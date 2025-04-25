@@ -1,4 +1,5 @@
-# SPOT Server Repository입니다. 
+# SPOT Server Ver.2 Repository입니다. 
+
 
 
 1. [Intro](#intro)
