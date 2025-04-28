@@ -1,0 +1,33 @@
+package com.example.spot.legacy.repository;
+
+import com.example.spot.legacy.domain.Member;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import com.example.spot.legacy.domain.enums.LoginType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    boolean existsByEmail(String email);
+
+    boolean existsByNickname(String nickname);
+
+    Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByLoginId(String loginId);
+
+    boolean existsByLoginId(String loginId);
+
+    boolean existsByEmailAndLoginTypeNot(String email, LoginType loginType);
+
+    boolean existsByEmailAndLoginType(String email, LoginType loginType);
+
+    Optional<Member> findByEmailAndLoginType(String email, LoginType loginType);
+
+    List<Member> findAllByInactiveBefore(LocalDateTime stdTime);
+}

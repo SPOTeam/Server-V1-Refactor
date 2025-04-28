@@ -1,11 +1,36 @@
 package com.example.spot.service.post;
 
-import com.example.spot.api.exception.handler.PostHandler;
-import com.example.spot.domain.*;
-import com.example.spot.domain.enums.Board;
-import com.example.spot.domain.mapping.MemberScrap;
-import com.example.spot.repository.*;
-import com.example.spot.web.dto.post.*;
+import com.example.spot.legacy.api.exception.handler.PostHandler;
+import com.example.spot.legacy.domain.LikedPost;
+import com.example.spot.legacy.domain.LikedPostComment;
+import com.example.spot.legacy.domain.Member;
+import com.example.spot.legacy.domain.Post;
+import com.example.spot.legacy.domain.PostComment;
+import com.example.spot.legacy.domain.PostReport;
+import com.example.spot.legacy.domain.enums.Board;
+import com.example.spot.legacy.domain.mapping.MemberScrap;
+import com.example.spot.legacy.repository.LikedPostCommentRepository;
+import com.example.spot.legacy.repository.LikedPostRepository;
+import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.legacy.repository.MemberScrapRepository;
+import com.example.spot.legacy.repository.PostCommentRepository;
+import com.example.spot.legacy.repository.PostReportRepository;
+import com.example.spot.legacy.repository.PostRepository;
+import com.example.spot.legacy.service.post.LikedPostCommentQueryService;
+import com.example.spot.legacy.service.post.LikedPostQueryService;
+import com.example.spot.legacy.service.post.PostCommandServiceImpl;
+import com.example.spot.legacy.web.dto.post.CommentCreateRequest;
+import com.example.spot.legacy.web.dto.post.CommentCreateResponse;
+import com.example.spot.legacy.web.dto.post.CommentLikeResponse;
+import com.example.spot.legacy.web.dto.post.PostCreateRequest;
+import com.example.spot.legacy.web.dto.post.PostCreateResponse;
+import com.example.spot.legacy.web.dto.post.PostLikeResponse;
+import com.example.spot.legacy.web.dto.post.PostReportResponse;
+import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
+import com.example.spot.legacy.web.dto.post.ScrapAllDeleteRequest;
+import com.example.spot.legacy.web.dto.post.ScrapPostResponse;
+import com.example.spot.legacy.web.dto.post.ScrapsPostDeleteResponse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +44,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
