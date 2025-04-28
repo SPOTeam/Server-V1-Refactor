@@ -12,11 +12,9 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyQuizResponseDTO
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyTerminationResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
-import com.example.spot.web.dto.memberstudy.request.*;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.web.dto.memberstudy.response.*;
 import com.example.spot.legacy.web.dto.study.response.StudyApplyResponseDTO;
 import jakarta.validation.Valid;
 

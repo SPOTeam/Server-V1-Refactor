@@ -9,9 +9,7 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyPostResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyScheduleResponseDTO;
-import com.example.spot.web.dto.memberstudy.response.*;
 
-import com.example.spot.web.dto.study.response.*;
 
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import java.time.LocalDate;

@@ -6,7 +6,6 @@ import com.example.spot.legacy.web.dto.post.PostBest5Response;
 import com.example.spot.legacy.web.dto.post.PostPagingResponse;
 import com.example.spot.legacy.web.dto.post.PostRepresentativeResponse;
 import com.example.spot.legacy.web.dto.post.PostSingleResponse;
-import com.example.spot.web.dto.post.*;
 import org.springframework.data.domain.Pageable;
 
 public interface PostQueryService {

@@ -5,7 +5,6 @@ import com.example.spot.legacy.domain.enums.Carrier;
 import com.example.spot.legacy.domain.enums.Gender;
 import com.example.spot.legacy.domain.enums.LoginType;
 import com.example.spot.legacy.domain.enums.Status;
-import com.example.spot.domain.mapping.*;
 import com.example.spot.legacy.domain.mapping.MemberAttendance;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

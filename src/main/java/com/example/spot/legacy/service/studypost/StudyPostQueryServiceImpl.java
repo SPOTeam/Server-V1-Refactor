@@ -16,7 +16,6 @@ import com.example.spot.legacy.repository.StudyLikedPostRepository;
 import com.example.spot.legacy.repository.StudyPostCommentRepository;
 import com.example.spot.legacy.repository.StudyPostRepository;
 import com.example.spot.legacy.repository.StudyRepository;
-import com.example.spot.repository.*;
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostResDTO;

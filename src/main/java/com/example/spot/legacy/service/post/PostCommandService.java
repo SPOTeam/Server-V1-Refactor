@@ -11,7 +11,6 @@ import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
 import com.example.spot.legacy.web.dto.post.ScrapAllDeleteRequest;
 import com.example.spot.legacy.web.dto.post.ScrapPostResponse;
 import com.example.spot.legacy.web.dto.post.ScrapsPostDeleteResponse;
-import com.example.spot.web.dto.post.*;
 
 
 public interface PostCommandService {

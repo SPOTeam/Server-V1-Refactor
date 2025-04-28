@@ -1,9 +1,9 @@
 package com.example.spot.legacy.repository.querydsl.impl;
 
 import com.example.spot.legacy.domain.Post;
-import com.example.spot.domain.QLikedPost;
-import com.example.spot.domain.QPost;
-import com.example.spot.domain.QPostComment;
+import com.example.spot.legacy.domain.QLikedPost;
+import com.example.spot.legacy.domain.QPost;
+import com.example.spot.legacy.domain.QPostComment;
 import com.example.spot.legacy.domain.enums.Board;
 import com.example.spot.legacy.repository.querydsl.PostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;

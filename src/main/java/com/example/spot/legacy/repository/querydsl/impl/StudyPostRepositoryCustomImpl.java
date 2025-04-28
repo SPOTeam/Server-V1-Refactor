@@ -1,7 +1,7 @@
 package com.example.spot.legacy.repository.querydsl.impl;
 
 import com.example.spot.legacy.domain.enums.Theme;
-import com.example.spot.domain.study.QStudyPost;
+import com.example.spot.legacy.domain.study.QStudyPost;
 import com.example.spot.legacy.domain.study.StudyPost;
 import com.example.spot.legacy.repository.querydsl.StudyPostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;

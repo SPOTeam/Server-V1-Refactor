@@ -21,7 +21,6 @@ import com.example.spot.legacy.web.dto.post.PostPagingResponse;
 import com.example.spot.legacy.web.dto.post.PostRepresentativeDetailResponse;
 import com.example.spot.legacy.web.dto.post.PostRepresentativeResponse;
 import com.example.spot.legacy.web.dto.post.PostSingleResponse;
-import com.example.spot.web.dto.post.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

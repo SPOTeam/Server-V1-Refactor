@@ -1,5 +1,7 @@
 package com.example.spot.legacy.repository.querydsl.impl;
 
+import static com.example.spot.legacy.domain.study.QStudy.*;
+
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.legacy.domain.enums.Gender;
 import com.example.spot.legacy.domain.enums.Status;
@@ -7,12 +9,9 @@ import com.example.spot.legacy.domain.enums.StudySortBy;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
-import com.example.spot.domain.mapping.QMemberStudy;
-import com.example.spot.domain.mapping.QRegionStudy;
-import com.example.spot.domain.mapping.QStudyTheme;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.legacy.domain.mapping.StudyTheme;
-import com.example.spot.domain.study.QStudy;
+import com.example.spot.legacy.domain.study.QStudy;
 import com.example.spot.legacy.domain.study.Study;
 import com.example.spot.legacy.repository.querydsl.StudyRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
@@ -26,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
 
-import static com.example.spot.domain.study.QStudy.study;
 @RequiredArgsConstructor
 @Slf4j
 public class StudyRepositoryCustomImpl implements StudyRepositoryCustom {

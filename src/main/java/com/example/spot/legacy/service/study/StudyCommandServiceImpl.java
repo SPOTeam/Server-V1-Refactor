@@ -23,7 +23,6 @@ import com.example.spot.legacy.repository.RegionStudyRepository;
 import com.example.spot.legacy.repository.StudyRepository;
 import com.example.spot.legacy.repository.StudyThemeRepository;
 import com.example.spot.legacy.repository.ThemeRepository;
-import com.example.spot.repository.*;
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.study.request.StudyJoinRequestDTO;
 import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO;

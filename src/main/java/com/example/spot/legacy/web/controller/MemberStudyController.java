@@ -27,18 +27,15 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyApplyResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyPostResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyScheduleResponseDTO;
-import com.example.spot.validation.annotation.*;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
-import com.example.spot.web.dto.memberstudy.request.*;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
-import com.example.spot.web.dto.memberstudy.response.*;
-import com.example.spot.web.dto.study.response.*;
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO.StudyApplicantDTO;
+import com.example.spot.legacy.web.dto.study.response.StudyScheduleResponseDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

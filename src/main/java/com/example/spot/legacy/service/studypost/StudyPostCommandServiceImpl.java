@@ -24,7 +24,6 @@ import com.example.spot.legacy.repository.StudyPostImageRepository;
 import com.example.spot.legacy.repository.StudyPostReportRepository;
 import com.example.spot.legacy.repository.StudyPostRepository;
 import com.example.spot.legacy.repository.StudyRepository;
-import com.example.spot.repository.*;
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostCommentRequestDTO;
