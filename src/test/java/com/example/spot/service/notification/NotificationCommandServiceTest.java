@@ -6,31 +6,29 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.api.exception.GeneralException;
-import com.example.spot.domain.Member;
-import com.example.spot.domain.Notification;
-import com.example.spot.domain.enums.ApplicationStatus;
-import com.example.spot.domain.enums.NotifyType;
-import com.example.spot.domain.mapping.MemberStudy;
-import com.example.spot.domain.study.Study;
-import com.example.spot.repository.MemberStudyRepository;
-import com.example.spot.repository.NotificationRepository;
-import com.example.spot.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
-import java.time.LocalDateTime;
+import com.example.spot.legacy.api.exception.GeneralException;
+import com.example.spot.legacy.domain.Member;
+import com.example.spot.legacy.domain.Notification;
+import com.example.spot.legacy.domain.enums.ApplicationStatus;
+import com.example.spot.legacy.domain.enums.NotifyType;
+import com.example.spot.legacy.domain.mapping.MemberStudy;
+import com.example.spot.legacy.domain.study.Study;
+import com.example.spot.legacy.repository.MemberStudyRepository;
+import com.example.spot.legacy.repository.NotificationRepository;
+import com.example.spot.legacy.service.notification.NotificationCommandServiceImpl;
+import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

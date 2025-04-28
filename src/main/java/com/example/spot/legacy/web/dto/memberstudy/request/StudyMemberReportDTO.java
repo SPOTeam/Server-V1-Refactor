@@ -1,0 +1,15 @@
+package com.example.spot.legacy.web.dto.memberstudy.request;
+
+import com.example.spot.legacy.validation.annotation.TextLength;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class StudyMemberReportDTO {
+
+    @TextLength(min = 1, max = 255)
+    private String content;
+}
