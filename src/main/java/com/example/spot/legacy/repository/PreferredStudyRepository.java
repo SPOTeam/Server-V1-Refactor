@@ -1,7 +1,7 @@
 package com.example.spot.legacy.repository;
 
 import com.example.spot.legacy.domain.enums.StudyLikeStatus;
-import com.example.spot.legacy.domain.mapping.PreferredStudy;
+import com.example.spot.refactor.domain.member.association.PreferredStudy;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;

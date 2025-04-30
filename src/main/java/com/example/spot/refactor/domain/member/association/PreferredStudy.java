@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain.mapping;
+package com.example.spot.refactor.domain.member.association;
 
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.common.BaseEntity;

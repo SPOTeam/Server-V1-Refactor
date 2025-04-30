@@ -20,7 +20,7 @@ import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.refactor.domain.member.association.MemberTheme;
 import com.example.spot.legacy.domain.mapping.MemberVote;
 import com.example.spot.refactor.domain.member.association.PreferredRegion;
-import com.example.spot.legacy.domain.mapping.PreferredStudy;
+import com.example.spot.refactor.domain.member.association.PreferredStudy;
 import com.example.spot.legacy.domain.mapping.StudyLikedComment;
 import com.example.spot.legacy.domain.mapping.StudyLikedPost;
 import com.example.spot.legacy.domain.study.Schedule;

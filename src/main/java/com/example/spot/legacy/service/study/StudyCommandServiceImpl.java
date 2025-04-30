@@ -11,7 +11,7 @@ import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.enums.StudyLikeStatus;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
-import com.example.spot.legacy.domain.mapping.PreferredStudy;
+import com.example.spot.refactor.domain.member.association.PreferredStudy;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.legacy.domain.mapping.StudyTheme;
 import com.example.spot.legacy.domain.study.Study;
