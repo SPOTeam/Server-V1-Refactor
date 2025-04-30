@@ -1,4 +1,4 @@
-package com.example.spot.legacy.validation.validator;
+package com.example.spot.refactor.domain.member.validation.validator;
 
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 
