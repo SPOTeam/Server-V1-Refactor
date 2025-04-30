@@ -9,7 +9,7 @@ import com.example.spot.legacy.domain.PostComment;
 import com.example.spot.legacy.domain.PostReport;
 import com.example.spot.legacy.domain.Quiz;
 import com.example.spot.legacy.domain.StudyReason;
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.domain.member.enums.Carrier;
 import com.example.spot.refactor.domain.member.enums.Gender;
 import com.example.spot.refactor.domain.member.enums.LoginType;

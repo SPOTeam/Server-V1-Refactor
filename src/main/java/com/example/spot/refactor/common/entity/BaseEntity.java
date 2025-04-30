@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain.common;
+package com.example.spot.refactor.common.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

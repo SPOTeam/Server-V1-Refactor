@@ -1,5 +1,5 @@
 package com.example.spot.legacy.domain.study;
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.mapping.MemberVote;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

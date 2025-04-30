@@ -1,7 +1,7 @@
 package com.example.spot.refactor.domain.member.association;
 
 import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.enums.StudyLikeStatus;
 import com.example.spot.legacy.domain.study.Study;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package com.example.spot.legacy.domain.mapping;
 
 import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.study.StudyPost;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

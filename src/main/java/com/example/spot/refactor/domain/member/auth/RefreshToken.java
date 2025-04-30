@@ -1,6 +1,6 @@
 package com.example.spot.refactor.domain.member.auth;
 
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
