@@ -17,7 +17,7 @@ import com.example.spot.legacy.web.dto.member.MemberRequestDTO;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberReasonDTO;
 import com.example.spot.refactor.domain.member.auth.CustomUserDetails;
 import com.example.spot.refactor.domain.member.auth.RefreshToken;
-import com.example.spot.legacy.repository.RefreshTokenRepository;
+import com.example.spot.refactor.domain.member.auth.RefreshTokenRepository;
 import com.example.spot.legacy.service.auth.KaKaoOAuthService;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberRegionDTO.RegionDTO;
