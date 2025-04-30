@@ -23,7 +23,7 @@ import com.example.spot.legacy.domain.study.ToDoList;
 import com.example.spot.legacy.domain.study.Vote;
 import com.example.spot.legacy.repository.MemberAttendanceRepository;
 import com.example.spot.legacy.repository.MemberReportRepository;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.MemberVoteRepository;
 import com.example.spot.legacy.repository.NotificationRepository;

@@ -1,7 +1,7 @@
 package com.example.spot.legacy.validation.validator;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.validation.annotation.ExistMember;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

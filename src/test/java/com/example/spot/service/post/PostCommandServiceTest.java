@@ -11,7 +11,7 @@ import com.example.spot.legacy.domain.enums.Board;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.repository.LikedPostCommentRepository;
 import com.example.spot.legacy.repository.LikedPostRepository;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.repository.MemberScrapRepository;
 import com.example.spot.legacy.repository.PostCommentRepository;
 import com.example.spot.legacy.repository.PostReportRepository;

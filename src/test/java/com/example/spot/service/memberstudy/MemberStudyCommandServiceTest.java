@@ -14,7 +14,7 @@ import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.study.Study;
 import com.example.spot.legacy.domain.study.ToDoList;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.StudyRepository;
 import com.example.spot.legacy.repository.ToDoListRepository;

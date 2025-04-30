@@ -8,7 +8,7 @@ import com.example.spot.legacy.domain.enums.Period;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.study.Schedule;
 import com.example.spot.legacy.domain.study.Study;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.ScheduleRepository;
 import com.example.spot.legacy.repository.StudyRepository;
