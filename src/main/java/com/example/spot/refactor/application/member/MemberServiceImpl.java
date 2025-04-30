@@ -1,8 +1,8 @@
 package com.example.spot.refactor.application.member;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.legacy.domain.StudyReason;
 import com.example.spot.refactor.domain.member.enums.Gender;
 import com.example.spot.refactor.domain.member.enums.LoginType;
@@ -10,7 +10,7 @@ import com.example.spot.legacy.domain.enums.Reason;
 import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.repository.StudyReasonRepository;
-import com.example.spot.legacy.security.utils.JwtTokenProvider;
+import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.refactor.web.dto.member.MemberRequestDTO;

@@ -3,7 +3,6 @@ package com.example.spot.refactor.web.dto.member.naver;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class NaverCallback {

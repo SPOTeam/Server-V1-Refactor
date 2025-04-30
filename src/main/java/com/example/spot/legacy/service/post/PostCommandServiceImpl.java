@@ -1,8 +1,8 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.PostHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.PostHandler;
 import com.example.spot.legacy.domain.LikedPost;
 import com.example.spot.legacy.domain.LikedPostComment;
 import com.example.spot.refactor.domain.member.Member;
@@ -41,7 +41,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.example.spot.legacy.security.utils.SecurityUtils.getCurrentUserId;
+import static com.example.spot.refactor.common.security.utils.SecurityUtils.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor

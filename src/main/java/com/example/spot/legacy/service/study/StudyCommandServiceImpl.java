@@ -1,8 +1,8 @@
 package com.example.spot.legacy.service.study;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.legacy.domain.Theme;
@@ -23,7 +23,7 @@ import com.example.spot.legacy.repository.RegionStudyRepository;
 import com.example.spot.legacy.repository.StudyRepository;
 import com.example.spot.legacy.repository.StudyThemeRepository;
 import com.example.spot.legacy.repository.ThemeRepository;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.study.request.StudyJoinRequestDTO;
 import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO;
 import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO.RegisterDTO;

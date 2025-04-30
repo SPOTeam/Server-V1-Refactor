@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.legacy.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;

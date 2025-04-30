@@ -1,9 +1,9 @@
 package com.example.spot.refactor.application.member.auth;
 
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.refactor.domain.member.auth.RsaKey;
 import com.example.spot.legacy.repository.MemberStudyRepository;
@@ -24,12 +24,12 @@ import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.refactor.domain.member.auth.RefreshTokenRepository;
 import com.example.spot.legacy.repository.rsa.RSAKeyRepository;
 import com.example.spot.refactor.domain.member.auth.verification.VerificationCodeRepository;
-import com.example.spot.legacy.security.utils.JwtTokenProvider;
-import com.example.spot.legacy.security.utils.MemberUtils;
-import com.example.spot.legacy.security.utils.RSAUtils;
+import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
+import com.example.spot.refactor.common.security.utils.MemberUtils;
+import com.example.spot.refactor.common.security.utils.RSAUtils;
 import com.example.spot.refactor.web.dto.member.MemberRequestDTO;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.message.MailService;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.refactor.web.dto.member.naver.NaverCallback;

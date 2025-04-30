@@ -1,7 +1,7 @@
 package com.example.spot.legacy.web.controller;
 
-import com.example.spot.legacy.api.ApiResponse;
-import com.example.spot.legacy.api.code.status.SuccessStatus;
+import com.example.spot.refactor.common.api.ApiResponse;
+import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandService;
 import com.example.spot.legacy.service.memberstudy.MemberStudyQueryService;
 import com.example.spot.legacy.validation.annotation.ExistMember;

@@ -1,7 +1,7 @@
 package com.example.spot.legacy.service.message;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package com.example.spot.legacy.validation.validator;
 
-import com.example.spot.legacy.security.utils.JwtTokenProvider;
+import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 
 public class MemberValidator {
     private static JwtTokenProvider jwtTokenProvider;

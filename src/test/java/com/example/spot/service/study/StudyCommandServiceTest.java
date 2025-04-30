@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.legacy.domain.Theme;

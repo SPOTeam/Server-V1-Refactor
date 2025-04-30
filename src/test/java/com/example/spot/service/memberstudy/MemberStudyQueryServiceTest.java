@@ -1,6 +1,6 @@
 package com.example.spot.service.memberstudy;
 
-import com.example.spot.legacy.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.enums.Theme;
@@ -14,7 +14,7 @@ import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.ScheduleRepository;
 import com.example.spot.legacy.repository.StudyPostRepository;
 import com.example.spot.legacy.repository.ToDoListRepository;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.memberstudy.MemberStudyQueryServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;

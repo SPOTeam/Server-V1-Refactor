@@ -1,8 +1,8 @@
 package com.example.spot.refactor.web.controller.member;
 
-import com.example.spot.legacy.api.ApiResponse;
-import com.example.spot.legacy.api.code.status.SuccessStatus;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.api.ApiResponse;
+import com.example.spot.refactor.common.api.code.status.SuccessStatus;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.NicknameDuplicateDTO;
 import com.example.spot.refactor.web.dto.rsa.Rsa;
 import com.example.spot.refactor.application.member.auth.AuthService;

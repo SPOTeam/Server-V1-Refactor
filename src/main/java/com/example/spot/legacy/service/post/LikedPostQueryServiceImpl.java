@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.spot.legacy.security.utils.SecurityUtils.getCurrentUserId;
+import static com.example.spot.refactor.common.security.utils.SecurityUtils.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor

@@ -1,9 +1,9 @@
 package com.example.spot.legacy.service.memberstudy;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.MemberReport;
 import com.example.spot.legacy.domain.Notification;
@@ -46,7 +46,7 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyQuizResponseDTO
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyTerminationResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO.ToDoListCreateDTO;

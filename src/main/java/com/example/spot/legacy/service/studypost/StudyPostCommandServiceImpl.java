@@ -1,8 +1,8 @@
 package com.example.spot.legacy.service.studypost;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
@@ -24,7 +24,7 @@ import com.example.spot.legacy.repository.StudyPostImageRepository;
 import com.example.spot.legacy.repository.StudyPostReportRepository;
 import com.example.spot.legacy.repository.StudyPostRepository;
 import com.example.spot.legacy.repository.StudyRepository;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostCommentRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostRequestDTO;

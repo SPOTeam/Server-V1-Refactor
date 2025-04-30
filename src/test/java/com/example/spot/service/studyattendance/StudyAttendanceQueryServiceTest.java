@@ -1,6 +1,6 @@
 package com.example.spot.service.studyattendance;
 
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Quiz;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;

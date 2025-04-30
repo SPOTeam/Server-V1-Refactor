@@ -1,7 +1,7 @@
 package com.example.spot.legacy.domain.enums;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.GeneralException;
 
 public enum Reason {
     꾸준한_학습_습관이_필요해요(1),

@@ -1,10 +1,10 @@
 package com.example.spot.legacy.web.controller;
 
-import com.example.spot.legacy.api.ApiResponse;
-import com.example.spot.legacy.api.code.status.SuccessStatus;
+import com.example.spot.refactor.common.api.ApiResponse;
+import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.legacy.domain.enums.StudySortBy;
 import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.study.StudyCommandService;
 import com.example.spot.legacy.service.study.StudyQueryService;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;

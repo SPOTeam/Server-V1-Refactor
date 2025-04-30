@@ -1,6 +1,6 @@
 package com.example.spot.legacy.validation.validator;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.repository.ThemeRepository;
 import com.example.spot.legacy.validation.annotation.ExistTheme;
