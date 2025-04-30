@@ -1,7 +1,7 @@
-package com.example.spot.legacy.domain.mapping;
+package com.example.spot.refactor.domain.member.association;
 
+import com.example.spot.legacy.domain.Region;
 import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.legacy.domain.Theme;
 import com.example.spot.legacy.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,23 +20,22 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberTheme extends BaseEntity {
+public class PreferredRegion extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
 
-    //== 회원 ==//
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    //== 회원 테마 ==//
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theme_id", nullable = false)
-    private Theme theme;
+    @JoinColumn(name = "region_id", nullable = false)
+    private Region region;
+
 
 }

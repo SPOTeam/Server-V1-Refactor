@@ -1,6 +1,6 @@
 package com.example.spot.legacy.repository;
 
-import com.example.spot.legacy.domain.mapping.MemberTheme;
+import com.example.spot.refactor.domain.member.association.MemberTheme;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

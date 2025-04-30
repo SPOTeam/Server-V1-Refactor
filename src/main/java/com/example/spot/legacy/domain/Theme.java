@@ -2,7 +2,7 @@ package com.example.spot.legacy.domain;
 
 import com.example.spot.legacy.domain.common.BaseEntity;
 import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.legacy.domain.mapping.MemberTheme;
+import com.example.spot.refactor.domain.member.association.MemberTheme;
 import com.example.spot.legacy.domain.mapping.StudyTheme;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
