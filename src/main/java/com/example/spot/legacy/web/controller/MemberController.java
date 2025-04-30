@@ -4,7 +4,7 @@ import com.example.spot.legacy.api.ApiResponse;
 import com.example.spot.legacy.api.code.status.SuccessStatus;
 
 import com.example.spot.legacy.security.utils.SecurityUtils;
-import com.example.spot.legacy.service.member.MemberService;
+import com.example.spot.refactor.application.member.MemberService;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberRegionDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberStudyReasonDTO;

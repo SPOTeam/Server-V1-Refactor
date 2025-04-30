@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.auth;
+package com.example.spot.refactor.application.member.auth;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;

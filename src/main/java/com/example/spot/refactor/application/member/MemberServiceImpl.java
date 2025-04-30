@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.member;
+package com.example.spot.refactor.application.member;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.GeneralException;
@@ -18,7 +18,7 @@ import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberReasonDTO;
 import com.example.spot.refactor.domain.member.auth.CustomUserDetails;
 import com.example.spot.refactor.domain.member.auth.RefreshToken;
 import com.example.spot.refactor.domain.member.auth.RefreshTokenRepository;
-import com.example.spot.legacy.service.auth.KaKaoOAuthService;
+import com.example.spot.refactor.application.member.auth.KaKaoOAuthService;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberRegionDTO.RegionDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberSignInDTO;

@@ -8,7 +8,7 @@ import com.example.spot.refactor.domain.member.enums.Carrier;
 import com.example.spot.refactor.domain.member.enums.LoginType;
 import com.example.spot.refactor.domain.member.MemberRepository;
 import com.example.spot.legacy.security.utils.MemberUtils;
-import com.example.spot.legacy.service.member.MemberService;
+import com.example.spot.refactor.application.member.MemberService;
 import com.example.spot.legacy.security.oauth.adpter.CustomOAuth2User;
 import com.example.spot.legacy.security.oauth.adpter.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;

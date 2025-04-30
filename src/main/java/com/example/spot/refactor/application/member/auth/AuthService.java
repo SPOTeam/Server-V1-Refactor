@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.auth;
+package com.example.spot.refactor.application.member.auth;
 
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.SignUpDetailDTO;
 import com.example.spot.legacy.web.dto.rsa.Rsa;

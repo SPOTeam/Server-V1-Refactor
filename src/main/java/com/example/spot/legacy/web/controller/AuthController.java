@@ -5,7 +5,7 @@ import com.example.spot.legacy.api.code.status.SuccessStatus;
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO.NicknameDuplicateDTO;
 import com.example.spot.legacy.web.dto.rsa.Rsa;
-import com.example.spot.legacy.service.auth.AuthService;
+import com.example.spot.refactor.application.member.auth.AuthService;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO;
 import com.example.spot.legacy.web.dto.member.MemberResponseDTO;

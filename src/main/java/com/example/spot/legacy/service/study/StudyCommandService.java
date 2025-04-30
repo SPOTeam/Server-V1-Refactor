@@ -12,6 +12,8 @@ public interface StudyCommandService {
 
     StudyRegisterResponseDTO.RegisterDTO registerStudy(StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO);
 
+
+    // TODO 스터디 좋아요 Member 도메인 하위로 옮기기
     StudyLikeResponseDTO likeStudy(Long memberId, Long studyId);
 
     void addHotKeyword(String keyword);

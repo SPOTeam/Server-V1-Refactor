@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.member;
+package com.example.spot.refactor.application.member;
 
 
 import com.example.spot.refactor.domain.member.Member;
