@@ -7,7 +7,7 @@ import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.legacy.domain.Theme;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.enums.StudyLikeStatus;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

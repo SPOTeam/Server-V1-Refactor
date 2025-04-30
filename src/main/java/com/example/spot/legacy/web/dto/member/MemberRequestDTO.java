@@ -1,7 +1,7 @@
 package com.example.spot.legacy.web.dto.member;
 
-import com.example.spot.legacy.domain.enums.Carrier;
-import com.example.spot.legacy.domain.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Carrier;
+import com.example.spot.refactor.domain.member.enums.Gender;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import jakarta.validation.constraints.AssertTrue;

@@ -16,10 +16,10 @@ import com.example.spot.legacy.web.dto.member.MemberResponseDTO.NicknameDuplicat
 import com.example.spot.legacy.web.dto.rsa.Rsa;
 import com.example.spot.legacy.domain.auth.RefreshToken;
 import com.example.spot.legacy.domain.auth.VerificationCode;
-import com.example.spot.legacy.domain.enums.Carrier;
-import com.example.spot.legacy.domain.enums.Gender;
-import com.example.spot.legacy.domain.enums.LoginType;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Carrier;
+import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.LoginType;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.repository.MemberRepository;
 import com.example.spot.legacy.repository.RefreshTokenRepository;
 import com.example.spot.legacy.repository.rsa.RSAKeyRepository;

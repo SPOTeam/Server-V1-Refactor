@@ -9,7 +9,7 @@ import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.legacy.domain.Theme;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.legacy.domain.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Gender;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

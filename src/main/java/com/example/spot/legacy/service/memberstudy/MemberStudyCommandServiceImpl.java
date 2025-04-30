@@ -10,7 +10,7 @@ import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.Quiz;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.mapping.MemberAttendance;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.mapping.MemberVote;

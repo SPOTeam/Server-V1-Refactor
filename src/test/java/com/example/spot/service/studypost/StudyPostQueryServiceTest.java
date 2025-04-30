@@ -3,7 +3,7 @@ package com.example.spot.service.studypost;
 import com.example.spot.legacy.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.legacy.domain.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Gender;
 import com.example.spot.legacy.domain.enums.Theme;
 import com.example.spot.legacy.domain.enums.ThemeQuery;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

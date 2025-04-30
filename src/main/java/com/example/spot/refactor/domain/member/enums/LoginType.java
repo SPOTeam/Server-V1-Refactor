@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain.enums;
+package com.example.spot.refactor.domain.member.enums;
 
 public enum LoginType {
     NORMAL,

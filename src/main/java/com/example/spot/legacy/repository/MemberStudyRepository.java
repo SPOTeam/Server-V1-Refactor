@@ -1,7 +1,7 @@
 package com.example.spot.legacy.repository;
 
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 
 import org.springframework.data.jpa.repository.JpaRepository;

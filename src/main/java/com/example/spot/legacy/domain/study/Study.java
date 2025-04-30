@@ -2,8 +2,8 @@ package com.example.spot.legacy.domain.study;
 
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.common.BaseEntity;
-import com.example.spot.legacy.domain.enums.Gender;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.mapping.PreferredStudy;

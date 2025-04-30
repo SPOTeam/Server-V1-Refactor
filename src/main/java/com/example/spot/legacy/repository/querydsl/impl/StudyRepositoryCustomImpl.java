@@ -3,8 +3,8 @@ package com.example.spot.legacy.repository.querydsl.impl;
 import static com.example.spot.legacy.domain.study.QStudy.*;
 
 import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.domain.enums.Gender;
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Status;
 import com.example.spot.legacy.domain.enums.StudySortBy;
 import com.example.spot.legacy.domain.enums.StudyState;
 import com.example.spot.legacy.domain.enums.ThemeType;

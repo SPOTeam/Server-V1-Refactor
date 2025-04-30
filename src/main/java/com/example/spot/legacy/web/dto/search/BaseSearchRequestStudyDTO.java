@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.search;
 
-import com.example.spot.legacy.domain.enums.Gender;
+import com.example.spot.refactor.domain.member.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;

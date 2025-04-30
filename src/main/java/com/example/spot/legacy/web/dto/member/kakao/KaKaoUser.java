@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.dto.member.kakao;
 
 import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.legacy.domain.enums.Carrier;
-import com.example.spot.legacy.domain.enums.LoginType;
+import com.example.spot.refactor.domain.member.enums.Carrier;
+import com.example.spot.refactor.domain.member.enums.LoginType;
 import com.example.spot.legacy.security.utils.MemberUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
