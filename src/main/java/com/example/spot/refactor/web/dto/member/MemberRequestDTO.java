@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.member;
+package com.example.spot.refactor.web.dto.member;
 
 import com.example.spot.refactor.domain.member.enums.Carrier;
 import com.example.spot.refactor.domain.member.enums.Gender;

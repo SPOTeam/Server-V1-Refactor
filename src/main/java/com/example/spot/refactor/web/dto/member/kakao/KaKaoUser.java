@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.member.kakao;
+package com.example.spot.refactor.web.dto.member.kakao;
 
 import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.refactor.domain.member.enums.Carrier;

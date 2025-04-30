@@ -2,9 +2,9 @@ package com.example.spot.refactor.application.member.auth;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.web.dto.member.naver.NaverCallback;
-import com.example.spot.legacy.web.dto.member.naver.NaverMember;
-import com.example.spot.legacy.web.dto.member.naver.NaverOAuthToken;
+import com.example.spot.refactor.web.dto.member.naver.NaverCallback;
+import com.example.spot.refactor.web.dto.member.naver.NaverMember;
+import com.example.spot.refactor.web.dto.member.naver.NaverOAuthToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -48,7 +48,7 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListUpdateResponseDTO;

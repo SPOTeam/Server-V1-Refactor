@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.token;
+package com.example.spot.refactor.web.dto.token;
 
 import lombok.*;
 

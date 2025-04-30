@@ -2,8 +2,8 @@ package com.example.spot.legacy.security.utils;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
-import com.example.spot.legacy.web.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.token.TokenResponseDTO.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

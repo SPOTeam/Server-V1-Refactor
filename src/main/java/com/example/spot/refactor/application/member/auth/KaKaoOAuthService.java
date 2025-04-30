@@ -1,8 +1,8 @@
 package com.example.spot.refactor.application.member.auth;
 
-import com.example.spot.legacy.web.dto.member.kakao.KaKaoOAuthToken;
-import com.example.spot.legacy.web.dto.member.kakao.KaKaoOAuthToken.KaKaoOAuthTokenDTO;
-import com.example.spot.legacy.web.dto.member.kakao.KaKaoUser;
+import com.example.spot.refactor.web.dto.member.kakao.KaKaoOAuthToken;
+import com.example.spot.refactor.web.dto.member.kakao.KaKaoOAuthToken.KaKaoOAuthTokenDTO;
+import com.example.spot.refactor.web.dto.member.kakao.KaKaoUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;

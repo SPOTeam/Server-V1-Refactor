@@ -1,18 +1,18 @@
-package com.example.spot.legacy.web.controller;
+package com.example.spot.refactor.web.controller.member;
 
 import com.example.spot.legacy.api.ApiResponse;
 import com.example.spot.legacy.api.code.status.SuccessStatus;
 
 import com.example.spot.legacy.security.utils.SecurityUtils;
 import com.example.spot.refactor.application.member.MemberService;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberRegionDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberStudyReasonDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberTestDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.MemberRegionDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.MemberStudyReasonDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.MemberTestDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.MemberUpdateDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.MemberUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.spot.legacy.web.dto.member.google.GoogleExampleResponse.EXAMPLE_RESPONSE;
+import static com.example.spot.refactor.web.dto.member.google.GoogleExampleResponse.EXAMPLE_RESPONSE;
 
 @RestController
 @RequestMapping("/spot")

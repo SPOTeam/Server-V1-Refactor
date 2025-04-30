@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.member.naver;
+package com.example.spot.refactor.web.dto.member.naver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

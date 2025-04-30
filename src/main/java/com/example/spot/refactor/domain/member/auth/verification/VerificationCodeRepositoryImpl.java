@@ -3,7 +3,7 @@ package com.example.spot.refactor.domain.member.auth.verification;
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.domain.member.auth.VerificationCode;
-import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.member.google;
+package com.example.spot.refactor.web.dto.member.google;
 
 public class GoogleExampleResponse {
 

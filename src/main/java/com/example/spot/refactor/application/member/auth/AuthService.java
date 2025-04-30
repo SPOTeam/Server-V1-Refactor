@@ -1,14 +1,14 @@
 package com.example.spot.refactor.application.member.auth;
 
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.SignUpDetailDTO;
-import com.example.spot.legacy.web.dto.rsa.Rsa;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
-import com.example.spot.legacy.web.dto.member.naver.NaverCallback;
-import com.example.spot.legacy.web.dto.member.naver.NaverOAuthToken;
-import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
-import com.example.spot.legacy.web.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.SignUpDetailDTO;
+import com.example.spot.refactor.web.dto.rsa.Rsa;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
+import com.example.spot.refactor.web.dto.member.naver.NaverCallback;
+import com.example.spot.refactor.web.dto.member.naver.NaverOAuthToken;
+import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.token.TokenResponseDTO.TokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

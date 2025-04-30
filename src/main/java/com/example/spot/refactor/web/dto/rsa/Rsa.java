@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.rsa;
+package com.example.spot.refactor.web.dto.rsa;
 
 import lombok.*;
 

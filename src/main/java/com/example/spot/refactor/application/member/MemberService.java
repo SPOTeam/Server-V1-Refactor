@@ -2,12 +2,12 @@ package com.example.spot.refactor.application.member;
 
 
 import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberInfoListDTO;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberReasonDTO;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberRegionDTO;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberThemeDTO;
-import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberUpdateDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.MemberInfoListDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.MemberReasonDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.MemberRegionDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.MemberThemeDTO;
+import com.example.spot.refactor.web.dto.member.MemberRequestDTO.MemberUpdateDTO;
+import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetailsService;
