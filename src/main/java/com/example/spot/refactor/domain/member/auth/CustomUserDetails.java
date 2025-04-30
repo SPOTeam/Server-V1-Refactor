@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain.auth;
+package com.example.spot.refactor.domain.member.auth;
 
 import java.util.Collection;
 import lombok.AccessLevel;

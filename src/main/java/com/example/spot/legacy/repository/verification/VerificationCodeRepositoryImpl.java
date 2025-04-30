@@ -2,7 +2,7 @@ package com.example.spot.legacy.repository.verification;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.domain.auth.VerificationCode;
+import com.example.spot.refactor.domain.member.auth.VerificationCode;
 import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

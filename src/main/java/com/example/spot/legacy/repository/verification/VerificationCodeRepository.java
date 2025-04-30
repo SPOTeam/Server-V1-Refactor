@@ -1,6 +1,6 @@
 package com.example.spot.legacy.repository.verification;
 
-import com.example.spot.legacy.domain.auth.VerificationCode;
+import com.example.spot.refactor.domain.member.auth.VerificationCode;
 import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
 
 public interface VerificationCodeRepository {

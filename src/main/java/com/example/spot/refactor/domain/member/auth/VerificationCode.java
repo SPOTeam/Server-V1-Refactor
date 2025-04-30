@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain.auth;
+package com.example.spot.refactor.domain.member.auth;
 
 import lombok.Builder;
 import lombok.Getter;

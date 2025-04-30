@@ -1,6 +1,6 @@
 package com.example.spot.legacy.repository;
 
-import com.example.spot.legacy.domain.auth.RefreshToken;
+import com.example.spot.refactor.domain.member.auth.RefreshToken;
 
 import java.util.List;
 import java.util.Optional;
