@@ -1,4 +1,4 @@
-package com.example.spot.legacy.repository.verification;
+package com.example.spot.refactor.domain.member.auth.verification;
 
 import com.example.spot.refactor.domain.member.auth.VerificationCode;
 import com.example.spot.legacy.web.dto.token.TokenResponseDTO;
