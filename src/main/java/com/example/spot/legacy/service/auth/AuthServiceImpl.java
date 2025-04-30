@@ -4,7 +4,7 @@ package com.example.spot.legacy.service.auth;
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.GeneralException;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.auth.RsaKey;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.MemberThemeRepository;

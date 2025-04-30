@@ -1,7 +1,7 @@
 package com.example.spot.legacy.service.member;
 
 
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberInfoListDTO;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberReasonDTO;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberRegionDTO;

@@ -3,7 +3,7 @@ package com.example.spot.service.post;
 import com.example.spot.legacy.api.exception.handler.PostHandler;
 import com.example.spot.legacy.domain.LikedPost;
 import com.example.spot.legacy.domain.LikedPostComment;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.Post;
 import com.example.spot.legacy.domain.PostComment;
 import com.example.spot.legacy.domain.enums.Board;

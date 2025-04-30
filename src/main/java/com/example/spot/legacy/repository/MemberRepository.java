@@ -1,6 +1,6 @@
 package com.example.spot.legacy.repository;
 
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;

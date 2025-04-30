@@ -4,6 +4,8 @@ import com.example.spot.legacy.domain.common.BaseEntity;
 import com.example.spot.legacy.domain.enums.Board;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
+import com.example.spot.refactor.domain.member.Member;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.StringUtils;

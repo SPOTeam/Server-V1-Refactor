@@ -1,7 +1,7 @@
 package com.example.spot.service.memberstudy;
 
 import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.enums.Theme;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

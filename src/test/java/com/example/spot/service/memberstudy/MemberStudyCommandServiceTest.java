@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
 import com.example.spot.legacy.api.exception.handler.StudyHandler;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.enums.Status;
 import com.example.spot.legacy.domain.mapping.MemberStudy;

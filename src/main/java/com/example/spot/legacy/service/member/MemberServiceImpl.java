@@ -11,7 +11,7 @@ import com.example.spot.legacy.domain.enums.Status;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.repository.StudyReasonRepository;
 import com.example.spot.legacy.security.utils.JwtTokenProvider;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.repository.MemberRepository;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO;
 import com.example.spot.legacy.web.dto.member.MemberRequestDTO.MemberReasonDTO;

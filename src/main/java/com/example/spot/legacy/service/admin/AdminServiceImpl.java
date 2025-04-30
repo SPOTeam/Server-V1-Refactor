@@ -2,7 +2,7 @@ package com.example.spot.legacy.service.admin;
 
 import com.example.spot.legacy.api.code.status.ErrorStatus;
 import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.repository.MemberRepository;
 import com.example.spot.legacy.repository.RefreshTokenRepository;
 import com.example.spot.legacy.security.utils.SecurityUtils;

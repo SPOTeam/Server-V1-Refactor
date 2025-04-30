@@ -1,5 +1,14 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.domain.member;
 
+import com.example.spot.legacy.domain.LikedPost;
+import com.example.spot.legacy.domain.LikedPostComment;
+import com.example.spot.legacy.domain.MemberReport;
+import com.example.spot.legacy.domain.Notification;
+import com.example.spot.legacy.domain.Post;
+import com.example.spot.legacy.domain.PostComment;
+import com.example.spot.legacy.domain.PostReport;
+import com.example.spot.legacy.domain.Quiz;
+import com.example.spot.legacy.domain.StudyReason;
 import com.example.spot.legacy.domain.common.BaseEntity;
 import com.example.spot.legacy.domain.enums.Carrier;
 import com.example.spot.legacy.domain.enums.Gender;

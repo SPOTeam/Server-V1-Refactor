@@ -1,6 +1,6 @@
 package com.example.spot.legacy.security.oauth.adpter;
 
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.enums.LoginType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

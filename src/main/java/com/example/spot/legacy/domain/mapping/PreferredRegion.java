@@ -1,7 +1,7 @@
 package com.example.spot.legacy.domain.mapping;
 
 import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.domain.member.Member;
 import com.example.spot.legacy.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
