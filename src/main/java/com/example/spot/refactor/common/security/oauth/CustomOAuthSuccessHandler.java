@@ -11,7 +11,7 @@ import com.example.spot.refactor.web.dto.member.MemberResponseDTO;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.refactor.common.security.oauth.adpter.CustomOAuth2User;
 import com.example.spot.refactor.common.security.oauth.adpter.google.GoogleUserInfo;
-import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.member.token.TokenResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

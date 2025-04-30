@@ -1,4 +1,4 @@
-package com.example.spot.refactor.web.dto.token;
+package com.example.spot.refactor.web.dto.member.token;
 
 import lombok.*;
 

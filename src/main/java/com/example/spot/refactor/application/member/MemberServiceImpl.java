@@ -27,7 +27,7 @@ import com.example.spot.refactor.web.dto.member.MemberResponseDTO.MemberTestDTO;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.refactor.web.dto.member.kakao.KaKaoOAuthToken.KaKaoOAuthTokenDTO;
 import com.example.spot.refactor.web.dto.member.kakao.KaKaoUser;
-import com.example.spot.refactor.web.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.refactor.web.dto.member.token.TokenResponseDTO.TokenDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

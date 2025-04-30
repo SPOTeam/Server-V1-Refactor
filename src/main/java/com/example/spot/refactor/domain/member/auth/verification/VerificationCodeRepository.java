@@ -1,7 +1,7 @@
 package com.example.spot.refactor.domain.member.auth.verification;
 
 import com.example.spot.refactor.domain.member.auth.VerificationCode;
-import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.member.token.TokenResponseDTO;
 
 public interface VerificationCodeRepository {
 

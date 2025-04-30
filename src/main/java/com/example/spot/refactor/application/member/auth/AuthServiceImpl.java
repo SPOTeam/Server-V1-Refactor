@@ -13,7 +13,7 @@ import com.example.spot.legacy.repository.StudyReasonRepository;
 import com.example.spot.refactor.web.dto.member.MemberRequestDTO.SignUpDetailDTO;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.CheckMemberDTO;
 import com.example.spot.refactor.web.dto.member.MemberResponseDTO.NicknameDuplicateDTO;
-import com.example.spot.refactor.web.dto.rsa.Rsa;
+import com.example.spot.refactor.web.dto.member.rsa.Rsa;
 import com.example.spot.refactor.domain.member.auth.RefreshToken;
 import com.example.spot.refactor.domain.member.auth.VerificationCode;
 import com.example.spot.refactor.domain.member.enums.Carrier;
@@ -35,8 +35,8 @@ import com.example.spot.refactor.web.dto.member.MemberResponseDTO.SocialLoginSig
 import com.example.spot.refactor.web.dto.member.naver.NaverCallback;
 import com.example.spot.refactor.web.dto.member.naver.NaverMember;
 import com.example.spot.refactor.web.dto.member.naver.NaverOAuthToken;
-import com.example.spot.refactor.web.dto.token.TokenResponseDTO;
-import com.example.spot.refactor.web.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.refactor.web.dto.member.token.TokenResponseDTO;
+import com.example.spot.refactor.web.dto.member.token.TokenResponseDTO.TokenDTO;
 
 import java.security.PrivateKey;
 import java.security.SecureRandom;
