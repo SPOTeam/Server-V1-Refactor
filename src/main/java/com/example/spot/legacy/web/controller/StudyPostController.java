@@ -2,7 +2,7 @@ package com.example.spot.legacy.web.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.refactor.study.domain.enums.ThemeQuery;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategoryQuery;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.legacy.service.studypost.StudyPostCommandService;
 import com.example.spot.legacy.service.studypost.StudyPostQueryService;
@@ -97,10 +97,10 @@ public class StudyPostController {
     @GetMapping("/studies/{studyId}/posts")
     public ApiResponse<StudyPostResDTO.PostListDTO> getAllPosts(
             @PathVariable @ExistStudy Long studyId,
-            @RequestParam(required = false) ThemeQuery themeQuery,
+            @RequestParam(required = false) StudyPostCategoryQuery studyPostCategoryQuery,
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) Integer limit) {
-        StudyPostResDTO.PostListDTO postListDTO = studyPostQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, themeQuery);
+        StudyPostResDTO.PostListDTO postListDTO = studyPostQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, studyPostCategoryQuery);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIST_FOUND, postListDTO);
     }
 

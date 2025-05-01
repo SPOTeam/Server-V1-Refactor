@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Quiz;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberAttendance;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuiz;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +23,11 @@ public class StudyQuizResponseDTO {
         private final String question;
         private final LocalDateTime createdAt;
 
-        public static QuizDTO toDTO(Quiz quiz) {
+        public static QuizDTO toDTO(StudyQuiz studyQuiz) {
             return QuizDTO.builder()
-                    .quizId(quiz.getId())
-                    .question(quiz.getQuestion())
-                    .createdAt(quiz.getCreatedAt())
+                    .quizId(studyQuiz.getId())
+                    .question(studyQuiz.getQuestion())
+                    .createdAt(studyQuiz.getCreatedAt())
                     .build();
         }
     }
@@ -44,14 +44,14 @@ public class StudyQuizResponseDTO {
         private final Integer tryNum;
         private final LocalDateTime createdAt;
 
-        public static AttendanceDTO toDTO(MemberAttendance memberAttendance, Integer tryNum) {
+        public static AttendanceDTO toDTO(StudyQuizSubmission studyQuizSubmission, Integer tryNum) {
             return AttendanceDTO.builder()
-                    .memberId(memberAttendance.getMember().getId())
-                    .quizId(memberAttendance.getQuiz().getId())
-                    .attendanceId(memberAttendance.getId())
-                    .isCorrect(memberAttendance.getIsCorrect())
+                    .memberId(studyQuizSubmission.getMember().getId())
+                    .quizId(studyQuizSubmission.getStudyQuiz().getId())
+                    .attendanceId(studyQuizSubmission.getId())
+                    .isCorrect(studyQuizSubmission.getIsCorrect())
                     .tryNum(tryNum)
-                    .createdAt(memberAttendance.getCreatedAt())
+                    .createdAt(studyQuizSubmission.getCreatedAt())
                     .build();
         }
     }
@@ -65,10 +65,10 @@ public class StudyQuizResponseDTO {
         private final Long quizId;
         private final List<StudyMemberDTO> studyMembers;
 
-        public static AttendanceListDTO toDTO(Quiz quiz, List<StudyMemberDTO> studyMembers) {
+        public static AttendanceListDTO toDTO(StudyQuiz studyQuiz, List<StudyMemberDTO> studyMembers) {
             return AttendanceListDTO.builder()
-                    .scheduleId(quiz.getSchedule().getId())
-                    .quizId(quiz.getId())
+                    .scheduleId(studyQuiz.getStudySchedule().getId())
+                    .quizId(studyQuiz.getId())
                     .studyMembers(studyMembers)
                     .build();
         }
@@ -85,12 +85,12 @@ public class StudyQuizResponseDTO {
         private final Boolean isOwned;
         private final Boolean isAttending;
 
-        public static StudyMemberDTO toDTO(MemberStudy memberStudy, Boolean isAttending) {
+        public static StudyMemberDTO toDTO(StudyMember studyMember, Boolean isAttending) {
             return StudyMemberDTO.builder()
-                    .memberId(memberStudy.getMember().getId())
-                    .name(memberStudy.getMember().getName())
-                    .profileImage(memberStudy.getMember().getProfileImage())
-                    .isOwned(memberStudy.getIsOwned())
+                    .memberId(studyMember.getMember().getId())
+                    .name(studyMember.getMember().getName())
+                    .profileImage(studyMember.getMember().getProfileImage())
+                    .isOwned(studyMember.getIsOwned())
                     .isAttending(isAttending)
                     .build();
         }

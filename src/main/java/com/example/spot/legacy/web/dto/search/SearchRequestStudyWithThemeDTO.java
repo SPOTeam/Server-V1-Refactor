@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.search;
 
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 

@@ -2,18 +2,14 @@ package com.example.spot.service.studyattendance;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Quiz;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.*;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberAttendance;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Schedule;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberAttendanceRepository;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.QuizRepository;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.ScheduleRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyQuizRequestDTO;
@@ -53,14 +49,14 @@ class StudyAttendanceCommandServiceTest {
     @Mock
     private StudyRepository studyRepository;
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Mock
-    private ScheduleRepository scheduleRepository;
+    private StudyScheduleRepository studyScheduleRepository;
     @Mock
-    private QuizRepository quizRepository;
+    private StudyQuizRepository studyQuizRepository;
     @Mock
-    private MemberAttendanceRepository memberAttendanceRepository;
+    private StudyQuizSubmissionRepository studyQuizSubmissionRepository;
 
     @InjectMocks
     private MemberStudyCommandServiceImpl memberStudyCommandService;
@@ -69,20 +65,20 @@ class StudyAttendanceCommandServiceTest {
     private static Member member1;
     private static Member member2;
     private static Member owner;
-    private static MemberStudy member1Study;
-    private static MemberStudy ownerStudy;
-    private static Schedule schedule;
-    private static Quiz quiz1;
-    private static MemberAttendance member1Attendance;
-    private static MemberAttendance member1Attendance2;
-    private static MemberAttendance member1Attendance3;
-    private static MemberAttendance ownerAttendance;
+    private static StudyMember member1Study;
+    private static StudyMember ownerStudy;
+    private static StudySchedule studySchedule;
+    private static StudyQuiz studyQuiz1;
+    private static StudyQuizSubmission member1Attendance;
+    private static StudyQuizSubmission member1Attendance2;
+    private static StudyQuizSubmission member1Attendance3;
+    private static StudyQuizSubmission ownerAttendance;
 
     @Mock
-    private static Quiz quiz2;
+    private static StudyQuiz studyQuiz2;
 
     @Mock
-    private static MemberAttendance mockAttendance;
+    private static StudyQuizSubmission mockAttendance;
 
     private static final LocalDate date = LocalDate.now();
     private static final LocalDateTime now = LocalDateTime.now();
@@ -100,16 +96,16 @@ class StudyAttendanceCommandServiceTest {
 
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
 
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndIsOwned(owner.getId(), 1L, Boolean.TRUE))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(owner.getId(), 1L, Boolean.TRUE))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberStudyRepository.findAllByStudyIdAndStatus(1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findAllByStudyIdAndStatus(1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
 
-        when(scheduleRepository.findById(schedule.getId())).thenReturn(Optional.of(schedule));
+        when(studyScheduleRepository.findById(studySchedule.getId())).thenReturn(Optional.of(studySchedule));
     }
 
     @Test
@@ -125,17 +121,17 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
+        when(studyQuizRepository.save(any(StudyQuiz.class))).thenReturn(studyQuiz2);
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
+        StudyQuizResponseDTO.QuizDTO result = memberStudyCommandService.createAttendanceQuiz(studyId, studySchedule.getId(), quizRequestDTO);
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getQuestion()).isEqualTo("최고의 스터디 앱은?");
-        verify(quizRepository, times(1)).save(any(Quiz.class));
+        verify(studyQuizRepository, times(1)).save(any(StudyQuiz.class));
     }
 
     @Test
@@ -149,12 +145,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
+        when(studyQuizRepository.save(any(StudyQuiz.class))).thenReturn(studyQuiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, studySchedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -168,12 +164,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
+        when(studyQuizRepository.save(any(StudyQuiz.class))).thenReturn(studyQuiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, studySchedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -187,12 +183,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
+        when(studyQuizRepository.save(any(StudyQuiz.class))).thenReturn(studyQuiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, studySchedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -209,12 +205,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizRepository.save(any(StudyQuiz.class))).thenReturn(studyQuiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, studySchedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -226,19 +222,19 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now);
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, member1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of(member1Attendance));
 
         // when
@@ -250,7 +246,7 @@ class StudyAttendanceCommandServiceTest {
         assertThat(result.getTryNum()).isEqualTo(2);
         assertThat(result.getIsCorrect()).isEqualTo(true);
 
-        verify(memberAttendanceRepository, times(1)).save(any(MemberAttendance.class));
+        verify(studyQuizSubmissionRepository, times(1)).save(any(StudyQuizSubmission.class));
     }
 
     @Test
@@ -262,17 +258,17 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, member2.getId()))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, member2.getId()))
                 .thenReturn(List.of());
 
         // when & then
@@ -298,12 +294,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, member1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of(member1Attendance));
 
         // when & then
@@ -319,7 +315,7 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         // 사용자 인증 정보 생성
         getAuthentication(member1.getId());
@@ -332,12 +328,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, member1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of());
 
         // when & then
@@ -353,7 +349,7 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         // 사용자 인증 정보 생성
         StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now.plusMinutes(5).plusNanos(1));
@@ -361,12 +357,12 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, member1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3));
 
         // when & then
@@ -382,19 +378,19 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(owner, now.plusMinutes(5).plusNanos(1));
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.save(any(MemberAttendance.class))).thenReturn(mockAttendance);
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.save(any(StudyQuizSubmission.class))).thenReturn(mockAttendance);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberAttendanceRepository.findByQuizIdAndMemberId(null, owner.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(null, owner.getId()))
                 .thenReturn(List.of(ownerAttendance));
 
         // when & then
@@ -410,7 +406,7 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         // 사용자 인증 정보 생성
         getAuthentication(owner.getId());
@@ -418,11 +414,11 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = date.atStartOfDay();             // 오늘 날짜
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);   // 내일 날짜
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(studySchedule.getId(), startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberAttendanceRepository.findByQuizId(quiz1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when
@@ -432,7 +428,7 @@ class StudyAttendanceCommandServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getQuestion()).isEqualTo("최고의 스터디 앱은?");
         assertThat(result.getCreatedAt()).isEqualTo(now);
-        verify(quizRepository, times(1)).delete(any(Quiz.class));
+        verify(studyQuizRepository, times(1)).delete(any(StudyQuiz.class));
     }
 
     @Test
@@ -452,11 +448,11 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = date.atStartOfDay();             // 오늘 날짜
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);   // 내일 날짜
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(2L, startOfDay, endOfDay))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(2L, startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberAttendanceRepository.findByQuizId(quiz1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
@@ -472,7 +468,7 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         // 사용자 인증 정보 생성
         getAuthentication(member2.getId());
@@ -480,9 +476,9 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = date.atStartOfDay();             // 오늘 날짜
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);   // 내일 날짜
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberAttendanceRepository.findByQuizId(quiz1.getId()))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
@@ -498,7 +494,7 @@ class StudyAttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        Long scheduleId = schedule.getId();
+        Long scheduleId = studySchedule.getId();
 
         // 사용자 인증 정보 생성
         getAuthentication(member1.getId());
@@ -506,11 +502,11 @@ class StudyAttendanceCommandServiceTest {
         LocalDateTime startOfDay = date.atStartOfDay();             // 오늘 날짜
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);   // 내일 날짜
 
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
-                .thenReturn(List.of(quiz1));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, ApplicationStatus.APPROVED))
+        when(studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
+                .thenReturn(List.of(studyQuiz1));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberAttendanceRepository.findByQuizId(quiz1.getId()))
+        when(studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
@@ -522,15 +518,15 @@ class StudyAttendanceCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -551,17 +547,17 @@ class StudyAttendanceCommandServiceTest {
     }
 
     private static void initMemberStudy() {
-        ownerStudy = MemberStudy.builder()
+        ownerStudy = StudyMember.builder()
                 .id(1L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(true)
                 .introduction("Hi")
                 .member(owner)
                 .study(study)
                 .build();
-        member1Study = MemberStudy.builder()
+        member1Study = StudyMember.builder()
                 .id(2L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(false)
                 .introduction("Hi")
                 .member(member1)
@@ -570,51 +566,51 @@ class StudyAttendanceCommandServiceTest {
     }
 
     private static void initSchedule() {
-        schedule = Schedule.builder()
+        studySchedule = StudySchedule.builder()
                 .id(1L)
                 .study(study)
                 .member(owner)
                 .build();
-        study.addSchedule(schedule);
-        owner.addSchedule(schedule);
+        study.addSchedule(studySchedule);
+        owner.addSchedule(studySchedule);
     }
 
     private static void initQuiz() {
-        quiz1 = Quiz.builder()
-                .schedule(schedule)
+        studyQuiz1 = StudyQuiz.builder()
+                .schedule(studySchedule)
                 .member(owner)
                 .question("최고의 스터디 앱은?")
                 .answer("SPOT")
                 .createdAt(now)
                 .build();
-        quiz1.addMemberAttendance(member1Attendance);
-        quiz1.addMemberAttendance(ownerAttendance);
+        studyQuiz1.addMemberAttendance(member1Attendance);
+        studyQuiz1.addMemberAttendance(ownerAttendance);
     }
 
     private static void initMemberAttendance() {
-        member1Attendance = MemberAttendance.builder()
+        member1Attendance = StudyQuizSubmission.builder()
                 .isCorrect(false)
                 .build();
         member1Attendance.setMember(member1);
-        member1Attendance.setQuiz(quiz1);
+        member1Attendance.setStudyQuiz(studyQuiz1);
 
-        ownerAttendance = MemberAttendance.builder()
+        ownerAttendance = StudyQuizSubmission.builder()
                 .isCorrect(true)
                 .build();
         ownerAttendance.setMember(owner);
-        ownerAttendance.setQuiz(quiz1);
+        ownerAttendance.setStudyQuiz(studyQuiz1);
 
-        member1Attendance2 = MemberAttendance.builder()
+        member1Attendance2 = StudyQuizSubmission.builder()
                 .isCorrect(false)
                 .build();
         member1Attendance2.setMember(member1);
-        member1Attendance2.setQuiz(quiz1);
+        member1Attendance2.setStudyQuiz(studyQuiz1);
 
-        member1Attendance3 = MemberAttendance.builder()
+        member1Attendance3 = StudyQuizSubmission.builder()
                 .isCorrect(false)
                 .build();
         member1Attendance3.setMember(member1);
-        member1Attendance3.setQuiz(quiz1);
+        member1Attendance3.setStudyQuiz(studyQuiz1);
     }
 
     private static void getAuthentication(Long memberId) {
@@ -637,8 +633,8 @@ class StudyAttendanceCommandServiceTest {
                 .answer("answer")
                 .build();
 
-        quiz2 = Quiz.builder()
-                .schedule(schedule)
+        studyQuiz2 = StudyQuiz.builder()
+                .schedule(studySchedule)
                 .member(member1)
                 .question("최고의 스터디 앱은?")
                 .answer("SPOT")
@@ -665,11 +661,11 @@ class StudyAttendanceCommandServiceTest {
                 .answer("SPOT")
                 .build();
 
-        mockAttendance = MemberAttendance.builder()
+        mockAttendance = StudyQuizSubmission.builder()
                 .isCorrect(true)
                 .build();
         mockAttendance.setMember(owner);
-        mockAttendance.setQuiz(quiz1);
+        mockAttendance.setStudyQuiz(studyQuiz1);
         return attendanceRequestDTO;
     }
 }

@@ -8,7 +8,7 @@ import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.legacy.domain.enums.Reason;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.legacy.repository.StudyReasonRepository;
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 import com.example.spot.refactor.member.domain.Member;
@@ -195,7 +195,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 테마 정보 조회
         List<Theme> themes = requestDTO.getThemes().stream()
-            .map(themeType -> themeRepository.findByStudyTheme(themeType).orElseThrow(() -> new GeneralException(ErrorStatus._THEME_NOT_FOUND)))
+            .map(themeType -> themeRepository.findByThemeType(themeType).orElseThrow(() -> new GeneralException(ErrorStatus._THEME_NOT_FOUND)))
             .toList();
 
         // MemberTheme 객체 생성
@@ -512,7 +512,7 @@ public class MemberServiceImpl implements MemberService {
             .toList();
 
         List<ThemeType> themeTypes = themes.stream()
-            .map(Theme::getStudyTheme)
+            .map(Theme::getThemeType)
             .toList();
 
         return MemberResponseDTO.MemberThemeDTO.builder()

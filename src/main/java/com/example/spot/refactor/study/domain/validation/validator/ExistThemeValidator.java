@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistTheme;
 import jakarta.validation.ConstraintValidator;
@@ -31,7 +31,7 @@ public class ExistThemeValidator implements ConstraintValidator<ExistTheme, Stri
         } else {
             try {
                 ThemeType themeType = ThemeType.valueOf(value.toUpperCase());
-                isValid = themeRepository.existsByStudyTheme(themeType);
+                isValid = themeRepository.existsByThemeType(themeType);
                 errorStatus = isValid ? null : ErrorStatus._STUDY_THEME_NOT_FOUND;
             } catch (IllegalArgumentException e) {
                 isValid = false;

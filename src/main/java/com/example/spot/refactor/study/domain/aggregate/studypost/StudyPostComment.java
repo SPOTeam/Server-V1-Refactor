@@ -59,7 +59,7 @@ public class StudyPostComment extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "studyPostComment", cascade = CascadeType.ALL)
-    private List<StudyLikedComment> likedComments = new ArrayList<>();
+    private List<LikedStudyComment> likedComments = new ArrayList<>();
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
@@ -68,13 +68,13 @@ public class StudyPostComment extends BaseEntity {
         studyPostComment.setParentComment(this);
     }
 
-    public void addLikedComment(StudyLikedComment studyLikedComment) {
-        likedComments.add(studyLikedComment);
-        studyLikedComment.setStudyPostComment(this);
+    public void addLikedComment(LikedStudyComment likedStudyComment) {
+        likedComments.add(likedStudyComment);
+        likedStudyComment.setStudyPostComment(this);
     }
 
-    public void deleteLikedComment(StudyLikedComment studyLikedComment) {
-        likedComments.remove(studyLikedComment);
+    public void deleteLikedComment(LikedStudyComment likedStudyComment) {
+        likedComments.remove(likedStudyComment);
     }
 
     public void deleteComment() {

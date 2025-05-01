@@ -6,14 +6,14 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
-import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
@@ -21,7 +21,7 @@ import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
@@ -77,7 +77,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
 
     // 스터디 관련 조회
     private final StudyRepository studyRepository;
-    private final MemberStudyRepository memberStudyRepository;
+    private final StudyMemberRepository studyMemberRepository;
     private final PreferredStudyRepository preferredStudyRepository;
 
     // 관심사 관련 조회
@@ -140,15 +140,15 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
-        List<MemberStudy> memberStudyList = study.getMemberStudies().stream()
-                .filter(MemberStudy::getIsOwned)
+        List<StudyMember> studyMemberList = study.getMemberStudies().stream()
+                .filter(StudyMember::getIsOwned)
                 .toList();
 
-        if (memberStudyList.isEmpty()) {
+        if (studyMemberList.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_OWNER_NOT_FOUND);
         }
 
-        Member owner = memberStudyList.get(0).getMember();
+        Member owner = studyMemberList.get(0).getMember();
         study.increaseHit();
         return StudyInfoResponseDTO.StudyInfoDTO.toDTO(study, owner);
     }
@@ -166,11 +166,11 @@ public class StudyQueryServiceImpl implements StudyQueryService {
             .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 내가 신청한 스터디 수
-        long appliedStudies = memberStudyRepository.countByMemberIdAndStatusAndStudy_Status(memberId, ApplicationStatus.APPLIED, Status.ON);
+        long appliedStudies = studyMemberRepository.countByMemberIdAndStatusAndStudy_Status(memberId, StudyApplicationStatus.APPLIED, Status.ON);
         // 내가 참여중인 스터디 수
-        long ongoingStudies = memberStudyRepository.countByMemberIdAndStatusAndStudy_Status(memberId, ApplicationStatus.APPROVED, Status.ON);
+        long ongoingStudies = studyMemberRepository.countByMemberIdAndStatusAndStudy_Status(memberId, StudyApplicationStatus.APPROVED, Status.ON);
         // 내가 모집중인 스터디 수
-        long myRecruitingStudies = memberStudyRepository.countByMemberIdAndIsOwnedAndStudy_Status(memberId, true, Status.ON);
+        long myRecruitingStudies = studyMemberRepository.countByMemberIdAndIsOwnedAndStudy_Status(memberId, true, Status.ON);
 
         return MyPageDTO.builder()
             .name(member.getName())
@@ -409,7 +409,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable,
-        Long memberId, SearchRequestStudyDTO request, ThemeType themeType, StudySortBy sortBy) {
+                                                                   Long memberId, SearchRequestStudyDTO request, ThemeType themeType, StudySortBy sortBy) {
 
         // 회원이 참가하고 있는 스터디 ID 가져오기
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
@@ -425,7 +425,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
             throw new MemberHandler(ErrorStatus._STUDY_THEME_IS_INVALID);
 
         // 회원이 입력한 관심사가 등록된 관심사와 다른 경우
-        if (themes.stream().noneMatch(theme -> theme.getStudyTheme().equals(themeType)))
+        if (themes.stream().noneMatch(theme -> theme.getThemeType().equals(themeType)))
             throw new MemberHandler(ErrorStatus._BAD_REQUEST);
 
 
@@ -700,7 +700,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
     @Override
     public StudyPreviewDTO findStudiesByTheme(Pageable pageable, ThemeType theme, StudySortBy sortBy) {
         // 테마로 스터디 조회
-        Theme themeEntity = themeRepository.findByStudyTheme(theme)
+        Theme themeEntity = themeRepository.findByThemeType(theme)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._BAD_REQUEST));
 
         // 테마에 해당하는 스터디 테마 조회
@@ -737,8 +737,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
     @Override
     public StudyPreviewDTO findOngoingStudiesByMemberId(Pageable pageable, Long memberId) {
         // 회원이 참가하고 있는 스터디 ID 가져오기
-        List<MemberStudy> memberStudies = memberStudyRepository.findAllByMemberIdAndStatus(
-            memberId, ApplicationStatus.APPROVED);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByMemberIdAndStatus(
+            memberId, StudyApplicationStatus.APPROVED);
 
         // 회원이 참가하고 있는 스터디가 없을 경우
         if (memberStudies.isEmpty())
@@ -776,8 +776,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
     @Override
     public StudyPreviewDTO findAppliedStudies(Pageable pageable, Long memberId) {
         // 회원이 신청한 스터디 조회
-        List<MemberStudy> memberStudies = memberStudyRepository.findAllByMemberIdAndStatus(
-            memberId, ApplicationStatus.APPLIED);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByMemberIdAndStatus(
+            memberId, StudyApplicationStatus.APPLIED);
 
         // 회원이 신청한 스터디가 없을 경우
         if (memberStudies.isEmpty())
@@ -812,7 +812,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
     @Override
     public StudyPreviewDTO findMyRecruitingStudies(Pageable pageable, Long memberId) {
         // 회원이 모집중인 스터디 조회
-        List<MemberStudy> memberStudies = memberStudyRepository.findAllByMemberIdAndIsOwned(memberId, true);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByMemberIdAndIsOwned(memberId, true);
 
         // 회원이 모집중인 스터디가 없을 경우
         if (memberStudies.isEmpty())
@@ -851,10 +851,10 @@ public class StudyQueryServiceImpl implements StudyQueryService {
             throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
 
         // 회원이 참가하고 있는 스터디 ID 가져오기
-        List<MemberStudy> memberStudies = memberStudyRepository.findAllByMemberIdAndStatus(memberId, ApplicationStatus.APPROVED);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByMemberIdAndStatus(memberId, StudyApplicationStatus.APPROVED);
 
         return memberStudies.stream()
-            .filter(memberStudy -> memberStudy.getStatus().equals(ApplicationStatus.APPROVED))
+            .filter(memberStudy -> memberStudy.getStatus().equals(StudyApplicationStatus.APPROVED))
                 .filter(memberStudy -> memberStudy.getStudy().getStatus().equals(Status.ON))
             .map(memberStudy -> memberStudy.getStudy().getId())
             .toList();
@@ -965,7 +965,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     private Theme findThemeByType(List<Theme> themes, ThemeType themeType) {
         return themes.stream()
-            .filter(t -> t.getStudyTheme().equals(themeType))
+            .filter(t -> t.getThemeType().equals(themeType))
             .findFirst()
             .orElseThrow(() -> new StudyHandler(ErrorStatus._BAD_REQUEST));
     }

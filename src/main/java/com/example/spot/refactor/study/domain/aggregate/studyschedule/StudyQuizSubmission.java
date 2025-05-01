@@ -1,15 +1,14 @@
-package com.example.spot.refactor.study.domain.aggregate.studymember;
+package com.example.spot.refactor.study.domain.aggregate.studyschedule;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Quiz;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAttendance extends BaseEntity {
+public class StudyQuizSubmission extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +27,13 @@ public class MemberAttendance extends BaseEntity {
     //== 출석 ==//
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quiz_id", nullable = false)
-    private Quiz quiz;
+    @JoinColumn(name = "study_quiz_id", nullable = false)
+    private StudyQuiz studyQuiz;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public MemberAttendance(Boolean isCorrect) {
+    public StudyQuizSubmission(Boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
 

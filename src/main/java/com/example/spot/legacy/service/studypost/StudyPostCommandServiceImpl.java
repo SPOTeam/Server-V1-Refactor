@@ -5,24 +5,15 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studypost.*;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImage;
+import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPost;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.legacy.repository.NotificationRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedCommentRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedPostRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostCommentRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImageRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostReportRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;
@@ -51,12 +42,12 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
 
-    private final MemberStudyRepository memberStudyRepository;
+    private final StudyMemberRepository studyMemberRepository;
     private final StudyPostRepository studyPostRepository;
     private final StudyPostImageRepository studyPostImageRepository;
     private final StudyPostCommentRepository studyPostCommentRepository;
-    private final StudyLikedPostRepository studyLikedPostRepository;
-    private final StudyLikedCommentRepository studyLikedCommentRepository;
+    private final LikedStudyPostRepository likedStudyPostRepository;
+    private final LikedStudyCommentRepository likedStudyCommentRepository;
     private final StudyPostReportRepository studyPostReportRepository;
     private final NotificationRepository notificationRepository;
 
@@ -82,15 +73,15 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 스터디장만 공지 가능
-        MemberStudy memberStudy = memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        StudyMember memberStudy = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
         if (!memberStudy.getIsOwned() && postRequestDTO.getIsAnnouncement()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_ANNOUNCEMENT_INVALID);
@@ -99,7 +90,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         //=== Feature ===//
         StudyPost studyPost = StudyPost.builder()
                 .isAnnouncement(postRequestDTO.getIsAnnouncement())
-                .theme(postRequestDTO.getTheme())
+                .studyPostCategory(postRequestDTO.getStudyPostCategory())
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .likeNum(0)
@@ -132,9 +123,9 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         if (studyPost.getIsAnnouncement()){
 
             // 스터디에 참여중인 회원들에게 알림 전송 위해 회원 조회
-            List<Member> members = memberStudyRepository.findAllByStudyIdAndStatus(
-                studyPost.getStudy().getId(), ApplicationStatus.APPROVED).stream()
-                    .map(MemberStudy::getMember)
+            List<Member> members = studyMemberRepository.findAllByStudyIdAndStatus(
+                studyPost.getStudy().getId(), StudyApplicationStatus.APPROVED).stream()
+                    .map(StudyMember::getMember)
                         .toList();
 
             if (members.isEmpty())
@@ -174,7 +165,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        MemberStudy memberStudy = memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED)
+        StudyMember studyMember = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 게시글 작성자인지 확인
@@ -182,7 +173,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_UPDATE_INVALID));
 
         // 스터디장만 공지 가능
-        if (!memberStudy.getIsOwned() && postDTO.getIsAnnouncement()) {
+        if (!studyMember.getIsOwned() && postDTO.getIsAnnouncement()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_ANNOUNCEMENT_INVALID);
         }
 
@@ -231,7 +222,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -240,7 +231,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
 
         // 로그인 회원이 게시글 작성자거나 owner인지 확인
         Long ownerId = studyPost.getStudy().getMemberStudies().stream()
-                .filter(MemberStudy::getIsOwned)
+                .filter(StudyMember::getIsOwned)
                 .map(memberStudy -> memberStudy.getMember().getId())
                 .findFirst()
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_OWNER_NOT_FOUND));
@@ -250,7 +241,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
 
             studyPostImageRepository.deleteAllByStudyPostId(postId);
             studyPostCommentRepository.deleteAllByStudyPostId(postId);
-            studyLikedPostRepository.deleteAllByStudyPostId(postId);
+            likedStudyPostRepository.deleteAllByStudyPostId(postId);
             studyPostReportRepository.deleteAllByStudyPostId(postId);
 
             member.deleteStudyPost(studyPost);
@@ -286,7 +277,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -294,19 +285,19 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 이미 좋아요를 눌렀다면 다시 좋아요 할 수 없음
-        if (studyLikedPostRepository.findByMemberIdAndStudyPostId(memberId, postId).isPresent()) {
+        if (likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_ALREADY_LIKED);
         }
 
         //=== Feature ===//
-        StudyLikedPost studyLikedPost = StudyLikedPost.builder()
+        LikedStudyPost likedStudyPost = LikedStudyPost.builder()
                 .member(member)
                 .studyPost(studyPost)
                 .build();
 
-        studyLikedPost = studyLikedPostRepository.save(studyLikedPost);
-        member.addStudyLikedPost(studyLikedPost);
-        studyPost.addLikedPost(studyLikedPost);
+        likedStudyPost = likedStudyPostRepository.save(likedStudyPost);
+        member.addStudyLikedPost(likedStudyPost);
+        studyPost.addLikedPost(likedStudyPost);
 
         studyPost.plusLikeNum();
         studyPost = studyPostRepository.save(studyPost);
@@ -336,7 +327,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -344,13 +335,13 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         //=== Feature ===//
-        StudyLikedPost studyLikedPost = studyLikedPostRepository.findByMemberIdAndStudyPostId(memberId, postId)
+        LikedStudyPost likedStudyPost = likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_LIKED_POST_NOT_FOUND));
 
-        member.deleteStudyLikedPost(studyLikedPost);
-        studyPost.deleteLikedPost(studyLikedPost);
+        member.deleteStudyLikedPost(likedStudyPost);
+        studyPost.deleteLikedPost(likedStudyPost);
         studyPost.minusLikeNum();
-        studyLikedPostRepository.delete(studyLikedPost);
+        likedStudyPostRepository.delete(likedStudyPost);
         studyPostRepository.save(studyPost);
 
         return StudyPostResDTO.PostLikeNumDTO.toDTO(studyPost);
@@ -380,7 +371,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -435,7 +426,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -534,7 +525,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -613,7 +604,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
@@ -621,25 +612,25 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 이미 좋아요나 싫어요를 눌렀다면 싫어요 할 수 없음
-        if (studyLikedCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE).isPresent()) {
+        if (likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_ALREADY_LIKED);
         }
-        if (studyLikedCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE).isPresent()) {
+        if (likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_ALREADY_DISLIKED);
         }
 
         //=== Feature ===//
-        StudyLikedComment studyLikedComment = StudyLikedComment.builder()
+        LikedStudyComment likedStudyComment = LikedStudyComment.builder()
                 .studyPostComment(studyPostComment)
                 .member(member)
                 .isLiked(isLiked)
                 .build();
 
-        studyLikedComment = studyLikedCommentRepository.save(studyLikedComment);
-        member.addStudyLikedComment(studyLikedComment);
-        studyPostComment.addLikedComment(studyLikedComment);
+        likedStudyComment = likedStudyCommentRepository.save(likedStudyComment);
+        member.addStudyLikedComment(likedStudyComment);
+        studyPostComment.addLikedComment(likedStudyComment);
 
-        if (studyLikedComment.getIsLiked()) {
+        if (likedStudyComment.getIsLiked()) {
             studyPostComment.plusLikeCount();
         } else {
             studyPostComment.plusDislikeCount();
@@ -663,10 +654,10 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
 
-        StudyLikedComment studyLikedComment = studyLikedCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE)
+        LikedStudyComment likedStudyComment = likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_LIKED_COMMENT_NOT_FOUND));
 
-        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, studyLikedComment);
+        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStudyComment);
         return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
     }
 
@@ -684,10 +675,10 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
 
-        StudyLikedComment studyLikedComment = studyLikedCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE)
+        LikedStudyComment likedStudyComment = likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_DISLIKED_COMMENT_NOT_FOUND));
 
-        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, studyLikedComment);
+        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStudyComment);
         return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
     }
 
@@ -697,10 +688,10 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
      * @param postId 타겟이 되는 스터디 게시글의 아이디를 입력 받습니다.
      * @param commentId 좋아요 혹은 싫어요를 취소할 타겟 댓글의 아이디를 입력 받습니다.
      * @param memberId 댓글에 좋아요 혹은 싫어요를 누른 회원의 아이디를 입력 받습니다.
-     * @param studyLikedComment DB에서 삭제할 StudyLikedComment 객체를 입력 받습니다.
+     * @param likedStudyComment DB에서 삭제할 StudyLikedComment 객체를 입력 받습니다.
      * @return 삭제된 StudyLikedComment 객체를 반환합니다.
      */
-    private StudyPostComment deleteStudyLikedComment(Long studyId, Long postId, Long commentId, Long memberId, StudyLikedComment studyLikedComment) {
+    private StudyPostComment deleteStudyLikedComment(Long studyId, Long postId, Long commentId, Long memberId, LikedStudyComment likedStudyComment) {
 
         //=== Exception ===//
         Member member = memberRepository.findById(memberId)
@@ -713,25 +704,25 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 댓글에 반응한 사람인지 확인
-        if (!studyLikedComment.getMember().equals(member)) {
+        if (!likedStudyComment.getMember().equals(member)) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_DELETE_INVALID);
         }
 
         //=== Feature ===//
-        member.deleteStudyLikedComment(studyLikedComment);
-        studyPostComment.deleteLikedComment(studyLikedComment);
+        member.deleteStudyLikedComment(likedStudyComment);
+        studyPostComment.deleteLikedComment(likedStudyComment);
 
-        if (studyLikedComment.getIsLiked()) {
+        if (likedStudyComment.getIsLiked()) {
             studyPostComment.minusLikeCount();
         } else {
             studyPostComment.minusDislikeCount();
         }
 
-        studyLikedCommentRepository.delete(studyLikedComment);
+        likedStudyCommentRepository.delete(likedStudyComment);
         studyPostCommentRepository.save(studyPostComment);
         return studyPostComment;
     }

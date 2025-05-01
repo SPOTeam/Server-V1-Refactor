@@ -1,8 +1,8 @@
 package com.example.spot.refactor.study.domain.repository;
 
 import com.example.spot.refactor.member.domain.enums.Status;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
@@ -34,8 +34,8 @@ public interface StudyRepositoryCustom {
 
     List<Study> findByStudyTheme(List<StudyTheme> studyTheme, StudySortBy sortBy, Pageable pageable);
 
-    List<Study> findByMemberStudy(List<MemberStudy> memberStudy, Pageable pageable);
-    List<Study> findRecruitingStudiesByMemberStudy(List<MemberStudy> memberStudy, Pageable pageable);
+    List<Study> findByMemberStudy(List<StudyMember> studyMember, Pageable pageable);
+    List<Study> findRecruitingStudiesByMemberStudy(List<StudyMember> studyMember, Pageable pageable);
 
     long countStudyByConditionsAndThemeTypesAndNotInIds(
         Map<String, Object> search, List<StudyTheme> themeTypes, StudySortBy sortBy, List<Long> studyIds);
@@ -47,7 +47,7 @@ public interface StudyRepositoryCustom {
 
     long countAllByTitleContaining(String title, StudySortBy sortBy);
 
-    long countByMemberStudiesAndStatus(List<MemberStudy> memberStudies, Status status);
-    long countByMemberStudiesAndStatusAndIsOwned(List<MemberStudy> memberStudies, Status status, boolean isOwned);
+    long countByMemberStudiesAndStatus(List<StudyMember> memberStudies, Status status);
+    long countByMemberStudiesAndStatusAndIsOwned(List<StudyMember> memberStudies, Status status, boolean isOwned);
 
 }

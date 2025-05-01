@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OptionRepository extends JpaRepository<Option, Long> {
+public interface StudyVoteOptionRepository extends JpaRepository<StudyVoteOption, Long> {
 
-    Optional<Option> findByIdAndVoteId(Long optionId, Long voteId);
+    Optional<StudyVoteOption> findByIdAndStudyVoteId(Long optionId, Long studyVoteId);
 
-    List<Option> findAllByVoteId(Long voteId);
+    List<StudyVoteOption> findAllByStudyVoteId(Long studyVoteId);
 }

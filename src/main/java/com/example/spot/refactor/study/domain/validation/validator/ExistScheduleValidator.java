@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.ScheduleRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyScheduleRepository;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistSchedule;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExistScheduleValidator implements ConstraintValidator<ExistSchedule, Long> {
 
-    private final ScheduleRepository scheduleRepository;
+    private final StudyScheduleRepository studyScheduleRepository;
 
     @Override
     public void initialize(ExistSchedule constraintAnnotation) {}
@@ -28,7 +28,7 @@ public class ExistScheduleValidator implements ConstraintValidator<ExistSchedule
             errorStatus = ErrorStatus._STUDY_SCHEDULE_ID_NULL;
         } else {
             errorStatus = ErrorStatus._STUDY_SCHEDULE_NOT_FOUND;
-            isValid = scheduleRepository.existsById(scheduleId);
+            isValid = studyScheduleRepository.existsById(scheduleId);
         }
 
         if (!isValid) {

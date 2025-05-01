@@ -4,12 +4,12 @@ import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Schedule;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.ToDoList;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.Vote;
+import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
@@ -90,7 +90,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<Schedule> schedules = new ArrayList<>();
+    private List<StudySchedule> studySchedules = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -98,7 +98,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<Vote> votes = new ArrayList<>();
+    private List<StudyVote> studyVotes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -106,7 +106,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<MemberStudy> memberStudies = new ArrayList<>();
+    private List<StudyMember> memberStudies = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -122,7 +122,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<ToDoList> toDoLists = new ArrayList<>();
+    private List<StudyToDo> studyToDos = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -130,9 +130,9 @@ public class Study extends BaseEntity {
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addMemberStudy(MemberStudy memberStudy) {
-        memberStudies.add(memberStudy);
-        memberStudy.setStudy(this);
+    public void addMemberStudy(StudyMember studyMember) {
+        memberStudies.add(studyMember);
+        studyMember.setStudy(this);
     }
 
     public void addRegionStudy(RegionStudy regionStudy) {
@@ -151,18 +151,18 @@ public class Study extends BaseEntity {
         this.heartCount++;
     }
 
-    public void addSchedule(Schedule schedule) {
-        schedules.add(schedule);
-        schedule.setStudy(this);
+    public void addSchedule(StudySchedule studySchedule) {
+        studySchedules.add(studySchedule);
+        studySchedule.setStudy(this);
     }
 
-    public void addVote(Vote vote) {
-        votes.add(vote);
-        vote.setStudy(this);
+    public void addVote(StudyVote studyVote) {
+        studyVotes.add(studyVote);
+        studyVote.setStudy(this);
     }
 
-    public void updateSchedule(Schedule schedule) {
-        schedules.set(schedules.indexOf(schedule), schedule);
+    public void updateSchedule(StudySchedule studySchedule) {
+        studySchedules.set(studySchedules.indexOf(studySchedule), studySchedule);
     }
 
     public void addStudyPost(StudyPost studyPost) {
@@ -191,16 +191,16 @@ public class Study extends BaseEntity {
         this.hitNum++;
     }
 
-    public void updateVote(Vote vote) {
-        votes.set(votes.indexOf(vote), vote);
+    public void updateVote(StudyVote studyVote) {
+        studyVotes.set(studyVotes.indexOf(studyVote), studyVote);
     }
 
-    public void deleteVote(Vote vote) {
-        votes.remove(vote);
+    public void deleteVote(StudyVote studyVote) {
+        studyVotes.remove(studyVote);
     }
 
-    public void addToDoList(ToDoList toDoList) {
-        toDoLists.add(toDoList);
+    public void addToDoList(StudyToDo studyToDo) {
+        studyToDos.add(studyToDo);
     }
 
     public void terminateStudy(String performance) {

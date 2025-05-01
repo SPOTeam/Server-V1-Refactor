@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.memberstudy.request;
 
-import com.example.spot.refactor.study.domain.enums.Period;
+import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class ScheduleRequestDTO {
         private LocalDateTime startedAt;
         private LocalDateTime finishedAt;
         private Boolean isAllDay; // 종일 진행 여부
-        private Period period; // 반복 일정 여부
+        private StudySchedulePeriod studySchedulePeriod; // 반복 일정 여부
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.memberstudy.request;
 
-import com.example.spot.refactor.study.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class StudyPostRequestDTO {
 
         @NotNull
         @Schema(description = "테마", example = "WELCOME")
-        private Theme theme;
+        private StudyPostCategory studyPostCategory;
 
         @NotNull
         @TextLength(min = 1, max = 50)

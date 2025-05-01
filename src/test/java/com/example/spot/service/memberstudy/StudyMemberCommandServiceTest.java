@@ -9,15 +9,15 @@ import static org.mockito.Mockito.when;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.ToDoList;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.ToDoListRepository;
+import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
@@ -45,7 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class MemberStudyCommandServiceTest {
+public class StudyMemberCommandServiceTest {
 
     @InjectMocks
     private MemberStudyCommandServiceImpl memberStudyCommandService;
@@ -54,13 +54,13 @@ public class MemberStudyCommandServiceTest {
     private StudyRepository studyRepository;
 
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Mock
     private MemberRepository memberRepository;
 
     @Mock
-    private ToDoListRepository toDoListRepository;
+    private StudyToDoRepository studyToDoRepository;
 
     @Mock
     private Study study;
@@ -69,10 +69,10 @@ public class MemberStudyCommandServiceTest {
     private Member member;
 
     @Mock
-    private MemberStudy memberStudy;
+    private StudyMember studyMember;
 
     @Mock
-    private ToDoList toDoList;
+    private StudyToDo studyToDo;
 
     private ToDoListCreateDTO requestDTO;
 
@@ -83,9 +83,9 @@ public class MemberStudyCommandServiceTest {
                 .date(LocalDate.EPOCH)
                 .build();
 
-        given(toDoList.getStudy()).willReturn(study);
+        given(studyToDo.getStudy()).willReturn(study);
         given(study.getId()).willReturn(1L);
-        given(toDoList.getMember()).willReturn(member);
+        given(studyToDo.getMember()).willReturn(member);
         given(member.getId()).willReturn(1L);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken("1", null, Collections.emptyList());
@@ -109,17 +109,17 @@ public class MemberStudyCommandServiceTest {
                 .id(1L)
                 .title("스터디")
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(false)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember));
 
         // when
         StudyWithdrawalResponseDTO.WithdrawalDTO result = memberStudyCommandService.withdrawFromStudy(1L);
@@ -145,16 +145,16 @@ public class MemberStudyCommandServiceTest {
                 .id(1L)
                 .title("스터디")
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(false)
-                .status(ApplicationStatus.APPLIED)
+                .status(StudyApplicationStatus.APPLIED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.empty());
 
         // when & then
@@ -174,17 +174,17 @@ public class MemberStudyCommandServiceTest {
                 .id(1L)
                 .title("스터디")
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(true)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember));
 
         // when & then
         assertThrows(StudyHandler.class, () -> memberStudyCommandService.withdrawFromStudy(1L));
@@ -204,17 +204,17 @@ public class MemberStudyCommandServiceTest {
                 .title("스터디")
                 .status(Status.ON)
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(true)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember));
 
         // when
         StudyTerminationResponseDTO.TerminationDTO result = memberStudyCommandService.terminateStudy(1L, "스터디 성과");
@@ -240,17 +240,17 @@ public class MemberStudyCommandServiceTest {
                 .title("스터디")
                 .status(Status.ON)
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(false)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember));
 
         // when & then
         assertThrows(StudyHandler.class, () -> memberStudyCommandService.terminateStudy(1L, "스터디 성과"));
@@ -270,17 +270,17 @@ public class MemberStudyCommandServiceTest {
                 .title("스터디")
                 .status(Status.OFF)
                 .build();
-        memberStudy = MemberStudy.builder()
+        studyMember = StudyMember.builder()
                 .member(member)
                 .study(study)
                 .isOwned(false)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember));
 
         // when & then
         assertThrows(StudyHandler.class, () -> memberStudyCommandService.terminateStudy(1L, "스터디 성과"));
@@ -294,11 +294,11 @@ public class MemberStudyCommandServiceTest {
     void createToDoList() {
         // given
         when(studyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
-                Optional.ofNullable(memberStudy));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+                Optional.ofNullable(studyMember));
         when(memberRepository.findById(anyLong())).thenReturn(Optional.ofNullable(member));
 
-        when(toDoListRepository.save(any())).thenReturn(toDoList);
+        when(studyToDoRepository.save(any())).thenReturn(studyToDo);
 
         // when
         ToDoListCreateResponseDTO responseDTO = memberStudyCommandService.createToDoList(1L, requestDTO);
@@ -312,7 +312,7 @@ public class MemberStudyCommandServiceTest {
     void ToDo_생성_시_스터디_회원이_아닌_경우() {
         // given
         when(studyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
                 Optional.empty());
 
 
@@ -328,7 +328,7 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 수정 - 성공")
     void ToDo_수정_성공() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
 
         // when
         ToDoListUpdateResponseDTO responseDTO = memberStudyCommandService.updateToDoList(1L,1L,  requestDTO);
@@ -342,7 +342,7 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 수정 - To-Do가 없는 경우")
     void ToDo_수정_시_ToDo가_없는_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -354,9 +354,9 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 수정 - To-Do가 다른 스터디의 것인 경우")
     void ToDo_수정_시_ToDo가_다른_스터디의_것인_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
-        given(toDoList.getStudy()).willReturn(Mockito.mock(Study.class));
-        given(toDoList.getStudy().getId()).willReturn(2L);
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
+        given(studyToDo.getStudy()).willReturn(Mockito.mock(Study.class));
+        given(studyToDo.getStudy().getId()).willReturn(2L);
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -368,9 +368,9 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 수정 - To-Do가 다른 회원의 것인 경우")
     void ToDo_수정_시_ToDo가_다른_회원의_것인_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
-        given(toDoList.getMember()).willReturn(Mockito.mock(Member.class));
-        given(toDoList.getMember().getId()).willReturn(2L);
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
+        given(studyToDo.getMember()).willReturn(Mockito.mock(Member.class));
+        given(studyToDo.getMember().getId()).willReturn(2L);
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -384,22 +384,22 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 삭제 - 성공")
     void ToDo_삭제_성공() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
-                Optional.ofNullable(memberStudy));
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+                Optional.ofNullable(studyMember));
 
         // when
         ToDoListUpdateResponseDTO responseDTO = memberStudyCommandService.deleteToDoList(1L, 1L);
 
         // then
-        verify(toDoListRepository, times(1)).deleteById(1L);
+        verify(studyToDoRepository, times(1)).deleteById(1L);
     }
 
     @Test
     @DisplayName("To-Do 삭제 - To-Do가 없는 경우")
     void ToDo_삭제_시_ToDo가_없는_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -411,9 +411,9 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 삭제 - To-Do가 다른 스터디의 것인 경우")
     void ToDo_삭제_시_ToDo가_다른_스터디의_것인_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
-        given(toDoList.getStudy()).willReturn(Mockito.mock(Study.class));
-        given(toDoList.getStudy().getId()).willReturn(2L);
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
+        given(studyToDo.getStudy()).willReturn(Mockito.mock(Study.class));
+        given(studyToDo.getStudy().getId()).willReturn(2L);
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -425,9 +425,9 @@ public class MemberStudyCommandServiceTest {
     @DisplayName("To-Do 삭제 - To-Do가 다른 회원의 것인 경우")
     void ToDo_삭제_시_ToDo가_다른_회원의_것인_경우() {
         // given
-        when(toDoListRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDoList));
-        given(toDoList.getMember()).willReturn(Mockito.mock(Member.class));
-        given(toDoList.getMember().getId()).willReturn(2L);
+        when(studyToDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(studyToDo));
+        given(studyToDo.getMember()).willReturn(Mockito.mock(Member.class));
+        given(studyToDo.getMember().getId()).willReturn(2L);
 
         // when & then
         assertThrows(StudyHandler.class, () -> {

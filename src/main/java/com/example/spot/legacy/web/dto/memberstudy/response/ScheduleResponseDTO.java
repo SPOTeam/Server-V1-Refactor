@@ -1,7 +1,7 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
-import com.example.spot.refactor.study.domain.enums.Period;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Schedule;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
+import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,13 +26,13 @@ public class ScheduleResponseDTO {
         private final LocalDateTime startedAt;
         private final LocalDateTime finishedAt;
 
-        public static ScheduleDTO toDTO(Schedule schedule) {
+        public static ScheduleDTO toDTO(StudySchedule studySchedule) {
             return ScheduleDTO.builder()
-                    .studyId(schedule.getStudy().getId())
-                    .scheduleId(schedule.getId())
-                    .title(schedule.getTitle())
-                    .startedAt(schedule.getStartedAt())
-                    .finishedAt(schedule.getFinishedAt())
+                    .studyId(studySchedule.getStudy().getId())
+                    .scheduleId(studySchedule.getId())
+                    .title(studySchedule.getTitle())
+                    .startedAt(studySchedule.getStartedAt())
+                    .finishedAt(studySchedule.getFinishedAt())
                     .build();
         }
     }
@@ -64,31 +64,31 @@ public class ScheduleResponseDTO {
         private final LocalDateTime startedAt;
         private final LocalDateTime finishedAt;
         private final Boolean isAllDay;
-        private final Period period;
+        private final StudySchedulePeriod studySchedulePeriod;
 
         public static MonthlyScheduleDTO toDTO(
-                Schedule schedule, boolean isStudyMember) {
+                StudySchedule studySchedule, boolean isStudyMember) {
             return MonthlyScheduleDTO.builder()
-                    .scheduleId(schedule.getId())
-                    .title(schedule.getTitle())
-                    .location(isStudyMember ? schedule.getLocation() : "공개되지 않습니다.")
-                    .startedAt(schedule.getStartedAt())
-                    .finishedAt(schedule.getFinishedAt())
-                    .isAllDay(schedule.getIsAllDay())
-                    .period(schedule.getPeriod())
+                    .scheduleId(studySchedule.getId())
+                    .title(studySchedule.getTitle())
+                    .location(isStudyMember ? studySchedule.getLocation() : "공개되지 않습니다.")
+                    .startedAt(studySchedule.getStartedAt())
+                    .finishedAt(studySchedule.getFinishedAt())
+                    .isAllDay(studySchedule.getIsAllDay())
+                    .studySchedulePeriod(studySchedule.getStudySchedulePeriod())
                     .build();
         }
 
         public static MonthlyScheduleDTO toDTOWithDate(
-                Schedule schedule, LocalDateTime startedAt, LocalDateTime finishedAt, boolean isStudyMember) {
+                StudySchedule studySchedule, LocalDateTime startedAt, LocalDateTime finishedAt, boolean isStudyMember) {
             return MonthlyScheduleDTO.builder()
-                    .scheduleId(schedule.getId())
-                    .title(schedule.getTitle())
-                    .location(isStudyMember ? schedule.getLocation() : "공개되지 않습니다.")
+                    .scheduleId(studySchedule.getId())
+                    .title(studySchedule.getTitle())
+                    .location(isStudyMember ? studySchedule.getLocation() : "공개되지 않습니다.")
                     .startedAt(startedAt)
                     .finishedAt(finishedAt)
-                    .isAllDay(schedule.getIsAllDay())
-                    .period(schedule.getPeriod())
+                    .isAllDay(studySchedule.getIsAllDay())
+                    .studySchedulePeriod(studySchedule.getStudySchedulePeriod())
                     .build();
         }
     }

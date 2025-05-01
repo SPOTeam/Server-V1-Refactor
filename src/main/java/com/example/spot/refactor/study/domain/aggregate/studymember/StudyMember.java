@@ -3,7 +3,7 @@ package com.example.spot.refactor.study.domain.aggregate.studymember;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Builder
 @AllArgsConstructor
-public class MemberStudy extends BaseEntity {
+public class StudyMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class MemberStudy extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Setter
-    private ApplicationStatus status;
+    private StudyApplicationStatus status;
 
     @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     @Setter
@@ -52,10 +52,10 @@ public class MemberStudy extends BaseEntity {
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
-    protected MemberStudy() {}
+    protected StudyMember() {}
 
     @Builder
-    public MemberStudy(Boolean isOwned, String introduction, Member member, Study study, ApplicationStatus status) {
+    public StudyMember(Boolean isOwned, String introduction, Member member, Study study, StudyApplicationStatus status) {
 
         this.isOwned = isOwned;
         this.introduction = introduction;

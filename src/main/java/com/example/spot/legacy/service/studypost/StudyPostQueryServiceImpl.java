@@ -4,15 +4,15 @@ import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
-import com.example.spot.refactor.study.domain.enums.Theme;
-import com.example.spot.refactor.study.domain.enums.ThemeQuery;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategoryQuery;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedPostRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPostRepository;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostCommentRepository;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
@@ -34,14 +34,14 @@ import java.util.List;
 public class StudyPostQueryServiceImpl implements StudyPostQueryService {
 
     private final StudyPostCommentRepository studyPostCommentRepository;
-    private final StudyLikedPostRepository studyLikedPostRepository;
+    private final LikedStudyPostRepository likedStudyPostRepository;
     @Value("${image.post.anonymous.profile}")
     private String defaultImage;
 
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
     private final StudyPostRepository studyPostRepository;
-    private final MemberStudyRepository memberStudyRepository;
+    private final StudyMemberRepository studyMemberRepository;
 
 /* ----------------------------- 스터디 게시글 관련 API ------------------------------------- */
 
@@ -50,13 +50,13 @@ public class StudyPostQueryServiceImpl implements StudyPostQueryService {
      * 오프셋 기반 페이징이 적용되어 있습니다.
      * @param pageRequest 페이징에 필요한 페이지 번호와 페이지 사이즈 정보를 입력 받습니다.
      * @param studyId 게시글 목록을 조회할 타겟 스터디의 아이디를 입력 받습니다.
-     * @param themeQuery 게시글 테마를 입력 받습니다. themeQuery는 null일 수 있습니다.
+     * @param studyPostCategoryQuery 게시글 테마를 입력 받습니다. themeQuery는 null일 수 있습니다.
      * @return 조건에 맞는 스터디 게시글 목록을 반환합니다.
      *          1. themeQuery가 있는 경우 해당 테마의 게시글 목록을 반환합니다.
      *          2. themeQuery가 null인 경우 필터링 없이 게시글 목록을 반환합니다.
      */
     @Override
-    public StudyPostResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, ThemeQuery themeQuery) {
+    public StudyPostResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, StudyPostCategoryQuery studyPostCategoryQuery) {
 
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
@@ -66,34 +66,34 @@ public class StudyPostQueryServiceImpl implements StudyPostQueryService {
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         List<StudyPost> studyPosts;
         Long totalPosts;
 
         // query가 없는 경우
-        if (themeQuery == null) {
+        if (studyPostCategoryQuery == null) {
             studyPosts = studyPostRepository.findAllByStudyId(studyId, pageRequest);
             totalPosts = studyPostRepository.countByStudyId(studyId);
         }
         // query가 ANNOUNCEMENT인 경우
-        else if (themeQuery.equals(ThemeQuery.ANNOUNCEMENT)) {
+        else if (studyPostCategoryQuery.equals(StudyPostCategoryQuery.ANNOUNCEMENT)) {
             studyPosts = studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest);
             totalPosts = studyPostRepository.countByStudyIdAndIsAnnouncement(studyId, Boolean.TRUE);
         }
         // query가 스터디 테마인 경우
         else {
-            Theme theme = themeQuery.toTheme();
-            studyPosts = studyPostRepository.findAllByStudyIdAndTheme(studyId, theme, pageRequest);
-            totalPosts = studyPostRepository.countByStudyIdAndTheme(studyId, theme);
+            StudyPostCategory studyPostCategory = studyPostCategoryQuery.toCategory();
+            studyPosts = studyPostRepository.findAllByStudyIdAndTheme(studyId, studyPostCategory, pageRequest);
+            totalPosts = studyPostRepository.countByStudyIdAndStudyPostCategory(studyId, studyPostCategory);
         }
 
         return StudyPostResDTO.PostListDTO.builder()
                 .studyId(studyId)
                 .posts(studyPosts.stream()
                         .map(studyPost -> {
-                            if (studyLikedPostRepository.existsByMemberIdAndStudyPostId(memberId, studyPost.getId())) {
+                            if (likedStudyPostRepository.existsByMemberIdAndStudyPostId(memberId, studyPost.getId())) {
                                 return StudyPostResDTO.PostDTO.toDTO(studyPost, true);
                             } else {
                                 return StudyPostResDTO.PostDTO.toDTO(studyPost, false);
@@ -134,7 +134,7 @@ public class StudyPostQueryServiceImpl implements StudyPostQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
@@ -149,7 +149,7 @@ public class StudyPostQueryServiceImpl implements StudyPostQueryService {
         studyRepository.save(study);
 
         Integer commentNum = studyPostCommentRepository.findAllByStudyPostId(postId).size();
-        boolean isLiked = studyLikedPostRepository.existsByMemberIdAndStudyPostId(memberId, studyPost.getId());
+        boolean isLiked = likedStudyPostRepository.existsByMemberIdAndStudyPostId(memberId, studyPost.getId());
         boolean isWriter = studyPost.getMember().getId().equals(memberId);
         return StudyPostResDTO.PostDetailDTO.toDTO(studyPost, commentNum, isLiked, isWriter);
     }
@@ -177,7 +177,7 @@ public class StudyPostQueryServiceImpl implements StudyPostQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
-        memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED)
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인

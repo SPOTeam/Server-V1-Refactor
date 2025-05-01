@@ -23,8 +23,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "options")
-public class Option extends BaseEntity {
+public class StudyVoteOption extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,36 +31,36 @@ public class Option extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vote_id", nullable = false)
-    private Vote vote;
+    @JoinColumn(name = "study_vote_id", nullable = false)
+    private StudyVote studyVote;
 
     @Setter
     private String content;
 
-    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
-    private List<MemberVote> memberVotes;
+    @OneToMany(mappedBy = "studyVoteOption", cascade = CascadeType.ALL)
+    private List<StudyVoteParticipant> studyVoteParticipants;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public Option(Vote vote, String content) {
-        this.vote = vote;
+    public StudyVoteOption(StudyVote studyVote, String content) {
+        this.studyVote = studyVote;
         this.content = content;
-        this.memberVotes = new ArrayList<>();
+        this.studyVoteParticipants = new ArrayList<>();
     }
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addMemberVote(MemberVote memberVote) {
-        if (memberVotes == null) {
-            memberVotes = new ArrayList<>();
+    public void addMemberVote(StudyVoteParticipant studyVoteParticipant) {
+        if (studyVoteParticipants == null) {
+            studyVoteParticipants = new ArrayList<>();
         }
-        memberVotes.add(memberVote);
-        memberVote.setOption(this);
+        studyVoteParticipants.add(studyVoteParticipant);
+        studyVoteParticipant.setStudyVoteOption(this);
     }
 
     public void deleteAllMemberVotes() {
-        memberVotes.clear();
+        studyVoteParticipants.clear();
     }
 
 }

@@ -3,19 +3,19 @@ package com.example.spot.refactor.study.domain.enums;
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 
-public enum ThemeQuery {
+public enum StudyPostCategoryQuery {
 
     ANNOUNCEMENT, WELCOME, INFO_SHARING, STUDY_REVIEW, FREE_TALK, QNA
 
     ;
 
-    public Theme toTheme() {
+    public StudyPostCategory toCategory() {
         return switch (this) {
-            case WELCOME -> Theme.WELCOME;
-            case INFO_SHARING -> Theme.INFO_SHARING;
-            case STUDY_REVIEW -> Theme.STUDY_REVIEW;
-            case FREE_TALK -> Theme.FREE_TALK;
-            case QNA -> Theme.QNA;
+            case WELCOME -> StudyPostCategory.WELCOME;
+            case INFO_SHARING -> StudyPostCategory.INFO_SHARING;
+            case STUDY_REVIEW -> StudyPostCategory.STUDY_REVIEW;
+            case FREE_TALK -> StudyPostCategory.FREE_TALK;
+            case QNA -> StudyPostCategory.QNA;
             default -> throw new StudyHandler(ErrorStatus._THEME_NOT_FOUND);
         };
     }

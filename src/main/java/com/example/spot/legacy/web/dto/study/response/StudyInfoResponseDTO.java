@@ -1,9 +1,9 @@
 package com.example.spot.legacy.web.dto.study.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,7 +39,7 @@ public class StudyInfoResponseDTO {
         private StudyInfoDTO(Long studyId, String studyName, StudyOwnerDTO studyOwner,
                              Long hitNum, Integer heartCount, Integer memberCount, Boolean isLiked, Long maxPeople, Gender gender,
                              Integer minAge, Integer maxAge, Integer fee, Boolean isOnline, String profileImage,
-                             List<ThemeType> themes, List<String> regions,String goal, String introduction) {
+                             List<ThemeType> themes, List<String> regions, String goal, String introduction) {
             this.studyId = studyId;
             this.studyName = studyName;
             this.studyOwner = studyOwner;
@@ -68,7 +68,7 @@ public class StudyInfoResponseDTO {
                     .heartCount(study.getHeartCount())
                     .memberCount(
                         study.getMemberStudies().stream()
-                            .filter(memberStudy -> memberStudy.getStatus().equals(ApplicationStatus.APPROVED))
+                            .filter(memberStudy -> memberStudy.getStatus().equals(StudyApplicationStatus.APPROVED))
                             .toList()
                             .size())
                     .maxPeople(study.getMaxPeople())
@@ -79,7 +79,7 @@ public class StudyInfoResponseDTO {
                     .isOnline(study.getIsOnline())
                     .profileImage(study.getProfileImage())
                     .themes(study.getStudyThemes().stream()
-                            .map(memberStudy -> { return memberStudy.getTheme().getStudyTheme();})
+                            .map(memberStudy -> { return memberStudy.getTheme().getThemeType();})
                             .toList())
                     .regions(study.getRegionStudies().stream()
                             .map(memberStudy -> { return memberStudy.getRegion().getCode();})

@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.domain.aggregate.studytheme;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -31,7 +31,7 @@ public class Theme extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ThemeType studyTheme;
+    private ThemeType themeType;
 
     //== 해당 테마를 선호하는 멤버 목록 ==//
     @Builder.Default

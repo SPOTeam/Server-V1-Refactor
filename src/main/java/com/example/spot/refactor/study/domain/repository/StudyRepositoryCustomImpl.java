@@ -5,10 +5,10 @@ import static com.example.spot.refactor.study.domain.aggregate.QStudy.*;
 import com.example.spot.legacy.domain.Region;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.StudyState;
-import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.QStudy;
@@ -256,21 +256,21 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     }
 
     @Override
-    public List<Study> findByMemberStudy(List<MemberStudy> memberStudy, Pageable pageable) {
+    public List<Study> findByMemberStudy(List<StudyMember> studyMember, Pageable pageable) {
         QStudy study = QStudy.study;
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(memberStudy))
+            .where(study.memberStudies.any().in(studyMember))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
     }
 
     @Override
-    public List<Study> findRecruitingStudiesByMemberStudy(List<MemberStudy> memberStudy,
+    public List<Study> findRecruitingStudiesByMemberStudy(List<StudyMember> studyMember,
         Pageable pageable) {
         QStudy study = QStudy.study;
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(memberStudy))
+            .where(study.memberStudies.any().in(studyMember))
             .where(study.studyState.eq(StudyState.RECRUITING))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -333,7 +333,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     }
 
     @Override
-    public long countByMemberStudiesAndStatus(List<MemberStudy> memberStudies, Status status) {
+    public long countByMemberStudiesAndStatus(List<StudyMember> memberStudies, Status status) {
         return queryFactory.selectFrom(study)
             .where(study.memberStudies.any().in(memberStudies))
             .where(study.status.eq(status))
@@ -341,7 +341,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     }
 
     @Override
-    public long countByMemberStudiesAndStatusAndIsOwned(List<MemberStudy> memberStudies, Status status,
+    public long countByMemberStudiesAndStatusAndIsOwned(List<StudyMember> memberStudies, Status status,
                                                         boolean isOwned) {
         return queryFactory.selectFrom(study)
             .where(study.memberStudies.any().in(memberStudies))
@@ -426,7 +426,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
         }
         if (search.get("themeTypes") != null) {
             List<ThemeType> themeTypes = (List<ThemeType>) search.get("themeTypes");
-            builder.and(study.studyThemes.any().theme.studyTheme.in(themeTypes));
+            builder.and(study.studyThemes.any().theme.themeType.in(themeTypes));
         }
         if (search.get("regions") != null) {
             List<Region> regionList = (List<Region>) search.get("regions");

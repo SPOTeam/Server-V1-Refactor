@@ -3,16 +3,16 @@ package com.example.spot.service.studyschedule;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.study.domain.enums.Period;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.Schedule;
+import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.legacy.repository.NotificationRepository;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.ScheduleRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyScheduleRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.request.ScheduleRequestDTO;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyScheduleCommandServiceTest {
+class StudyStudyScheduleCommandServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -54,11 +54,11 @@ class StudyScheduleCommandServiceTest {
     @Mock
     private StudyRepository studyRepository;
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     // 스터디 일정 관련 Mock
     @Mock
-    private ScheduleRepository scheduleRepository;
+    private StudyScheduleRepository studyScheduleRepository;
 
     // 알림 관련 Mock
     @Mock
@@ -71,11 +71,11 @@ class StudyScheduleCommandServiceTest {
     private static Member member1;
     private static Member member2;
     private static Member owner;
-    private static MemberStudy memberStudy1;
-    private static MemberStudy memberStudy2;
+    private static StudyMember studyMember1;
+    private static StudyMember studyMember2;
 
     @Mock
-    private static Schedule schedule;
+    private static StudySchedule studySchedule;
 
 
     @BeforeEach
@@ -88,34 +88,34 @@ class StudyScheduleCommandServiceTest {
     @Test
     @DisplayName("스터디 일정 생성 - 기본 일정인 경우 (성공)")
     void addSchedule_None_Success() {
-        addScheduleSuccess(Period.NONE);
+        addScheduleSuccess(StudySchedulePeriod.NONE);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Daily 일정인 경우 (성공)")
     void addSchedule_Daily_Success() {
-        addScheduleSuccess(Period.DAILY);
+        addScheduleSuccess(StudySchedulePeriod.DAILY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Weekly 일정인 경우(성공)")
     void addSchedule_Weekly() {
-        addScheduleSuccess(Period.WEEKLY);
+        addScheduleSuccess(StudySchedulePeriod.WEEKLY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Biweekly 일정인 경우")
     void addSchedule_Biweekly() {
-        addScheduleSuccess(Period.BIWEEKLY);
+        addScheduleSuccess(StudySchedulePeriod.BIWEEKLY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Monthly 일정인 경우")
     void addSchedule_Monthly() {
-        addScheduleSuccess(Period.MONTHLY);
+        addScheduleSuccess(StudySchedulePeriod.MONTHLY);
     }
 
-    private void addScheduleSuccess(Period period) {
+    private void addScheduleSuccess(StudySchedulePeriod studySchedulePeriod) {
 
         // given
         Long studyId = 1L;
@@ -130,10 +130,10 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .period(period)
+                .studySchedulePeriod(studySchedulePeriod)
                 .build();
 
-        schedule = Schedule.builder()
+        studySchedule = StudySchedule.builder()
                 .id(1L)
                 .study(study1)
                 .member(owner)
@@ -142,22 +142,22 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .period(period)
+                .studySchedulePeriod(studySchedulePeriod)
                 .build();
 
-        study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
+        study1.addSchedule(studySchedule);
+        owner.addSchedule(studySchedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member1));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study1));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy2));
-        when(memberStudyRepository.findAllByStudyIdAndStatus(studyId, ApplicationStatus.APPROVED))
-                .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(scheduleRepository.save(schedule)).thenReturn(schedule);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember2));
+        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
+                .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyScheduleRepository.save(studySchedule)).thenReturn(studySchedule);
 
         // when
         ScheduleResponseDTO.ScheduleDTO result = memberStudyCommandService.addSchedule(studyId, scheduleRequestDTO);
@@ -165,7 +165,7 @@ class StudyScheduleCommandServiceTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("일정");
-        verify(scheduleRepository, times(1)).save(any(Schedule.class));
+        verify(studyScheduleRepository, times(1)).save(any(StudySchedule.class));
         verify(notificationRepository, times(2)).save(any(Notification.class));
     }
 
@@ -226,7 +226,7 @@ class StudyScheduleCommandServiceTest {
                 .isAllDay(false)
                 .build();
 
-        schedule = Schedule.builder()
+        studySchedule = StudySchedule.builder()
                 .id(1L)
                 .study(study1)
                 .member(owner)
@@ -237,17 +237,17 @@ class StudyScheduleCommandServiceTest {
                 .isAllDay(false)
                 .build();
 
-        study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
+        study1.addSchedule(studySchedule);
+        owner.addSchedule(studySchedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member1));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study1));
-        when(memberStudyRepository.findAllByStudyIdAndStatus(studyId, ApplicationStatus.APPROVED))
-                .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(scheduleRepository.save(schedule)).thenReturn(schedule);
+        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
+                .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyScheduleRepository.save(studySchedule)).thenReturn(studySchedule);
 
         // when & then
         assertThrows(StudyHandler.class, () -> memberStudyCommandService.addSchedule(studyId, scheduleRequestDTO));
@@ -264,13 +264,13 @@ class StudyScheduleCommandServiceTest {
 
         ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
 
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, ApplicationStatus.APPROVED))
-                .thenReturn(Optional.of(memberStudy2));
-        when(scheduleRepository.findByIdAndMemberId(scheduleId, memberId))
-                .thenReturn(Optional.of(schedule));
-        when(scheduleRepository.findByIdAndStudyId(scheduleId, studyId))
-                .thenReturn(Optional.of(schedule));
-        when(scheduleRepository.save(schedule)).thenReturn(schedule);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED))
+                .thenReturn(Optional.of(studyMember2));
+        when(studyScheduleRepository.findByIdAndMemberId(scheduleId, memberId))
+                .thenReturn(Optional.of(studySchedule));
+        when(studyScheduleRepository.findByIdAndStudyId(scheduleId, studyId))
+                .thenReturn(Optional.of(studySchedule));
+        when(studyScheduleRepository.save(studySchedule)).thenReturn(studySchedule);
 
         // when
         ScheduleResponseDTO.ScheduleDTO result = memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
@@ -278,9 +278,9 @@ class StudyScheduleCommandServiceTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("수정된 일정");
-        assertThat(study1.getSchedules()).isNotEmpty();
-        assertThat(member1.getScheduleList()).isNotEmpty();
-        verify(scheduleRepository, times(1)).save(any(Schedule.class));
+        assertThat(study1.getStudySchedules()).isNotEmpty();
+        assertThat(member1.getStudyScheduleList()).isNotEmpty();
+        verify(studyScheduleRepository, times(1)).save(any(StudySchedule.class));
     }
 
     @Test
@@ -341,10 +341,10 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .period(Period.NONE)
+                .studySchedulePeriod(StudySchedulePeriod.NONE)
                 .build();
 
-        schedule = Schedule.builder()
+        studySchedule = StudySchedule.builder()
                 .id(scheduleId)
                 .study(study)
                 .member(member)
@@ -352,15 +352,15 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(2))
                 .isAllDay(false)
-                .period(Period.WEEKLY)
+                .studySchedulePeriod(StudySchedulePeriod.WEEKLY)
                 .build();
 
-        study.addSchedule(schedule);
-        member.addSchedule(schedule);
+        study.addSchedule(studySchedule);
+        member.addSchedule(studySchedule);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study));
-        when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(schedule));
+        when(studyScheduleRepository.findById(scheduleId)).thenReturn(Optional.of(studySchedule));
         return scheduleModDTO;
     }
 
@@ -369,15 +369,15 @@ class StudyScheduleCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -398,17 +398,17 @@ class StudyScheduleCommandServiceTest {
     }
 
     private static void initMemberStudy() {
-        memberStudy1 = MemberStudy.builder()
+        studyMember1 = StudyMember.builder()
                 .id(1L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(true)
                 .introduction("Hi")
                 .member(owner)
                 .study(study1)
                 .build();
-        memberStudy2 = MemberStudy.builder()
+        studyMember2 = StudyMember.builder()
                 .id(2L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(false)
                 .introduction("Hi")
                 .member(member1)

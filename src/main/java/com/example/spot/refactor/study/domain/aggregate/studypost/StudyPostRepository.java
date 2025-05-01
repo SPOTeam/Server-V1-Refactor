@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.domain.aggregate.studypost;
 
-import com.example.spot.refactor.study.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
 
 import java.util.Optional;
 
@@ -20,5 +20,5 @@ public interface StudyPostRepository extends JpaRepository<StudyPost, Long>, Stu
 
     Long countByStudyIdAndIsAnnouncement(Long studyId, Boolean aTrue);
 
-    Long countByStudyIdAndTheme(Long studyId, Theme theme);
+    Long countByStudyIdAndStudyPostCategory(Long studyId, StudyPostCategory studyPostCategory);
 }

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudyThemeRepository extends JpaRepository<StudyTheme, Long> {
     List<StudyTheme> findAllByTheme(Theme theme);
-    StudyTheme findByTheme(Theme theme);
-
     void deleteByStudyId(Long studyId);
 
 }

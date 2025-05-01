@@ -1,5 +1,5 @@
 package com.example.spot.refactor.study.domain.enums;
 
-public enum Period {
+public enum StudySchedulePeriod {
     NONE, DAILY, WEEKLY, BIWEEKLY, MONTHLY
 }

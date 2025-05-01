@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface StudyLikedPostRepository extends JpaRepository<StudyLikedPost, Long> {
+public interface LikedStudyPostRepository extends JpaRepository<LikedStudyPost, Long> {
 
-    Optional<StudyLikedPost> findByMemberIdAndStudyPostId(Long memberId, Long postId);
+    Optional<LikedStudyPost> findByMemberIdAndStudyPostId(Long memberId, Long postId);
 
     boolean existsByMemberIdAndStudyPostId(Long memberId, Long id);
 

@@ -1,7 +1,6 @@
 package com.example.spot.refactor.study.domain.aggregate.studypost;
 
-import com.example.spot.refactor.study.domain.enums.Theme;
-import com.example.spot.refactor.study.domain.aggregate.QStudy;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -27,12 +26,12 @@ public class StudyPostRepositoryCustomImpl implements StudyPostRepositoryCustom 
     }
 
     @Override
-    public List<StudyPost> findAllByStudyIdAndTheme(Long studyId, Theme theme, Pageable pageable) {
+    public List<StudyPost> findAllByStudyIdAndTheme(Long studyId, StudyPostCategory studyPostCategory, Pageable pageable) {
 
         QStudyPost studyPost = QStudyPost.studyPost;
         return queryFactory.selectFrom(studyPost)
                 .where(studyPost.study.id.eq(studyId))  // studyId가 일치하는지 확인
-                .where(studyPost.theme.eq(theme))       // theme이 일치하는지 확인
+                .where(studyPost.studyPostCategory.eq(studyPostCategory))       // category가 일치하는지 확인
                 .orderBy(studyPost.createdAt.desc())    // 최신순 정렬
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

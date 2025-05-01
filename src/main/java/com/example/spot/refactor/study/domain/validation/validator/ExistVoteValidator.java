@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.VoteRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteRepository;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistVote;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExistVoteValidator implements ConstraintValidator<ExistVote, Long> {
 
-    private final VoteRepository voteRepository;
+    private final StudyVoteRepository studyVoteRepository;
 
     @Override
     public void initialize(ExistVote constraintAnnotation) {}
@@ -25,7 +25,7 @@ public class ExistVoteValidator implements ConstraintValidator<ExistVote, Long> 
 
         if (voteId == null) {
             errorStatus = ErrorStatus._STUDY_VOTE_NULL;
-        } else if (!voteRepository.existsById(voteId)) {
+        } else if (!studyVoteRepository.existsById(voteId)) {
             errorStatus = ErrorStatus._STUDY_VOTE_NOT_FOUND;
         } else {
             errorStatus = ErrorStatus._STUDY_VOTE_NOT_FOUND; // ignore

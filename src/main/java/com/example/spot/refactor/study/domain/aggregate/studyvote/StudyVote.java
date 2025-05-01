@@ -18,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Vote extends BaseEntity {
+public class StudyVote extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,30 +43,30 @@ public class Vote extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime finishedAt;
 
-    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    private List<Option> options;
+    @OneToMany(mappedBy = "studyVote", cascade = CascadeType.ALL)
+    private List<StudyVoteOption> studyVoteOptions;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public Vote(Study study, Member member, String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {
+    public StudyVote(Study study, Member member, String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {
         this.study = study;
         this.member = member;
         this.title = title;
         this.isMultipleChoice = isMultipleChoice;
         this.finishedAt = finishedAt;
-        this.options = new ArrayList<>();
+        this.studyVoteOptions = new ArrayList<>();
     }
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addOption(Option option) {
-        this.options.add(option);
-        option.setVote(this);
+    public void addOption(StudyVoteOption studyVoteOption) {
+        this.studyVoteOptions.add(studyVoteOption);
+        studyVoteOption.setStudyVote(this);
     }
 
-    public void updateOption(Option option) {
-        options.set(options.indexOf(option), option);
+    public void updateOption(StudyVoteOption studyVoteOption) {
+        studyVoteOptions.set(studyVoteOptions.indexOf(studyVoteOption), studyVoteOption);
     }
 
     public void updateVote(String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {

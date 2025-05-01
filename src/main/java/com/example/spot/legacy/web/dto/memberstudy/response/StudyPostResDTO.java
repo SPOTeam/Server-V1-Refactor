@@ -1,7 +1,7 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImage;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import lombok.*;
@@ -52,7 +52,7 @@ public class StudyPostResDTO {
         private final Long postId;
         private final String title;
         private final String content;
-        private final Theme theme;
+        private final StudyPostCategory studyPostCategory;
         private final Boolean isAnnouncement;
         private final LocalDateTime createdAt;
         private final Integer likeNum;
@@ -65,7 +65,7 @@ public class StudyPostResDTO {
                     .postId(studyPost.getId())
                     .title(studyPost.getTitle())
                     .content(studyPost.getContent())
-                    .theme(studyPost.getTheme())
+                    .studyPostCategory(studyPost.getStudyPostCategory())
                     .isAnnouncement(studyPost.getIsAnnouncement())
                     .createdAt(studyPost.getCreatedAt())
                     .likeNum(studyPost.getLikeNum())
@@ -85,7 +85,7 @@ public class StudyPostResDTO {
         private final Long postId;
         private final String title;
         private final String content;
-        private final Theme theme;
+        private final StudyPostCategory studyPostCategory;
         private final Boolean isAnnouncement;
         private final LocalDateTime createdAt;
         private final Integer likeNum;
@@ -101,7 +101,7 @@ public class StudyPostResDTO {
                     .postId(studyPost.getId())
                     .title(studyPost.getTitle())
                     .content(studyPost.getContent())
-                    .theme(studyPost.getTheme())
+                    .studyPostCategory(studyPost.getStudyPostCategory())
                     .isAnnouncement(studyPost.getIsAnnouncement())
                     .createdAt(studyPost.getCreatedAt())
                     .likeNum(studyPost.getLikeNum())

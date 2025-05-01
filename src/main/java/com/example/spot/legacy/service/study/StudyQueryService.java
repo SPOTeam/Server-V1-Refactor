@@ -1,7 +1,7 @@
 package com.example.spot.legacy.service.study;
 
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.HotKeywordDTO;
@@ -37,7 +37,7 @@ public interface StudyQueryService {
 
     // 내 특정 관심사 스터디 페이징 조회
     StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId,
-        SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
+                                                            SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
 
     // 내 관심 지역 스터디 페이징 조회
     StudyPreviewDTO findInterestRegionStudiesByConditionsAll(

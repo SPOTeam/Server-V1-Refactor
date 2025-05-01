@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface QuizRepository extends JpaRepository<Quiz, Long> {
+public interface StudyQuizRepository extends JpaRepository<StudyQuiz, Long> {
 
-    List<Quiz> findByScheduleId(Long scheduleId);
-
-    List<Quiz> findAllByScheduleIdAndCreatedAtBetween(Long scheduleId, LocalDateTime startOfDay, LocalDateTime endOfDay);
+    List<StudyQuiz> findAllByStudyScheduleIdAndCreatedAtBetween(Long studyScheduleId, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }

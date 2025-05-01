@@ -3,7 +3,7 @@ package com.example.spot.refactor.study.domain.aggregate.studypost;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.aggregate.*;
-import com.example.spot.refactor.study.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostRequestDTO;
 import jakarta.persistence.*;
 
@@ -43,7 +43,7 @@ public class StudyPost extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Theme theme;
+    private StudyPostCategory studyPostCategory;
 
     @Column(nullable = false)
     private String title;
@@ -71,7 +71,7 @@ public class StudyPost extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
-    private List<StudyLikedPost> likedPosts = new ArrayList<>();
+    private List<LikedStudyPost> likedPosts = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
@@ -89,7 +89,7 @@ public class StudyPost extends BaseEntity {
         comment.setStudyPost(this);
     }
 
-    public void addLikedPost(StudyLikedPost likedPost) {
+    public void addLikedPost(LikedStudyPost likedPost) {
         likedPosts.add(likedPost);
         likedPost.setStudyPost(this);
     }
@@ -102,7 +102,7 @@ public class StudyPost extends BaseEntity {
         comments.remove(comment);
     }
 
-    public void deleteLikedPost(StudyLikedPost likedPost) {
+    public void deleteLikedPost(LikedStudyPost likedPost) {
         likedPosts.remove(likedPost);
     }
 
@@ -134,7 +134,7 @@ public class StudyPost extends BaseEntity {
 
     public void updatePost(StudyPostRequestDTO.PostDTO requestDTO) {
         isAnnouncement = requestDTO.getIsAnnouncement();
-        theme = requestDTO.getTheme();
+        studyPostCategory = requestDTO.getStudyPostCategory();
         title = requestDTO.getTitle();
         content = requestDTO.getContent();
 

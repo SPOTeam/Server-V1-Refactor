@@ -13,15 +13,12 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.*;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
-import com.example.spot.refactor.study.domain.enums.StudySortBy;
-import com.example.spot.refactor.study.domain.enums.StudyState;
-import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
@@ -29,7 +26,7 @@ import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
@@ -75,7 +72,7 @@ class StudyQueryServiceTest {
     @Mock
     private StudyRepository studyRepository;
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
     @Mock
     private PreferredStudyRepository preferredStudyRepository;
 
@@ -117,8 +114,8 @@ class StudyQueryServiceTest {
     private static RegionStudy regionStudy2;
     private static PreferredStudy preferredStudy1;
     private static PreferredStudy preferredStudy2;
-    private static MemberStudy memberStudy1;
-    private static MemberStudy memberStudy2;
+    private static StudyMember studyMember1;
+    private static StudyMember studyMember2;
 
     @BeforeEach
     void setUp() {
@@ -148,10 +145,10 @@ class StudyQueryServiceTest {
         preferredStudy2 = getPreferredStudy(member, study2);
 
 
-        memberStudy1 = getMemberStudy(member, study1);
-        memberStudy2 = getMemberStudy(member, study2);
+        studyMember1 = getMemberStudy(member, study1);
+        studyMember2 = getMemberStudy(member, study2);
 
-        study1.addMemberStudy(memberStudy1);
+        study1.addMemberStudy(studyMember1);
 
         request = getSearchRequestStudyDTO();
         requestWithTheme = getSearchRequestStudyWithThemeDTO();
@@ -243,9 +240,9 @@ class StudyQueryServiceTest {
         Long memberId = 1L;
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(memberStudyRepository.countByMemberIdAndStatusAndStudy_Status(memberId, ApplicationStatus.APPLIED, Status.ON)).thenReturn(2L);
-        when(memberStudyRepository.countByMemberIdAndStatusAndStudy_Status(memberId, ApplicationStatus.APPROVED, Status.ON)).thenReturn(1L);
-        when(memberStudyRepository.countByMemberIdAndIsOwnedAndStudy_Status(memberId, true, Status.ON)).thenReturn(3L);
+        when(studyMemberRepository.countByMemberIdAndStatusAndStudy_Status(memberId, StudyApplicationStatus.APPLIED, Status.ON)).thenReturn(2L);
+        when(studyMemberRepository.countByMemberIdAndStatusAndStudy_Status(memberId, StudyApplicationStatus.APPROVED, Status.ON)).thenReturn(1L);
+        when(studyMemberRepository.countByMemberIdAndIsOwnedAndStudy_Status(memberId, true, Status.ON)).thenReturn(3L);
 
         // when
         MyPageDTO myPageStudyCount = studyQueryService.getMyPageStudyCount(memberId);
@@ -1626,7 +1623,7 @@ class StudyQueryServiceTest {
         Theme theme = getTheme(1L, themeType);
         StudyTheme studyTheme = new StudyTheme(theme, study1);
 
-        when(themeRepository.findByStudyTheme(themeType)).thenReturn(Optional.ofNullable(theme));
+        when(themeRepository.findByThemeType(themeType)).thenReturn(Optional.ofNullable(theme));
         when(studyThemeRepository.findAllByTheme(theme)).thenReturn(List.of(studyTheme));
 
         when(studyRepository.findByStudyTheme(List.of(studyTheme), sortBy, pageable))
@@ -1649,7 +1646,7 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
-        verify(themeRepository).findByStudyTheme(themeType);
+        verify(themeRepository).findByThemeType(themeType);
         verify(studyThemeRepository).findAllByTheme(theme);
         verify(studyRepository).findByStudyTheme(List.of(studyTheme), sortBy, pageable);
         verify(studyRepository).countStudyByStudyTheme(List.of(studyTheme), sortBy);
@@ -1664,7 +1661,7 @@ class StudyQueryServiceTest {
         ThemeType themeType = ThemeType.어학;
         StudySortBy sortBy = StudySortBy.ALL;
 
-        when(themeRepository.findByStudyTheme(themeType)).thenReturn(Optional.ofNullable(theme1));
+        when(themeRepository.findByThemeType(themeType)).thenReturn(Optional.ofNullable(theme1));
         when(studyThemeRepository.findAllByTheme(theme1)).thenReturn(List.of(studyTheme1));
         when(studyRepository.findByStudyTheme(List.of(studyTheme1), sortBy, pageable))
                 .thenReturn(List.of());
@@ -1684,11 +1681,11 @@ class StudyQueryServiceTest {
 
         // given
 
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPROVED))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPROVED))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findByMemberStudy(List.of(studyMember1, studyMember2), pageable))
             .thenReturn(List.of(study1, study2));
-        when(studyRepository.countByMemberStudiesAndStatus(List.of(memberStudy1, memberStudy2), Status.ON))
+        when(studyRepository.countByMemberStudiesAndStatus(List.of(studyMember1, studyMember2), Status.ON))
             .thenReturn(2L);
 
         // when
@@ -1697,8 +1694,8 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
-        verify(memberStudyRepository).findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPROVED);
-        verify(studyRepository).findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable);
+        verify(studyMemberRepository).findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPROVED);
+        verify(studyRepository).findByMemberStudy(List.of(studyMember1, studyMember2), pageable);
 
     }
 
@@ -1707,7 +1704,7 @@ class StudyQueryServiceTest {
     void 내가_참여하고_있는_스터디가_없는_경우_1() {
         // given
 
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of());
 
         // when & then
@@ -1722,9 +1719,9 @@ class StudyQueryServiceTest {
     void 내가_참여하고_있는_스터디가_없는_경우_2() {
         // given
 
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPROVED))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPROVED))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findByMemberStudy(List.of(studyMember1, studyMember2), pageable))
                 .thenReturn(List.of());
 
         // when & then
@@ -1742,11 +1739,11 @@ class StudyQueryServiceTest {
     void findAppliedStudies() {
         // given
 
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPLIED))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPLIED))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findByMemberStudy(List.of(studyMember1, studyMember2), pageable))
             .thenReturn(List.of(study1, study2));
-        when(studyRepository.countByMemberStudiesAndStatus(List.of(memberStudy1, memberStudy2), Status.ON))
+        when(studyRepository.countByMemberStudiesAndStatus(List.of(studyMember1, studyMember2), Status.ON))
             .thenReturn(2L);
 
         // when
@@ -1755,8 +1752,8 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
-        verify(memberStudyRepository).findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPLIED);
-        verify(studyRepository).findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable);
+        verify(studyMemberRepository).findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPLIED);
+        verify(studyRepository).findByMemberStudy(List.of(studyMember1, studyMember2), pageable);
 
     }
 
@@ -1765,7 +1762,7 @@ class StudyQueryServiceTest {
     void 내가_신청한_스터디가_없는_경우_1() {
 
         // given
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPLIED))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPLIED))
                 .thenReturn(List.of());
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -1779,9 +1776,9 @@ class StudyQueryServiceTest {
     void 내가_신청한_스터디가_없는_경우_2() {
 
         // given
-        when(memberStudyRepository.findAllByMemberIdAndStatus(member.getId(), ApplicationStatus.APPLIED))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndStatus(member.getId(), StudyApplicationStatus.APPLIED))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findByMemberStudy(List.of(studyMember1, studyMember2), pageable))
             .thenReturn(List.of());
 
         // when & then
@@ -1800,11 +1797,11 @@ class StudyQueryServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
 
-        when(memberStudyRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findRecruitingStudiesByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findRecruitingStudiesByMemberStudy(List.of(studyMember1, studyMember2), pageable))
             .thenReturn(List.of(study1, study2));
-        when(studyRepository.countByMemberStudiesAndStatusAndIsOwned(List.of(memberStudy1, memberStudy2), Status.ON, true))
+        when(studyRepository.countByMemberStudiesAndStatusAndIsOwned(List.of(studyMember1, studyMember2), Status.ON, true))
             .thenReturn(2L);
 
         // when
@@ -1813,8 +1810,8 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
-        verify(memberStudyRepository).findAllByMemberIdAndIsOwned(member.getId(), true);
-        verify(studyRepository).findRecruitingStudiesByMemberStudy(List.of(memberStudy1, memberStudy2), pageable);
+        verify(studyMemberRepository).findAllByMemberIdAndIsOwned(member.getId(), true);
+        verify(studyRepository).findRecruitingStudiesByMemberStudy(List.of(studyMember1, studyMember2), pageable);
 
     }
 
@@ -1824,7 +1821,7 @@ class StudyQueryServiceTest {
         // given
         Member member = getMember();
 
-        when(memberStudyRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
+        when(studyMemberRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
                 .thenReturn(List.of());
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -1838,9 +1835,9 @@ class StudyQueryServiceTest {
         // given
         Member member = getMember();
 
-        when(memberStudyRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
-            .thenReturn(List.of(memberStudy1, memberStudy2));
-        when(studyRepository.findByMemberStudy(List.of(memberStudy1, memberStudy2), pageable))
+        when(studyMemberRepository.findAllByMemberIdAndIsOwned(member.getId(), true))
+            .thenReturn(List.of(studyMember1, studyMember2));
+        when(studyRepository.findByMemberStudy(List.of(studyMember1, studyMember2), pageable))
                 .thenReturn(List.of());
 
         // when & then
@@ -1943,12 +1940,12 @@ class StudyQueryServiceTest {
             .build();
     }
 
-    private static MemberStudy getMemberStudy(Member member, Study study) {
-        return MemberStudy.builder()
+    private static StudyMember getMemberStudy(Member member, Study study) {
+        return StudyMember.builder()
             .member(member)
             .study(study)
                 .isOwned(true)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
             .build();
     }
 

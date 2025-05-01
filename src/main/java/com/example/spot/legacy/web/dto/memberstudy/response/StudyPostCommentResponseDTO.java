@@ -1,7 +1,7 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedComment;
+import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -138,7 +138,7 @@ public class StudyPostCommentResponseDTO {
 
         private static String getIsLiked(StudyPostComment comment, Member member) {
             String isLiked = "NONE";
-            for (StudyLikedComment likedComment : comment.getLikedComments()) {
+            for (LikedStudyComment likedComment : comment.getLikedComments()) {
                 if (likedComment.getMember().equals(member)) {
                     if (likedComment.getIsLiked()) {
                         isLiked = "LIKED";

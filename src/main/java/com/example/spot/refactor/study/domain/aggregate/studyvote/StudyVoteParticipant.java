@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberVote extends BaseEntity {
+public class StudyVoteParticipant extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +25,15 @@ public class MemberVote extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id", nullable = false)
-    private Option option;
+    @JoinColumn(name = "study_vote_option_id", nullable = false)
+    private StudyVoteOption studyVoteOption;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public MemberVote(Member member, Option option) {
+    public StudyVoteParticipant(Member member, StudyVoteOption studyVoteOption) {
         this.member = member;
-        this.option = option;
+        this.studyVoteOption = studyVoteOption;
     }
 
 }

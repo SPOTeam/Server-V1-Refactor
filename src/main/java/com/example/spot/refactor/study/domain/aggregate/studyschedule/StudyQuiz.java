@@ -2,7 +2,6 @@ package com.example.spot.refactor.study.domain.aggregate.studyschedule;
 
 import com.example.spot.refactor.member.domain.Member;
 
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberAttendance;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Quiz {
+public class StudyQuiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +34,14 @@ public class Quiz {
     private String answer;
 
     //== 출석 회원 목록 ==//
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
-    private List<MemberAttendance> memberAttendanceList;
+    @OneToMany(mappedBy = "studyQuiz", cascade = CascadeType.ALL)
+    private List<StudyQuizSubmission> studyQuizSubmissionList;
 
     //== 해당 퀴즈를 생성한 일정 ==//
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
+    private StudySchedule studySchedule;
 
     //== 퀴즈 생성자 ==//
     @Setter
@@ -60,23 +59,23 @@ public class Quiz {
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public Quiz(Schedule schedule, Member member, String question, String answer, LocalDateTime createdAt) {
-        this.schedule = schedule;
+    public StudyQuiz(StudySchedule studySchedule, Member member, String question, String answer, LocalDateTime createdAt) {
+        this.studySchedule = studySchedule;
         this.member = member;
         this.question = question;
         this.answer = answer;
         this.createdAt = createdAt;
-        this.memberAttendanceList = new ArrayList<>();
+        this.studyQuizSubmissionList = new ArrayList<>();
     }
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addMemberAttendance(MemberAttendance memberAttendance) {
-        memberAttendanceList.add(memberAttendance);
-        memberAttendance.setQuiz(this);
+    public void addMemberAttendance(StudyQuizSubmission studyQuizSubmission) {
+        studyQuizSubmissionList.add(studyQuizSubmission);
+        studyQuizSubmission.setStudyQuiz(this);
     }
 
-    public void deleteMemberAttendance(MemberAttendance memberAttendance) {
-        memberAttendanceList.remove(memberAttendance);
+    public void deleteMemberAttendance(StudyQuizSubmission studyQuizSubmission) {
+        studyQuizSubmissionList.remove(studyQuizSubmission);
     }
 }

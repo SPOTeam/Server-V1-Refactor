@@ -6,7 +6,7 @@ import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.member.domain.auth.RsaKey;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.legacy.repository.StudyReasonRepository;
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService{
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-    private final MemberStudyRepository memberStudyRepository;
+    private final StudyMemberRepository studyMemberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationCodeRepository verificationCodeRepository;
 
@@ -162,7 +162,7 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 운영중인 스터디가 있는 경우 탈퇴 불가
-        if (memberStudyRepository.existsByMemberIdAndIsOwned(memberId, true)) {
+        if (studyMemberRepository.existsByMemberIdAndIsOwned(memberId, true)) {
             throw new MemberHandler(ErrorStatus._OWNED_STUDY_EXISTS);
         }
 

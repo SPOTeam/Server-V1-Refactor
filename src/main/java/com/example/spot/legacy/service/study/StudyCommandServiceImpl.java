@@ -5,18 +5,18 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 import com.example.spot.refactor.study.domain.enums.StudyState;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
 import com.example.spot.legacy.repository.RegionRepository;
 import com.example.spot.legacy.repository.RegionStudyRepository;
@@ -54,7 +54,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
     private final RegionRepository regionRepository;
     private final ThemeRepository themeRepository;
 
-    private final MemberStudyRepository memberStudyRepository;
+    private final StudyMemberRepository studyMemberRepository;
     private final RegionStudyRepository regionStudyRepository;
     private final StudyThemeRepository studyThemeRepository;
     private final PreferredStudyRepository preferredStudyRepository;
@@ -82,35 +82,35 @@ public class StudyCommandServiceImpl implements StudyCommandService {
             throw new StudyHandler(ErrorStatus._STUDY_NOT_RECRUITING);
         }
 
-        if (study.getMaxPeople() <= memberStudyRepository.countByStatusAndStudyId(ApplicationStatus.APPROVED, studyId))
+        if (study.getMaxPeople() <= studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
             throw new StudyHandler(ErrorStatus._STUDY_IS_FULL);
 
 
         // 이미 신청한 스터디에 다시 신청할 수 없음
-        List<MemberStudy> memberStudyList = memberStudyRepository.findByMemberIdAndStatusNot(memberId, ApplicationStatus.REJECTED).stream()
+        List<StudyMember> studyMemberList = studyMemberRepository.findByMemberIdAndStatusNot(memberId, StudyApplicationStatus.REJECTED).stream()
                 .filter(memberStudy -> study.equals(memberStudy.getStudy()))
                 .toList();
 
         // memberStudy에 내가 소유한 스터디가 있으면 에러 발생
-        if (memberStudyList.stream().anyMatch(MemberStudy::getIsOwned)) {
+        if (studyMemberList.stream().anyMatch(StudyMember::getIsOwned)) {
             throw new StudyHandler(ErrorStatus._STUDY_OWNER_CANNOT_APPLY);
         }
 
-        if (!memberStudyList.isEmpty()) {
+        if (!studyMemberList.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_ALREADY_APPLIED);
         }
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .isOwned(false)
                 .introduction(studyJoinRequestDTO.getIntroduction())
                 .member(member)
                 .study(study)
-                .status(ApplicationStatus.APPLIED)
+                .status(StudyApplicationStatus.APPLIED)
                 .build();
 
-        member.addMemberStudy(memberStudy);
-        study.addMemberStudy(memberStudy);
-        memberStudyRepository.save(memberStudy);
+        member.addMemberStudy(studyMember);
+        study.addMemberStudy(studyMember);
+        studyMemberRepository.save(studyMember);
 
         return StudyJoinResponseDTO.JoinDTO.toDTO(member, study);
     }
@@ -168,10 +168,10 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
-        MemberStudy memberStudy = memberStudyRepository.findByMemberIdAndStudyId(currentUserId, studyId)
+        StudyMember studyMember = studyMemberRepository.findByMemberIdAndStudyId(currentUserId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
-        if (!memberStudy.getIsOwned()) {
+        if (!studyMember.getIsOwned()) {
             throw new StudyHandler(ErrorStatus._STUDY_NOT_OWNER);
         }
 
@@ -239,19 +239,19 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
     private void createMemberStudy(Member member, Study study) {
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .isOwned(true)
                 .introduction(study.getIntroduction())
                 .member(member)
                 .study(study)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .build();
 
-        member.addMemberStudy(memberStudy);
-        study.addMemberStudy(memberStudy);
-        memberStudyRepository.save(memberStudy);
+        member.addMemberStudy(studyMember);
+        study.addMemberStudy(studyMember);
+        studyMemberRepository.save(studyMember);
 
-        study.addMemberStudy(memberStudy);
+        study.addMemberStudy(studyMember);
 
     }
 
@@ -282,7 +282,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
         studyRegisterRequestDTO.getThemes()
                 .forEach(stringTheme -> {
 
-                    Theme theme = themeRepository.findByStudyTheme(stringTheme)
+                    Theme theme = themeRepository.findByThemeType(stringTheme)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._THEME_NOT_FOUND));
 
                     StudyTheme studyTheme = StudyTheme.builder()

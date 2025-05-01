@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ToDoList extends BaseEntity {
+public class StudyToDo extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

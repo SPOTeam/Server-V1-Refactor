@@ -2,21 +2,16 @@ package com.example.spot.service.studypost;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studypost.*;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.study.domain.enums.Theme;
-import com.example.spot.refactor.study.domain.enums.ThemeQuery;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedPost;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.study.domain.enums.StudyPostCategoryQuery;
+import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudyRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedPostRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostCommentRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.legacy.service.studypost.StudyPostQueryServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;
@@ -55,12 +50,12 @@ class StudyPostQueryServiceTest {
     @Mock
     private StudyRepository studyRepository;
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Mock
     private StudyPostRepository studyPostRepository;
     @Mock
-    private StudyLikedPostRepository studyLikedPostRepository;
+    private LikedStudyPostRepository likedStudyPostRepository;
 
     @Mock
     private StudyPostCommentRepository studyPostCommentRepository;
@@ -74,17 +69,17 @@ class StudyPostQueryServiceTest {
     private static Member member1;
     private static Member member2;
     private static Member owner;
-    private static MemberStudy member1Study;
-    private static MemberStudy ownerStudy;
+    private static StudyMember member1Study;
+    private static StudyMember ownerStudy;
 
     private static StudyPost studyPost1;
     private static StudyPost studyPost2;
     private static StudyPost studyPost3;
-    private static StudyLikedPost studyLikedPost;
+    private static LikedStudyPost likedStudyPost;
     private static StudyPostComment studyPost1Comment1;
     private static StudyPostComment studyPost1Comment2;
-    private static StudyLikedComment studyLikedComment;
-    private static StudyLikedComment studyDislikedComment;
+    private static LikedStudyComment likedStudyComment;
+    private static LikedStudyComment studyDislikedComment;
 
     @BeforeEach
     void setUp() {
@@ -105,11 +100,11 @@ class StudyPostQueryServiceTest {
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
 
         // MemberStudy
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(2L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(2L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.empty());
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(3L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(3L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
 
         // StudyPost
@@ -117,9 +112,9 @@ class StudyPostQueryServiceTest {
         when(studyPostRepository.findById(2L)).thenReturn(Optional.of(studyPost2));
         when(studyPostRepository.findById(3L)).thenReturn(Optional.of(studyPost3));
 
-        when(studyLikedPostRepository.findByMemberIdAndStudyPostId(3L, 1L))
-                .thenReturn(Optional.of(studyLikedPost));
-        when(studyLikedPostRepository.existsByMemberIdAndStudyPostId(3L, 1L))
+        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(3L, 1L))
+                .thenReturn(Optional.of(likedStudyPost));
+        when(likedStudyPostRepository.existsByMemberIdAndStudyPostId(3L, 1L))
                 .thenReturn(true);
 
         // Comment
@@ -145,7 +140,7 @@ class StudyPostQueryServiceTest {
                 .thenReturn(List.of(studyPost1, studyPost2, studyPost3));
         when(studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest))
                 .thenReturn(List.of(studyPost2));
-        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, Theme.FREE_TALK, pageRequest))
+        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, StudyPostCategory.FREE_TALK, pageRequest))
                 .thenReturn(List.of(studyPost1, studyPost3));
 
         // when
@@ -174,11 +169,11 @@ class StudyPostQueryServiceTest {
                 .thenReturn(List.of(studyPost1, studyPost2, studyPost3));
         when(studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest))
                 .thenReturn(List.of(studyPost2));
-        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, Theme.FREE_TALK, pageRequest))
+        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, StudyPostCategory.FREE_TALK, pageRequest))
                 .thenReturn(List.of(studyPost1, studyPost3));
 
         // when
-        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, ThemeQuery.FREE_TALK);
+        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StudyPostCategoryQuery.FREE_TALK);
 
         // then
         assertNotNull(result);
@@ -203,11 +198,11 @@ class StudyPostQueryServiceTest {
                 .thenReturn(List.of(studyPost1, studyPost2, studyPost3));
         when(studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest))
                 .thenReturn(List.of(studyPost2));
-        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, Theme.FREE_TALK, pageRequest))
+        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, StudyPostCategory.FREE_TALK, pageRequest))
                 .thenReturn(List.of(studyPost1, studyPost3));
 
         // when
-        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, ThemeQuery.ANNOUNCEMENT);
+        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StudyPostCategoryQuery.ANNOUNCEMENT);
 
         // then
         assertNotNull(result);
@@ -232,7 +227,7 @@ class StudyPostQueryServiceTest {
                 .thenReturn(List.of(studyPost1, studyPost2, studyPost3));
         when(studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest))
                 .thenReturn(List.of(studyPost2));
-        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, Theme.FREE_TALK, pageRequest))
+        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, StudyPostCategory.FREE_TALK, pageRequest))
                 .thenReturn(List.of(studyPost1, studyPost3));
 
         // when & then
@@ -254,11 +249,11 @@ class StudyPostQueryServiceTest {
                 .thenReturn(List.of(studyPost1, studyPost2, studyPost3));
         when(studyPostRepository.findAnnouncementsByStudyId(studyId, pageRequest))
                 .thenReturn(List.of(studyPost2));
-        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, Theme.FREE_TALK, pageRequest))
+        when(studyPostRepository.findAllByStudyIdAndTheme(studyId, StudyPostCategory.FREE_TALK, pageRequest))
                 .thenReturn(List.of(studyPost1, studyPost3));
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> studyPostQueryService.getAllPosts(pageRequest, studyId, ThemeQuery.valueOf("Nothing")));
+        assertThrows(IllegalArgumentException.class, () -> studyPostQueryService.getAllPosts(pageRequest, studyId, StudyPostCategoryQuery.valueOf("Nothing")));
     }
 
 
@@ -282,7 +277,7 @@ class StudyPostQueryServiceTest {
         when(studyRepository.save(study)).thenReturn(study);
         when(studyPostCommentRepository.findAllByStudyPostId(postId))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
-        when(studyLikedPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
+        when(likedStudyPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
                 .thenReturn(false);
 
         // when
@@ -315,7 +310,7 @@ class StudyPostQueryServiceTest {
         when(studyRepository.save(study)).thenReturn(study);
         when(studyPostCommentRepository.findAllByStudyPostId(postId))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
-        when(studyLikedPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
+        when(likedStudyPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
                 .thenReturn(false);
 
         // when
@@ -348,7 +343,7 @@ class StudyPostQueryServiceTest {
         when(studyRepository.save(study)).thenReturn(study);
         when(studyPostCommentRepository.findAllByStudyPostId(postId))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
-        when(studyLikedPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
+        when(likedStudyPostRepository.existsByMemberIdAndStudyPostId(memberId, postId))
                 .thenReturn(false);
 
         // when & then
@@ -462,23 +457,23 @@ class StudyPostQueryServiceTest {
         member1 = Member.builder()
                 .id(1L)
                 .studyPostList(new ArrayList<>())
-                .studyLikedPostList(new ArrayList<>())
+                .likedStudyPostList(new ArrayList<>())
                 .studyPostCommentList(new ArrayList<>())
-                .studyLikedCommentList(new ArrayList<>())
+                .likedStudyCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
                 .studyPostList(new ArrayList<>())
-                .studyLikedPostList(new ArrayList<>())
+                .likedStudyPostList(new ArrayList<>())
                 .studyPostCommentList(new ArrayList<>())
-                .studyLikedCommentList(new ArrayList<>())
+                .likedStudyCommentList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
                 .studyPostList(new ArrayList<>())
-                .studyLikedPostList(new ArrayList<>())
+                .likedStudyPostList(new ArrayList<>())
                 .studyPostCommentList(new ArrayList<>())
-                .studyLikedCommentList(new ArrayList<>())
+                .likedStudyCommentList(new ArrayList<>())
                 .build();
     }
 
@@ -500,9 +495,9 @@ class StudyPostQueryServiceTest {
     }
 
     private static void initMemberStudy() {
-        ownerStudy = MemberStudy.builder()
+        ownerStudy = StudyMember.builder()
                 .id(1L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(true)
                 .introduction("Hi")
                 .member(owner)
@@ -511,9 +506,9 @@ class StudyPostQueryServiceTest {
         owner.addMemberStudy(ownerStudy);
         study.addMemberStudy(ownerStudy);
 
-        member1Study = MemberStudy.builder()
+        member1Study = StudyMember.builder()
                 .id(2L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(false)
                 .introduction("Hi")
                 .member(member1)
@@ -529,7 +524,7 @@ class StudyPostQueryServiceTest {
                 .member(member1)
                 .study(study)
                 .isAnnouncement(false)
-                .theme(Theme.FREE_TALK)
+                .studyPostCategory(StudyPostCategory.FREE_TALK)
                 .title("잡담")
                 .content("내용")
                 .hitNum(0)
@@ -544,7 +539,7 @@ class StudyPostQueryServiceTest {
                 .member(owner)
                 .study(study)
                 .isAnnouncement(true)
-                .theme(Theme.INFO_SHARING)
+                .studyPostCategory(StudyPostCategory.INFO_SHARING)
                 .title("공지")
                 .content("내용")
                 .hitNum(0)
@@ -559,7 +554,7 @@ class StudyPostQueryServiceTest {
                 .member(owner)
                 .study(study)
                 .isAnnouncement(false)
-                .theme(Theme.FREE_TALK)
+                .studyPostCategory(StudyPostCategory.FREE_TALK)
                 .title("테스트")
                 .content("내용")
                 .hitNum(0)
@@ -575,14 +570,14 @@ class StudyPostQueryServiceTest {
     }
 
     private static void initStudyLikedPost() {
-        studyLikedPost = StudyLikedPost.builder()
+        likedStudyPost = LikedStudyPost.builder()
                 .id(1L)
                 .studyPost(studyPost1)
                 .member(owner)
                 .build();
-        studyPost1.addLikedPost(studyLikedPost);
+        studyPost1.addLikedPost(likedStudyPost);
         studyPost1.plusLikeNum();
-        owner.addStudyLikedPost(studyLikedPost);
+        owner.addStudyLikedPost(likedStudyPost);
     }
 
     private static void initStudyPostComment() {
@@ -615,17 +610,17 @@ class StudyPostQueryServiceTest {
     }
 
     private static void initStudyLikedComment() {
-        studyLikedComment = StudyLikedComment.builder()
+        likedStudyComment = LikedStudyComment.builder()
                 .id(1L)
                 .isLiked(true)
                 .studyPostComment(studyPost1Comment2)
                 .member(member1)
                 .build();
-        studyPost1Comment2.addLikedComment(studyLikedComment);
+        studyPost1Comment2.addLikedComment(likedStudyComment);
         studyPost1Comment2.plusLikeCount();
-        member1.addStudyLikedComment(studyLikedComment);
+        member1.addStudyLikedComment(likedStudyComment);
 
-        studyDislikedComment = StudyLikedComment.builder()
+        studyDislikedComment = LikedStudyComment.builder()
                 .id(2L)
                 .isLiked(false)
                 .studyPostComment(studyPost1Comment2)
