@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.studypost;
 
-import com.example.spot.legacy.domain.enums.ThemeQuery;
+import com.example.spot.refactor.study.domain.enums.ThemeQuery;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostResDTO;
 import org.springframework.data.domain.PageRequest;

@@ -1,9 +1,9 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.mapping.MemberVote;
-import com.example.spot.legacy.domain.study.Option;
-import com.example.spot.legacy.domain.study.Vote;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.MemberVote;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.Option;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.Vote;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

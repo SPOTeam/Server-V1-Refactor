@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
-import com.example.spot.legacy.domain.Quiz;
-import com.example.spot.legacy.domain.mapping.MemberAttendance;
-import com.example.spot.legacy.domain.mapping.MemberStudy;
+import com.example.spot.refactor.study.domain.aggregate.studyschedule.Quiz;
+import com.example.spot.refactor.study.domain.aggregate.studymember.MemberAttendance;
+import com.example.spot.refactor.study.domain.aggregate.studymember.MemberStudy;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

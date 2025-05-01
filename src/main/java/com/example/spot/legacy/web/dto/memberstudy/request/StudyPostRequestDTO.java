@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.memberstudy.request;
 
-import com.example.spot.legacy.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.enums.Theme;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

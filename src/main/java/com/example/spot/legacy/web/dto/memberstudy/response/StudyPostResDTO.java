@@ -1,9 +1,9 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.enums.Theme;
-import com.example.spot.legacy.domain.mapping.StudyPostImage;
-import com.example.spot.legacy.domain.study.StudyPost;
+import com.example.spot.refactor.study.domain.enums.Theme;
+import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImage;
+import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import lombok.*;
 
 import java.time.LocalDateTime;

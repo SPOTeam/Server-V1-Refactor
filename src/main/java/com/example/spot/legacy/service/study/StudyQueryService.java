@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.study;
 
-import com.example.spot.legacy.domain.enums.StudySortBy;
+import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;

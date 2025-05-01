@@ -43,13 +43,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.domain.Theme;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.legacy.repository.RegionRepository;
-import com.example.spot.legacy.repository.ThemeRepository;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberInfoListDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberRegionDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberThemeDTO;

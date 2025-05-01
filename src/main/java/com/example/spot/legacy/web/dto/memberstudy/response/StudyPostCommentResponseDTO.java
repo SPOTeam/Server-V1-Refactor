@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.mapping.StudyLikedComment;
-import com.example.spot.legacy.domain.study.StudyPostComment;
+import com.example.spot.refactor.study.domain.aggregate.studypost.StudyLikedComment;
+import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

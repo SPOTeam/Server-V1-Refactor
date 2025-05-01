@@ -2,13 +2,13 @@ package com.example.spot.legacy.web.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.legacy.domain.enums.ThemeQuery;
+import com.example.spot.refactor.study.domain.enums.ThemeQuery;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.legacy.service.studypost.StudyPostCommandService;
 import com.example.spot.legacy.service.studypost.StudyPostQueryService;
-import com.example.spot.legacy.validation.annotation.ExistStudy;
-import com.example.spot.legacy.validation.annotation.ExistStudyPost;
-import com.example.spot.legacy.validation.annotation.ExistStudyPostComment;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyPost;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyPostComment;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostCommentRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;

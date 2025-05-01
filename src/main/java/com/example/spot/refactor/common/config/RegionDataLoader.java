@@ -1,10 +1,10 @@
 package com.example.spot.refactor.common.config;
 
-import com.example.spot.legacy.domain.Theme;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.repository.RegionRepository;
 import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.repository.ThemeRepository;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;

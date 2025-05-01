@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
-import com.example.spot.legacy.domain.mapping.StudyPostImage;
+import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImage;
 
 import lombok.AccessLevel;
 import lombok.Builder;

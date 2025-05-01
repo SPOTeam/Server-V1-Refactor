@@ -5,7 +5,7 @@ import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.study.StudyCommandService;
 import com.example.spot.legacy.service.study.StudyQueryService;
-import com.example.spot.legacy.validation.annotation.ExistStudy;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.legacy.web.dto.study.request.StudyJoinRequestDTO;
 import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyInfoResponseDTO;
