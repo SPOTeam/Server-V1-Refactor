@@ -1,6 +1,6 @@
 package com.example.spot.legacy.repository.querydsl;
 
-import com.example.spot.legacy.domain.enums.Status;
+import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.legacy.domain.enums.StudySortBy;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.mapping.RegionStudy;

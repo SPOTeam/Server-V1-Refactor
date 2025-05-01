@@ -1,9 +1,9 @@
 package com.example.spot.service.post;
 
-import com.example.spot.legacy.api.exception.handler.PostHandler;
+import com.example.spot.refactor.common.api.exception.handler.PostHandler;
 import com.example.spot.legacy.domain.LikedPost;
 import com.example.spot.legacy.domain.LikedPostComment;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Post;
 import com.example.spot.legacy.domain.PostComment;
 import com.example.spot.legacy.domain.PostReport;
@@ -11,7 +11,7 @@ import com.example.spot.legacy.domain.enums.Board;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.repository.LikedPostCommentRepository;
 import com.example.spot.legacy.repository.LikedPostRepository;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.legacy.repository.MemberScrapRepository;
 import com.example.spot.legacy.repository.PostCommentRepository;
 import com.example.spot.legacy.repository.PostReportRepository;

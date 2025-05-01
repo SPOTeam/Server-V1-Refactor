@@ -1,11 +1,11 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.PostHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.PostHandler;
 import com.example.spot.legacy.domain.LikedPost;
 import com.example.spot.legacy.domain.LikedPostComment;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Post;
 import com.example.spot.legacy.domain.PostComment;
 import com.example.spot.legacy.domain.PostReport;
@@ -14,7 +14,7 @@ import com.example.spot.legacy.domain.enums.PostStatus;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.repository.LikedPostCommentRepository;
 import com.example.spot.legacy.repository.LikedPostRepository;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.legacy.repository.MemberScrapRepository;
 import com.example.spot.legacy.repository.PostCommentRepository;
 import com.example.spot.legacy.repository.PostReportRepository;
@@ -41,7 +41,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.example.spot.legacy.security.utils.SecurityUtils.getCurrentUserId;
+import static com.example.spot.refactor.common.security.utils.SecurityUtils.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor

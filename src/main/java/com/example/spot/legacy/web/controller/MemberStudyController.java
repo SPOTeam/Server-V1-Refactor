@@ -1,10 +1,10 @@
 package com.example.spot.legacy.web.controller;
 
-import com.example.spot.legacy.api.ApiResponse;
-import com.example.spot.legacy.api.code.status.SuccessStatus;
+import com.example.spot.refactor.common.api.ApiResponse;
+import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandService;
 import com.example.spot.legacy.service.memberstudy.MemberStudyQueryService;
-import com.example.spot.legacy.validation.annotation.ExistMember;
+import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
 import com.example.spot.legacy.validation.annotation.ExistSchedule;
 import com.example.spot.legacy.validation.annotation.ExistStudy;
 import com.example.spot.legacy.validation.annotation.ExistStudyPost;
@@ -27,7 +27,7 @@ import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO
 import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyApplyResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyPostResponseDTO;
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO;

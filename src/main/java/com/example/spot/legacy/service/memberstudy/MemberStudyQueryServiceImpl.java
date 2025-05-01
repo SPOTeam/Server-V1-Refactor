@@ -1,9 +1,9 @@
 package com.example.spot.legacy.service.memberstudy;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Quiz;
 import com.example.spot.legacy.domain.enums.Period;
 import com.example.spot.legacy.domain.mapping.MemberAttendance;
@@ -14,7 +14,7 @@ import com.example.spot.legacy.domain.study.StudyPost;
 import com.example.spot.legacy.domain.study.ToDoList;
 import com.example.spot.legacy.domain.study.Vote;
 import com.example.spot.legacy.repository.MemberAttendanceRepository;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.MemberVoteRepository;
 import com.example.spot.legacy.repository.OptionRepository;
@@ -33,13 +33,13 @@ import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyPostResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyScheduleResponseDTO;
 
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO.ToDoListDTO;
 
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import lombok.RequiredArgsConstructor;
-import com.example.spot.legacy.api.exception.GeneralException;
+import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO.StudyApplyMemberDTO;

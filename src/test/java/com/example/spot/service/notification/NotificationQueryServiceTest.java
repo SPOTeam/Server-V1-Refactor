@@ -7,8 +7,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.common.api.exception.GeneralException;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.enums.NotifyType;
 import com.example.spot.legacy.domain.study.Study;

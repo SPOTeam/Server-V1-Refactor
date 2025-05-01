@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.controller;
 
-import com.example.spot.legacy.api.ApiResponse;
-import com.example.spot.legacy.api.code.status.SuccessStatus;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.api.ApiResponse;
+import com.example.spot.refactor.common.api.code.status.SuccessStatus;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO;
 import com.example.spot.legacy.service.notification.NotificationCommandService;
 import com.example.spot.legacy.service.notification.NotificationQueryService;

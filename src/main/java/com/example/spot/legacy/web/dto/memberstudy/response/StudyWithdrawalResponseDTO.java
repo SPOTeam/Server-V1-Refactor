@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.memberstudy.response;
 
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.study.Study;
 import lombok.AccessLevel;
 import lombok.Builder;

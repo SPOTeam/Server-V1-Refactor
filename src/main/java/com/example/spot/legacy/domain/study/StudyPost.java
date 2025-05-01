@@ -1,7 +1,7 @@
 package com.example.spot.legacy.domain.study;
 
-import com.example.spot.legacy.domain.Member;
-import com.example.spot.legacy.domain.common.BaseEntity;
+import com.example.spot.refactor.member.domain.Member;
+import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.enums.Theme;
 import com.example.spot.legacy.domain.mapping.StudyLikedPost;
 import com.example.spot.legacy.domain.mapping.StudyPostImage;

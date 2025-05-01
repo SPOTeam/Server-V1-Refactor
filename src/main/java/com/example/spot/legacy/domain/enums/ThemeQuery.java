@@ -1,7 +1,7 @@
 package com.example.spot.legacy.domain.enums;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.StudyHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 
 public enum ThemeQuery {
 

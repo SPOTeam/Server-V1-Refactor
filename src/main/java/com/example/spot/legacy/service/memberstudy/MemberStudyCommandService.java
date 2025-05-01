@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.memberstudy;
 
-import com.example.spot.legacy.web.dto.member.MemberResponseDTO;
+import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.ScheduleRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.legacy.web.dto.memberstudy.request.StudyMemberReportDTO;

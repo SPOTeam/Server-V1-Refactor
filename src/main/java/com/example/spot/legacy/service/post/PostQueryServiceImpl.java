@@ -1,7 +1,7 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.api.code.status.ErrorStatus;
-import com.example.spot.legacy.api.exception.handler.PostHandler;
+import com.example.spot.refactor.common.api.code.status.ErrorStatus;
+import com.example.spot.refactor.common.api.exception.handler.PostHandler;
 import com.example.spot.legacy.domain.Post;
 import com.example.spot.legacy.domain.PostComment;
 import com.example.spot.legacy.domain.enums.Board;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.example.spot.legacy.security.utils.SecurityUtils.getCurrentUserId;
+import static com.example.spot.refactor.common.security.utils.SecurityUtils.getCurrentUserId;
 
 
 @Service

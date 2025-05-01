@@ -1,7 +1,7 @@
 package com.example.spot.service.memberstudy;
 
-import com.example.spot.legacy.api.exception.GeneralException;
-import com.example.spot.legacy.domain.Member;
+import com.example.spot.refactor.common.api.exception.GeneralException;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
 import com.example.spot.legacy.domain.enums.Theme;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
@@ -9,12 +9,12 @@ import com.example.spot.legacy.domain.study.Schedule;
 import com.example.spot.legacy.domain.study.Study;
 import com.example.spot.legacy.domain.study.StudyPost;
 import com.example.spot.legacy.domain.study.ToDoList;
-import com.example.spot.legacy.repository.MemberRepository;
+import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.ScheduleRepository;
 import com.example.spot.legacy.repository.StudyPostRepository;
 import com.example.spot.legacy.repository.ToDoListRepository;
-import com.example.spot.legacy.security.utils.SecurityUtils;
+import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.memberstudy.MemberStudyQueryServiceImpl;
 import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;
