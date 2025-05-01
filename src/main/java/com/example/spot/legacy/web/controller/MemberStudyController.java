@@ -5,11 +5,11 @@ import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandService;
 import com.example.spot.legacy.service.memberstudy.MemberStudyQueryService;
 import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistSchedule;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudySchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyPost;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistToDoList;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistVote;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyToDo;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyVote;
 import com.example.spot.legacy.validation.annotation.IntSize;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import com.example.spot.legacy.web.dto.memberstudy.request.ScheduleRequestDTO;
@@ -267,7 +267,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}")
     public ApiResponse<ScheduleResponseDTO.MonthlyScheduleDTO> getSchedule(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId) {
+            @PathVariable @ExistStudySchedule Long scheduleId) {
         ScheduleResponseDTO.MonthlyScheduleDTO scheduleDTO = memberStudyQueryService.getSchedule(studyId, scheduleId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, scheduleDTO);
     }
@@ -300,7 +300,7 @@ public class MemberStudyController {
     @PatchMapping("/studies/{studyId}/schedules/{scheduleId}")
     public ApiResponse<ScheduleResponseDTO.ScheduleDTO> modSchedule(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleModDTO) {
         ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_UPDATED, scheduleResponseDTO);
@@ -333,7 +333,7 @@ public class MemberStudyController {
     @PostMapping("/studies/{studyId}/votes/{voteId}/options")
     public ApiResponse<StudyVoteResponseDTO.VotedOptionDTO> vote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistVote Long voteId,
+            @PathVariable @ExistStudyVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VotedOptionDTO votedOptionDTO) {
         StudyVoteResponseDTO.VotedOptionDTO votedOptionResDTO = memberStudyCommandService.vote(studyId, voteId, votedOptionDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_PARTICIPATED, votedOptionResDTO);
@@ -349,7 +349,7 @@ public class MemberStudyController {
     @PatchMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> updateVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistVote Long voteId,
+            @PathVariable @ExistStudyVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VoteUpdateDTO voteDTO) {
         StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.updateVote(studyId, voteId, voteDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_UPDATED, votePreviewDTO);
@@ -365,7 +365,7 @@ public class MemberStudyController {
     @DeleteMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> deleteVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistVote Long voteId) {
+            @PathVariable @ExistStudyVote Long voteId) {
         StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.deleteVote(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DELETED, votePreviewDTO);
     }
@@ -395,7 +395,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<?> getVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistVote Long voteId) {
+            @PathVariable @ExistStudyVote Long voteId) {
         Boolean isCompleted = memberStudyQueryService.getIsCompleted(voteId);
         if (isCompleted) {
             StudyVoteResponseDTO.CompletedVoteDTO completedVoteDTO = memberStudyQueryService.getVoteInCompletion(studyId, voteId);
@@ -416,7 +416,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/votes/{voteId}/details")
     public ApiResponse<StudyVoteResponseDTO.CompletedVoteDetailDTO> getCompletedVoteDetail(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistVote Long voteId) {
+            @PathVariable @ExistStudyVote Long voteId) {
         StudyVoteResponseDTO.CompletedVoteDetailDTO completedVoteDetailDTO = memberStudyQueryService.getCompletedVoteDetail(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DETAIL_STATUS_FOUND, completedVoteDetailDTO);
     }
@@ -450,7 +450,7 @@ public class MemberStudyController {
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> createAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
         StudyQuizResponseDTO.QuizDTO quizResponseDTO = memberStudyCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_CREATED, quizResponseDTO);
@@ -467,7 +467,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> getAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyQueryService.getAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, quizDTO);
@@ -485,7 +485,7 @@ public class MemberStudyController {
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
     public ApiResponse<StudyQuizResponseDTO.AttendanceDTO> attendantStudy(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
         StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = memberStudyCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
         if (attendanceResponseDTO.getIsCorrect()) {
@@ -507,7 +507,7 @@ public class MemberStudyController {
     @DeleteMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> deleteAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, quizDTO);
@@ -524,7 +524,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
     public ApiResponse<StudyQuizResponseDTO.AttendanceListDTO> getAllAttendances(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
+            @PathVariable @ExistStudySchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = memberStudyQueryService.getAllAttendances(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_ATTENDANCES_FOUND, attendanceListDTO);
@@ -594,7 +594,7 @@ public class MemberStudyController {
     @PostMapping("/studies/{studyId}/to-do/{toDoId}/update")
     public ApiResponse<ToDoListUpdateResponseDTO> updateToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistToDoList Long toDoId,
+        @PathVariable @ExistStudyToDo Long toDoId,
         @RequestBody @Valid ToDoListRequestDTO.ToDoListCreateDTO request) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.updateToDoList(
             studyId, toDoId, request);
@@ -619,7 +619,7 @@ public class MemberStudyController {
     @PostMapping("/studies/{studyId}/to-do/{toDoId}/check")
     public ApiResponse<ToDoListUpdateResponseDTO> checkToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistToDoList Long toDoId) {
+        @PathVariable @ExistStudyToDo Long toDoId) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.checkToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_UPDATED, toDoListUpdateResponseDTO);
@@ -637,7 +637,7 @@ public class MemberStudyController {
     @DeleteMapping("/studies/{studyId}/to-do/{toDoId}")
     public ApiResponse<ToDoListUpdateResponseDTO> deleteToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistToDoList Long toDoId) {
+        @PathVariable @ExistStudyToDo Long toDoId) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.deleteToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_DELETED, toDoListUpdateResponseDTO);

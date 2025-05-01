@@ -1,8 +1,8 @@
 package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizRepository;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistQuiz;
+import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteRepository;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyVote;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,25 +10,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistQuizValidator implements ConstraintValidator<ExistQuiz, Long> {
+public class ExistStudyVoteValidator implements ConstraintValidator<ExistStudyVote, Long> {
 
-    private final StudyQuizRepository studyQuizRepository;
-
-    @Override
-    public void initialize(ExistQuiz constraintAnnotation) {}
+    private final StudyVoteRepository studyVoteRepository;
 
     @Override
-    public boolean isValid(Long quizId, ConstraintValidatorContext context) {
+    public void initialize(ExistStudyVote constraintAnnotation) {}
+
+    @Override
+    public boolean isValid(Long voteId, ConstraintValidatorContext context) {
 
         boolean isValid = false;
         ErrorStatus errorStatus;
 
-        if (quizId == null) {
-            errorStatus = ErrorStatus._STUDY_QUIZ_ID_NULL;
-        } else if (!studyQuizRepository.existsById(quizId)) {
-            errorStatus = ErrorStatus._STUDY_QUIZ_NOT_FOUND;
+        if (voteId == null) {
+            errorStatus = ErrorStatus._STUDY_VOTE_NULL;
+        } else if (!studyVoteRepository.existsById(voteId)) {
+            errorStatus = ErrorStatus._STUDY_VOTE_NOT_FOUND;
         } else {
-            errorStatus = ErrorStatus._STUDY_QUIZ_NOT_FOUND; // ignore
+            errorStatus = ErrorStatus._STUDY_VOTE_NOT_FOUND; // ignore
             isValid = true;
         }
 

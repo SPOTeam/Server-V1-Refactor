@@ -2,7 +2,7 @@ package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyCommentRepository;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyLikedComment;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistLikedStudyComment;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistStudyLikedCommentValidator implements ConstraintValidator<ExistStudyLikedComment, Long> {
+public class ExistLikedStudyCommentValidator implements ConstraintValidator<ExistLikedStudyComment, Long> {
 
     private final LikedStudyCommentRepository likedStudyCommentRepository;
 
     @Override
-    public void initialize(ExistStudyLikedComment constraintAnnotation) {}
+    public void initialize(ExistLikedStudyComment constraintAnnotation) {}
 
     @Override
     public boolean isValid(Long likedCommentId, ConstraintValidatorContext context) {

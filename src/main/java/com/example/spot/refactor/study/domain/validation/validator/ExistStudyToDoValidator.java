@@ -2,7 +2,7 @@ package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistToDoList;
+import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyToDo;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistToDoListValidator implements ConstraintValidator<ExistToDoList, Long>{
+public class ExistStudyToDoValidator implements ConstraintValidator<ExistStudyToDo, Long>{
 
     private final StudyToDoRepository studyToDoRepository;
     @Override
-    public void initialize(ExistToDoList constraintAnnotation) {
+    public void initialize(ExistStudyToDo constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
