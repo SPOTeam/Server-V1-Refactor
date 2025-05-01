@@ -1,16 +1,16 @@
 package com.example.spot.service.studyattendance;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
-import com.example.spot.refactor.domain.member.Member;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Quiz;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.legacy.domain.mapping.MemberAttendance;
 import com.example.spot.legacy.domain.mapping.MemberStudy;
 import com.example.spot.legacy.domain.study.Schedule;
 import com.example.spot.legacy.domain.study.Study;
 import com.example.spot.legacy.repository.MemberAttendanceRepository;
-import com.example.spot.refactor.domain.member.MemberRepository;
+import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.legacy.repository.MemberStudyRepository;
 import com.example.spot.legacy.repository.QuizRepository;
 import com.example.spot.legacy.repository.ScheduleRepository;

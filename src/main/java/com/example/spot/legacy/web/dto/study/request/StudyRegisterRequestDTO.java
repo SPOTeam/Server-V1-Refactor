@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.study.request;
 
-import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.validation.annotation.IntSize;
 import com.example.spot.legacy.validation.annotation.LongSize;

@@ -1,8 +1,8 @@
 package com.example.spot.legacy.web.dto.study.response;
 
-import com.example.spot.refactor.domain.member.Member;
+import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.refactor.domain.member.enums.Gender;
+import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.legacy.domain.enums.ThemeType;
 import com.example.spot.legacy.domain.study.Study;
 import lombok.AccessLevel;

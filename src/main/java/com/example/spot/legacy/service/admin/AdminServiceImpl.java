@@ -2,9 +2,9 @@ package com.example.spot.legacy.service.admin;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
-import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.refactor.domain.member.MemberRepository;
-import com.example.spot.refactor.domain.member.auth.RefreshTokenRepository;
+import com.example.spot.refactor.member.domain.Member;
+import com.example.spot.refactor.member.domain.MemberRepository;
+import com.example.spot.refactor.member.domain.auth.RefreshTokenRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.web.dto.admin.AdminResponseDTO;
 import lombok.RequiredArgsConstructor;

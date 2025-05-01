@@ -4,7 +4,7 @@ import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.enums.Board;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
-import com.example.spot.refactor.domain.member.Member;
+import com.example.spot.refactor.member.domain.Member;
 
 import jakarta.persistence.*;
 import lombok.*;

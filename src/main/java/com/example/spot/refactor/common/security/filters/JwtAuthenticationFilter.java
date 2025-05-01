@@ -1,10 +1,10 @@
 package com.example.spot.refactor.common.security.filters;
 
 import com.example.spot.refactor.common.api.exception.GeneralException;
-import com.example.spot.refactor.domain.member.auth.TempUserDetails;
-import com.example.spot.refactor.application.member.MemberService;
+import com.example.spot.refactor.member.domain.auth.TempUserDetails;
+import com.example.spot.refactor.member.application.MemberService;
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
-import com.example.spot.refactor.application.member.UserDetailsServiceCustom;
+import com.example.spot.refactor.member.application.UserDetailsServiceCustom;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

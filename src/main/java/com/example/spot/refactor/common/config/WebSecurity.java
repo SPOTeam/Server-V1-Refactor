@@ -5,8 +5,8 @@ import com.example.spot.refactor.common.security.filters.JwtAuthenticationFilter
 import com.example.spot.refactor.common.security.oauth.CustomOAuth2UserService;
 import com.example.spot.refactor.common.security.oauth.CustomOAuthSuccessHandler;
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
-import com.example.spot.refactor.application.member.MemberService;
-import com.example.spot.refactor.application.member.UserDetailsServiceCustom;
+import com.example.spot.refactor.member.application.MemberService;
+import com.example.spot.refactor.member.application.UserDetailsServiceCustom;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;

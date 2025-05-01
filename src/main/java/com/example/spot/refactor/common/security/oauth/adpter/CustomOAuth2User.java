@@ -1,7 +1,7 @@
 package com.example.spot.refactor.common.security.oauth.adpter;
 
-import com.example.spot.refactor.domain.member.Member;
-import com.example.spot.refactor.domain.member.enums.LoginType;
+import com.example.spot.refactor.member.domain.Member;
+import com.example.spot.refactor.member.domain.enums.LoginType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

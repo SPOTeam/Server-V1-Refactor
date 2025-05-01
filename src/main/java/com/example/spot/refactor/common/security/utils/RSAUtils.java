@@ -2,7 +2,7 @@ package com.example.spot.refactor.common.security.utils;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
-import com.example.spot.refactor.domain.member.auth.RsaKey;
+import com.example.spot.refactor.member.domain.auth.RsaKey;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
