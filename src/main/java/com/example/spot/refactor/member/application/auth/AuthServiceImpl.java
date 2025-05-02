@@ -9,7 +9,7 @@ import com.example.spot.refactor.member.domain.auth.RsaKey;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
-import com.example.spot.legacy.repository.StudyReasonRepository;
+import com.example.spot.refactor.member.domain.association.StudyJoinReasonRepository;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO.CheckMemberDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO.NicknameDuplicateDTO;
@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService{
 
     private final MemberThemeRepository memberThemeRepository;
     private final PreferredRegionRepository preferredRegionRepository;
-    private final StudyReasonRepository studyReasonRepository;
+    private final StudyJoinReasonRepository studyJoinReasonRepository;
 
     private final MailService mailService;
     private final NaverOAuthService naverOAuthService;
@@ -295,7 +295,7 @@ public class AuthServiceImpl implements AuthService{
         Long memberId = member.getId();
         return memberThemeRepository.existsByMemberId(memberId) &&
                 preferredRegionRepository.existsByMemberId(memberId) &&
-                studyReasonRepository.existsByMemberId(memberId);
+                studyJoinReasonRepository.existsByMemberId(memberId);
     }
 
     /**

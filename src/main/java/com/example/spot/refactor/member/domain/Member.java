@@ -1,16 +1,10 @@
 package com.example.spot.refactor.member.domain;
 
-import com.example.spot.legacy.domain.LikedPost;
-import com.example.spot.legacy.domain.LikedPostComment;
-import com.example.spot.legacy.domain.MemberReport;
-import com.example.spot.legacy.domain.Notification;
-import com.example.spot.legacy.domain.Post;
-import com.example.spot.legacy.domain.PostComment;
-import com.example.spot.legacy.domain.PostReport;
+import com.example.spot.legacy.domain.*;
 import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
 import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPost;
 import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuiz;
-import com.example.spot.legacy.domain.StudyReason;
+import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Carrier;
 import com.example.spot.refactor.member.domain.enums.Gender;
@@ -114,7 +108,7 @@ public class Member extends BaseEntity {
     //== 스터디 희망사유 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyReason> studyReasonList = new ArrayList<>();
+    private List<StudyJoinReason> studyJoinReasonList = new ArrayList<>();
 
     //== 알림 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -278,9 +272,9 @@ public class Member extends BaseEntity {
         this.preferredRegionList.addAll(preferredRegions);
     }
 
-    public void updateReasons(List<StudyReason> studyReasons) {
-        this.studyReasonList.clear();
-        this.studyReasonList.addAll(studyReasons);
+    public void updateReasons(List<StudyJoinReason> studyJoinReasons) {
+        this.studyJoinReasonList.clear();
+        this.studyJoinReasonList.addAll(studyJoinReasons);
     }
 
     public void updateTerm(Boolean personalInfo, Boolean idInfo) {

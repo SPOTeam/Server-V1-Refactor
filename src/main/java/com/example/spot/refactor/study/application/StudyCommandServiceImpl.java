@@ -1,10 +1,11 @@
 package com.example.spot.refactor.study.application;
 
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
@@ -12,14 +13,13 @@ import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
-import com.example.spot.legacy.repository.RegionRepository;
-import com.example.spot.legacy.repository.RegionStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegionRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
@@ -55,7 +55,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
     private final ThemeRepository themeRepository;
 
     private final StudyMemberRepository studyMemberRepository;
-    private final RegionStudyRepository regionStudyRepository;
+    private final StudyRegionRepository studyRegionRepository;
     private final StudyThemeRepository studyThemeRepository;
     private final PreferredStudyRepository preferredStudyRepository;
 
@@ -185,7 +185,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
         studyThemeRepository.deleteByStudyId(studyId);
         study.getStudyThemes().clear();
 
-        regionStudyRepository.deleteByStudyId(studyId);
+        studyRegionRepository.deleteByStudyId(studyId);
         study.getRegionStudies().clear();
 
         createRegionStudy(study, studyInfoDTO);
@@ -264,16 +264,16 @@ public class StudyCommandServiceImpl implements StudyCommandService {
                             .findByCode(stringRegion)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._REGION_NOT_FOUND));
 
-                    RegionStudy regionStudy = RegionStudy.builder()
+                    StudyRegion studyRegion = StudyRegion.builder()
                             .region(region)
                             .study(study)
                             .build();
 
-                    region.addRegionStudy(regionStudy);
-                    study.addRegionStudy(regionStudy);
-                    regionStudyRepository.save(regionStudy);
+                    region.addRegionStudy(studyRegion);
+                    study.addRegionStudy(studyRegion);
+                    studyRegionRepository.save(studyRegion);
 
-                    study.addRegionStudy(regionStudy);
+                    study.addRegionStudy(studyRegion);
                 });
     }
 

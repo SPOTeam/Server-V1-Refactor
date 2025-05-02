@@ -1,6 +1,5 @@
-package com.example.spot.legacy.repository;
+package com.example.spot.refactor.study.domain.aggregate.studyregion;
 
-import com.example.spot.legacy.domain.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +9,6 @@ import java.util.Optional;
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
-    List<Region> findAllByProvince(String province);
-    List<Region> findAllByDistrict(String district);
-    Optional<Region> findByProvinceAndDistrictAndNeighborhood(String province, String district, String neighborhood);
     Optional<Region> findByCode(String code);
     boolean existsByCode(String code);
 }

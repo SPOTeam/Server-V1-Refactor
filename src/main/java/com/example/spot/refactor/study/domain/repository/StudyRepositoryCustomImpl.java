@@ -2,14 +2,14 @@ package com.example.spot.refactor.study.domain.repository;
 
 import static com.example.spot.refactor.study.domain.aggregate.QStudy.*;
 
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.QStudy;
 import com.example.spot.refactor.study.domain.aggregate.Study;
@@ -89,7 +89,7 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom {
     }
 
     @Override
-    public List<Study> findByRegionStudyAndNotInIds(List<RegionStudy> regionStudies, List<Long> studyIds) {
+    public List<Study> findByRegionStudyAndNotInIds(List<StudyRegion> regionStudies, List<Long> studyIds) {
         return queryFactory.selectFrom(study)
             .where(study.regionStudies.any().in(regionStudies))
             .where(study.id.notIn(studyIds))
@@ -168,7 +168,7 @@ public class StudyRepositoryCustomImpl implements StudyRepositoryCustom {
 
     @Override
     public List<Study> findStudyByConditionsAndRegionStudiesAndNotInIds(Map<String, Object> search,
-        StudySortBy sortBy, Pageable pageable, List<RegionStudy> regionStudies,
+        StudySortBy sortBy, Pageable pageable, List<StudyRegion> regionStudies,
         List<Long> studyIds) {
         QStudy study = QStudy.study;
 
@@ -293,7 +293,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
 
     @Override
     public long countStudyByConditionsAndRegionStudiesAndNotInIds(Map<String, Object> search,
-        List<RegionStudy> regionStudies, StudySortBy sortBy, List<Long> studyIds) {
+                                                                  List<StudyRegion> regionStudies, StudySortBy sortBy, List<Long> studyIds) {
         BooleanBuilder builder = getBooleanBuilderByRegionStudies(search, study, regionStudies);
         getStudyState(sortBy, builder, study);
         return queryFactory.selectFrom(study)
@@ -380,7 +380,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
         }
     }
     private static BooleanBuilder getBooleanBuilderByRegionStudies(Map<String, Object> search, QStudy study,
-        List<RegionStudy> RegionStudies) {
+        List<StudyRegion> RegionStudies) {
         BooleanBuilder builder = new BooleanBuilder();
         // 조건문 추가
         getConditions(search, study, builder);

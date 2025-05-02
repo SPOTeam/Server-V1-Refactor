@@ -4,22 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
-import com.example.spot.legacy.repository.RegionRepository;
-import com.example.spot.legacy.repository.RegionStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegionRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
@@ -62,7 +62,7 @@ class StudyCommandServiceTest {
     @Mock
     private RegionRepository regionRepository;
     @Mock
-    private RegionStudyRepository regionStudyRepository;
+    private StudyRegionRepository studyRegionRepository;
 
     @Mock
     private ThemeRepository themeRepository;
@@ -252,7 +252,7 @@ class StudyCommandServiceTest {
                 .study(study)
                 .build();
 
-        RegionStudy regionStudy = RegionStudy.builder()
+        StudyRegion studyRegion = StudyRegion.builder()
                 .region(region)
                 .study(study)
                 .build();
@@ -264,7 +264,7 @@ class StudyCommandServiceTest {
 
         when(studyRepository.save(any(Study.class))).thenReturn(study);
         when(studyMemberRepository.save(any(StudyMember.class))).thenReturn(studyMember);
-        when(regionStudyRepository.save(any(RegionStudy.class))).thenReturn(regionStudy);
+        when(studyRegionRepository.save(any(StudyRegion.class))).thenReturn(studyRegion);
         when(studyThemeRepository.save(any(StudyTheme.class))).thenReturn(studyTheme);
 
         // when
@@ -275,7 +275,7 @@ class StudyCommandServiceTest {
         assertThat(result.getTitle()).isEqualTo("새로운 스터디");
         verify(studyRepository, times(2)).save(any(Study.class));
         verify(studyMemberRepository, times(1)).save(any(StudyMember.class));
-        verify(regionStudyRepository, times(1)).save(any(RegionStudy.class));
+        verify(studyRegionRepository, times(1)).save(any(StudyRegion.class));
         verify(studyThemeRepository, times(1)).save(any(StudyTheme.class));
     }
 

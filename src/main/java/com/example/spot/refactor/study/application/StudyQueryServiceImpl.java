@@ -5,7 +5,7 @@ import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
@@ -17,7 +17,7 @@ import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
@@ -25,8 +25,8 @@ import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberR
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
-import com.example.spot.legacy.repository.RegionRepository;
-import com.example.spot.legacy.repository.RegionStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegionRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
@@ -87,7 +87,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
 
     // 지역 관련 조회
     private final PreferredRegionRepository preferredRegionRepository;
-    private final RegionStudyRepository regionStudyRepository;
+    private final StudyRegionRepository studyRegionRepository;
     private final RegionRepository regionRepository;
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -272,8 +272,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
             .toList();
 
         // 회원 관심 지역으로 스터디 지역 조회
-        List<RegionStudy> regionStudies = regions.stream()
-                .flatMap(region -> regionStudyRepository.findAllByRegion(region).stream())
+        List<StudyRegion> regionStudies = regions.stream()
+                .flatMap(region -> studyRegionRepository.findAllByRegion(region).stream())
                 .toList();
 
         // 해당 관심사에 해당하는 스터디가 존재하지 않을 경우
@@ -493,8 +493,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
             throw new MemberHandler(ErrorStatus._STUDY_REGION_IS_INVALID);
 
         // 회원 관심 지역으로 스터디 지역 조회
-        List<RegionStudy> regionStudies = regions.stream()
-            .flatMap(region -> regionStudyRepository.findAllByRegion(region).stream())
+        List<StudyRegion> regionStudies = regions.stream()
+            .flatMap(region -> studyRegionRepository.findAllByRegion(region).stream())
             .toList();
 
         // 해당 관심 지역에 해당하는 스터디가 존재하지 않을 경우
@@ -563,8 +563,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         Region region = findRegionByCode(regions, regionCode);
 
         // 스터디 지역 조회
-        List<RegionStudy> regionStudies = regions.stream()
-            .flatMap(regionStudy -> regionStudyRepository.findAllByRegion(region).stream())
+        List<StudyRegion> regionStudies = regions.stream()
+            .flatMap(regionStudy -> studyRegionRepository.findAllByRegion(region).stream())
             .toList();
 
         // 해당 관심 지역에 해당하는 스터디가 존재하지 않을 경우

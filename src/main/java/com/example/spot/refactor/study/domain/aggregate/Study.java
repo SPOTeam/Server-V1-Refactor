@@ -1,6 +1,7 @@
 package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.legacy.domain.Notification;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
@@ -12,7 +13,6 @@ import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -110,7 +110,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<RegionStudy> regionStudies = new ArrayList<>();
+    private List<StudyRegion> regionStudies = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -135,9 +135,9 @@ public class Study extends BaseEntity {
         studyMember.setStudy(this);
     }
 
-    public void addRegionStudy(RegionStudy regionStudy) {
-        regionStudies.add(regionStudy);
-        regionStudy.setStudy(this);
+    public void addRegionStudy(StudyRegion studyRegion) {
+        regionStudies.add(studyRegion);
+        studyRegion.setStudy(this);
     }
 
     public void addStudyTheme(StudyTheme studyTheme) {

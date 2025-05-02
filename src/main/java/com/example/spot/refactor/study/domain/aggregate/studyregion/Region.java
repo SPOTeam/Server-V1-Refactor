@@ -1,7 +1,6 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.study.domain.aggregate.studyregion;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -33,7 +32,7 @@ public class Region extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    private List<RegionStudy> regionStudyList = new ArrayList<>();
+    private List<StudyRegion> studyRegionList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
@@ -42,9 +41,9 @@ public class Region extends BaseEntity {
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addRegionStudy(RegionStudy regionStudy) {
-        regionStudyList.add(regionStudy);
-        regionStudy.setRegion(this);
+    public void addRegionStudy(StudyRegion studyRegion) {
+        studyRegionList.add(studyRegion);
+        studyRegion.setRegion(this);
     }
 
     public void addPreferredRegion(PreferredRegion preferredRegion) {

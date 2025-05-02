@@ -3,13 +3,13 @@ package com.example.spot.refactor.member.application;
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
-import com.example.spot.legacy.domain.StudyReason;
+import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.legacy.domain.enums.Reason;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.repository.StudyReasonRepository;
+import com.example.spot.refactor.member.domain.association.StudyJoinReasonRepository;
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.member.domain.MemberRepository;
@@ -42,13 +42,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
-import com.example.spot.legacy.repository.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberInfoListDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberRegionDTO;
@@ -83,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
     private final RegionRepository regionRepository;
     private final MemberThemeRepository memberThemeRepository;
     private final PreferredRegionRepository preferredRegionRepository;
-    private final StudyReasonRepository studyReasonRepository;
+    private final StudyJoinReasonRepository studyJoinReasonRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
@@ -468,19 +468,19 @@ public class MemberServiceImpl implements MemberService {
             .toList();
 
         // StudyReason 객체 생성
-        List<StudyReason> studyReasons = reasons.stream()
-            .map(reason -> StudyReason.builder().member(member).reason(reason.getCode()).build())
+        List<StudyJoinReason> studyJoinReasons = reasons.stream()
+            .map(reason -> StudyJoinReason.builder().member(member).reason(reason.getCode()).build())
             .toList();
 
         // 기존의 StudyReason 삭제
-        if (studyReasonRepository.existsByMemberId(member.getId()))
-            studyReasonRepository.deleteByMemberId(member.getId());
+        if (studyJoinReasonRepository.existsByMemberId(member.getId()))
+            studyJoinReasonRepository.deleteByMemberId(member.getId());
 
         // 새로운 StudyReason 저장
-        studyReasonRepository.saveAll(studyReasons);
+        studyJoinReasonRepository.saveAll(studyJoinReasons);
 
         // 회원 정보 업데이트
-        member.updateReasons(studyReasons);
+        member.updateReasons(studyJoinReasons);
 
         // 회원 정보 저장
         memberRepository.save(member);
@@ -575,12 +575,12 @@ public class MemberServiceImpl implements MemberService {
             .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 회원의 스터디 참여 이유가 없을 경우
-        if (member.getStudyReasonList().isEmpty())
+        if (member.getStudyJoinReasonList().isEmpty())
             throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
 
         // 회원의 스터디 참여 이유 ID 조회
-        List<Long> reasonNums = member.getStudyReasonList().stream()
-            .map(StudyReason::getReason)
+        List<Long> reasonNums = member.getStudyJoinReasonList().stream()
+            .map(StudyJoinReason::getReason)
             .toList();
 
         // 이유 ID를 이유 객체로 변환
@@ -686,7 +686,7 @@ public class MemberServiceImpl implements MemberService {
         Long memberId = member.getId();
         return memberThemeRepository.existsByMemberId(memberId) &&
                 preferredRegionRepository.existsByMemberId(memberId) &&
-                studyReasonRepository.existsByMemberId(memberId);
+                studyJoinReasonRepository.existsByMemberId(memberId);
     }
 
 

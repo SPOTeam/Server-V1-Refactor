@@ -9,10 +9,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.study.domain.enums.*;
@@ -22,7 +23,6 @@ import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
@@ -30,7 +30,7 @@ import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberR
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.refactor.member.domain.association.PreferredStudyRepository;
-import com.example.spot.legacy.repository.RegionStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegionRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
@@ -88,7 +88,7 @@ class StudyQueryServiceTest {
     @Mock
     private PreferredRegionRepository preferredRegionRepository;
     @Mock
-    private RegionStudyRepository regionStudyRepository;
+    private StudyRegionRepository studyRegionRepository;
 
     @InjectMocks
     private StudyQueryServiceImpl studyQueryService;
@@ -110,8 +110,8 @@ class StudyQueryServiceTest {
     private static Region region2;
     private static PreferredRegion preferredRegion1;
     private static PreferredRegion preferredRegion2;
-    private static RegionStudy regionStudy1;
-    private static RegionStudy regionStudy2;
+    private static StudyRegion studyRegion1;
+    private static StudyRegion studyRegion2;
     private static PreferredStudy preferredStudy1;
     private static PreferredStudy preferredStudy2;
     private static StudyMember studyMember1;
@@ -138,8 +138,8 @@ class StudyQueryServiceTest {
         preferredRegion1 = PreferredRegion.builder().member(member).region(region1).build();
         preferredRegion2 = PreferredRegion.builder().member(member).region(region2).build();
 
-        regionStudy1 = RegionStudy.builder().region(region1).study(study1).build();
-        regionStudy2 = RegionStudy.builder().region(region2).study(study2).build();
+        studyRegion1 = StudyRegion.builder().region(region1).study(study1).build();
+        studyRegion2 = StudyRegion.builder().region(region2).study(study2).build();
 
         preferredStudy1 = getPreferredStudy(member, study1);
         preferredStudy2 = getPreferredStudy(member, study2);
@@ -396,8 +396,8 @@ class StudyQueryServiceTest {
         when(studyThemeRepository.findAllByTheme(theme1)).thenReturn(List.of(studyTheme1));
         when(studyThemeRepository.findAllByTheme(theme2)).thenReturn(List.of(studyTheme2));
 
-        when(regionStudyRepository.findAllByRegion(region1)).thenReturn(List.of(regionStudy1));
-        when(regionStudyRepository.findAllByRegion(region2)).thenReturn(List.of(regionStudy2));
+        when(studyRegionRepository.findAllByRegion(region1)).thenReturn(List.of(studyRegion1));
+        when(studyRegionRepository.findAllByRegion(region2)).thenReturn(List.of(studyRegion2));
 
         // Mocking the studyRepository to return studies based on the study themes
         when(studyRepository.findByStudyThemeAndNotInIds(anyList(), anyList())).thenReturn(List.of(study1, study2));
@@ -429,8 +429,8 @@ class StudyQueryServiceTest {
         when(studyThemeRepository.findAllByTheme(theme1)).thenReturn(List.of(studyTheme1));
         when(studyThemeRepository.findAllByTheme(theme2)).thenReturn(List.of(studyTheme2));
 
-        when(regionStudyRepository.findAllByRegion(region1)).thenReturn(List.of(regionStudy1));
-        when(regionStudyRepository.findAllByRegion(region2)).thenReturn(List.of(regionStudy2));
+        when(studyRegionRepository.findAllByRegion(region1)).thenReturn(List.of(studyRegion1));
+        when(studyRegionRepository.findAllByRegion(region2)).thenReturn(List.of(studyRegion2));
 
         // Mocking the studyRepository to return studies based on the study themes
         when(studyRepository.findByStudyThemeAndNotInIds(anyList(), anyList())).thenReturn(List.of());
@@ -458,8 +458,8 @@ class StudyQueryServiceTest {
         when(studyThemeRepository.findAllByTheme(theme1)).thenReturn(List.of());
         when(studyThemeRepository.findAllByTheme(theme2)).thenReturn(List.of());
 
-        when(regionStudyRepository.findAllByRegion(region1)).thenReturn(List.of(regionStudy1));
-        when(regionStudyRepository.findAllByRegion(region2)).thenReturn(List.of(regionStudy2));
+        when(studyRegionRepository.findAllByRegion(region1)).thenReturn(List.of(studyRegion1));
+        when(studyRegionRepository.findAllByRegion(region2)).thenReturn(List.of(studyRegion2));
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -481,8 +481,8 @@ class StudyQueryServiceTest {
         when(studyThemeRepository.findAllByTheme(theme1)).thenReturn(List.of(studyTheme1));
         when(studyThemeRepository.findAllByTheme(theme2)).thenReturn(List.of(studyTheme2));
 
-        when(regionStudyRepository.findAllByRegion(region1)).thenReturn(List.of());
-        when(regionStudyRepository.findAllByRegion(region2)).thenReturn(List.of());
+        when(studyRegionRepository.findAllByRegion(region1)).thenReturn(List.of());
+        when(studyRegionRepository.findAllByRegion(region2)).thenReturn(List.of());
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -1038,17 +1038,17 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
             .thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(region1))
-            .thenReturn(List.of(regionStudy1));
-        when(regionStudyRepository.findAllByRegion(region2))
-            .thenReturn(List.of(regionStudy2));
+        when(studyRegionRepository.findAllByRegion(region1))
+            .thenReturn(List.of(studyRegion1));
+        when(studyRegionRepository.findAllByRegion(region2))
+            .thenReturn(List.of(studyRegion2));
 
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, List.of(regionStudy1, regionStudy2), sortBy, studyIds))
+            searchConditions, List.of(studyRegion1, studyRegion2), sortBy, studyIds))
             .thenReturn(2L);
 
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, sortBy, pageable, List.of(regionStudy1, regionStudy2), studyIds))
+            searchConditions, sortBy, pageable, List.of(studyRegion1, studyRegion2), studyIds))
             .thenReturn(List.of(study1, study2));
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
@@ -1060,10 +1060,10 @@ class StudyQueryServiceTest {
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());  // Assuming StudyPreviewDTO has a getSize method
         verify(preferredRegionRepository).findAllByMemberId(member.getId());
-        verify(regionStudyRepository, times(1)).findAllByRegion(region1);
-        verify(regionStudyRepository, times(1)).findAllByRegion(region2);
-        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(regionStudy1, regionStudy2), sortBy, studyIds);
-        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(regionStudy1, regionStudy2), studyIds);
+        verify(studyRegionRepository, times(1)).findAllByRegion(region1);
+        verify(studyRegionRepository, times(1)).findAllByRegion(region2);
+        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(studyRegion1, studyRegion2), sortBy, studyIds);
+        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(studyRegion1, studyRegion2), studyIds);
     }
 
     @Test
@@ -1075,7 +1075,7 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
                 .thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of( ));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of( ));
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -1083,7 +1083,7 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(regionStudyRepository, times(1)).findAllByRegion(region1);
+        verify(studyRegionRepository, times(1)).findAllByRegion(region1);
     }
 
 
@@ -1100,14 +1100,14 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
             .thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, List.of(regionStudy1, regionStudy2), sortBy, studyIds))
+            searchConditions, List.of(studyRegion1, studyRegion2), sortBy, studyIds))
             .thenReturn(2L);
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, sortBy, pageable, List.of(regionStudy1, regionStudy2), studyIds))
+            searchConditions, sortBy, pageable, List.of(studyRegion1, studyRegion2), studyIds))
             .thenReturn(List.of());
 
         // when & then
@@ -1116,8 +1116,8 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(regionStudyRepository, times(1)).findAllByRegion(region1);
-        verify(regionStudyRepository, times(1)).findAllByRegion(region1);
+        verify(studyRegionRepository, times(1)).findAllByRegion(region1);
+        verify(studyRegionRepository, times(1)).findAllByRegion(region1);
     }
 
 
@@ -1129,7 +1129,7 @@ class StudyQueryServiceTest {
         List<Study> studies = List.of(study1, study2);
 
         when(preferredRegionRepository.findAllByMemberId(any())).thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
             .thenReturn(studies);
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
@@ -1156,7 +1156,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(1L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
@@ -1182,7 +1182,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(2L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
@@ -1207,7 +1207,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(2L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
@@ -1258,17 +1258,17 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
             .thenReturn(List.of(preferredRegion1));
-        when(regionStudyRepository.findAllByRegion(region1))
-            .thenReturn(List.of(regionStudy1));
+        when(studyRegionRepository.findAllByRegion(region1))
+            .thenReturn(List.of(studyRegion1));
 
         // Only studyTheme1 should match
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, List.of(regionStudy1), sortBy, studyIds))
+            searchConditions, List.of(studyRegion1), sortBy, studyIds))
             .thenReturn(1L);
 
         // Adjusting the mock to match the specific test data
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, sortBy, pageable, List.of(regionStudy1), studyIds))
+            searchConditions, sortBy, pageable, List.of(studyRegion1), studyIds))
             .thenReturn(List.of(study1));
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
@@ -1280,9 +1280,9 @@ class StudyQueryServiceTest {
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());  // Verify the count matches expected result
         verify(preferredRegionRepository).findAllByMemberId(member.getId());
-        verify(regionStudyRepository).findAllByRegion(region1);  // Ensure the correct theme is queried
-        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(regionStudy1), sortBy, studyIds);
-        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(regionStudy1), studyIds);
+        verify(studyRegionRepository).findAllByRegion(region1);  // Ensure the correct theme is queried
+        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(studyRegion1), sortBy, studyIds);
+        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(studyRegion1), studyIds);
 
 
     }
@@ -1296,7 +1296,7 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
                 .thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of( ));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of( ));
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
@@ -1304,7 +1304,7 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(regionStudyRepository, times(2)).findAllByRegion(any());
+        verify(studyRegionRepository, times(2)).findAllByRegion(any());
     }
 
     @Test
@@ -1322,15 +1322,15 @@ class StudyQueryServiceTest {
 
         when(preferredRegionRepository.findAllByMemberId(member.getId()))
             .thenReturn(List.of(preferredRegion1));
-        when(regionStudyRepository.findAllByRegion(region1))
-            .thenReturn(List.of(regionStudy1));
+        when(studyRegionRepository.findAllByRegion(region1))
+            .thenReturn(List.of(studyRegion1));
 
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, List.of(regionStudy1), sortBy, studyIds))
+            searchConditions, List.of(studyRegion1), sortBy, studyIds))
             .thenReturn(0L);
 
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(
-            searchConditions, sortBy, pageable, List.of(regionStudy1), studyIds))
+            searchConditions, sortBy, pageable, List.of(studyRegion1), studyIds))
             .thenReturn(List.of());
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
@@ -1340,9 +1340,9 @@ class StudyQueryServiceTest {
             studyQueryService.findInterestRegionStudiesByConditionsSpecific(pageable, member.getId(), requestWithTheme, regionCode, sortBy);
         });
         verify(preferredRegionRepository).findAllByMemberId(member.getId());
-        verify(regionStudyRepository).findAllByRegion(region1);  // Ensure the correct theme is queried
-        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(regionStudy1), sortBy, studyIds);
-        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(regionStudy1),studyIds);
+        verify(studyRegionRepository).findAllByRegion(region1);  // Ensure the correct theme is queried
+        verify(studyRepository).countStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, List.of(studyRegion1), sortBy, studyIds);
+        verify(studyRepository).findStudyByConditionsAndRegionStudiesAndNotInIds(searchConditions, sortBy, pageable, List.of(studyRegion1),studyIds);
     }
 
     @Test
@@ -1355,7 +1355,7 @@ class StudyQueryServiceTest {
         when(preferredRegionRepository.findAllByMemberId(any())).thenReturn(List.of(preferredRegion1, preferredRegion2));
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
             .thenReturn(studies);
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(2L);
         when(memberRepository.existsById(any())).thenReturn(true);
@@ -1379,7 +1379,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(2L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
@@ -1406,7 +1406,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1, preferredRegion2));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1, regionStudy2));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1, studyRegion2));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(3L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))
@@ -1433,7 +1433,7 @@ class StudyQueryServiceTest {
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredRegion1));
-        when(regionStudyRepository.findAllByRegion(any())).thenReturn(List.of(regionStudy1));
+        when(studyRegionRepository.findAllByRegion(any())).thenReturn(List.of(studyRegion1));
         when(studyRepository.countStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any()))
             .thenReturn(3L);
         when(studyRepository.findStudyByConditionsAndRegionStudiesAndNotInIds(any(), any(), any(), any(), any()))

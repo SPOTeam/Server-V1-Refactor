@@ -1,6 +1,5 @@
-package com.example.spot.legacy.domain.mapping;
+package com.example.spot.refactor.study.domain.aggregate.studyregion;
 
-import com.example.spot.legacy.domain.Region;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import jakarta.persistence.Entity;
@@ -23,7 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @AllArgsConstructor
-public class RegionStudy extends BaseEntity {
+public class StudyRegion extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +39,10 @@ public class RegionStudy extends BaseEntity {
     private Study study;
 
 
-    protected RegionStudy() {}
+    protected StudyRegion() {}
 
     @Builder
-    public RegionStudy(Region region, Study study) {
+    public StudyRegion(Region region, Study study) {
         this.region = region;
     }
 

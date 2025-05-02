@@ -1,13 +1,13 @@
 package com.example.spot.legacy.web.dto.search;
 
-import com.example.spot.legacy.domain.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 
@@ -107,7 +107,7 @@ public class SearchResponseDTO {
             this.hitNum = study.getHitNum();
             this.maxPeople = study.getMaxPeople();
             this.studyState = study.getStudyState();
-            this.regions = study.getRegionStudies().stream().map(RegionStudy::getRegion).map(Region::getCode).toList();
+            this.regions = study.getRegionStudies().stream().map(StudyRegion::getRegion).map(Region::getCode).toList();
             this.themeTypes = study.getStudyThemes().stream().map(StudyTheme::getTheme).map(Theme::getThemeType).toList();
             this.createdAt = study.getCreatedAt();
         }
