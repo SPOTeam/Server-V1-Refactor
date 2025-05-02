@@ -1,4 +1,4 @@
-package com.example.spot.service.memberstudy;
+package com.example.spot.service.study.studymember;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com.example.spot.service.memberstudy;
+package com.example.spot.service.study.studymember;
 
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;

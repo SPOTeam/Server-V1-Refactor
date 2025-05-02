@@ -1,4 +1,4 @@
-package com.example.spot.service.studyattendance;
+package com.example.spot.service.study.studyschedule;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
