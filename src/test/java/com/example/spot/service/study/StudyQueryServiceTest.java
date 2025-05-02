@@ -1918,7 +1918,7 @@ class StudyQueryServiceTest {
     private static Theme getTheme(Long id, ThemeType themeType) {
         return Theme.builder()
             .id(id)
-            .studyTheme(themeType)
+            .themeType(themeType)
             .build();
     }
 

@@ -344,7 +344,7 @@ class StudyCommandServiceTest {
 
     private static void initTheme() {
         theme = Theme.builder()
-                .studyTheme(ThemeType.자격증)
+                .themeType(ThemeType.자격증)
                 .build();
     }
 

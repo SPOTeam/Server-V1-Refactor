@@ -577,7 +577,7 @@ class StudyAttendanceCommandServiceTest {
 
     private static void initQuiz() {
         studyQuiz1 = StudyQuiz.builder()
-                .schedule(studySchedule)
+                .studySchedule(studySchedule)
                 .member(owner)
                 .question("최고의 스터디 앱은?")
                 .answer("SPOT")
@@ -634,7 +634,7 @@ class StudyAttendanceCommandServiceTest {
                 .build();
 
         studyQuiz2 = StudyQuiz.builder()
-                .schedule(studySchedule)
+                .studySchedule(studySchedule)
                 .member(member1)
                 .question("최고의 스터디 앱은?")
                 .answer("SPOT")

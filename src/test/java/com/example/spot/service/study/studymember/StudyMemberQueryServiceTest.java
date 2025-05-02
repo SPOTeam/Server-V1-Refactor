@@ -37,8 +37,6 @@ import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -74,7 +72,7 @@ public class StudyMemberQueryServiceTest {
     private static Member member2;
     private static Study study;
     private static StudyMember studyMember;
-    private static StudyMember studyMember;
+    private static StudyMember studyMember2;
     private static StudyMember apply;
     private static StudyToDo studyToDo;
     
@@ -96,7 +94,7 @@ public class StudyMemberQueryServiceTest {
 
         apply = StudyMember.builder()
                 .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED).build();
-        studyMember = StudyMember.builder()
+        studyMember2 = StudyMember.builder()
                 .introduction("title").study(study).member(member2).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
         studyToDo = StudyToDo.builder()
                 .id(1L)
