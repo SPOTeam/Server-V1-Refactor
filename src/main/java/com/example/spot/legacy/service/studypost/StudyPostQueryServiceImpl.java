@@ -17,8 +17,8 @@ import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComme
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostResDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostResDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;

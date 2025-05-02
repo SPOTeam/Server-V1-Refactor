@@ -1,9 +1,9 @@
 package com.example.spot.legacy.service.studypost;
 
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostCommentRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyPostRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostCommentResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostResDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyPostCommentRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostResDTO;
 
 public interface StudyPostCommandService {
 

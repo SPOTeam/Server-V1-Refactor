@@ -1,21 +1,21 @@
 package com.example.spot.legacy.service.memberstudy;
 
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.ScheduleRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyHostWithdrawRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyMemberReportDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyQuizRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.StudyVoteRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.ScheduleResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyPostResDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyQuizResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyTerminationResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyApplyResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyMemberReportDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyVoteRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostResDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyTerminationResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyVoteResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyWithdrawalResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.request.ToDoListRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyApplyResponseDTO;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;

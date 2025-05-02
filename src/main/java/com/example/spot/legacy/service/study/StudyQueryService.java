@@ -7,7 +7,7 @@ import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.MyPageDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyInfoResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyInfoResponseDTO;
 
 import org.springframework.data.domain.Pageable;
 

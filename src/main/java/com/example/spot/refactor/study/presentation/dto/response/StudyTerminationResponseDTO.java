@@ -1,0 +1,30 @@
+package com.example.spot.refactor.study.presentation.dto.response;
+
+import com.example.spot.refactor.member.domain.enums.Status;
+import com.example.spot.refactor.study.domain.aggregate.Study;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+public class StudyTerminationResponseDTO {
+
+    @Getter
+    @RequiredArgsConstructor
+    @Builder(access = AccessLevel.PRIVATE)
+    public static class TerminationDTO {
+
+        private final Long studyId;
+        private final String studyName;
+        private final Status status;
+
+        public static TerminationDTO toDTO(Study study) {
+            return TerminationDTO.builder()
+                    .studyId(study.getId())
+                    .studyName(study.getTitle())
+                    .status(study.getStatus())
+                    .build();
+        }
+    }
+}

@@ -3,7 +3,7 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
-import com.example.spot.legacy.web.dto.memberstudy.request.ScheduleRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

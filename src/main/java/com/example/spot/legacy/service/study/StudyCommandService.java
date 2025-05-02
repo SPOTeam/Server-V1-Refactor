@@ -1,10 +1,10 @@
 package com.example.spot.legacy.service.study;
 
-import com.example.spot.legacy.web.dto.study.request.StudyJoinRequestDTO;
-import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyJoinResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyLikeResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyRegisterResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyJoinRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyRegisterRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyJoinResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyLikeResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyRegisterResponseDTO;
 
 public interface StudyCommandService {
 

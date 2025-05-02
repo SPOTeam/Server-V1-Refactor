@@ -1,17 +1,17 @@
 package com.example.spot.legacy.service.memberstudy;
 
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.ScheduleResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyImageResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyMemberResDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyQuizResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyVoteResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyPostResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyScheduleResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyImageResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyVoteResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyPostResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyScheduleResponseDTO;
 
 
-import com.example.spot.legacy.web.dto.study.response.StudyMemberResponseDTO.StudyApplicantDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

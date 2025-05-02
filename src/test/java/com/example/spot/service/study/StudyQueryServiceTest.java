@@ -39,7 +39,7 @@ import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.MyPageDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyInfoResponseDTO.StudyInfoDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyInfoResponseDTO.StudyInfoDTO;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

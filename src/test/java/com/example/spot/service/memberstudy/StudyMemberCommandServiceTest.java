@@ -19,15 +19,15 @@ import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberR
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
 import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListRequestDTO.ToDoListCreateDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.request.toDo.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyTerminationResponseDTO;
-import com.example.spot.legacy.web.dto.memberstudy.response.StudyWithdrawalResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyTerminationResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
