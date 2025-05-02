@@ -4,30 +4,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.domain.Theme;
-import com.example.spot.legacy.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.legacy.domain.enums.StudyState;
-import com.example.spot.legacy.domain.enums.ThemeType;
-import com.example.spot.legacy.domain.mapping.MemberStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
-import com.example.spot.legacy.domain.mapping.StudyTheme;
-import com.example.spot.legacy.domain.study.Study;
+import com.example.spot.refactor.study.domain.enums.StudyState;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
+import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.legacy.repository.MemberStudyRepository;
-import com.example.spot.legacy.repository.RegionRepository;
-import com.example.spot.legacy.repository.RegionStudyRepository;
-import com.example.spot.legacy.repository.StudyRepository;
-import com.example.spot.legacy.repository.StudyThemeRepository;
-import com.example.spot.legacy.repository.ThemeRepository;
-import com.example.spot.legacy.service.study.StudyCommandServiceImpl;
-import com.example.spot.legacy.web.dto.study.request.StudyJoinRequestDTO;
-import com.example.spot.legacy.web.dto.study.request.StudyRegisterRequestDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyJoinResponseDTO;
-import com.example.spot.legacy.web.dto.study.response.StudyRegisterResponseDTO;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegionRepository;
+import com.example.spot.refactor.study.domain.repository.StudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
+import com.example.spot.refactor.study.application.StudyCommandServiceImpl;
+import com.example.spot.refactor.study.presentation.dto.request.StudyJoinRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.request.StudyRegisterRequestDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyJoinResponseDTO;
+import com.example.spot.refactor.study.presentation.dto.response.StudyRegisterResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,12 +57,12 @@ class StudyCommandServiceTest {
     @Mock
     private StudyRepository studyRepository;
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Mock
     private RegionRepository regionRepository;
     @Mock
-    private RegionStudyRepository regionStudyRepository;
+    private StudyRegionRepository studyRegionRepository;
 
     @Mock
     private ThemeRepository themeRepository;
@@ -76,8 +76,8 @@ class StudyCommandServiceTest {
     private static Member member1;
     private static Member member2;
     private static Member owner;
-    private static MemberStudy member1Study;
-    private static MemberStudy ownerStudy;
+    private static StudyMember member1Study;
+    private static StudyMember ownerStudy;
     private static Region region;
     private static Theme theme;
 
@@ -95,13 +95,13 @@ class StudyCommandServiceTest {
 
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
         when(regionRepository.findByCode("123456")).thenReturn(Optional.of(region));
-        when(themeRepository.findByStudyTheme(ThemeType.자격증)).thenReturn(Optional.of(theme));
+        when(themeRepository.findByThemeType(ThemeType.자격증)).thenReturn(Optional.of(theme));
 
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(3L, 1L, ApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(3L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndIsOwned(3L, 1L, true))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(3L, 1L, true))
                 .thenReturn(Optional.of(ownerStudy));
     }
 
@@ -119,21 +119,21 @@ class StudyCommandServiceTest {
                 .introduction("Hi")
                 .build();
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .id(3L)
                 .member(member2)
                 .study(study)
-                .status(ApplicationStatus.APPLIED)
+                .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
                 .introduction(studyJoinRequestDTO.getIntroduction())
                 .build();
 
-        when(memberStudyRepository.countByStatusAndStudyId(ApplicationStatus.APPROVED, studyId))
+        when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
                 .thenReturn(2L);
-        when(memberStudyRepository.findByMemberIdAndStatusNot(memberId, ApplicationStatus.REJECTED))
+        when(studyMemberRepository.findByMemberIdAndStatusNot(memberId, StudyApplicationStatus.REJECTED))
                 .thenReturn(List.of());
-        when(memberStudyRepository.save(any(MemberStudy.class)))
-                .thenReturn(memberStudy);
+        when(studyMemberRepository.save(any(StudyMember.class)))
+                .thenReturn(studyMember);
 
         // when
         StudyJoinResponseDTO.JoinDTO result = studyCommandService.applyToStudy(studyId, studyJoinRequestDTO);
@@ -141,7 +141,7 @@ class StudyCommandServiceTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getMemberId()).isEqualTo(memberId);
-        verify(memberStudyRepository, times(1)).save(any(MemberStudy.class));
+        verify(studyMemberRepository, times(1)).save(any(StudyMember.class));
     }
 
     @Test
@@ -158,21 +158,21 @@ class StudyCommandServiceTest {
                 .introduction("Hi")
                 .build();
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .id(3L)
                 .member(member1)
                 .study(study)
-                .status(ApplicationStatus.APPLIED)
+                .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
                 .introduction(studyJoinRequestDTO.getIntroduction())
                 .build();
 
-        when(memberStudyRepository.countByStatusAndStudyId(ApplicationStatus.APPROVED, studyId))
+        when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
                 .thenReturn(2L);
-        when(memberStudyRepository.findByMemberIdAndStatusNot(memberId, ApplicationStatus.REJECTED))
+        when(studyMemberRepository.findByMemberIdAndStatusNot(memberId, StudyApplicationStatus.REJECTED))
                 .thenReturn(List.of(member1Study));
-        when(memberStudyRepository.save(any(MemberStudy.class)))
-                .thenReturn(memberStudy);
+        when(studyMemberRepository.save(any(StudyMember.class)))
+                .thenReturn(studyMember);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, studyJoinRequestDTO));
@@ -197,21 +197,21 @@ class StudyCommandServiceTest {
                 .introduction("Hi")
                 .build();
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .id(3L)
                 .member(member2)
                 .study(study)
-                .status(ApplicationStatus.APPLIED)
+                .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
                 .introduction(studyJoinRequestDTO.getIntroduction())
                 .build();
 
-        when(memberStudyRepository.countByStatusAndStudyId(ApplicationStatus.APPROVED, studyId))
+        when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
                 .thenReturn(1L);
-        when(memberStudyRepository.findByMemberIdAndStatusNot(memberId, ApplicationStatus.REJECTED))
+        when(studyMemberRepository.findByMemberIdAndStatusNot(memberId, StudyApplicationStatus.REJECTED))
                 .thenReturn(List.of());
-        when(memberStudyRepository.save(any(MemberStudy.class)))
-                .thenReturn(memberStudy);
+        when(studyMemberRepository.save(any(StudyMember.class)))
+                .thenReturn(studyMember);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, studyJoinRequestDTO));
@@ -247,12 +247,12 @@ class StudyCommandServiceTest {
                 .maxPeople(10L)
                 .build();
 
-        MemberStudy memberStudy = MemberStudy.builder()
+        StudyMember studyMember = StudyMember.builder()
                 .member(member1)
                 .study(study)
                 .build();
 
-        RegionStudy regionStudy = RegionStudy.builder()
+        StudyRegion studyRegion = StudyRegion.builder()
                 .region(region)
                 .study(study)
                 .build();
@@ -263,8 +263,8 @@ class StudyCommandServiceTest {
                 .build();
 
         when(studyRepository.save(any(Study.class))).thenReturn(study);
-        when(memberStudyRepository.save(any(MemberStudy.class))).thenReturn(memberStudy);
-        when(regionStudyRepository.save(any(RegionStudy.class))).thenReturn(regionStudy);
+        when(studyMemberRepository.save(any(StudyMember.class))).thenReturn(studyMember);
+        when(studyRegionRepository.save(any(StudyRegion.class))).thenReturn(studyRegion);
         when(studyThemeRepository.save(any(StudyTheme.class))).thenReturn(studyTheme);
 
         // when
@@ -274,8 +274,8 @@ class StudyCommandServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("새로운 스터디");
         verify(studyRepository, times(2)).save(any(Study.class));
-        verify(memberStudyRepository, times(1)).save(any(MemberStudy.class));
-        verify(regionStudyRepository, times(1)).save(any(RegionStudy.class));
+        verify(studyMemberRepository, times(1)).save(any(StudyMember.class));
+        verify(studyRegionRepository, times(1)).save(any(StudyRegion.class));
         verify(studyThemeRepository, times(1)).save(any(StudyTheme.class));
     }
 
@@ -288,15 +288,15 @@ class StudyCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
+                .studyScheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -318,17 +318,17 @@ class StudyCommandServiceTest {
     }
 
     private static void initMemberStudy() {
-        ownerStudy = MemberStudy.builder()
+        ownerStudy = StudyMember.builder()
                 .id(1L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(true)
                 .introduction("Hi")
                 .member(owner)
                 .study(study)
                 .build();
-        member1Study = MemberStudy.builder()
+        member1Study = StudyMember.builder()
                 .id(2L)
-                .status(ApplicationStatus.APPROVED)
+                .status(StudyApplicationStatus.APPROVED)
                 .isOwned(false)
                 .introduction("Hi")
                 .member(member1)
@@ -344,7 +344,7 @@ class StudyCommandServiceTest {
 
     private static void initTheme() {
         theme = Theme.builder()
-                .studyTheme(ThemeType.자격증)
+                .themeType(ThemeType.자격증)
                 .build();
     }
 

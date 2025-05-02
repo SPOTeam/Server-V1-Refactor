@@ -9,11 +9,11 @@ import static org.mockito.Mockito.when;
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.legacy.domain.enums.ApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
-import com.example.spot.legacy.domain.mapping.MemberStudy;
-import com.example.spot.legacy.domain.study.Study;
-import com.example.spot.legacy.repository.MemberStudyRepository;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.legacy.repository.NotificationRepository;
 import com.example.spot.legacy.service.notification.NotificationCommandServiceImpl;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
@@ -41,7 +41,7 @@ public class NotificationCommandServiceTest {
     private NotificationRepository notificationRepository;
 
     @Mock
-    private MemberStudyRepository memberStudyRepository;
+    private StudyMemberRepository studyMemberRepository;
 
     @Mock
     private Member member;
@@ -53,7 +53,7 @@ public class NotificationCommandServiceTest {
     private Notification notification2;
     private Notification notification3;
 
-    private MemberStudy memberStudy;
+    private StudyMember studyMember;
 
     @BeforeEach
     void init() {
@@ -67,7 +67,7 @@ public class NotificationCommandServiceTest {
                 .id(3L).study(study).member(member).type(NotifyType.STUDY_APPLY).notifierName("Test")
                 .isChecked(true).build();
 
-        this.memberStudy = MemberStudy.builder().status(ApplicationStatus.APPLIED).build();
+        this.studyMember = StudyMember.builder().status(StudyApplicationStatus.APPLIED).build();
     }
 
     /* --------------------------------- 알림 읽음 처리 ----------------------------------- */
@@ -141,9 +141,9 @@ public class NotificationCommandServiceTest {
                 anyLong(), anyLong(), any(), anyBoolean()
         )).thenReturn(Optional.ofNullable(notification1));
 
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(
                 anyLong(), anyLong(), any()
-        )).thenReturn(Optional.ofNullable(memberStudy));
+        )).thenReturn(Optional.ofNullable(studyMember));
 
         // when
         NotificationProcessDTO response =
@@ -175,7 +175,7 @@ public class NotificationCommandServiceTest {
                 anyLong(), anyLong(), any(), anyBoolean()
         )).thenReturn(Optional.ofNullable(notification1));
 
-        when(memberStudyRepository.findByMemberIdAndStudyIdAndStatus(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(
                 anyLong(), anyLong(), any()
         )).thenReturn(Optional.empty());
 

@@ -1,6 +1,6 @@
 package com.example.spot.refactor.member.domain.association;
 
-import com.example.spot.legacy.domain.enums.StudyLikeStatus;
+import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 
 import java.util.List;
 import java.util.Optional;

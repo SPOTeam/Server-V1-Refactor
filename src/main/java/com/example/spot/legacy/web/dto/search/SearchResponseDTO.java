@@ -1,19 +1,20 @@
 package com.example.spot.legacy.web.dto.search;
 
-import com.example.spot.legacy.domain.Region;
-import com.example.spot.legacy.domain.Theme;
-import com.example.spot.legacy.domain.enums.ApplicationStatus;
-import com.example.spot.legacy.domain.enums.StudyLikeStatus;
-import com.example.spot.legacy.domain.enums.StudyState;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
+import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
+import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
+import com.example.spot.refactor.study.domain.enums.StudyState;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.legacy.domain.mapping.RegionStudy;
-import com.example.spot.legacy.domain.mapping.StudyTheme;
-import com.example.spot.legacy.domain.study.Study;
+import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
+import com.example.spot.refactor.study.domain.aggregate.Study;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -99,15 +100,15 @@ public class SearchResponseDTO {
             this.introduction = study.getIntroduction();
             this.goal = study.getGoal();
             this.memberCount = (long) study.getMemberStudies().stream()
-                    .filter(memberStudy -> memberStudy.getStatus().equals(ApplicationStatus.APPROVED))
+                    .filter(memberStudy -> memberStudy.getStatus().equals(StudyApplicationStatus.APPROVED))
                     .toList()
                     .size();
             this.heartCount = (long) study.getHeartCount();
             this.hitNum = study.getHitNum();
             this.maxPeople = study.getMaxPeople();
             this.studyState = study.getStudyState();
-            this.regions = study.getRegionStudies().stream().map(RegionStudy::getRegion).map(Region::getCode).toList();
-            this.themeTypes = study.getStudyThemes().stream().map(StudyTheme::getTheme).map(Theme::getStudyTheme).toList();
+            this.regions = study.getRegionStudies().stream().map(StudyRegion::getRegion).map(Region::getCode).toList();
+            this.themeTypes = study.getStudyThemes().stream().map(StudyTheme::getTheme).map(Theme::getThemeType).toList();
             this.createdAt = study.getCreatedAt();
         }
 

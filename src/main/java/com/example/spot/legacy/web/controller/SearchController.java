@@ -2,11 +2,11 @@ package com.example.spot.legacy.web.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.legacy.domain.enums.StudySortBy;
-import com.example.spot.legacy.domain.enums.ThemeType;
+import com.example.spot.refactor.study.domain.enums.StudySortBy;
+import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
-import com.example.spot.legacy.service.study.StudyCommandService;
-import com.example.spot.legacy.service.study.StudyQueryService;
+import com.example.spot.refactor.study.application.StudyCommandService;
+import com.example.spot.refactor.study.application.StudyQueryService;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.HotKeywordDTO;

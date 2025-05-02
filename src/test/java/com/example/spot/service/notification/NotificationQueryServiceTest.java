@@ -11,7 +11,7 @@ import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.legacy.domain.enums.NotifyType;
-import com.example.spot.legacy.domain.study.Study;
+import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.legacy.repository.NotificationRepository;
 import com.example.spot.legacy.service.notification.NotificationQueryServiceImpl;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationListDTO;
