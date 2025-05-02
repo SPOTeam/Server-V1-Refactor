@@ -23,7 +23,7 @@ import com.example.spot.legacy.repository.RegionStudyRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
-import com.example.spot.legacy.service.study.StudyCommandServiceImpl;
+import com.example.spot.refactor.study.application.StudyCommandServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.request.StudyJoinRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyRegisterRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyJoinResponseDTO;

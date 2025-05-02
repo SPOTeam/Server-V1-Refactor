@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.study;
+package com.example.spot.refactor.study.application;
 
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.ThemeType;

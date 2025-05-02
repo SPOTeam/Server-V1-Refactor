@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.studypost;
+package com.example.spot.refactor.study.application;
 
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;

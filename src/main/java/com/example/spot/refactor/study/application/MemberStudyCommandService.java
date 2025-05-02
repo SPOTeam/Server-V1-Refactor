@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.memberstudy;
+package com.example.spot.refactor.study.application;
 
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;

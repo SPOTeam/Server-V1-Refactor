@@ -34,7 +34,7 @@ import com.example.spot.legacy.repository.RegionStudyRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyThemeRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
-import com.example.spot.legacy.service.study.StudyQueryServiceImpl;
+import com.example.spot.refactor.study.application.StudyQueryServiceImpl;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
 import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
 import com.example.spot.legacy.web.dto.search.SearchResponseDTO.MyPageDTO;

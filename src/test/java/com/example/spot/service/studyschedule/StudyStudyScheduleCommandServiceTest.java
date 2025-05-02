@@ -14,7 +14,7 @@ import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberR
 import com.example.spot.legacy.repository.NotificationRepository;
 import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyScheduleRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
-import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
+import com.example.spot.refactor.study.application.MemberStudyCommandServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
 import org.junit.jupiter.api.BeforeEach;

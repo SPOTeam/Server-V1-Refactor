@@ -13,7 +13,7 @@ import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
-import com.example.spot.legacy.service.studypost.StudyPostQueryServiceImpl;
+import com.example.spot.refactor.study.application.StudyPostQueryServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostResDTO;
 import org.junit.jupiter.api.BeforeEach;

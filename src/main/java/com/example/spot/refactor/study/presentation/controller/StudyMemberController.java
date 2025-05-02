@@ -2,8 +2,8 @@ package com.example.spot.refactor.study.presentation.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.legacy.service.memberstudy.MemberStudyCommandService;
-import com.example.spot.legacy.service.memberstudy.MemberStudyQueryService;
+import com.example.spot.refactor.study.application.MemberStudyCommandService;
+import com.example.spot.refactor.study.application.MemberStudyQueryService;
 import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudySchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;

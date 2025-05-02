@@ -18,7 +18,7 @@ import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
-import com.example.spot.legacy.service.memberstudy.MemberStudyCommandServiceImpl;
+import com.example.spot.refactor.study.application.MemberStudyCommandServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
