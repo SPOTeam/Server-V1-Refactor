@@ -9,7 +9,7 @@ import com.example.spot.refactor.schedule.domain.validation.annotation.ExistSche
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.refactor.story.domain.validation.annotation.ExistStory;
 import com.example.spot.refactor.todo.domain.validation.annotation.ExistToDo;
-import com.example.spot.refactor.vote.domain.validation.annotation.ExistStudyVote;
+import com.example.spot.refactor.vote.domain.validation.annotation.ExistVote;
 import com.example.spot.legacy.validation.annotation.IntSize;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
@@ -333,7 +333,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/votes/{voteId}/options")
     public ApiResponse<StudyVoteResponseDTO.VotedOptionDTO> vote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyVote Long voteId,
+            @PathVariable @ExistVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VotedOptionDTO votedOptionDTO) {
         StudyVoteResponseDTO.VotedOptionDTO votedOptionResDTO = memberStudyCommandService.vote(studyId, voteId, votedOptionDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_PARTICIPATED, votedOptionResDTO);
@@ -349,7 +349,7 @@ public class StudyMemberController {
     @PatchMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> updateVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyVote Long voteId,
+            @PathVariable @ExistVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VoteUpdateDTO voteDTO) {
         StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.updateVote(studyId, voteId, voteDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_UPDATED, votePreviewDTO);
@@ -365,7 +365,7 @@ public class StudyMemberController {
     @DeleteMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> deleteVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyVote Long voteId) {
+            @PathVariable @ExistVote Long voteId) {
         StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.deleteVote(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DELETED, votePreviewDTO);
     }
@@ -395,7 +395,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/votes/{voteId}")
     public ApiResponse<?> getVote(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyVote Long voteId) {
+            @PathVariable @ExistVote Long voteId) {
         Boolean isCompleted = memberStudyQueryService.getIsCompleted(voteId);
         if (isCompleted) {
             StudyVoteResponseDTO.CompletedVoteDTO completedVoteDTO = memberStudyQueryService.getVoteInCompletion(studyId, voteId);
@@ -416,7 +416,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/votes/{voteId}/details")
     public ApiResponse<StudyVoteResponseDTO.CompletedVoteDetailDTO> getCompletedVoteDetail(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyVote Long voteId) {
+            @PathVariable @ExistVote Long voteId) {
         StudyVoteResponseDTO.CompletedVoteDetailDTO completedVoteDetailDTO = memberStudyQueryService.getCompletedVoteDetail(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DETAIL_STATUS_FOUND, completedVoteDetailDTO);
     }

@@ -1,9 +1,9 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteOption;
-import com.example.spot.refactor.vote.domain.StudyVote;
+import com.example.spot.refactor.vote.domain.Vote;
+import com.example.spot.refactor.vote.domain.aggregate.VoteParticipant;
+import com.example.spot.refactor.vote.domain.aggregate.VoteOption;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +23,10 @@ public class StudyVoteResponseDTO {
         private final Long voteId;
         private final String title;
 
-        public static VotePreviewDTO toDTO(StudyVote studyVote) {
+        public static VotePreviewDTO toDTO(Vote vote) {
             return VotePreviewDTO.builder()
-                    .voteId(studyVote.getId())
-                    .title(studyVote.getTitle())
+                    .voteId(vote.getId())
+                    .title(vote.getTitle())
                     .build();
         }
     }
@@ -40,12 +40,12 @@ public class StudyVoteResponseDTO {
         private final Long memberId;
         private final List<OptionDTO> votedOptions;
 
-        public static VotedOptionDTO toDTO(StudyVote studyVote, Member member, List<StudyVoteParticipant> studyVoteParticipants) {
+        public static VotedOptionDTO toDTO(Vote vote, Member member, List<VoteParticipant> voteParticipants) {
             return VotedOptionDTO.builder()
-                    .voteId(studyVote.getId())
+                    .voteId(vote.getId())
                     .memberId(member.getId())
-                    .votedOptions(studyVoteParticipants.stream()
-                            .map(memberVote -> OptionDTO.toDTO(memberVote.getStudyVoteOption()))
+                    .votedOptions(voteParticipants.stream()
+                            .map(memberVote -> OptionDTO.toDTO(memberVote.getVoteOption()))
                             .toList())
                     .build();
         }
@@ -79,11 +79,11 @@ public class StudyVoteResponseDTO {
         private final LocalDateTime finishedAt;
         private final Boolean isParticipated;
 
-        public static VoteInfoDTO toDTO(StudyVote studyVote, Boolean isParticipated) {
+        public static VoteInfoDTO toDTO(Vote vote, Boolean isParticipated) {
             return VoteInfoDTO.builder()
-                    .voteId(studyVote.getId())
-                    .title(studyVote.getTitle())
-                    .finishedAt(studyVote.getFinishedAt())
+                    .voteId(vote.getId())
+                    .title(vote.getTitle())
+                    .finishedAt(vote.getFinishedAt())
                     .isParticipated(isParticipated)
                     .build();
         }
@@ -102,18 +102,18 @@ public class StudyVoteResponseDTO {
         private final LocalDateTime finishedAt;
         private final Boolean isParticipated;
 
-        public static VoteDTO toDTO(StudyVote studyVote, Member member) {
+        public static VoteDTO toDTO(Vote vote, Member member) {
             return VoteDTO.builder()
-                    .voteId(studyVote.getId())
-                    .creator(MemberDTO.toDTO(studyVote.getMember()))
-                    .title(studyVote.getTitle())
-                    .options(studyVote.getStudyVoteOptions().stream()
+                    .voteId(vote.getId())
+                    .creator(MemberDTO.toDTO(vote.getMember()))
+                    .title(vote.getTitle())
+                    .options(vote.getVoteOptions().stream()
                             .map(OptionDTO::toDTO)
                             .toList())
-                    .isMultipleChoice(studyVote.getIsMultipleChoice())
-                    .finishedAt(studyVote.getFinishedAt())
-                    .isParticipated(studyVote.getStudyVoteOptions().stream()
-                            .flatMap(option -> option.getStudyVoteParticipants().stream())
+                    .isMultipleChoice(vote.getIsMultipleChoice())
+                    .finishedAt(vote.getFinishedAt())
+                    .isParticipated(vote.getVoteOptions().stream()
+                            .flatMap(option -> option.getVoteParticipants().stream())
                             .anyMatch(memberVote -> memberVote.getMember().equals(member)))
                     .build();
         }
@@ -131,19 +131,19 @@ public class StudyVoteResponseDTO {
         private final int totalParticipants;
         private final LocalDateTime finishedAt;
 
-        public static CompletedVoteDTO toDTO(StudyVote studyVote) {
+        public static CompletedVoteDTO toDTO(Vote vote) {
             return CompletedVoteDTO.builder()
-                    .voteId(studyVote.getId())
-                    .creator(MemberDTO.toDTO(studyVote.getMember()))
-                    .title(studyVote.getTitle())
-                    .optionCounts(studyVote.getStudyVoteOptions().stream()
+                    .voteId(vote.getId())
+                    .creator(MemberDTO.toDTO(vote.getMember()))
+                    .title(vote.getTitle())
+                    .optionCounts(vote.getVoteOptions().stream()
                             .map(VotedOptionCountDTO::toDTO)
                             .toList())
-                    .totalParticipants(studyVote.getStudyVoteOptions().stream()
+                    .totalParticipants(vote.getVoteOptions().stream()
                             .map(VotedOptionCountDTO::toDTO)
                             .mapToInt(VotedOptionCountDTO::getCount)
                             .sum())
-                    .finishedAt(studyVote.getFinishedAt())
+                    .finishedAt(vote.getFinishedAt())
                     .build();
         }
     }
@@ -157,11 +157,11 @@ public class StudyVoteResponseDTO {
         private final String title;
         private final List<OptionVoterDTO> optionVoters;
 
-        public static CompletedVoteDetailDTO toDTO(StudyVote studyVote) {
+        public static CompletedVoteDetailDTO toDTO(Vote vote) {
             return CompletedVoteDetailDTO.builder()
-                    .voteId(studyVote.getId())
-                    .title(studyVote.getTitle())
-                    .optionVoters(studyVote.getStudyVoteOptions().stream()
+                    .voteId(vote.getId())
+                    .title(vote.getTitle())
+                    .optionVoters(vote.getVoteOptions().stream()
                             .map(OptionVoterDTO::toDTO)
                             .toList())
                     .build();
@@ -179,11 +179,11 @@ public class StudyVoteResponseDTO {
         private final String content;
         private final int count;
 
-        public static VotedOptionCountDTO toDTO(StudyVoteOption studyVoteOption) {
+        public static VotedOptionCountDTO toDTO(VoteOption voteOption) {
             return VotedOptionCountDTO.builder()
-                    .optionId(studyVoteOption.getId())
-                    .content(studyVoteOption.getContent())
-                    .count(studyVoteOption.getStudyVoteParticipants().size())
+                    .optionId(voteOption.getId())
+                    .content(voteOption.getContent())
+                    .count(voteOption.getVoteParticipants().size())
                     .build();
         }
     }
@@ -198,12 +198,12 @@ public class StudyVoteResponseDTO {
         private final int count;
         private final List<MemberDTO> voters;
 
-        public static OptionVoterDTO toDTO(StudyVoteOption studyVoteOption) {
+        public static OptionVoterDTO toDTO(VoteOption voteOption) {
             return OptionVoterDTO.builder()
-                    .optionId(studyVoteOption.getId())
-                    .content(studyVoteOption.getContent())
-                    .count(studyVoteOption.getStudyVoteParticipants().size())
-                    .voters(studyVoteOption.getStudyVoteParticipants().stream()
+                    .optionId(voteOption.getId())
+                    .content(voteOption.getContent())
+                    .count(voteOption.getVoteParticipants().size())
+                    .voters(voteOption.getVoteParticipants().stream()
                             .map(memberVote -> MemberDTO.toDTO(memberVote.getMember()))
                             .toList())
                     .build();
@@ -218,10 +218,10 @@ public class StudyVoteResponseDTO {
         private final Long optionId;
         private final String content;
 
-        public static OptionDTO toDTO(StudyVoteOption studyVoteOption) {
+        public static OptionDTO toDTO(VoteOption voteOption) {
             return OptionDTO.builder()
-                    .optionId(studyVoteOption.getId())
-                    .content(studyVoteOption.getContent())
+                    .optionId(voteOption.getId())
+                    .content(voteOption.getContent())
                     .build();
         }
     }

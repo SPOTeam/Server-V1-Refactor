@@ -17,8 +17,8 @@ import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.todo.domain.ToDo;
-import com.example.spot.refactor.vote.domain.StudyVote;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
+import com.example.spot.refactor.vote.domain.Vote;
+import com.example.spot.refactor.vote.domain.aggregate.VoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import com.example.spot.refactor.story.domain.aggregate.StoryComment;
@@ -198,12 +198,12 @@ public class Member extends BaseEntity {
     //== 회원이 생성한 투표 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyVote> studyVoteList = new ArrayList<>();
+    private List<Vote> voteList = new ArrayList<>();
 
     //== 회원이 투표한 항목 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyVoteParticipant> studyVoteParticipantList = new ArrayList<>();
+    private List<VoteParticipant> voteParticipantList = new ArrayList<>();
 
     //== 회원이 선호하는 지역 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -255,12 +255,12 @@ public class Member extends BaseEntity {
         quizSubmission.setMember(this);
     }
 
-    public void addVote(StudyVote studyVote) {
-        if (this.studyVoteList == null) {
-            this.studyVoteList = new ArrayList<>();
+    public void addVote(Vote vote) {
+        if (this.voteList == null) {
+            this.voteList = new ArrayList<>();
         }
-        this.studyVoteList.add(studyVote);
-        studyVote.setMember(this);
+        this.voteList.add(vote);
+        vote.setMember(this);
     }
 
     public void updateThemes(List<MemberTheme> memberThemes) {
@@ -312,16 +312,16 @@ public class Member extends BaseEntity {
         likedStoryComment.setMember(this);
     }
 
-    public void addMemberVote(StudyVoteParticipant studyVoteParticipant) {
-        if (this.studyVoteParticipantList == null) {
-            this.studyVoteParticipantList = new ArrayList<>();
+    public void addMemberVote(VoteParticipant voteParticipant) {
+        if (this.voteParticipantList == null) {
+            this.voteParticipantList = new ArrayList<>();
         }
-        this.studyVoteParticipantList.add(studyVoteParticipant);
-        studyVoteParticipant.setMember(this);
+        this.voteParticipantList.add(voteParticipant);
+        voteParticipant.setMember(this);
     }
 
-    public void updateVote(StudyVote studyVote) {
-        studyVoteList.set(studyVoteList.indexOf(studyVote), studyVote);
+    public void updateVote(Vote vote) {
+        voteList.set(voteList.indexOf(vote), vote);
     }
 
     public void deleteStudyPost(Story story) {
@@ -356,8 +356,8 @@ public class Member extends BaseEntity {
         this.storyCommentList.add(storyComment);
     }
 
-    public void deleteVote(StudyVote studyVote) {
-        this.studyVoteList.remove(studyVote);
+    public void deleteVote(Vote vote) {
+        this.voteList.remove(vote);
     }
 
     public void addQuiz(Quiz quiz) {

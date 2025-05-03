@@ -10,7 +10,7 @@ import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
 import com.example.spot.refactor.todo.domain.ToDo;
-import com.example.spot.refactor.vote.domain.StudyVote;
+import com.example.spot.refactor.vote.domain.Vote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import jakarta.persistence.CascadeType;
@@ -98,7 +98,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudyVote> studyVotes = new ArrayList<>();
+    private List<Vote> votes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -156,9 +156,9 @@ public class Study extends BaseEntity {
         schedule.setStudy(this);
     }
 
-    public void addVote(StudyVote studyVote) {
-        studyVotes.add(studyVote);
-        studyVote.setStudy(this);
+    public void addVote(Vote vote) {
+        votes.add(vote);
+        vote.setStudy(this);
     }
 
     public void updateSchedule(Schedule schedule) {
@@ -191,12 +191,12 @@ public class Study extends BaseEntity {
         this.hitNum++;
     }
 
-    public void updateVote(StudyVote studyVote) {
-        studyVotes.set(studyVotes.indexOf(studyVote), studyVote);
+    public void updateVote(Vote vote) {
+        votes.set(votes.indexOf(vote), vote);
     }
 
-    public void deleteVote(StudyVote studyVote) {
-        studyVotes.remove(studyVote);
+    public void deleteVote(Vote vote) {
+        votes.remove(vote);
     }
 
     public void addToDoList(ToDo toDo) {

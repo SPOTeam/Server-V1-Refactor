@@ -3,7 +3,7 @@ package com.example.spot.refactor.vote.domain;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteOption;
+import com.example.spot.refactor.vote.domain.aggregate.VoteOption;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyVote extends BaseEntity {
+public class Vote extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,30 +44,30 @@ public class StudyVote extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime finishedAt;
 
-    @OneToMany(mappedBy = "studyVote", cascade = CascadeType.ALL)
-    private List<StudyVoteOption> studyVoteOptions;
+    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
+    private List<VoteOption> voteOptions;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public StudyVote(Study study, Member member, String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {
+    public Vote(Study study, Member member, String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {
         this.study = study;
         this.member = member;
         this.title = title;
         this.isMultipleChoice = isMultipleChoice;
         this.finishedAt = finishedAt;
-        this.studyVoteOptions = new ArrayList<>();
+        this.voteOptions = new ArrayList<>();
     }
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addOption(StudyVoteOption studyVoteOption) {
-        this.studyVoteOptions.add(studyVoteOption);
-        studyVoteOption.setStudyVote(this);
+    public void addOption(VoteOption voteOption) {
+        this.voteOptions.add(voteOption);
+        voteOption.setVote(this);
     }
 
-    public void updateOption(StudyVoteOption studyVoteOption) {
-        studyVoteOptions.set(studyVoteOptions.indexOf(studyVoteOption), studyVoteOption);
+    public void updateOption(VoteOption voteOption) {
+        voteOptions.set(voteOptions.indexOf(voteOption), voteOption);
     }
 
     public void updateVote(String title, Boolean isMultipleChoice, LocalDateTime finishedAt) {

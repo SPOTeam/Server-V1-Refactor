@@ -53,11 +53,11 @@ import com.example.spot.refactor.study.presentation.dto.response.StudyApplyRespo
 import java.time.LocalDate;
 import java.util.Objects;
 
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteOption;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
-import com.example.spot.refactor.vote.domain.repository.StudyVoteOptionRepository;
-import com.example.spot.refactor.vote.domain.repository.StudyVoteParticipantRepository;
-import com.example.spot.refactor.vote.domain.StudyVoteRepository;
+import com.example.spot.refactor.vote.domain.aggregate.VoteOption;
+import com.example.spot.refactor.vote.domain.aggregate.VoteParticipant;
+import com.example.spot.refactor.vote.domain.repository.VoteOptionRepository;
+import com.example.spot.refactor.vote.domain.repository.VoteParticipantRepository;
+import com.example.spot.refactor.vote.domain.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -79,15 +79,15 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
     private final StudyRepository studyRepository;
     private final ScheduleRepository scheduleRepository;
     private final QuizRepository quizRepository;
-    private final StudyVoteRepository studyVoteRepository;
-    private final StudyVoteOptionRepository studyVoteOptionRepository;
+    private final VoteRepository voteRepository;
+    private final VoteOptionRepository voteOptionRepository;
     private final MemberReportRepository memberReportRepository;
     private final StoryReportRepository storyReportRepository;
 
     private final StudyMemberRepository studyMemberRepository;
     private final QuizSubmissionRepository quizSubmissionRepository;
     private final StoryRepository storyRepository;
-    private final StudyVoteParticipantRepository studyVoteParticipantRepository;
+    private final VoteParticipantRepository voteParticipantRepository;
     private final ToDoRepository toDoRepository;
     private final NotificationRepository notificationRepository;
 
@@ -656,7 +656,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
-        StudyVote studyVote = StudyVote.builder()
+        Vote vote = Vote.builder()
                 .study(study)
                 .member(loginMember)
                 .title(voteDTO.getTitle())
@@ -665,34 +665,34 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .build();
 
         // Vote 저장
-        studyVote = studyVoteRepository.save(studyVote);
+        vote = voteRepository.save(vote);
         // Option 저장
-        studyVote = createOption(studyVote, voteDTO);
+        vote = createOption(vote, voteDTO);
         // 연관관계 매핑
-        loginMember.addVote(studyVote);
-        study.addVote(studyVote);
+        loginMember.addVote(vote);
+        study.addVote(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
      * 스터디 투표의 항목을 생성하는 메서드입니다.
      * createVote 메서드 내부에서 사용되는 메서드입니다.
-     * @param studyVote 항목을 생성할 타겟 투표를 입력 받습니다.
+     * @param vote 항목을 생성할 타겟 투표를 입력 받습니다.
      * @param voteDTO 생성할 투표의 제목, 항목 목록, 중복 선택 가능 여부, 종료 일시를 입력 받습니다.
      * @return 투표 객체를 반환합니다.
      */
-    private StudyVote createOption(StudyVote studyVote, StudyVoteRequestDTO.VoteDTO voteDTO) {
+    private Vote createOption(Vote vote, StudyVoteRequestDTO.VoteDTO voteDTO) {
         voteDTO.getOptions()
                 .forEach(stringOption -> {
-                    StudyVoteOption studyVoteOption = StudyVoteOption.builder()
-                            .studyVote(studyVote)
+                    VoteOption voteOption = VoteOption.builder()
+                            .vote(vote)
                             .content(stringOption)
                             .build();
-                    studyVoteOption = studyVoteOptionRepository.save(studyVoteOption);
-                    studyVote.addOption(studyVoteOption);
+                    voteOption = voteOptionRepository.save(voteOption);
+                    vote.addOption(voteOption);
                 });
-        return studyVoteRepository.save(studyVote);
+        return voteRepository.save(vote);
     }
 
     /**
@@ -713,9 +713,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -723,40 +723,40 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 중복 선택이 허용되지 않는 투표는 여러 개의 option을 선택할 수 없음
-        if (!studyVote.getIsMultipleChoice() && votedOptionDTO.getOptionIdList().size() > 1) {
+        if (!vote.getIsMultipleChoice() && votedOptionDTO.getOptionIdList().size() > 1) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_MULTIPLE_CHOICE_NOT_VALID);
         }
 
         // 한 번 참여한 투표는 다시 참여할 수 없음
-        studyVoteOptionRepository.findAllByStudyVoteId(voteId)
+        voteOptionRepository.findAllByVoteId(voteId)
                 .forEach(option -> {
-                    if (studyVoteParticipantRepository.existsByMemberIdAndStudyVoteOptionId(loginMember.getId(), option.getId())) {
+                    if (voteParticipantRepository.existsByMemberIdAndVoteOptionId(loginMember.getId(), option.getId())) {
                             throw new StudyHandler(ErrorStatus._STUDY_VOTE_RE_PARTICIPATION_INVALID);
                     }
                 });
 
         //=== Feature ===//
-        List<StudyVoteParticipant> studyVoteParticipants = votedOptionDTO.getOptionIdList().stream()
+        List<VoteParticipant> voteParticipants = votedOptionDTO.getOptionIdList().stream()
                 .map(optionId -> {
-                    StudyVoteOption votedStudyVoteOption = studyVoteOptionRepository.findById(optionId)
+                    VoteOption votedVoteOption = voteOptionRepository.findById(optionId)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
-                    studyVoteOptionRepository.findByIdAndStudyVoteId(optionId, voteId)
+                    voteOptionRepository.findByIdAndVoteId(optionId, voteId)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
 
-                    StudyVoteParticipant studyVoteParticipant = StudyVoteParticipant.builder()
+                    VoteParticipant voteParticipant = VoteParticipant.builder()
                             .member(loginMember)
-                            .studyVoteOption(votedStudyVoteOption)
+                            .voteOption(votedVoteOption)
                             .build();
 
-                    studyVoteParticipant = studyVoteParticipantRepository.save(studyVoteParticipant);
-                    loginMember.addMemberVote(studyVoteParticipant);
-                    votedStudyVoteOption.addMemberVote(studyVoteParticipant);
+                    voteParticipant = voteParticipantRepository.save(voteParticipant);
+                    loginMember.addMemberVote(voteParticipant);
+                    votedVoteOption.addMemberVote(voteParticipant);
 
-                    return studyVoteParticipant;
+                    return voteParticipant;
                 })
                 .toList();
 
-        return StudyVoteResponseDTO.VotedOptionDTO.toDTO(studyVote, loginMember, studyVoteParticipants);
+        return StudyVoteResponseDTO.VotedOptionDTO.toDTO(vote, loginMember, voteParticipants);
     }
 
     /**
@@ -777,7 +777,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -785,33 +785,33 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 투표 생성자인지 확인
-        if (!loginMember.equals(studyVote.getMember())) {
+        if (!loginMember.equals(vote.getMember())) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_CREATOR_NOT_AUTHORIZED);
         }
 
         // 한 명이라도 투표에 참여했으면 투표 편집 불가
-        studyVoteOptionRepository.findAllByStudyVoteId(voteId)
+        voteOptionRepository.findAllByVoteId(voteId)
                 .forEach(option -> {
-                    if (studyVoteParticipantRepository.existsByStudyVoteOptionId(option.getId())) {
+                    if (voteParticipantRepository.existsByVoteOptionId(option.getId())) {
                         throw new StudyHandler(ErrorStatus._STUDY_VOTE_IS_IN_PROGRESS);
                     }
                 });
 
         //=== Feature ===//
         for (StudyVoteRequestDTO.OptionDTO optionDTO : voteDTO.getOptions()) {
-            StudyVoteOption studyVoteOption = studyVoteOptionRepository.findById(optionDTO.getOptionId())
+            VoteOption voteOption = voteOptionRepository.findById(optionDTO.getOptionId())
                     .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
-            studyVoteOption.setContent(optionDTO.getContent());
-            studyVoteOption = studyVoteOptionRepository.save(studyVoteOption);
-            studyVote.updateOption(studyVoteOption);
+            voteOption.setContent(optionDTO.getContent());
+            voteOption = voteOptionRepository.save(voteOption);
+            vote.updateOption(voteOption);
         }
 
-        studyVote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
-        studyVote = studyVoteRepository.save(studyVote);
-        loginMember.updateVote(studyVote);
-        study.updateVote(studyVote);
+        vote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
+        vote = voteRepository.save(vote);
+        loginMember.updateVote(vote);
+        study.updateVote(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
@@ -831,9 +831,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -841,17 +841,17 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 투표 생성자인지 확인
-        if (!loginMember.equals(studyVote.getMember())) {
+        if (!loginMember.equals(vote.getMember())) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_CREATOR_NOT_AUTHORIZED);
         }
 
         //=== Feature ===//
         deleteOptions(voteId);
-        loginMember.deleteVote(studyVote);
-        study.deleteVote(studyVote);
-        studyVoteRepository.delete(studyVote);
+        loginMember.deleteVote(vote);
+        study.deleteVote(vote);
+        voteRepository.delete(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
@@ -860,11 +860,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
      * @param voteId 항목을 삭제할 타겟 투표의 아이디를 입력 받습니다.
      */
     private void deleteOptions(Long voteId) {
-        List<StudyVoteOption> studyVoteOptions = studyVoteOptionRepository.findAllByStudyVoteId(voteId);
-        studyVoteOptions.forEach(option -> {
+        List<VoteOption> voteOptions = voteOptionRepository.findAllByVoteId(voteId);
+        voteOptions.forEach(option -> {
             option.deleteAllMemberVotes();
-            studyVoteParticipantRepository.deleteAll(studyVoteParticipantRepository.findAllByStudyVoteOptionId(option.getId()));
-            studyVoteOptionRepository.delete(option);
+            voteParticipantRepository.deleteAll(voteParticipantRepository.findAllByVoteOptionId(option.getId()));
+            voteOptionRepository.delete(option);
         });
     }
 

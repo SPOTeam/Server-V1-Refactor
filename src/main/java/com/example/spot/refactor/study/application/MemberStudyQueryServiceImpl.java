@@ -36,10 +36,10 @@ import com.example.spot.refactor.study.presentation.dto.response.ToDoListRespons
 import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO.ToDoListDTO;
 
 import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
-import com.example.spot.refactor.vote.domain.aggregate.StudyVoteOption;
-import com.example.spot.refactor.vote.domain.repository.StudyVoteOptionRepository;
-import com.example.spot.refactor.vote.domain.repository.StudyVoteParticipantRepository;
-import com.example.spot.refactor.vote.domain.StudyVoteRepository;
+import com.example.spot.refactor.vote.domain.aggregate.VoteOption;
+import com.example.spot.refactor.vote.domain.repository.VoteOptionRepository;
+import com.example.spot.refactor.vote.domain.repository.VoteParticipantRepository;
+import com.example.spot.refactor.vote.domain.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
@@ -73,9 +73,9 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
     private final StudyMemberRepository studyMemberRepository;
     private final QuizSubmissionRepository quizSubmissionRepository;
     private final QuizRepository quizRepository;
-    private final StudyVoteRepository studyVoteRepository;
-    private final StudyVoteOptionRepository studyVoteOptionRepository;
-    private final StudyVoteParticipantRepository studyVoteParticipantRepository;
+    private final VoteRepository voteRepository;
+    private final VoteOptionRepository voteOptionRepository;
+    private final VoteParticipantRepository voteParticipantRepository;
     private final ToDoRepository toDoRepository;
 
 
@@ -525,7 +525,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
         //=== Feature ===//
 
         // 진행중인 투표 목록
-        List<StudyVoteResponseDTO.VoteInfoDTO> votesInProgress = studyVoteRepository.findAllByStudyIdAndFinishedAtAfter(studyId, LocalDateTime.now()).stream()
+        List<StudyVoteResponseDTO.VoteInfoDTO> votesInProgress = voteRepository.findAllByStudyIdAndFinishedAtAfter(studyId, LocalDateTime.now()).stream()
                 .map(vote -> {
                     boolean isParticipated = isParticipated(vote, member);
                     return StudyVoteResponseDTO.VoteInfoDTO.toDTO(vote, isParticipated);
@@ -533,7 +533,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .toList();
 
         // 마감된 투표 목록
-        List<StudyVoteResponseDTO.VoteInfoDTO> votesInCompletion = studyVoteRepository.findAllByStudyIdAndFinishedAtBefore(studyId, LocalDateTime.now()).stream()
+        List<StudyVoteResponseDTO.VoteInfoDTO> votesInCompletion = voteRepository.findAllByStudyIdAndFinishedAtBefore(studyId, LocalDateTime.now()).stream()
                 .map(vote -> {
                     boolean isParticipated = isParticipated(vote, member);
                     return StudyVoteResponseDTO.VoteInfoDTO.toDTO(vote, isParticipated);
@@ -546,15 +546,15 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
     /**
      * 스터디 회원의 투표 참여 여부를 확인하는 메서드입니다.
      * getAllVotes에서 사용되는 내부 메서드입니다.
-     * @param studyVote 스터디에서 생성한 투표의 아이디를 입력 받습니다.
+     * @param vote 스터디에서 생성한 투표의 아이디를 입력 받습니다.
      * @param loginMember 로그인한 회원의 정보를 입력 받습니다.
      * @return 투표 참여 여부를 true or false로 반환합니다.
      */
-    private boolean isParticipated(StudyVote studyVote, Member loginMember) {
+    private boolean isParticipated(Vote vote, Member loginMember) {
         // 투표 참여 여부 확인
         boolean isParticipated = false;
-        for (StudyVoteOption studyVoteOption : studyVote.getStudyVoteOptions()) {
-            if (studyVoteParticipantRepository.existsByMemberIdAndStudyVoteOptionId(loginMember.getId(), studyVoteOption.getId())) {
+        for (VoteOption voteOption : vote.getVoteOptions()) {
+            if (voteParticipantRepository.existsByMemberIdAndVoteOptionId(loginMember.getId(), voteOption.getId())) {
                 isParticipated = true;
             }
         }
@@ -569,7 +569,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
      */
     @Override
     public Boolean getIsCompleted(Long voteId) {
-        return studyVoteRepository.existsByIdAndFinishedAtBefore(voteId, LocalDateTime.now());
+        return voteRepository.existsByIdAndFinishedAtBefore(voteId, LocalDateTime.now());
     }
 
     /**
@@ -589,7 +589,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -597,11 +597,11 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 투표인지 확인
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         //=== Feature ===//
-        return StudyVoteResponseDTO.CompletedVoteDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.CompletedVoteDTO.toDTO(vote);
 
     }
 
@@ -622,11 +622,11 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 해당 스터디의 투표인지 확인
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -634,7 +634,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
-        return StudyVoteResponseDTO.VoteDTO.toDTO(studyVote, member);
+        return StudyVoteResponseDTO.VoteDTO.toDTO(vote, member);
     }
 
     /**
@@ -654,11 +654,11 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 해당 스터디의 투표인지 확인
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -666,12 +666,12 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 마감된 투표인지 확인
-        if (!studyVoteRepository.existsByIdAndFinishedAtBefore(voteId, LocalDateTime.now())) {
+        if (!voteRepository.existsByIdAndFinishedAtBefore(voteId, LocalDateTime.now())) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_COMPLETED);
         }
 
         //=== Feature ===//
-        return StudyVoteResponseDTO.CompletedVoteDetailDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.CompletedVoteDetailDTO.toDTO(vote);
     }
 
     /**

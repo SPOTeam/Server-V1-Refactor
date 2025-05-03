@@ -1,6 +1,6 @@
 package com.example.spot.refactor.vote.domain.aggregate;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.vote.domain.StudyVote;
+import com.example.spot.refactor.vote.domain.Vote;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +23,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyVoteOption extends BaseEntity {
+public class VoteOption extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,36 +31,36 @@ public class StudyVoteOption extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_vote_id", nullable = false)
-    private StudyVote studyVote;
+    @JoinColumn(name = "vote_id", nullable = false)
+    private Vote vote;
 
     @Setter
     private String content;
 
-    @OneToMany(mappedBy = "studyVoteOption", cascade = CascadeType.ALL)
-    private List<StudyVoteParticipant> studyVoteParticipants;
+    @OneToMany(mappedBy = "voteOption", cascade = CascadeType.ALL)
+    private List<VoteParticipant> voteParticipants;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public StudyVoteOption(StudyVote studyVote, String content) {
-        this.studyVote = studyVote;
+    public VoteOption(Vote vote, String content) {
+        this.vote = vote;
         this.content = content;
-        this.studyVoteParticipants = new ArrayList<>();
+        this.voteParticipants = new ArrayList<>();
     }
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addMemberVote(StudyVoteParticipant studyVoteParticipant) {
-        if (studyVoteParticipants == null) {
-            studyVoteParticipants = new ArrayList<>();
+    public void addMemberVote(VoteParticipant voteParticipant) {
+        if (voteParticipants == null) {
+            voteParticipants = new ArrayList<>();
         }
-        studyVoteParticipants.add(studyVoteParticipant);
-        studyVoteParticipant.setStudyVoteOption(this);
+        voteParticipants.add(voteParticipant);
+        voteParticipant.setVoteOption(this);
     }
 
     public void deleteAllMemberVotes() {
-        studyVoteParticipants.clear();
+        voteParticipants.clear();
     }
 
 }
