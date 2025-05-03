@@ -6,7 +6,7 @@ import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.member.domain.auth.RsaKey;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.aggregate.StudyMemberRepository;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
 import com.example.spot.refactor.member.domain.association.StudyJoinReasonRepository;

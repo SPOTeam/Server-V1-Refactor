@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studytheme;
+package com.example.spot.refactor.study.domain.aggregate;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

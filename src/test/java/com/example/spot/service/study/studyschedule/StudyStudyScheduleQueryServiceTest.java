@@ -6,10 +6,10 @@ import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySched
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.aggregate.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyScheduleRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.application.MemberStudyQueryServiceImpl;

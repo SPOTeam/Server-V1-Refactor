@@ -12,7 +12,7 @@ import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;

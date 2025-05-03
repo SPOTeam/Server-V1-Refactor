@@ -2,15 +2,15 @@ package com.example.spot.refactor.study.domain.repository;
 
 import static com.example.spot.refactor.study.domain.aggregate.QStudy.*;
 
-import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
-import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
+import com.example.spot.refactor.study.domain.aggregate.Region;
+import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
+import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.QStudy;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.querydsl.core.BooleanBuilder;

@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studymember;
+package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Status;

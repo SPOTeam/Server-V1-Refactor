@@ -42,14 +42,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
+import com.example.spot.refactor.study.domain.aggregate.Region;
+import com.example.spot.refactor.study.domain.aggregate.Theme;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.MemberThemeRepository;
 import com.example.spot.refactor.member.domain.association.PreferredRegionRepository;
-import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.ThemeRepository;
+import com.example.spot.refactor.study.domain.aggregate.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.ThemeRepository;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberInfoListDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberRegionDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberThemeDTO;

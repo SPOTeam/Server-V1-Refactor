@@ -1,14 +1,11 @@
 package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
 import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;

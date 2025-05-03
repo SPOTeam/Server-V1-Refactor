@@ -11,7 +11,7 @@ import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.aggregate.StudyMemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPostRepository;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostCommentRepository;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;

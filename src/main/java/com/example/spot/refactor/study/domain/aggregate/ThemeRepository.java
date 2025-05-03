@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studytheme;
+package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import org.springframework.data.jpa.repository.JpaRepository;

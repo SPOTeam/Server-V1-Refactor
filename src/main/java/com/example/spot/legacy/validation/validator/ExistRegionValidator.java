@@ -1,7 +1,7 @@
 package com.example.spot.legacy.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studyregion.RegionRepository;
+import com.example.spot.refactor.study.domain.aggregate.RegionRepository;
 import com.example.spot.legacy.validation.annotation.ExistRegion;
 
 import jakarta.validation.ConstraintValidator;

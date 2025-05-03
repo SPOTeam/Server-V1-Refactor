@@ -1,7 +1,6 @@
-package com.example.spot.refactor.study.domain.aggregate.studyregion;
+package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.study.domain.aggregate.Study;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studytheme;
+package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
