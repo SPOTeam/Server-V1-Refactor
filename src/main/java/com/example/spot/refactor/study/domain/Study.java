@@ -9,7 +9,7 @@ import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
-import com.example.spot.refactor.todo.domain.StudyToDo;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.vote.domain.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
@@ -122,7 +122,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudyToDo> studyToDos = new ArrayList<>();
+    private List<ToDo> toDos = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -199,8 +199,8 @@ public class Study extends BaseEntity {
         studyVotes.remove(studyVote);
     }
 
-    public void addToDoList(StudyToDo studyToDo) {
-        studyToDos.add(studyToDo);
+    public void addToDoList(ToDo toDo) {
+        toDos.add(toDo);
     }
 
     public void terminateStudy(String performance) {

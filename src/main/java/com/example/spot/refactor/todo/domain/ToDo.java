@@ -28,7 +28,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyToDo extends BaseEntity {
+public class ToDo extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,11 +42,9 @@ public class StudyToDo extends BaseEntity {
     @Column(nullable = false)
     private boolean isDone;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id")

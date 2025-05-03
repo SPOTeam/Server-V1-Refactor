@@ -16,7 +16,7 @@ import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
-import com.example.spot.refactor.todo.domain.StudyToDo;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.vote.domain.StudyVote;
 import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
@@ -222,7 +222,7 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyToDo> studyToDos = new ArrayList<>();
+    private List<ToDo> toDos = new ArrayList<>();
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
@@ -383,8 +383,8 @@ public class Member extends BaseEntity {
         this.memberReportList.add(memberReport);
     }
 
-    public void addToDoList(StudyToDo studyToDo) {
-        this.studyToDos.add(studyToDo);
+    public void addToDoList(ToDo toDo) {
+        this.toDos.add(toDo);
     }
 
 }

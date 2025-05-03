@@ -8,7 +8,7 @@ import com.example.spot.refactor.member.domain.validation.annotation.ExistMember
 import com.example.spot.refactor.schedule.domain.validation.annotation.ExistSchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.refactor.story.domain.validation.annotation.ExistStory;
-import com.example.spot.refactor.todo.domain.validation.annotation.ExistStudyToDo;
+import com.example.spot.refactor.todo.domain.validation.annotation.ExistToDo;
 import com.example.spot.refactor.vote.domain.validation.annotation.ExistStudyVote;
 import com.example.spot.legacy.validation.annotation.IntSize;
 import com.example.spot.legacy.validation.annotation.TextLength;
@@ -594,7 +594,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/to-do/{toDoId}/update")
     public ApiResponse<ToDoListUpdateResponseDTO> updateToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistStudyToDo Long toDoId,
+        @PathVariable @ExistToDo Long toDoId,
         @RequestBody @Valid ToDoListRequestDTO.ToDoListCreateDTO request) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.updateToDoList(
             studyId, toDoId, request);
@@ -619,7 +619,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/to-do/{toDoId}/check")
     public ApiResponse<ToDoListUpdateResponseDTO> checkToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistStudyToDo Long toDoId) {
+        @PathVariable @ExistToDo Long toDoId) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.checkToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_UPDATED, toDoListUpdateResponseDTO);
@@ -637,7 +637,7 @@ public class StudyMemberController {
     @DeleteMapping("/studies/{studyId}/to-do/{toDoId}")
     public ApiResponse<ToDoListUpdateResponseDTO> deleteToDoList(
         @PathVariable @ExistStudy Long studyId,
-        @PathVariable @ExistStudyToDo Long toDoId) {
+        @PathVariable @ExistToDo Long toDoId) {
         ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.deleteToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_DELETED, toDoListUpdateResponseDTO);

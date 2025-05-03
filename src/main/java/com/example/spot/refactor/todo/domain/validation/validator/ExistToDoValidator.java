@@ -1,8 +1,8 @@
 package com.example.spot.refactor.todo.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.todo.domain.StudyToDoRepository;
-import com.example.spot.refactor.todo.domain.validation.annotation.ExistStudyToDo;
+import com.example.spot.refactor.todo.domain.ToDoRepository;
+import com.example.spot.refactor.todo.domain.validation.annotation.ExistToDo;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistStudyToDoValidator implements ConstraintValidator<ExistStudyToDo, Long>{
+public class ExistToDoValidator implements ConstraintValidator<ExistToDo, Long>{
 
-    private final StudyToDoRepository studyToDoRepository;
+    private final ToDoRepository toDoRepository;
     @Override
-    public void initialize(ExistStudyToDo constraintAnnotation) {
+    public void initialize(ExistToDo constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
@@ -25,7 +25,7 @@ public class ExistStudyToDoValidator implements ConstraintValidator<ExistStudyTo
 
         if (value == null) {
             errorStatus = ErrorStatus._STUDY_TODO_NULL;
-        } else if (!studyToDoRepository.existsById(value)) {
+        } else if (!toDoRepository.existsById(value)) {
             errorStatus = ErrorStatus._STUDY_TODO_NOT_FOUND;
         } else {
             errorStatus = ErrorStatus._STUDY_TODO_NOT_FOUND; // ignore

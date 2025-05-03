@@ -15,13 +15,13 @@ import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.todo.domain.StudyToDo;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.vote.domain.*;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
-import com.example.spot.refactor.todo.domain.StudyToDoRepository;
+import com.example.spot.refactor.todo.domain.ToDoRepository;
 import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyMemberResDTO;
@@ -76,7 +76,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
     private final StudyVoteRepository studyVoteRepository;
     private final StudyVoteOptionRepository studyVoteOptionRepository;
     private final StudyVoteParticipantRepository studyVoteParticipantRepository;
-    private final StudyToDoRepository studyToDoRepository;
+    private final ToDoRepository toDoRepository;
 
 
     /**
@@ -749,18 +749,18 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
             throw new GeneralException(ErrorStatus._ONLY_STUDY_MEMBER_CAN_ACCESS_TODO_LIST);
 
         // 페이징 처리
-        List<StudyToDo> studyToDos = studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(
+        List<ToDo> toDos = toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(
             studyId, memberId, date, pageRequest);
 
         // 스터디 투 두 리스트가 존재하지 않는 경우
-        if (studyToDos.isEmpty())
+        if (toDos.isEmpty())
             throw new GeneralException(ErrorStatus._STUDY_TODO_NOT_FOUND);
 
         // 투 두 리스트 갯수 조회
-        long totalElements = studyToDoRepository.countByStudyIdAndMemberIdAndDate(studyId, memberId, date);
+        long totalElements = toDoRepository.countByStudyIdAndMemberIdAndDate(studyId, memberId, date);
 
         // DTO로 변환
-        List<ToDoListDTO> toDoListDTOS = getToDoListDTOS(studyToDos);
+        List<ToDoListDTO> toDoListDTOS = getToDoListDTOS(toDos);
 
         return new ToDoListSearchResponseDTO(
             new PageImpl<>(toDoListDTOS, pageRequest, totalElements), toDoListDTOS, totalElements);
@@ -790,18 +790,18 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
             throw new GeneralException(ErrorStatus._TODO_LIST_MEMBER_NOT_FOUND);
 
         // 조회하려는 회원의 투 두 리스트 조회
-        List<StudyToDo> studyToDos = studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(
+        List<ToDo> toDos = toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(
             studyId, memberId, date, pageRequest);
 
         // 투 두 리스트가 존재하지 않는 경우
-        if (studyToDos.isEmpty())
+        if (toDos.isEmpty())
             throw new GeneralException(ErrorStatus._STUDY_TODO_NOT_FOUND);
 
         // 투 두 리스트 갯수 조회
-        long totalElements = studyToDoRepository.countByStudyIdAndMemberIdAndDate(studyId, memberId, date);
+        long totalElements = toDoRepository.countByStudyIdAndMemberIdAndDate(studyId, memberId, date);
 
         // DTO로 변환
-        List<ToDoListDTO> toDoListDTOS = getToDoListDTOS(studyToDos);
+        List<ToDoListDTO> toDoListDTOS = getToDoListDTOS(toDos);
 
         return new ToDoListSearchResponseDTO(
             new PageImpl<>(toDoListDTOS, pageRequest, totalElements), toDoListDTOS, totalElements);
@@ -809,11 +809,11 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
 
     /**
      * 투 두 리스트를 DTO로 변환합니다.
-     * @param studyToDos 투 두 리스트
+     * @param toDos 투 두 리스트
      * @return 투 두 리스트 DTO 목록을 반환합니다.
      */
-    private static List<ToDoListDTO> getToDoListDTOS(List<StudyToDo> studyToDos) {
-        List<ToDoListDTO> toDoListDTOS = studyToDos.stream()
+    private static List<ToDoListDTO> getToDoListDTOS(List<ToDo> toDos) {
+        List<ToDoListDTO> toDoListDTOS = toDos.stream()
             .map(toDoList -> ToDoListDTO.builder()
                 .id(toDoList.getId())
                 .content(toDoList.getContent())

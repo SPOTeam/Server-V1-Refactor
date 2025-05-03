@@ -5,7 +5,7 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.schedule.domain.Schedule;
-import com.example.spot.refactor.todo.domain.StudyToDo;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.refactor.study.domain.Study;
@@ -13,7 +13,7 @@ import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
 import com.example.spot.refactor.story.domain.StoryRepository;
-import com.example.spot.refactor.todo.domain.StudyToDoRepository;
+import com.example.spot.refactor.todo.domain.ToDoRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.study.application.MemberStudyQueryServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
@@ -64,7 +64,7 @@ public class StudyMemberQueryServiceTest {
     @Mock
     private ScheduleRepository scheduleRepository;
     @Mock
-    private StudyToDoRepository studyToDoRepository;
+    private ToDoRepository toDoRepository;
     @Mock
     private SecurityUtils securityUtils;
 
@@ -74,7 +74,7 @@ public class StudyMemberQueryServiceTest {
     private static StudyMember studyMember;
     private static StudyMember studyMember2;
     private static StudyMember apply;
-    private static StudyToDo studyToDo;
+    private static ToDo toDo;
     
     @BeforeEach
     void setup(){
@@ -96,7 +96,7 @@ public class StudyMemberQueryServiceTest {
                 .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED).build();
         studyMember2 = StudyMember.builder()
                 .introduction("title").study(study).member(member2).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
-        studyToDo = StudyToDo.builder()
+        toDo = ToDo.builder()
                 .id(1L)
                 .build();
 
@@ -395,9 +395,9 @@ public class StudyMemberQueryServiceTest {
         // given
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.ofNullable(studyMember));
-        when(studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of(studyToDo));
-        when(studyToDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
+        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
+                .thenReturn(List.of(toDo));
+        when(toDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
                 .thenReturn(1L);
 
         // when
@@ -425,7 +425,7 @@ public class StudyMemberQueryServiceTest {
         // given
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.ofNullable(studyMember));
-        when(studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
+        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
                 .thenReturn(List.of());
 
         // when & then
@@ -442,9 +442,9 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(Optional.ofNullable(studyMember));
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(2L, 1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.ofNullable(studyMember));
-        when(studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of(studyToDo));
-        when(studyToDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
+        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
+                .thenReturn(List.of(toDo));
+        when(toDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
                 .thenReturn(1L);
 
         // when
@@ -485,7 +485,7 @@ public class StudyMemberQueryServiceTest {
         // given
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.ofNullable(studyMember));
-        when(studyToDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
+        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
                 .thenReturn(List.of());
 
         // when & then

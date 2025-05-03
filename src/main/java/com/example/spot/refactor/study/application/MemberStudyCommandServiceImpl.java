@@ -15,7 +15,7 @@ import com.example.spot.refactor.schedule.domain.repository.QuizSubmissionReposi
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
 import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.story.domain.aggregate.StoryReport;
-import com.example.spot.refactor.todo.domain.StudyToDo;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
 import com.example.spot.refactor.member.domain.enums.Status;
@@ -29,7 +29,7 @@ import com.example.spot.legacy.repository.NotificationRepository;
 import com.example.spot.refactor.story.domain.repository.StoryReportRepository;
 import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
-import com.example.spot.refactor.todo.domain.StudyToDoRepository;
+import com.example.spot.refactor.todo.domain.ToDoRepository;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyMemberReportDTO;
@@ -88,7 +88,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
     private final QuizSubmissionRepository quizSubmissionRepository;
     private final StoryRepository storyRepository;
     private final StudyVoteParticipantRepository studyVoteParticipantRepository;
-    private final StudyToDoRepository studyToDoRepository;
+    private final ToDoRepository toDoRepository;
     private final NotificationRepository notificationRepository;
 
     // S3 Service
@@ -1005,7 +1005,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // To-Do List 생성
-        StudyToDo studyToDo = StudyToDo.builder()
+        ToDo toDo = ToDo.builder()
             .study(study)
             .member(member)
             .date(toDoListCreateDTO.getDate())
@@ -1014,14 +1014,14 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             .build();
 
         // To-Do List 저장
-        studyToDo.setToDoList();
-        studyToDoRepository.save(studyToDo);
+        toDo.setToDoList();
+        toDoRepository.save(toDo);
 
         // To-Do List 생성 DTO 반환
         return ToDoListCreateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .content(studyToDo.getContent())
-            .createdAt(studyToDo.getCreatedAt())
+            .id(toDo.getId())
+            .content(toDo.getContent())
+            .createdAt(toDo.getCreatedAt())
             .build();
     }
 
@@ -1041,23 +1041,23 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
     public ToDoListUpdateResponseDTO checkToDoList(Long studyId, Long toDoListId) {
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 변경하는 회원이 스터디 회원이 아니면 예외 처리
         Long currentUserId = SecurityUtils.getCurrentUserId();
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 체크 상태 변경
-        studyToDo.check();
+        toDo.check();
 
         // 스터디 회원의 To-Do List 중 하나가 완료 되면, 해당 스터디의 모든 회원에게 알림 전송
-        if (studyToDo.isDone()){
+        if (toDo.isDone()){
             List<Member> members = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED).stream()
                 .map(StudyMember::getMember)
                 .toList();
@@ -1065,9 +1065,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             // 알림을 생성할 회원이 없으면 알림 생성하지 않음
             if (members.isEmpty()){
                 return ToDoListUpdateResponseDTO.builder()
-                    .id(studyToDo.getId())
-                    .isDone(studyToDo.isDone())
-                    .updatedAt(studyToDo.getUpdatedAt())
+                    .id(toDo.getId())
+                    .isDone(toDo.isDone())
+                    .updatedAt(toDo.getUpdatedAt())
                     .build();
             }
 
@@ -1075,8 +1075,8 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             members.forEach(studyMember -> {
                 Notification notification = Notification.builder()
                     .member(studyMember)
-                    .notifierName(studyToDo.getMember().getName()) // To-Do 완료한 회원 이름
-                    .study(studyToDo.getStudy())
+                    .notifierName(toDo.getMember().getName()) // To-Do 완료한 회원 이름
+                    .study(toDo.getStudy())
                     .type(NotifyType.TO_DO_UPDATE)
                     .isChecked(Boolean.FALSE)
                     .build();
@@ -1085,13 +1085,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         }
 
         // To-Do List 저장
-        studyToDoRepository.save(studyToDo);
+        toDoRepository.save(toDo);
 
         // To-Do List 변경 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
@@ -1111,29 +1111,29 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         ToDoListCreateDTO toDoListCreateDTO) {
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 수정하는 회원이 스터디 회원이 아니면 예외 처리
         Long currentUserId = SecurityUtils.getCurrentUserId();
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 수정
-        studyToDo.update(toDoListCreateDTO.getContent(), toDoListCreateDTO.getDate());
+        toDo.update(toDoListCreateDTO.getContent(), toDoListCreateDTO.getDate());
 
         // To-Do List 저장
-        studyToDoRepository.save(studyToDo);
+        toDoRepository.save(toDo);
 
         // To-Do List 변경 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
@@ -1157,25 +1157,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             throw new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND);
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 삭제하는 회원의 ID와 To-Do List를 생성한 회원의 ID가 다르면 예외 처리
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 삭제
-        studyToDoRepository.deleteById(toDoListId);
+        toDoRepository.deleteById(toDoListId);
 
         // To-Do List 삭제 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
