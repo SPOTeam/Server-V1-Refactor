@@ -3,7 +3,7 @@ package com.example.spot.refactor.study.presentation.dto.response;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
-import com.example.spot.refactor.story.domain.aggregate.StudyPost;
+import com.example.spot.refactor.story.domain.StudyPost;
 import lombok.*;
 
 import java.time.LocalDateTime;

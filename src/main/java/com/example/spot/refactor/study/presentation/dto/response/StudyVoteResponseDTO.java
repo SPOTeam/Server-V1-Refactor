@@ -1,9 +1,9 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteParticipant;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteOption;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
+import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
+import com.example.spot.refactor.vote.domain.aggregate.StudyVoteOption;
+import com.example.spot.refactor.vote.domain.StudyVote;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

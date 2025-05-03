@@ -2,7 +2,7 @@ package com.example.spot.refactor.study.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.ThemeRepository;
+import com.example.spot.refactor.study.domain.repository.ThemeRepository;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistTheme;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

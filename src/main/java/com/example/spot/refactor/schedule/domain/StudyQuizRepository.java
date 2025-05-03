@@ -1,4 +1,4 @@
-package com.example.spot.refactor.schedule.domain.repository;
+package com.example.spot.refactor.schedule.domain;
 
 import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
 import org.springframework.data.jpa.repository.JpaRepository;

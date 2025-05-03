@@ -2,6 +2,7 @@ package com.example.spot.refactor.study.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
+import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -2,6 +2,7 @@ package com.example.spot.refactor.story.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
+import com.example.spot.refactor.story.domain.StudyPost;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

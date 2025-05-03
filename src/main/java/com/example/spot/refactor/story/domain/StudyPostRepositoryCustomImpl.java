@@ -1,7 +1,6 @@
-package com.example.spot.refactor.story.domain.repository;
+package com.example.spot.refactor.story.domain;
 
-import com.example.spot.refactor.story.domain.aggregate.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.QStudyPost;
+import com.example.spot.refactor.story.domain.QStudyPost;
 import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.example.spot.legacy.domain;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.legacy.domain.enums.NotifyType;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.Member;
 
 import jakarta.persistence.*;

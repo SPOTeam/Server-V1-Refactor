@@ -1,11 +1,11 @@
-package com.example.spot.refactor.study.domain.repository;
+package com.example.spot.refactor.study.domain;
 
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+
 import java.util.List;
 import java.util.Map;
 

@@ -3,7 +3,7 @@ package com.example.spot.refactor.member.domain.association;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,9 @@
-package com.example.spot.refactor.study.domain.aggregate;
+package com.example.spot.refactor.study.domain.repository;
 
 import java.util.List;
+
+import com.example.spot.refactor.study.domain.aggregate.Region;
+import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

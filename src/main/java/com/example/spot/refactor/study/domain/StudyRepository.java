@@ -1,6 +1,5 @@
-package com.example.spot.refactor.study.domain.repository;
+package com.example.spot.refactor.study.domain;
 
-import com.example.spot.refactor.study.domain.aggregate.Study;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

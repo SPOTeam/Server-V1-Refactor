@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studyvote;
+package com.example.spot.refactor.vote.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

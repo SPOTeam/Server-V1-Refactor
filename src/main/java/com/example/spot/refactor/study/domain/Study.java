@@ -1,13 +1,16 @@
-package com.example.spot.refactor.study.domain.aggregate;
+package com.example.spot.refactor.study.domain;
 
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.story.domain.aggregate.StudyPost;
+import com.example.spot.refactor.story.domain.StudyPost;
 import com.example.spot.refactor.schedule.domain.StudySchedule;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
+import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
 import com.example.spot.refactor.todo.domain.StudyToDo;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
+import com.example.spot.refactor.vote.domain.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import jakarta.persistence.CascadeType;

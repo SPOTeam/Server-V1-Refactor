@@ -1,5 +1,6 @@
 package com.example.spot.refactor.story.domain.aggregate;
 
+import com.example.spot.refactor.story.domain.StudyPost;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

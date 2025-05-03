@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studyvote;
+package com.example.spot.refactor.vote.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;

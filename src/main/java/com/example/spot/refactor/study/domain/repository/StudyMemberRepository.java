@@ -1,5 +1,6 @@
-package com.example.spot.refactor.study.domain.aggregate;
+package com.example.spot.refactor.study.domain.repository;
 
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Status;
 

@@ -9,7 +9,7 @@ import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.example.spot.refactor.story.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.story.domain.repository.StudyPostRepository;
+import com.example.spot.refactor.story.domain.StudyPostRepository;
 import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPost;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

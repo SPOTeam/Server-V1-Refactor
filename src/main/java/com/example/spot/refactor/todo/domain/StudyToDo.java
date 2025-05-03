@@ -2,7 +2,7 @@ package com.example.spot.refactor.todo.domain;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

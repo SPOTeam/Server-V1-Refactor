@@ -1,6 +1,6 @@
-package com.example.spot.refactor.study.domain.repository;
+package com.example.spot.refactor.study.domain;
 
-import static com.example.spot.refactor.study.domain.aggregate.QStudy.*;
+import static com.example.spot.refactor.study.domain.QStudy.*;
 
 import com.example.spot.refactor.study.domain.aggregate.Region;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
@@ -11,8 +11,7 @@ import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
-import com.example.spot.refactor.study.domain.aggregate.QStudy;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.QStudy;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

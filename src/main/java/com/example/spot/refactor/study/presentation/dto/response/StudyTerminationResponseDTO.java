@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

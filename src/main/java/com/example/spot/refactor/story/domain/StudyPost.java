@@ -1,8 +1,12 @@
-package com.example.spot.refactor.story.domain.aggregate;
+package com.example.spot.refactor.story.domain;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.study.domain.aggregate.*;
+import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostReport;
+import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
 import jakarta.persistence.*;

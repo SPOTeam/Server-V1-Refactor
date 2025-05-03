@@ -4,7 +4,7 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

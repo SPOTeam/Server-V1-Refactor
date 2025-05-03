@@ -1,8 +1,8 @@
-package com.example.spot.refactor.study.domain.validation.validator;
+package com.example.spot.refactor.vote.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteRepository;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyVote;
+import com.example.spot.refactor.vote.domain.StudyVoteRepository;
+import com.example.spot.refactor.vote.domain.validation.annotation.ExistStudyVote;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
-package com.example.spot.refactor.story.domain.repository;
+package com.example.spot.refactor.story.domain;
 
-import com.example.spot.refactor.story.domain.aggregate.StudyPost;
 import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 
 import java.util.Optional;
