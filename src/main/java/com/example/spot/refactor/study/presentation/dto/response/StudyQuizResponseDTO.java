@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuiz;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
+import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
+import com.example.spot.refactor.schedule.domain.aggregate.StudyQuizSubmission;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import lombok.AccessLevel;
 import lombok.Builder;

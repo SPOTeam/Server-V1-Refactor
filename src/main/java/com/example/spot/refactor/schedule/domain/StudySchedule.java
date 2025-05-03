@@ -1,8 +1,9 @@
-package com.example.spot.refactor.study.domain.aggregate.studyschedule;
+package com.example.spot.refactor.schedule.domain;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
+import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
 import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import jakarta.persistence.*;
 

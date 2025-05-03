@@ -2,15 +2,15 @@ package com.example.spot.service.study.studyschedule;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
+import com.example.spot.refactor.schedule.domain.StudySchedule;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.aggregate.StudyMemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyScheduleRepository;
+import com.example.spot.refactor.schedule.domain.repository.StudyScheduleRepository;
 import com.example.spot.refactor.study.domain.repository.StudyRepository;
 import com.example.spot.refactor.study.application.MemberStudyQueryServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;

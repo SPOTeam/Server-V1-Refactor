@@ -5,7 +5,7 @@ import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.study.application.MemberStudyCommandService;
 import com.example.spot.refactor.study.application.MemberStudyQueryService;
 import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistStudySchedule;
+import com.example.spot.refactor.schedule.domain.validation.annotation.ExistStudySchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyPost;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyToDo;

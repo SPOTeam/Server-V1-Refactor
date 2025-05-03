@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
-import com.example.spot.refactor.study.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.StudySchedule;
+import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
