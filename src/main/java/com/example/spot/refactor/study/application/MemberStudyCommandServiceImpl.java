@@ -8,11 +8,11 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.MemberReport;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.schedule.domain.*;
-import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
-import com.example.spot.refactor.schedule.domain.aggregate.StudyQuizSubmission;
-import com.example.spot.refactor.schedule.domain.StudyQuizRepository;
-import com.example.spot.refactor.schedule.domain.repository.StudyQuizSubmissionRepository;
-import com.example.spot.refactor.schedule.domain.repository.StudyScheduleRepository;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
+import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
+import com.example.spot.refactor.schedule.domain.repository.QuizRepository;
+import com.example.spot.refactor.schedule.domain.repository.QuizSubmissionRepository;
+import com.example.spot.refactor.schedule.domain.ScheduleRepository;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
@@ -77,15 +77,15 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
-    private final StudyScheduleRepository studyScheduleRepository;
-    private final StudyQuizRepository studyQuizRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final QuizRepository quizRepository;
     private final StudyVoteRepository studyVoteRepository;
     private final StudyVoteOptionRepository studyVoteOptionRepository;
     private final MemberReportRepository memberReportRepository;
     private final StudyPostReportRepository studyPostReportRepository;
 
     private final StudyMemberRepository studyMemberRepository;
-    private final StudyQuizSubmissionRepository studyQuizSubmissionRepository;
+    private final QuizSubmissionRepository quizSubmissionRepository;
     private final StudyPostRepository studyPostRepository;
     private final StudyVoteParticipantRepository studyVoteParticipantRepository;
     private final StudyToDoRepository studyToDoRepository;
@@ -339,7 +339,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // Period 기반 시작일 종료일 제한
         checkStartAndFinishDate(scheduleRequestDTO);
 
-        StudySchedule studySchedule = StudySchedule.builder()
+        Schedule schedule = Schedule.builder()
                 .study(study)
                 .member(member)
                 .title(scheduleRequestDTO.getTitle())
@@ -371,11 +371,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 notificationRepository.save(notification);
             });
 
-        studyScheduleRepository.save(studySchedule);
-        study.addSchedule(studySchedule);
-        member.addSchedule(studySchedule);
+        scheduleRepository.save(schedule);
+        study.addSchedule(schedule);
+        member.addSchedule(schedule);
 
-        return ScheduleResponseDTO.ScheduleDTO.toDTO(studySchedule);
+        return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
 
     /**
@@ -396,7 +396,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudySchedule studySchedule = studyScheduleRepository.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -404,11 +404,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 일정 생성자인지 확인
-        studyScheduleRepository.findByIdAndMemberId(scheduleId, memberId)
+        scheduleRepository.findByIdAndMemberId(scheduleId, memberId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._SCHEDULE_MOD_INVALID));
 
         // 해당 스터디의 일정인지 확인
-        studyScheduleRepository.findByIdAndStudyId(scheduleId, studyId)
+        scheduleRepository.findByIdAndStudyId(scheduleId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
 
         //=== Feature ===//
@@ -416,13 +416,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // Period 기반 시작일 종료일 제한
         checkStartAndFinishDate(scheduleModDTO);
 
-        studySchedule.modSchedule(scheduleModDTO);
-        studySchedule = studyScheduleRepository.save(studySchedule);
+        schedule.modSchedule(scheduleModDTO);
+        schedule = scheduleRepository.save(schedule);
 
-        study.updateSchedule(studySchedule);
-        member.updateSchedule(studySchedule);
+        study.updateSchedule(schedule);
+        member.updateSchedule(schedule);
 
-        return ScheduleResponseDTO.ScheduleDTO.toDTO(studySchedule);
+        return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
 
     private static void checkStartAndFinishDate(ScheduleRequestDTO.ScheduleDTO scheduleRequestDTO) {
@@ -477,13 +477,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        StudySchedule studySchedule = studyScheduleRepository.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
         // 해당 스터디에서 생성된 일정인지 확인
-        if (!studySchedule.getStudy().equals(study)) {
+        if (!schedule.getStudy().equals(study)) {
             throw new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND);
         }
 
@@ -494,25 +494,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 이미 출석 퀴즈가 생성되었는지 확인
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
-        List<StudyQuiz> todayQuizzes = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        List<Quiz> todayQuizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
         if (!todayQuizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_ALREADY_EXIST);
         }
 
         //=== Feature ===//
-        StudyQuiz studyQuiz = StudyQuiz.builder()
-                .studySchedule(studySchedule)
+        Quiz quiz = Quiz.builder()
+                .schedule(schedule)
                 .member(member)
                 .question(quizRequestDTO.getQuestion())
                 .answer(quizRequestDTO.getAnswer())
                 .createdAt(quizRequestDTO.getCreatedAt())
                 .build();
 
-        studyQuiz = studyQuizRepository.save(studyQuiz);
-        studySchedule.addQuiz(studyQuiz);
-        member.addQuiz(studyQuiz);
+        quiz = quizRepository.save(quiz);
+        schedule.addQuiz(quiz);
+        member.addQuiz(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(studyQuiz);
+        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
     }
 
     /**
@@ -538,25 +538,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 생성된 출석 퀴즈 조회
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
-        List<StudyQuiz> studyQuizs = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
-        if (studyQuizs.isEmpty()) {
+        List<Quiz> quizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        if (quizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_FOUND);
         }
-        StudyQuiz studyQuiz = studyQuizs.get(0);
+        Quiz quiz = quizzes.get(0);
 
         // 로그인한 회원이 스터디 회원인지 확인
         studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), study.getId(), StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 퀴즈 제한시간 확인
-        if (attendanceRequestDTO.getDateTime().isAfter(studyQuiz.getCreatedAt().plusMinutes(5))) {
+        if (attendanceRequestDTO.getDateTime().isAfter(quiz.getCreatedAt().plusMinutes(5))) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_VALID);
         }
 
         // 이미 출석이 완료되었거나 시도 횟수를 초과하였는지 확인
-        List<StudyQuizSubmission> attendanceList = studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(studyQuiz.getId(), member.getId());
+        List<QuizSubmission> attendanceList = quizSubmissionRepository.findByQuizIdAndMemberId(quiz.getId(), member.getId());
         int try_num = 0;
-        for (StudyQuizSubmission attendance : attendanceList) {
+        for (QuizSubmission attendance : attendanceList) {
             if (attendance.getIsCorrect())
                 throw new StudyHandler(ErrorStatus._STUDY_ATTENDANCE_ALREADY_EXIST);
             else
@@ -568,18 +568,18 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
         //=== Feature ===//
         Boolean isCorrect;
-        if (attendanceRequestDTO.getAnswer().equals(studyQuiz.getAnswer())) {
+        if (attendanceRequestDTO.getAnswer().equals(quiz.getAnswer())) {
             isCorrect = Boolean.TRUE;
         } else {
             isCorrect = Boolean.FALSE;
         }
 
-        StudyQuizSubmission studyQuizSubmission = new StudyQuizSubmission(isCorrect);
-        member.addMemberAttendance(studyQuizSubmission);
-        studyQuiz.addMemberAttendance(studyQuizSubmission);
-        studyQuizSubmission = studyQuizSubmissionRepository.save(studyQuizSubmission);
+        QuizSubmission quizSubmission = new QuizSubmission(isCorrect);
+        member.addMemberAttendance(quizSubmission);
+        quiz.addMemberAttendance(quizSubmission);
+        quizSubmission = quizSubmissionRepository.save(quizSubmission);
 
-        return StudyQuizResponseDTO.AttendanceDTO.toDTO(studyQuizSubmission, try_num+1);
+        return StudyQuizResponseDTO.AttendanceDTO.toDTO(quizSubmission, try_num+1);
     }
 
     /**
@@ -605,11 +605,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 생성된 출석 퀴즈 조회
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);
-        List<StudyQuiz> todayQuizzes = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        List<Quiz> todayQuizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
         if (todayQuizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_FOUND);
         }
-        StudyQuiz studyQuiz = todayQuizzes.get(0);
+        Quiz quiz = todayQuizzes.get(0);
 
         // 로그인한 회원이 스터디 회원인지 확인
         studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), study.getId(), StudyApplicationStatus.APPROVED)
@@ -620,14 +620,14 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_QUIZ_DELETION_INVALID));
 
         //=== Feature ===//
-        studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz.getId())
+        quizSubmissionRepository.findByQuizId(quiz.getId())
                 .forEach(memberAttendance -> {
-                    studyQuiz.deleteMemberAttendance(memberAttendance);
-                    studyQuizSubmissionRepository.delete(memberAttendance);
+                    quiz.deleteMemberAttendance(memberAttendance);
+                    quizSubmissionRepository.delete(memberAttendance);
                 });
-        studyQuizRepository.delete(studyQuiz);
+        quizRepository.delete(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(studyQuiz);
+        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
     }
 
 

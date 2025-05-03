@@ -4,8 +4,8 @@ import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
+import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.story.domain.StudyPost;
-import com.example.spot.refactor.schedule.domain.StudySchedule;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
@@ -90,7 +90,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudySchedule> studySchedules = new ArrayList<>();
+    private List<Schedule> schedules = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -151,9 +151,9 @@ public class Study extends BaseEntity {
         this.heartCount++;
     }
 
-    public void addSchedule(StudySchedule studySchedule) {
-        studySchedules.add(studySchedule);
-        studySchedule.setStudy(this);
+    public void addSchedule(Schedule schedule) {
+        schedules.add(schedule);
+        schedule.setStudy(this);
     }
 
     public void addVote(StudyVote studyVote) {
@@ -161,8 +161,8 @@ public class Study extends BaseEntity {
         studyVote.setStudy(this);
     }
 
-    public void updateSchedule(StudySchedule studySchedule) {
-        studySchedules.set(studySchedules.indexOf(studySchedule), studySchedule);
+    public void updateSchedule(Schedule schedule) {
+        schedules.set(schedules.indexOf(schedule), schedule);
     }
 
     public void addStudyPost(StudyPost studyPost) {

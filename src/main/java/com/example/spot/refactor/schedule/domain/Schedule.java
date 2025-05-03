@@ -1,7 +1,7 @@
 package com.example.spot.refactor.schedule.domain;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
@@ -22,7 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class StudySchedule extends BaseEntity {
+public class Schedule extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -38,8 +38,8 @@ public class StudySchedule extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "studySchedule", cascade = CascadeType.ALL)
-    private List<StudyQuiz> studyQuizList = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<Quiz> quizList = new ArrayList<>();
 
     @Column(nullable = false, length = 20)
     private String title;
@@ -63,9 +63,9 @@ public class StudySchedule extends BaseEntity {
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public StudySchedule(Study study, Member member, String title, String location,
-                         LocalDateTime staredAt, LocalDateTime finishedAt,
-                         Boolean isAllDay, StudySchedulePeriod studySchedulePeriod) {
+    public Schedule(Study study, Member member, String title, String location,
+                    LocalDateTime staredAt, LocalDateTime finishedAt,
+                    Boolean isAllDay, StudySchedulePeriod studySchedulePeriod) {
         this.study = study;
         this.member = member;
         this.title = title;
@@ -74,15 +74,15 @@ public class StudySchedule extends BaseEntity {
         this.finishedAt = finishedAt;
         this.isAllDay = isAllDay;
         this.studySchedulePeriod = studySchedulePeriod;
-        this.studyQuizList = new ArrayList<>();
+        this.quizList = new ArrayList<>();
     }
 
 /* ----------------------------- 메소드 ------------------------------------- */
 
 
-    public void addQuiz(StudyQuiz studyQuiz) {
-        studyQuizList.add(studyQuiz);
-        studyQuiz.setStudySchedule(this);
+    public void addQuiz(Quiz quiz) {
+        quizList.add(quiz);
+        quiz.setSchedule(this);
     }
     public void modSchedule(ScheduleRequestDTO.ScheduleDTO scheduleDTO) {
         this.title = scheduleDTO.getTitle();

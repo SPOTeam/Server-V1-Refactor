@@ -3,7 +3,7 @@ package com.example.spot.service.study.studymember;
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
-import com.example.spot.refactor.schedule.domain.StudySchedule;
+import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
@@ -11,7 +11,7 @@ import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.story.domain.StudyPost;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.refactor.schedule.domain.repository.StudyScheduleRepository;
+import com.example.spot.refactor.schedule.domain.ScheduleRepository;
 import com.example.spot.refactor.story.domain.StudyPostRepository;
 import com.example.spot.refactor.todo.domain.StudyToDoRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
@@ -62,7 +62,7 @@ public class StudyMemberQueryServiceTest {
     @Mock
     private StudyPostRepository studyPostRepository;
     @Mock
-    private StudyScheduleRepository studyScheduleRepository;
+    private ScheduleRepository scheduleRepository;
     @Mock
     private StudyToDoRepository studyToDoRepository;
     @Mock
@@ -183,9 +183,9 @@ public class StudyMemberQueryServiceTest {
         Long studyId = 1L;
         String title = "title";
 
-        StudySchedule studySchedule1 = StudySchedule.builder().id(1L).title(title).build();
-        StudySchedule studySchedule2 = StudySchedule.builder().id(2L).title("title1").build();
-        when(studyScheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(List.of(studySchedule1, studySchedule2));
+        Schedule schedule1 = Schedule.builder().id(1L).title(title).build();
+        Schedule schedule2 = Schedule.builder().id(2L).title("title1").build();
+        when(scheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(List.of(schedule1, schedule2));
 
         // when
         StudyScheduleResponseDTO responseDTO = memberStudyQueryService.findStudySchedule(studyId, Pageable.unpaged());
@@ -214,7 +214,7 @@ public class StudyMemberQueryServiceTest {
         long studyId = 1L;
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.of(studyMember));
-        when(studyScheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(Collections.emptyList());
+        when(scheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(Collections.emptyList());
 
         // when & then
         assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudySchedule(studyId, Pageable.unpaged()));

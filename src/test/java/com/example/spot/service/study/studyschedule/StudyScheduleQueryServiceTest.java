@@ -2,7 +2,7 @@ package com.example.spot.service.study.studyschedule;
 
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.schedule.domain.StudySchedule;
+import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
@@ -10,7 +10,7 @@ import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.refactor.schedule.domain.repository.StudyScheduleRepository;
+import com.example.spot.refactor.schedule.domain.ScheduleRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.study.application.MemberStudyQueryServiceImpl;
 import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyStudyScheduleQueryServiceTest {
+class StudyScheduleQueryServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -52,7 +52,7 @@ class StudyStudyScheduleQueryServiceTest {
     private StudyMemberRepository studyMemberRepository;
 
     @Mock
-    private StudyScheduleRepository studyScheduleRepository;
+    private ScheduleRepository scheduleRepository;
 
     @InjectMocks
     private MemberStudyQueryServiceImpl memberStudyQueryService;
@@ -64,9 +64,9 @@ class StudyStudyScheduleQueryServiceTest {
     private static Member owner;
     private static StudyMember member1Study1;
     private static StudyMember ownerStudy1;
-    private static StudySchedule studySchedule1;
-    private static StudySchedule studySchedule2;
-    private static StudySchedule studySchedule3;
+    private static Schedule schedule1;
+    private static Schedule schedule2;
+    private static Schedule schedule3;
 
     @BeforeEach
     void setUp() {
@@ -87,12 +87,12 @@ class StudyStudyScheduleQueryServiceTest {
         when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member2.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(false);
         when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(owner.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(true);
 
-        when(studyScheduleRepository.findById(studySchedule1.getId())).thenReturn(Optional.of(studySchedule1));
-        when(studyScheduleRepository.findById(studySchedule2.getId())).thenReturn(Optional.of(studySchedule2));
-        when(studyScheduleRepository.findById(studySchedule3.getId())).thenReturn(Optional.of(studySchedule3));
-        when(studyScheduleRepository.findByIdAndStudyId(studySchedule1.getId(), 1L)).thenReturn(Optional.of(studySchedule1));
-        when(studyScheduleRepository.findByIdAndStudyId(studySchedule2.getId(), 1L)).thenReturn(Optional.of(studySchedule2));
-        when(studyScheduleRepository.findByIdAndStudyId(studySchedule3.getId(), 1L)).thenReturn(Optional.of(studySchedule3));
+        when(scheduleRepository.findById(schedule1.getId())).thenReturn(Optional.of(schedule1));
+        when(scheduleRepository.findById(schedule2.getId())).thenReturn(Optional.of(schedule2));
+        when(scheduleRepository.findById(schedule3.getId())).thenReturn(Optional.of(schedule3));
+        when(scheduleRepository.findByIdAndStudyId(schedule1.getId(), 1L)).thenReturn(Optional.of(schedule1));
+        when(scheduleRepository.findByIdAndStudyId(schedule2.getId(), 1L)).thenReturn(Optional.of(schedule2));
+        when(scheduleRepository.findByIdAndStudyId(schedule3.getId(), 1L)).thenReturn(Optional.of(schedule3));
     }
 
     @Test
@@ -113,8 +113,8 @@ class StudyStudyScheduleQueryServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getScheduleList()).isNotEmpty();
         assertThat(result.getScheduleList()).size().isEqualTo(2);
-        assertThat(result.getScheduleList().get(0).getTitle()).isEqualTo(studySchedule1.getTitle());
-        assertThat(result.getScheduleList().get(1).getTitle()).isEqualTo(studySchedule2.getTitle());
+        assertThat(result.getScheduleList().get(0).getTitle()).isEqualTo(schedule1.getTitle());
+        assertThat(result.getScheduleList().get(1).getTitle()).isEqualTo(schedule2.getTitle());
     }
 
     @Test
@@ -156,7 +156,7 @@ class StudyStudyScheduleQueryServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo(studySchedule1.getTitle());
+        assertThat(result.getTitle()).isEqualTo(schedule1.getTitle());
     }
 
     @Test
@@ -180,15 +180,15 @@ class StudyStudyScheduleQueryServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -244,7 +244,7 @@ class StudyStudyScheduleQueryServiceTest {
 
         LocalDateTime startedAt = LocalDateTime.of(LocalDate.of(2024, 1, 1), LocalTime.MIN);
 
-        studySchedule1 = StudySchedule.builder()
+        schedule1 = Schedule.builder()
                 .id(1L)
                 .study(study1)
                 .member(owner)
@@ -253,10 +253,10 @@ class StudyStudyScheduleQueryServiceTest {
                 .finishedAt(startedAt.plusHours(1))
                 .studySchedulePeriod(StudySchedulePeriod.NONE)
                 .build();
-        study1.addSchedule(studySchedule1);
-        owner.addSchedule(studySchedule1);
+        study1.addSchedule(schedule1);
+        owner.addSchedule(schedule1);
 
-        studySchedule2 = StudySchedule.builder()
+        schedule2 = Schedule.builder()
                 .id(2L)
                 .study(study1)
                 .member(member1)
@@ -265,10 +265,10 @@ class StudyStudyScheduleQueryServiceTest {
                 .finishedAt(startedAt.plusHours(2))
                 .studySchedulePeriod(StudySchedulePeriod.MONTHLY)
                 .build();
-        study1.addSchedule(studySchedule2);
-        member1.addSchedule(studySchedule2);
+        study1.addSchedule(schedule2);
+        member1.addSchedule(schedule2);
 
-        studySchedule3 = StudySchedule.builder()
+        schedule3 = Schedule.builder()
                 .id(3L)
                 .study(study2)
                 .member(member2)
@@ -277,8 +277,8 @@ class StudyStudyScheduleQueryServiceTest {
                 .finishedAt(startedAt.plusHours(2))
                 .studySchedulePeriod(StudySchedulePeriod.WEEKLY)
                 .build();
-        study2.addSchedule(studySchedule3);
-        member2.addSchedule(studySchedule3);
+        study2.addSchedule(schedule3);
+        member2.addSchedule(schedule3);
     }
 
     private static void getAuthentication(Long memberId) {

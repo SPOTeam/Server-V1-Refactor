@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyQuizSubmission extends BaseEntity {
+public class QuizSubmission extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,12 @@ public class StudyQuizSubmission extends BaseEntity {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_quiz_id", nullable = false)
-    private StudyQuiz studyQuiz;
+    private Quiz quiz;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public StudyQuizSubmission(Boolean isCorrect) {
+    public QuizSubmission(Boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
 

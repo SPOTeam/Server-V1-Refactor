@@ -1,16 +1,17 @@
 package com.example.spot.refactor.member.domain;
 
 import com.example.spot.legacy.domain.*;
+import com.example.spot.refactor.schedule.domain.Schedule;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
 import com.example.spot.refactor.story.domain.aggregate.LikedStudyComment;
 import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
-import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
 import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Carrier;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.schedule.domain.aggregate.StudyQuizSubmission;
+import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
@@ -19,7 +20,6 @@ import com.example.spot.refactor.vote.domain.StudyVote;
 import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.refactor.schedule.domain.StudySchedule;
 import com.example.spot.refactor.story.domain.StudyPost;
 import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
@@ -128,7 +128,7 @@ public class Member extends BaseEntity {
     //== 회원의 출석 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyQuizSubmission> studyQuizSubmissionList = new ArrayList<>();
+    private List<QuizSubmission> quizSubmissionList = new ArrayList<>();
 
     //== 회원이 참여하는 스터디 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -213,12 +213,12 @@ public class Member extends BaseEntity {
     //== 회원이 생성한 스터디 퀴즈 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyQuiz> studyQuizList = new ArrayList<>();
+    private List<Quiz> quizList = new ArrayList<>();
 
     //== 회원이 생성한 스터디 일정 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudySchedule> studyScheduleList = new ArrayList<>();
+    private List<Schedule> scheduleList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -247,12 +247,12 @@ public class Member extends BaseEntity {
         memberTheme.setMember(this); // 양방향 관계 설정
     }
 
-    public void addMemberAttendance(StudyQuizSubmission studyQuizSubmission) {
-        if (this.studyQuizSubmissionList == null) {
-            this.studyQuizSubmissionList = new ArrayList<>();
+    public void addMemberAttendance(QuizSubmission quizSubmission) {
+        if (this.quizSubmissionList == null) {
+            this.quizSubmissionList = new ArrayList<>();
         }
-        this.studyQuizSubmissionList.add(studyQuizSubmission);
-        studyQuizSubmission.setMember(this);
+        this.quizSubmissionList.add(quizSubmission);
+        quizSubmission.setMember(this);
     }
 
     public void addVote(StudyVote studyVote) {
@@ -360,19 +360,19 @@ public class Member extends BaseEntity {
         this.studyVoteList.remove(studyVote);
     }
 
-    public void addQuiz(StudyQuiz studyQuiz) {
-        this.studyQuizList.add(studyQuiz);
-        studyQuiz.setMember(this);
+    public void addQuiz(Quiz quiz) {
+        this.quizList.add(quiz);
+        quiz.setMember(this);
     }
 
-    public void addSchedule(StudySchedule studySchedule) {
-        this.studyScheduleList.add(studySchedule);
-        studySchedule.setMember(this);
+    public void addSchedule(Schedule schedule) {
+        this.scheduleList.add(schedule);
+        schedule.setMember(this);
 
     }
 
-    public void updateSchedule(StudySchedule studySchedule) {
-        studyScheduleList.set(studyScheduleList.indexOf(studySchedule), studySchedule);
+    public void updateSchedule(Schedule schedule) {
+        scheduleList.set(scheduleList.indexOf(schedule), schedule);
     }
 
     public void toAdmin() {

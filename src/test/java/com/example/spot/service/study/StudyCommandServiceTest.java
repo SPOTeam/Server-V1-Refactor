@@ -288,15 +288,15 @@ class StudyCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .studyScheduleList(new ArrayList<>())
+                .scheduleList(new ArrayList<>())
                 .build();
     }
 
