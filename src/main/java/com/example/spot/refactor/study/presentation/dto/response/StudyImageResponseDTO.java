@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostImage;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -7,7 +7,7 @@ import com.example.spot.refactor.study.application.MemberStudyQueryService;
 import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
 import com.example.spot.refactor.schedule.domain.validation.annotation.ExistStudySchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyPost;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPost;
 import com.example.spot.refactor.todo.domain.validation.annotation.ExistStudyToDo;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyVote;
 import com.example.spot.legacy.validation.annotation.IntSize;

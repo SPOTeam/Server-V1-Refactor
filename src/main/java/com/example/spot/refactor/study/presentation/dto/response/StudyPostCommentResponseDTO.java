@@ -1,8 +1,8 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.LikedStudyComment;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

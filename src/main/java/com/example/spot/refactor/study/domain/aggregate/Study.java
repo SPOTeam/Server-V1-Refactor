@@ -4,7 +4,7 @@ import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
+import com.example.spot.refactor.story.domain.aggregate.StudyPost;
 import com.example.spot.refactor.schedule.domain.StudySchedule;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;

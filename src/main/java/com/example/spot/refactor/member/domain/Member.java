@@ -1,8 +1,8 @@
 package com.example.spot.refactor.member.domain;
 
 import com.example.spot.legacy.domain.*;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPost;
+import com.example.spot.refactor.story.domain.aggregate.LikedStudyComment;
+import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
 import com.example.spot.refactor.schedule.domain.aggregate.StudyQuiz;
 import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.common.entity.BaseEntity;
@@ -20,8 +20,8 @@ import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteParti
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
 import com.example.spot.refactor.schedule.domain.StudySchedule;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.StudyPost;
+import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import jakarta.persistence.*;
 import java.util.ArrayList;

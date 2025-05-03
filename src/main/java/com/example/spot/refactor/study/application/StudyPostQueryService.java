@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.application;
 
-import com.example.spot.refactor.study.domain.enums.StudyPostCategoryQuery;
+import com.example.spot.refactor.story.domain.enums.StudyPostCategoryQuery;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostResDTO;
 import org.springframework.data.domain.PageRequest;

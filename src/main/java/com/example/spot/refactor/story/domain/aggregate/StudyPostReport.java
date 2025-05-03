@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studypost;
+package com.example.spot.refactor.story.domain.aggregate;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

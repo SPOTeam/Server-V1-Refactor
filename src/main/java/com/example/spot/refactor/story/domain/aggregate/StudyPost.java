@@ -1,9 +1,9 @@
-package com.example.spot.refactor.study.domain.aggregate.studypost;
+package com.example.spot.refactor.story.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.study.domain.aggregate.*;
-import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
 import jakarta.persistence.*;
 

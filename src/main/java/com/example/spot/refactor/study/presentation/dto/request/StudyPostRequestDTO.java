@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.presentation.dto.request;
 
-import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

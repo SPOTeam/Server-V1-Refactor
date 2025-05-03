@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.enums;
+package com.example.spot.refactor.story.domain.enums;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
