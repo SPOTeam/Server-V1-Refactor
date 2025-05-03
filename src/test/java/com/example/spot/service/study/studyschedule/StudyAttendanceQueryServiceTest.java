@@ -298,7 +298,7 @@ class StudyAttendanceQueryServiceTest {
 
     private static void initQuiz() {
         quiz = Quiz.builder()
-                .studySchedule(schedule)
+                .schedule(schedule)
                 .member(owner)
                 .question("최고의 스터디 앱은?")
                 .answer("SPOT")
