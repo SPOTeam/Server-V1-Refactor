@@ -6,7 +6,7 @@ import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
 import com.example.spot.refactor.schedule.domain.StudySchedule;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
+import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;

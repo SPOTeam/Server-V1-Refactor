@@ -1,6 +1,6 @@
-package com.example.spot.refactor.study.domain.validation.annotation;
+package com.example.spot.refactor.todo.domain.validation.annotation;
 
-import com.example.spot.refactor.study.domain.validation.validator.ExistStudyToDoValidator;
+import com.example.spot.refactor.todo.domain.validation.validator.ExistStudyToDoValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.Documented;

@@ -1,8 +1,8 @@
-package com.example.spot.refactor.study.domain.validation.validator;
+package com.example.spot.refactor.todo.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
-import com.example.spot.refactor.study.domain.validation.annotation.ExistStudyToDo;
+import com.example.spot.refactor.todo.domain.StudyToDoRepository;
+import com.example.spot.refactor.todo.domain.validation.annotation.ExistStudyToDo;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

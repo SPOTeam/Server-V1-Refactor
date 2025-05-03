@@ -1,4 +1,4 @@
-package com.example.spot.refactor.study.domain.aggregate.studytodo;
+package com.example.spot.refactor.todo.domain;
 
 import java.time.LocalDate;
 import java.util.List;

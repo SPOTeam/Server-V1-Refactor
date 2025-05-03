@@ -14,7 +14,7 @@ import com.example.spot.refactor.schedule.domain.aggregate.StudyQuizSubmission;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
+import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
 import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
