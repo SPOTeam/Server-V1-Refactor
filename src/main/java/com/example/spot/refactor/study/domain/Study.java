@@ -5,7 +5,7 @@ import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.schedule.domain.Schedule;
-import com.example.spot.refactor.story.domain.StudyPost;
+import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
 import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
@@ -94,7 +94,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudyPost> posts = new ArrayList<>();
+    private List<Story> posts = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -118,7 +118,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudyPost> studyPosts = new ArrayList<>();
+    private List<Story> stories = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -165,20 +165,20 @@ public class Study extends BaseEntity {
         schedules.set(schedules.indexOf(schedule), schedule);
     }
 
-    public void addStudyPost(StudyPost studyPost) {
-        if (this.studyPosts == null) {
-            this.studyPosts = new ArrayList<>();
+    public void addStudyPost(Story story) {
+        if (this.stories == null) {
+            this.stories = new ArrayList<>();
         }
-        this.studyPosts.add(studyPost);
-        studyPost.setStudy(this);
+        this.stories.add(story);
+        story.setStudy(this);
     }
 
-    public void updateStudyPost(StudyPost studyPost) {
-        studyPosts.set(studyPosts.indexOf(studyPost), studyPost);
+    public void updateStudyPost(Story story) {
+        stories.set(stories.indexOf(story), story);
     }
 
-    public void deleteStudyPost(StudyPost studyPost) {
-        studyPosts.remove(studyPost);
+    public void deleteStudyPost(Story story) {
+        stories.remove(story);
     }
 
     // preferredStudy 삭제

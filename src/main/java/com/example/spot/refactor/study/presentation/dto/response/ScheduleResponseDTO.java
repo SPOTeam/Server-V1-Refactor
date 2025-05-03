@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.schedule.domain.Schedule;
-import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.domain.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,7 +64,7 @@ public class ScheduleResponseDTO {
         private final LocalDateTime startedAt;
         private final LocalDateTime finishedAt;
         private final Boolean isAllDay;
-        private final StudySchedulePeriod studySchedulePeriod;
+        private final SchedulePeriod schedulePeriod;
 
         public static MonthlyScheduleDTO toDTO(
                 Schedule schedule, boolean isStudyMember) {
@@ -75,7 +75,7 @@ public class ScheduleResponseDTO {
                     .startedAt(schedule.getStartedAt())
                     .finishedAt(schedule.getFinishedAt())
                     .isAllDay(schedule.getIsAllDay())
-                    .studySchedulePeriod(schedule.getStudySchedulePeriod())
+                    .schedulePeriod(schedule.getSchedulePeriod())
                     .build();
         }
 
@@ -88,7 +88,7 @@ public class ScheduleResponseDTO {
                     .startedAt(startedAt)
                     .finishedAt(finishedAt)
                     .isAllDay(schedule.getIsAllDay())
-                    .studySchedulePeriod(schedule.getStudySchedulePeriod())
+                    .schedulePeriod(schedule.getSchedulePeriod())
                     .build();
         }
     }

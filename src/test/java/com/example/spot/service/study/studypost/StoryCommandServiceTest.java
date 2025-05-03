@@ -3,16 +3,16 @@ package com.example.spot.service.study.studypost;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
-import com.example.spot.refactor.story.domain.aggregate.LikedStudyComment;
-import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
-import com.example.spot.refactor.story.domain.StudyPost;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.StoryRepository;
+import com.example.spot.refactor.story.domain.aggregate.LikedStory;
+import com.example.spot.refactor.story.domain.aggregate.LikedStoryComment;
+import com.example.spot.refactor.story.domain.aggregate.StoryComment;
 import com.example.spot.refactor.story.domain.repository.*;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
@@ -51,7 +51,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyPostCommandServiceTest {
+class StoryCommandServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -62,18 +62,18 @@ class StudyPostCommandServiceTest {
     private StudyMemberRepository studyMemberRepository;
 
     @Mock
-    private StudyPostRepository studyPostRepository;
+    private StoryRepository storyRepository;
     @Mock
-    private LikedStudyPostRepository likedStudyPostRepository;
+    private LikedStoryRepository likedStoryRepository;
     @Mock
-    private StudyPostImageRepository studyPostImageRepository;
+    private StoryImageRepository storyImageRepository;
     @Mock
-    private StudyPostReportRepository studyPostReportRepository;
+    private StoryReportRepository storyReportRepository;
 
     @Mock
-    private StudyPostCommentRepository studyPostCommentRepository;
+    private StoryCommentRepository storyCommentRepository;
     @Mock
-    private LikedStudyCommentRepository likedStudyCommentRepository;
+    private LikedStoryCommentRepository likedStoryCommentRepository;
 
     @Mock
     private NotificationRepository notificationRepository;
@@ -91,14 +91,14 @@ class StudyPostCommandServiceTest {
     private static StudyMember member1Study;
     private static StudyMember ownerStudy;
 
-    private static StudyPost studyPost1;
-    private static StudyPost studyPost2;
-    private static StudyPost studyPost3;
-    private static LikedStudyPost likedStudyPost;
-    private static StudyPostComment studyPost1Comment1;
-    private static StudyPostComment studyPost1Comment2;
-    private static LikedStudyComment likedStudyComment;
-    private static LikedStudyComment studyDislikedComment;
+    private static Story story1;
+    private static Story story2;
+    private static Story story3;
+    private static LikedStory likedStory;
+    private static StoryComment studyPost1Comment1;
+    private static StoryComment studyPost1Comment2;
+    private static LikedStoryComment likedStoryComment;
+    private static LikedStoryComment studyDislikedComment;
 
     @BeforeEach
     void setUp() {
@@ -127,20 +127,20 @@ class StudyPostCommandServiceTest {
                 .thenReturn(Optional.of(ownerStudy));
 
         // StudyPost
-        when(studyPostRepository.findById(1L)).thenReturn(Optional.of(studyPost1));
-        when(studyPostRepository.findById(2L)).thenReturn(Optional.of(studyPost2));
-        when(studyPostRepository.findById(3L)).thenReturn(Optional.of(studyPost3));
+        when(storyRepository.findById(1L)).thenReturn(Optional.of(story1));
+        when(storyRepository.findById(2L)).thenReturn(Optional.of(story2));
+        when(storyRepository.findById(3L)).thenReturn(Optional.of(story3));
 
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(3L, 1L))
-                .thenReturn(Optional.of(likedStudyPost));
-        when(likedStudyPostRepository.existsByMemberIdAndStudyPostId(3L, 1L))
+        when(likedStoryRepository.findByMemberIdAndStoryId(3L, 1L))
+                .thenReturn(Optional.of(likedStory));
+        when(likedStoryRepository.existsByMemberIdAndStoryId(3L, 1L))
                 .thenReturn(true);
 
          // Comment
-        when(studyPostCommentRepository.findAllByStudyPostId(1L))
+        when(storyCommentRepository.findAllByStoryId(1L))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
-        when(studyPostCommentRepository.findById(1L)).thenReturn(Optional.of(studyPost1Comment1));
-        when(studyPostCommentRepository.findById(2L)).thenReturn(Optional.of(studyPost1Comment2));
+        when(storyCommentRepository.findById(1L)).thenReturn(Optional.of(studyPost1Comment1));
+        when(storyCommentRepository.findById(2L)).thenReturn(Optional.of(studyPost1Comment2));
 
         // S3
         when(s3ImageService.upload(any(MultipartFile.class))).thenReturn("url");
@@ -159,7 +159,7 @@ class StudyPostCommandServiceTest {
 
         StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
-                .studyPostCategory(StudyPostCategory.INFO_SHARING)
+                .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
                 .content("내용")
                 .build();
@@ -168,7 +168,7 @@ class StudyPostCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true))
                 .thenReturn(Optional.of(ownerStudy));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost2);
+        when(storyRepository.save(any(Story.class))).thenReturn(story2);
         when(notificationRepository.save(any(Notification.class))).thenReturn(null);
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -179,7 +179,7 @@ class StudyPostCommandServiceTest {
         // then
         assertNotNull(result);
         assertThat(result.getTitle()).isEqualTo("공지");
-        verify(studyPostRepository, times(1)).save(any(StudyPost.class));
+        verify(storyRepository, times(1)).save(any(Story.class));
     }
 
     @Test
@@ -192,7 +192,7 @@ class StudyPostCommandServiceTest {
 
         StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
                 .isAnnouncement(false)
-                .studyPostCategory(StudyPostCategory.FREE_TALK)
+                .storyCategory(StoryCategory.FREE_TALK)
                 .title("잡담")
                 .content("내용")
                 .build();
@@ -201,7 +201,7 @@ class StudyPostCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true))
                 .thenReturn(Optional.of(member1Study));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
         when(notificationRepository.save(any(Notification.class))).thenReturn(null);
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -212,7 +212,7 @@ class StudyPostCommandServiceTest {
         // then
         assertNotNull(result);
         assertThat(result.getTitle()).isEqualTo("잡담");
-        verify(studyPostRepository, times(1)).save(any(StudyPost.class));
+        verify(storyRepository, times(1)).save(any(Story.class));
     }
 
     @Test
@@ -225,7 +225,7 @@ class StudyPostCommandServiceTest {
 
         StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
-                .studyPostCategory(StudyPostCategory.INFO_SHARING)
+                .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
                 .content("내용")
                 .build();
@@ -234,7 +234,7 @@ class StudyPostCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true))
                 .thenReturn(Optional.of(ownerStudy));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost2);
+        when(storyRepository.save(any(Story.class))).thenReturn(story2);
         when(notificationRepository.save(any(Notification.class))).thenReturn(null);
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -253,7 +253,7 @@ class StudyPostCommandServiceTest {
 
         StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
-                .studyPostCategory(StudyPostCategory.INFO_SHARING)
+                .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
                 .content("내용")
                 .build();
@@ -262,7 +262,7 @@ class StudyPostCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true))
                 .thenReturn(Optional.of(member1Study));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost2);
+        when(storyRepository.save(any(Story.class))).thenReturn(story2);
         when(notificationRepository.save(any(Notification.class))).thenReturn(null);
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -281,7 +281,7 @@ class StudyPostCommandServiceTest {
 
         StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
-                .studyPostCategory(StudyPostCategory.INFO_SHARING)
+                .storyCategory(StoryCategory.INFO_SHARING)
                 .title("50자가 넘어가는 제목 "
                         + "50자가 넘어가는 제목 "
                         + "50자가 넘어가는 제목 "
@@ -294,7 +294,7 @@ class StudyPostCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true))
                 .thenReturn(Optional.of(ownerStudy));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost2);
+        when(storyRepository.save(any(Story.class))).thenReturn(story2);
         when(notificationRepository.save(any(Notification.class))).thenReturn(null);
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -317,10 +317,10 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostRepository.findByIdAndMemberId(postId, memberId))
-                .thenReturn(Optional.of(studyPost1));
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyRepository.findByIdAndMemberId(postId, memberId))
+                .thenReturn(Optional.of(story1));
 
         // when
         StudyPostResDTO.PostPreviewDTO result = studyPostCommandService.deletePost(studyId, postId);
@@ -329,8 +329,8 @@ class StudyPostCommandServiceTest {
         assertNotNull(result);
         assertThat(result.getPostId()).isEqualTo(1L);
         assertThat(result.getTitle()).isEqualTo("잡담");
-        verify(studyPostRepository, times(1)).delete(any(StudyPost.class));
-        verify(likedStudyPostRepository, times(1)).deleteAllByStudyPostId(postId);
+        verify(storyRepository, times(1)).delete(any(Story.class));
+        verify(likedStoryRepository, times(1)).deleteAllByStoryId(postId);
     }
 
     @Test
@@ -344,9 +344,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
                 .thenReturn(Optional.empty());
-        when(studyPostRepository.findByIdAndMemberId(postId, memberId))
+        when(storyRepository.findByIdAndMemberId(postId, memberId))
                 .thenReturn(Optional.empty());
 
         // when & then
@@ -364,10 +364,10 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostRepository.findByIdAndMemberId(postId, memberId))
-                .thenReturn(Optional.of(studyPost1));
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyRepository.findByIdAndMemberId(postId, memberId))
+                .thenReturn(Optional.of(story1));
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.deletePost(studyId, postId));
@@ -386,12 +386,12 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(Optional.empty());
-        when(likedStudyPostRepository.save(any(LikedStudyPost.class))).thenReturn(likedStudyPost);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(likedStoryRepository.save(any(LikedStory.class))).thenReturn(likedStory);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
         StudyPostResDTO.PostLikeNumDTO result = studyPostCommandService.likePost(studyId, postId);
@@ -401,7 +401,7 @@ class StudyPostCommandServiceTest {
         assertThat(result.getPostId()).isEqualTo(1L);
         assertThat(result.getTitle()).isEqualTo("잡담");
         assertThat(result.getLikeNum()).isEqualTo(2);
-        verify(likedStudyPostRepository, times(1)).save(any(LikedStudyPost.class));
+        verify(likedStoryRepository, times(1)).save(any(LikedStory.class));
     }
 
     @Test
@@ -415,12 +415,12 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(Optional.empty());
-        when(likedStudyPostRepository.save(any(LikedStudyPost.class))).thenReturn(likedStudyPost);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(likedStoryRepository.save(any(LikedStory.class))).thenReturn(likedStory);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.likePost(studyId, postId));
@@ -436,12 +436,12 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
-                .thenReturn(Optional.of(likedStudyPost));
-        when(likedStudyPostRepository.save(any(LikedStudyPost.class))).thenReturn(likedStudyPost);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
+                .thenReturn(Optional.of(likedStory));
+        when(likedStoryRepository.save(any(LikedStory.class))).thenReturn(likedStory);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.likePost(studyId, postId));
@@ -461,11 +461,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
-                .thenReturn(Optional.of(likedStudyPost));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
+                .thenReturn(Optional.of(likedStory));
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
         StudyPostResDTO.PostLikeNumDTO result = studyPostCommandService.cancelPostLike(studyId, postId);
@@ -488,11 +488,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
-                .thenReturn(Optional.of(likedStudyPost));
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
+                .thenReturn(Optional.of(likedStory));
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelPostLike(studyId, postId));
@@ -509,11 +509,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(likedStoryRepository.findByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(Optional.empty());
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelPostLike(studyId, postId));
@@ -538,12 +538,12 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(true)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId)).thenReturn(List.of());
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId)).thenReturn(List.of());
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId)).thenReturn(List.of());
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId)).thenReturn(List.of());
 
         // when
         StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
@@ -571,12 +571,12 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(false)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId)).thenReturn(List.of());
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId)).thenReturn(List.of());
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId)).thenReturn(List.of());
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId)).thenReturn(List.of());
 
         // when
         StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
@@ -604,12 +604,12 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(false)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId)).thenReturn(List.of());
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId)).thenReturn(List.of());
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId)).thenReturn(List.of());
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId)).thenReturn(List.of());
 
         // when
         assertThrows(StudyHandler.class, () -> studyPostCommandService.createComment(studyId, postId, commentDTO));
@@ -636,13 +636,13 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(true)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId))
                 .thenReturn(List.of(studyPost1Comment1));
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId))
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(List.of());
 
         // when
@@ -673,13 +673,13 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(false)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId))
                 .thenReturn(List.of(studyPost1Comment1));
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId))
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(List.of());
 
         // when
@@ -710,13 +710,13 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(false)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId))
                 .thenReturn(List.of(studyPost1Comment1));
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId))
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(List.of());
 
         // when
@@ -739,13 +739,13 @@ class StudyPostCommandServiceTest {
                 .isAnonymous(false)
                 .build();
 
-        when(studyPostRepository.findByIdAndStudyId(postId, studyId))
-                .thenReturn(Optional.of(studyPost1));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment1);
-        when(studyPostRepository.save(any(StudyPost.class))).thenReturn(studyPost1);
-        when(studyPostCommentRepository.findAllByStudyPostId(postId))
+        when(storyRepository.findByIdAndStudyId(postId, studyId))
+                .thenReturn(Optional.of(story1));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment1);
+        when(storyRepository.save(any(Story.class))).thenReturn(story1);
+        when(storyCommentRepository.findAllByStoryId(postId))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
-        when(studyPostCommentRepository.findAllByMemberIdAndStudyPostId(memberId, postId))
+        when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId))
                 .thenReturn(List.of(studyPost1Comment1));
 
         // when
@@ -774,11 +774,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.likeComment(studyId, postId, commentId);
@@ -802,11 +802,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         assertThrows(StudyHandler.class, () -> studyPostCommandService.likeComment(studyId, postId, commentId));
@@ -824,11 +824,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
-                .thenReturn(Optional.of(likedStudyComment));
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
+                .thenReturn(Optional.of(likedStoryComment));
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         assertThrows(StudyHandler.class, () -> studyPostCommandService.likeComment(studyId, postId, commentId));
@@ -849,11 +849,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.dislikeComment(studyId, postId, commentId);
@@ -877,11 +877,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         assertThrows(StudyHandler.class, () -> studyPostCommandService.dislikeComment(studyId, postId, commentId));
@@ -900,11 +900,11 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, true))
                 .thenReturn(Optional.empty());
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, false))
-                .thenReturn(Optional.of(likedStudyComment));
-        when(likedStudyCommentRepository.save(any(LikedStudyComment.class))).thenReturn(likedStudyComment);
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, false))
+                .thenReturn(Optional.of(likedStoryComment));
+        when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
         assertThrows(StudyHandler.class, () -> studyPostCommandService.dislikeComment(studyId, postId, commentId));
@@ -924,9 +924,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
-                .thenReturn(Optional.of(likedStudyComment));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+                .thenReturn(Optional.of(likedStoryComment));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when
         StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
@@ -951,9 +951,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
-                .thenReturn(Optional.of(likedStudyComment));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+                .thenReturn(Optional.of(likedStoryComment));
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentLike(studyId, postId, commentId));
@@ -971,9 +971,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
                 .thenReturn(Optional.empty());
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentLike(studyId, postId, commentId));
@@ -993,9 +993,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
                 .thenReturn(Optional.of(studyDislikedComment));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when
         StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
@@ -1020,9 +1020,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
                 .thenReturn(Optional.of(studyDislikedComment));
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
@@ -1040,9 +1040,9 @@ class StudyPostCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
                 .thenReturn(Optional.empty());
-        when(studyPostCommentRepository.save(any(StudyPostComment.class))).thenReturn(studyPost1Comment2);
+        when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
@@ -1063,26 +1063,26 @@ class StudyPostCommandServiceTest {
         member1 = Member.builder()
                 .id(1L)
                 .name("회원1")
-                .studyPostList(new ArrayList<>())
-                .likedStudyPostList(new ArrayList<>())
-                .studyPostCommentList(new ArrayList<>())
-                .likedStudyCommentList(new ArrayList<>())
+                .storyList(new ArrayList<>())
+                .likedStoryList(new ArrayList<>())
+                .storyCommentList(new ArrayList<>())
+                .likedStoryCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
                 .name("회원2")
-                .studyPostList(new ArrayList<>())
-                .likedStudyPostList(new ArrayList<>())
-                .studyPostCommentList(new ArrayList<>())
-                .likedStudyCommentList(new ArrayList<>())
+                .storyList(new ArrayList<>())
+                .likedStoryList(new ArrayList<>())
+                .storyCommentList(new ArrayList<>())
+                .likedStoryCommentList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
                 .name("회원3")
-                .studyPostList(new ArrayList<>())
-                .likedStudyPostList(new ArrayList<>())
-                .studyPostCommentList(new ArrayList<>())
-                .likedStudyCommentList(new ArrayList<>())
+                .storyList(new ArrayList<>())
+                .likedStoryList(new ArrayList<>())
+                .storyCommentList(new ArrayList<>())
+                .likedStoryCommentList(new ArrayList<>())
                 .build();
     }
 
@@ -1128,71 +1128,71 @@ class StudyPostCommandServiceTest {
     }
 
     private static void initStudyPost() {
-        studyPost1 = StudyPost.builder()
+        story1 = Story.builder()
                 .id(1L)
                 .member(member1)
                 .study(study)
                 .isAnnouncement(false)
-                .studyPostCategory(StudyPostCategory.FREE_TALK)
+                .storyCategory(StoryCategory.FREE_TALK)
                 .title("잡담")
                 .content("내용")
                 .hitNum(0)
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        member1.addStudyPost(studyPost1);
-        study.addStudyPost(studyPost1);
+        member1.addStudyPost(story1);
+        study.addStudyPost(story1);
 
-        studyPost2 = StudyPost.builder()
+        story2 = Story.builder()
                 .id(2L)
                 .member(owner)
                 .study(study)
                 .isAnnouncement(true)
-                .studyPostCategory(StudyPostCategory.INFO_SHARING)
+                .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
                 .content("내용")
                 .hitNum(0)
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(studyPost2);
-        study.addStudyPost(studyPost2);
+        owner.addStudyPost(story2);
+        study.addStudyPost(story2);
 
-        studyPost3 = StudyPost.builder()
+        story3 = Story.builder()
                 .id(3L)
                 .member(owner)
                 .study(study)
                 .isAnnouncement(false)
-                .studyPostCategory(StudyPostCategory.FREE_TALK)
+                .storyCategory(StoryCategory.FREE_TALK)
                 .title("테스트")
                 .content("내용")
                 .hitNum(0)
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(studyPost3);
-        study.addStudyPost(studyPost3);
+        owner.addStudyPost(story3);
+        study.addStudyPost(story3);
 
         for (int i=0; i<10; i++) {
-            studyPost1.plusHitNum();
+            story1.plusHitNum();
         }
     }
 
     private static void initStudyLikedPost() {
-        likedStudyPost = LikedStudyPost.builder()
+        likedStory = LikedStory.builder()
                 .id(1L)
-                .studyPost(studyPost1)
+                .story(story1)
                 .member(owner)
                 .build();
-        studyPost1.addLikedPost(likedStudyPost);
-        studyPost1.plusLikeNum();
-        owner.addStudyLikedPost(likedStudyPost);
+        story1.addLikedPost(likedStory);
+        story1.plusLikeNum();
+        owner.addStudyLikedPost(likedStory);
     }
 
     private static void initStudyPostComment() {
-        studyPost1Comment1 = StudyPostComment.builder()
+        studyPost1Comment1 = StoryComment.builder()
                 .id(1L)
-                .studyPost(studyPost1)
+                .story(story1)
                 .member(member1)
                 .content("댓글")
                 .likeCount(0)
@@ -1202,11 +1202,11 @@ class StudyPostCommandServiceTest {
                 .isDeleted(false)
                 .parentComment(null)
                 .build();
-        studyPost1.addComment(studyPost1Comment1);
+        story1.addComment(studyPost1Comment1);
 
-        studyPost1Comment2 = StudyPostComment.builder()
+        studyPost1Comment2 = StoryComment.builder()
                 .id(2L)
-                .studyPost(studyPost1)
+                .story(story1)
                 .member(owner)
                 .content("답글")
                 .likeCount(0)
@@ -1216,24 +1216,24 @@ class StudyPostCommandServiceTest {
                 .parentComment(studyPost1Comment1)
                 .build();
         studyPost1Comment1.addChildrenComment(studyPost1Comment2);
-        studyPost1.addComment(studyPost1Comment2);
+        story1.addComment(studyPost1Comment2);
     }
 
     private static void initStudyLikedComment() {
-        likedStudyComment = LikedStudyComment.builder()
+        likedStoryComment = LikedStoryComment.builder()
                 .id(1L)
                 .isLiked(true)
-                .studyPostComment(studyPost1Comment2)
+                .storyComment(studyPost1Comment2)
                 .member(member1)
                 .build();
-        studyPost1Comment2.addLikedComment(likedStudyComment);
+        studyPost1Comment2.addLikedComment(likedStoryComment);
         studyPost1Comment2.plusLikeCount();
-        member1.addStudyLikedComment(likedStudyComment);
+        member1.addStudyLikedComment(likedStoryComment);
 
-        studyDislikedComment = LikedStudyComment.builder()
+        studyDislikedComment = LikedStoryComment.builder()
                 .id(2L)
                 .isLiked(false)
-                .studyPostComment(studyPost1Comment2)
+                .storyComment(studyPost1Comment2)
                 .member(owner)
                 .build();
         studyPost1Comment2.addLikedComment(studyDislikedComment);

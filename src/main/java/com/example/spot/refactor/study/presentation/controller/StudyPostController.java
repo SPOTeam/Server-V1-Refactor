@@ -2,13 +2,13 @@ package com.example.spot.refactor.study.presentation.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategoryQuery;
+import com.example.spot.refactor.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.legacy.service.s3.S3ImageService;
 import com.example.spot.refactor.study.application.StudyPostCommandService;
 import com.example.spot.refactor.study.application.StudyPostQueryService;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPost;
-import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPostComment;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistStory;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistStoryComment;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;
@@ -61,7 +61,7 @@ public class StudyPostController {
     @PatchMapping(value = "/studies/{studyId}/posts/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<StudyPostResDTO.PostPreviewDTO> updatePost(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
+            @PathVariable @ExistStory Long postId,
             @ModelAttribute(name= "post") @Valid StudyPostRequestDTO.PostDTO postDTO
     ) {
         StudyPostResDTO.PostPreviewDTO postPreviewDTO = studyPostCommandService.updatePost(studyId, postId, postDTO);
@@ -79,7 +79,7 @@ public class StudyPostController {
     @DeleteMapping("/studies/{studyId}/posts/{postId}")
     public ApiResponse<StudyPostResDTO.PostPreviewDTO> deletePost(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId) {
+            @PathVariable @ExistStory Long postId) {
         StudyPostResDTO.PostPreviewDTO postPreviewDTO = studyPostCommandService.deletePost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_DELETED, postPreviewDTO);
     }
@@ -97,10 +97,10 @@ public class StudyPostController {
     @GetMapping("/studies/{studyId}/posts")
     public ApiResponse<StudyPostResDTO.PostListDTO> getAllPosts(
             @PathVariable @ExistStudy Long studyId,
-            @RequestParam(required = false) StudyPostCategoryQuery studyPostCategoryQuery,
+            @RequestParam(required = false) StoryCategoryQuery storyCategoryQuery,
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) Integer limit) {
-        StudyPostResDTO.PostListDTO postListDTO = studyPostQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, studyPostCategoryQuery);
+        StudyPostResDTO.PostListDTO postListDTO = studyPostQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, storyCategoryQuery);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIST_FOUND, postListDTO);
     }
 
@@ -114,7 +114,7 @@ public class StudyPostController {
     @GetMapping("/studies/{studyId}/posts/{postId}")
     public ApiResponse<StudyPostResDTO.PostDetailDTO> getPost(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
+            @PathVariable @ExistStory Long postId,
             @RequestParam Boolean likeOrScrap) {
         StudyPostResDTO.PostDetailDTO postDetailDTO = studyPostQueryService.getPost(studyId, postId, likeOrScrap);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_FOUND, postDetailDTO);
@@ -130,7 +130,7 @@ public class StudyPostController {
     @PostMapping("/studies/{studyId}/posts/{postId}/likes")
     public ApiResponse<StudyPostResDTO.PostLikeNumDTO> likePost(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId) {
+            @PathVariable @ExistStory Long postId) {
         StudyPostResDTO.PostLikeNumDTO postLikeNumDTO = studyPostCommandService.likePost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIKED, postLikeNumDTO);
     }
@@ -145,7 +145,7 @@ public class StudyPostController {
     @DeleteMapping("/studies/{studyId}/posts/{postId}/likes")
     public ApiResponse<StudyPostResDTO.PostLikeNumDTO> cancelPostLike(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId) {
+            @PathVariable @ExistStory Long postId) {
         StudyPostResDTO.PostLikeNumDTO postLikeNumDTO = studyPostCommandService.cancelPostLike(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_DISLIKED, postLikeNumDTO);
     }
@@ -162,7 +162,7 @@ public class StudyPostController {
     @PostMapping("/studies/{studyId}/posts/{postId}/comments")
     public ApiResponse<StudyPostCommentResponseDTO.CommentDTO> createComment(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
+            @PathVariable @ExistStory Long postId,
             @RequestBody @Valid StudyPostCommentRequestDTO.CommentDTO commentRequestDTO) {
         StudyPostCommentResponseDTO.CommentDTO commentResponseDTO = studyPostCommandService.createComment(studyId, postId, commentRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_CREATED, commentResponseDTO);
@@ -179,8 +179,8 @@ public class StudyPostController {
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/replies")
     public ApiResponse<StudyPostCommentResponseDTO.CommentDTO> createReply(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId,
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId,
             @RequestBody @Valid StudyPostCommentRequestDTO.CommentDTO commentRequestDTO) {
         StudyPostCommentResponseDTO.CommentDTO commentResponseDTO = studyPostCommandService.createReply(studyId, postId, commentId, commentRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_CREATED, commentResponseDTO);
@@ -197,8 +197,8 @@ public class StudyPostController {
     @PatchMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}")
     public ApiResponse<StudyPostCommentResponseDTO.CommentIdDTO> deleteComment(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId) {
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId) {
         StudyPostCommentResponseDTO.CommentIdDTO commentPreviewDTO = studyPostCommandService.deleteComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DELETED, commentPreviewDTO);
     }
@@ -214,8 +214,8 @@ public class StudyPostController {
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/likes")
     public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> likeComment(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId) {
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId) {
         StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = studyPostCommandService.likeComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_LIKED, commentPreviewDTO);
     }
@@ -231,8 +231,8 @@ public class StudyPostController {
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/dislikes")
     public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> dislikeComment(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId) {
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId) {
         StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = studyPostCommandService.dislikeComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DISLIKED, commentPreviewDTO);
     }
@@ -248,8 +248,8 @@ public class StudyPostController {
     @DeleteMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/likes")
     public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> cancelCommentLike(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId) {
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId) {
         StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = studyPostCommandService.cancelCommentLike(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_LIKE_CANCELED, commentPreviewDTO);
     }
@@ -265,8 +265,8 @@ public class StudyPostController {
     @DeleteMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/dislikes")
     public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> cancelCommentDislike(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId,
-            @PathVariable @ExistStudyPostComment Long commentId) {
+            @PathVariable @ExistStory Long postId,
+            @PathVariable @ExistStoryComment Long commentId) {
         StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = studyPostCommandService.cancelCommentDislike(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DISLIKE_CANCELED, commentPreviewDTO);
     }
@@ -281,7 +281,7 @@ public class StudyPostController {
     @GetMapping("/studies/{studyId}/posts/{postId}/comments")
     public ApiResponse<StudyPostCommentResponseDTO.CommentReplyListDTO> getAllComments(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId) {
+            @PathVariable @ExistStory Long postId) {
         StudyPostCommentResponseDTO.CommentReplyListDTO commentReplyListDTO = studyPostQueryService.getAllComments(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_FOUND, commentReplyListDTO);
     }

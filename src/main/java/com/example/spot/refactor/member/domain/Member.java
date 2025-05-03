@@ -3,8 +3,9 @@ package com.example.spot.refactor.member.domain;
 import com.example.spot.legacy.domain.*;
 import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
-import com.example.spot.refactor.story.domain.aggregate.LikedStudyComment;
-import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.aggregate.LikedStoryComment;
+import com.example.spot.refactor.story.domain.aggregate.LikedStory;
 import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Carrier;
@@ -20,8 +21,7 @@ import com.example.spot.refactor.vote.domain.StudyVote;
 import com.example.spot.refactor.vote.domain.aggregate.StudyVoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.refactor.story.domain.StudyPost;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.StoryComment;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -178,22 +178,22 @@ public class Member extends BaseEntity {
     //== 회원이 작성한 스터디 게시글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyPost> studyPostList = new ArrayList<>();
+    private List<Story> storyList = new ArrayList<>();
 
     //== 회원이 좋아요한 스터디 게시글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<LikedStudyPost> likedStudyPostList = new ArrayList<>();
+    private List<LikedStory> likedStoryList = new ArrayList<>();
 
     //== 회원이 작성한 스터디 게시글 댓글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyPostComment> studyPostCommentList = new ArrayList<>();
+    private List<StoryComment> storyCommentList = new ArrayList<>();
 
     //== 회원이 좋아요한 게시글 댓글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<LikedStudyComment> likedStudyCommentList = new ArrayList<>();
+    private List<LikedStoryComment> likedStoryCommentList = new ArrayList<>();
 
     //== 회원이 생성한 투표 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -296,20 +296,20 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
     }
 
-    public void addStudyPost(StudyPost studyPost) {
-        if (this.studyPostList == null) {
-            this.studyPostList = new ArrayList<>();
+    public void addStudyPost(Story story) {
+        if (this.storyList == null) {
+            this.storyList = new ArrayList<>();
         }
-        this.studyPostList.add(studyPost);
-        studyPost.setMember(this);
+        this.storyList.add(story);
+        story.setMember(this);
     }
 
-    public void addStudyLikedComment(LikedStudyComment likedStudyComment) {
+    public void addStudyLikedComment(LikedStoryComment likedStoryComment) {
         if (this.likedCommentList == null) {
             this.likedCommentList = new ArrayList<>();
         }
-        this.likedStudyCommentList.add(likedStudyComment);
-        likedStudyComment.setMember(this);
+        this.likedStoryCommentList.add(likedStoryComment);
+        likedStoryComment.setMember(this);
     }
 
     public void addMemberVote(StudyVoteParticipant studyVoteParticipant) {
@@ -324,36 +324,36 @@ public class Member extends BaseEntity {
         studyVoteList.set(studyVoteList.indexOf(studyVote), studyVote);
     }
 
-    public void deleteStudyPost(StudyPost studyPost) {
-        this.studyPostList.remove(studyPost);
+    public void deleteStudyPost(Story story) {
+        this.storyList.remove(story);
     }
 
-    public void updateStudyPost(StudyPost studyPost) {
-        studyPostList.set(studyPostList.indexOf(studyPost), studyPost);
+    public void updateStudyPost(Story story) {
+        storyList.set(storyList.indexOf(story), story);
     }
 
-    public void updateComment(StudyPostComment studyPostComment) {
-        studyPostCommentList.set(studyPostCommentList.indexOf(studyPostComment), studyPostComment);
+    public void updateComment(StoryComment storyComment) {
+        storyCommentList.set(storyCommentList.indexOf(storyComment), storyComment);
     }
 
-    public void addStudyLikedPost(LikedStudyPost likedStudyPost) {
-        if (this.likedStudyPostList == null) {
-            this.likedStudyPostList = new ArrayList<>();
+    public void addStudyLikedPost(LikedStory likedStory) {
+        if (this.likedStoryList == null) {
+            this.likedStoryList = new ArrayList<>();
         }
-        this.likedStudyPostList.add(likedStudyPost);
-        likedStudyPost.setMember(this);
+        this.likedStoryList.add(likedStory);
+        likedStory.setMember(this);
     }
 
-    public void deleteStudyLikedPost(LikedStudyPost likedStudyPost) {
-        this.likedStudyPostList.remove(likedStudyPost);
+    public void deleteStudyLikedPost(LikedStory likedStory) {
+        this.likedStoryList.remove(likedStory);
     }
 
-    public void deleteStudyLikedComment(LikedStudyComment likedStudyComment) {
-        this.likedStudyCommentList.remove(likedStudyComment);
+    public void deleteStudyLikedComment(LikedStoryComment likedStoryComment) {
+        this.likedStoryCommentList.remove(likedStoryComment);
     }
 
-    public void addComment(StudyPostComment studyPostComment) {
-        this.studyPostCommentList.add(studyPostComment);
+    public void addComment(StoryComment storyComment) {
+        this.storyCommentList.add(storyComment);
     }
 
     public void deleteVote(StudyVote studyVote) {

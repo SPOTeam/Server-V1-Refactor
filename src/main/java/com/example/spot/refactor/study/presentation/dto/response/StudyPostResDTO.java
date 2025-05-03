@@ -1,9 +1,9 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
-import com.example.spot.refactor.story.domain.StudyPost;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
+import com.example.spot.refactor.story.domain.aggregate.StoryImage;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,10 +20,10 @@ public class StudyPostResDTO {
         private final Long postId;
         private final String title;
 
-        public static PostPreviewDTO toDTO(StudyPost studyPost) {
+        public static PostPreviewDTO toDTO(Story story) {
             return PostPreviewDTO.builder()
-                    .postId(studyPost.getId())
-                    .title(studyPost.getTitle())
+                    .postId(story.getId())
+                    .title(story.getTitle())
                     .build();
         }
     }
@@ -52,7 +52,7 @@ public class StudyPostResDTO {
         private final Long postId;
         private final String title;
         private final String content;
-        private final StudyPostCategory studyPostCategory;
+        private final StoryCategory storyCategory;
         private final Boolean isAnnouncement;
         private final LocalDateTime createdAt;
         private final Integer likeNum;
@@ -60,17 +60,17 @@ public class StudyPostResDTO {
         private final Integer commentNum;
         private final Boolean isLiked;
 
-        public static PostDTO toDTO(StudyPost studyPost, boolean isLiked) {
+        public static PostDTO toDTO(Story story, boolean isLiked) {
             return PostDTO.builder()
-                    .postId(studyPost.getId())
-                    .title(studyPost.getTitle())
-                    .content(studyPost.getContent())
-                    .studyPostCategory(studyPost.getStudyPostCategory())
-                    .isAnnouncement(studyPost.getIsAnnouncement())
-                    .createdAt(studyPost.getCreatedAt())
-                    .likeNum(studyPost.getLikeNum())
-                    .hitNum(studyPost.getHitNum())
-                    .commentNum(studyPost.getCommentNum())
+                    .postId(story.getId())
+                    .title(story.getTitle())
+                    .content(story.getContent())
+                    .storyCategory(story.getStoryCategory())
+                    .isAnnouncement(story.getIsAnnouncement())
+                    .createdAt(story.getCreatedAt())
+                    .likeNum(story.getLikeNum())
+                    .hitNum(story.getHitNum())
+                    .commentNum(story.getCommentNum())
                     .isLiked(isLiked)
                     .build();
         }
@@ -85,7 +85,7 @@ public class StudyPostResDTO {
         private final Long postId;
         private final String title;
         private final String content;
-        private final StudyPostCategory studyPostCategory;
+        private final StoryCategory storyCategory;
         private final Boolean isAnnouncement;
         private final LocalDateTime createdAt;
         private final Integer likeNum;
@@ -95,21 +95,21 @@ public class StudyPostResDTO {
         private final Boolean isWriter;
         private final List<ImageDTO> studyPostImages;
 
-        public static PostDetailDTO toDTO(StudyPost studyPost, Integer commentNum, boolean isLiked, boolean isWriter) {
+        public static PostDetailDTO toDTO(Story story, Integer commentNum, boolean isLiked, boolean isWriter) {
             return PostDetailDTO.builder()
-                    .member(PostMemberDTO.toDTO(studyPost.getMember()))
-                    .postId(studyPost.getId())
-                    .title(studyPost.getTitle())
-                    .content(studyPost.getContent())
-                    .studyPostCategory(studyPost.getStudyPostCategory())
-                    .isAnnouncement(studyPost.getIsAnnouncement())
-                    .createdAt(studyPost.getCreatedAt())
-                    .likeNum(studyPost.getLikeNum())
-                    .hitNum(studyPost.getHitNum())
+                    .member(PostMemberDTO.toDTO(story.getMember()))
+                    .postId(story.getId())
+                    .title(story.getTitle())
+                    .content(story.getContent())
+                    .storyCategory(story.getStoryCategory())
+                    .isAnnouncement(story.getIsAnnouncement())
+                    .createdAt(story.getCreatedAt())
+                    .likeNum(story.getLikeNum())
+                    .hitNum(story.getHitNum())
                     .commentNum(commentNum)
                     .isLiked(isLiked)
                     .isWriter(isWriter)
-                    .studyPostImages(studyPost.getImages().stream()
+                    .studyPostImages(story.getImages().stream()
                             .map(ImageDTO::toDTO)
                             .toList())
                     .build();
@@ -142,10 +142,10 @@ public class StudyPostResDTO {
         private final Long imageId;
         private final String imageUrl;
 
-        public static ImageDTO toDTO(StudyPostImage studyPostImage) {
+        public static ImageDTO toDTO(StoryImage storyImage) {
             return ImageDTO.builder()
-                    .imageId(studyPostImage.getId())
-                    .imageUrl(studyPostImage.getUrl())
+                    .imageId(storyImage.getId())
+                    .imageUrl(storyImage.getUrl())
                     .build();
         }
     }
@@ -159,11 +159,11 @@ public class StudyPostResDTO {
         private final String title;
         private final Integer likeNum;
 
-        public static PostLikeNumDTO toDTO(StudyPost studyPost) {
+        public static PostLikeNumDTO toDTO(Story story) {
             return PostLikeNumDTO.builder()
-                    .postId(studyPost.getId())
-                    .title(studyPost.getTitle())
-                    .likeNum(studyPost.getLikeNum())
+                    .postId(story.getId())
+                    .title(story.getTitle())
+                    .likeNum(story.getLikeNum())
                     .build();
         }
 

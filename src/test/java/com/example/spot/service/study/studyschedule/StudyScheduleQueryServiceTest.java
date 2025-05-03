@@ -3,9 +3,9 @@ package com.example.spot.service.study.studyschedule;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.schedule.domain.Schedule;
+import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
@@ -251,7 +251,7 @@ class StudyScheduleQueryServiceTest {
                 .title("일정1")
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(1))
-                .studySchedulePeriod(StudySchedulePeriod.NONE)
+                .schedulePeriod(SchedulePeriod.NONE)
                 .build();
         study1.addSchedule(schedule1);
         owner.addSchedule(schedule1);
@@ -263,7 +263,7 @@ class StudyScheduleQueryServiceTest {
                 .title("일정2")
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(2))
-                .studySchedulePeriod(StudySchedulePeriod.MONTHLY)
+                .schedulePeriod(SchedulePeriod.MONTHLY)
                 .build();
         study1.addSchedule(schedule2);
         member1.addSchedule(schedule2);
@@ -275,7 +275,7 @@ class StudyScheduleQueryServiceTest {
                 .title("일정3")
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(2))
-                .studySchedulePeriod(StudySchedulePeriod.WEEKLY)
+                .schedulePeriod(SchedulePeriod.WEEKLY)
                 .build();
         study2.addSchedule(schedule3);
         member2.addSchedule(schedule3);

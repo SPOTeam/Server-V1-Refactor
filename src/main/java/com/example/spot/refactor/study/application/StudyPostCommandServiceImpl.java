@@ -5,8 +5,8 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.story.domain.StudyPost;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.story.domain.aggregate.*;
 import com.example.spot.refactor.story.domain.repository.*;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
@@ -45,12 +45,12 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
     private final StudyRepository studyRepository;
 
     private final StudyMemberRepository studyMemberRepository;
-    private final StudyPostRepository studyPostRepository;
-    private final StudyPostImageRepository studyPostImageRepository;
-    private final StudyPostCommentRepository studyPostCommentRepository;
-    private final LikedStudyPostRepository likedStudyPostRepository;
-    private final LikedStudyCommentRepository likedStudyCommentRepository;
-    private final StudyPostReportRepository studyPostReportRepository;
+    private final StoryRepository storyRepository;
+    private final StoryImageRepository storyImageRepository;
+    private final StoryCommentRepository storyCommentRepository;
+    private final LikedStoryRepository likedStoryRepository;
+    private final LikedStoryCommentRepository likedStoryCommentRepository;
+    private final StoryReportRepository storyReportRepository;
     private final NotificationRepository notificationRepository;
 
     // S3 Service
@@ -90,9 +90,9 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         }
 
         //=== Feature ===//
-        StudyPost studyPost = StudyPost.builder()
+        Story story = Story.builder()
                 .isAnnouncement(postRequestDTO.getIsAnnouncement())
-                .studyPostCategory(postRequestDTO.getStudyPostCategory())
+                .storyCategory(postRequestDTO.getStoryCategory())
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .likeNum(0)
@@ -103,30 +103,30 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .build();
 
         // 공지면 announcedAt 설정
-        if (studyPost.getIsAnnouncement()) {
-            studyPost.setAnnouncedAt(LocalDateTime.now());
+        if (story.getIsAnnouncement()) {
+            story.setAnnouncedAt(LocalDateTime.now());
         }
 
-        studyPost = studyPostRepository.save(studyPost);
-        member.addStudyPost(studyPost);
-        study.addStudyPost(studyPost);
+        story = storyRepository.save(story);
+        member.addStudyPost(story);
+        study.addStudyPost(story);
 
         // 이미지가 있는 경우 이미지 저장
         if (postRequestDTO.getImage() != null) {
             String imageUrl = s3ImageService.upload(postRequestDTO.getImage());
-            StudyPostImage studyPostImage = StudyPostImage.builder()
+            StoryImage storyImage = StoryImage.builder()
                     .url(imageUrl)
-                    .studyPost(studyPost)
+                    .story(story)
                     .build();
-            studyPostImage = studyPostImageRepository.save(studyPostImage);
-            studyPost.addImage(studyPostImage);
+            storyImage = storyImageRepository.save(storyImage);
+            story.addImage(storyImage);
         }
 
-        if (studyPost.getIsAnnouncement()){
+        if (story.getIsAnnouncement()){
 
             // 스터디에 참여중인 회원들에게 알림 전송 위해 회원 조회
             List<Member> members = studyMemberRepository.findAllByStudyIdAndStatus(
-                studyPost.getStudy().getId(), StudyApplicationStatus.APPROVED).stream()
+                story.getStudy().getId(), StudyApplicationStatus.APPROVED).stream()
                     .map(StudyMember::getMember)
                         .toList();
 
@@ -136,9 +136,9 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
             // 알림 생성
             for (Member studyMember : members) {
                 Notification notification = Notification.builder()
-                        .study(studyPost.getStudy())
+                        .study(story.getStudy())
                         .member(studyMember)
-                        .studyPostId(studyPost.getId())
+                        .studyPostId(story.getId())
                         .notifierName(member.getName()) // 글을 작성한 회원 이름
                         .type(NotifyType.ANNOUNCEMENT)
                         .isChecked(false)
@@ -147,10 +147,10 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
             }
         }
 
-        member.updateStudyPost(studyPost);
-        study.updateStudyPost(studyPost);
+        member.updateStudyPost(story);
+        study.updateStudyPost(story);
 
-        return StudyPostResDTO.PostPreviewDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostPreviewDTO.toDTO(story);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -171,7 +171,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 게시글 작성자인지 확인
-        studyPostRepository.findByIdAndMemberId(postId, memberId)
+        storyRepository.findByIdAndMemberId(postId, memberId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_UPDATE_INVALID));
 
         // 스터디장만 공지 가능
@@ -180,24 +180,24 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         }
 
         // 스터디 게시글 이미지 업데이트
-        updateStudyPostImage(postDTO, studyPost);
+        updateStudyPostImage(postDTO, story);
 
         // 스터디 게시글 업데이트
-        studyPost.updatePost(postDTO);
+        story.updatePost(postDTO);
 
-        return StudyPostResDTO.PostPreviewDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostPreviewDTO.toDTO(story);
     }
 
-    private void updateStudyPostImage(StudyPostRequestDTO.PostDTO postDTO, StudyPost studyPost) {
-        List<StudyPostImage> studyPostImages = studyPost.getImages();
+    private void updateStudyPostImage(StudyPostRequestDTO.PostDTO postDTO, Story story) {
+        List<StoryImage> storyImages = story.getImages();
         // 기존 이미지가 존재하는 경우 이미지 유지
         if (!StringUtils.hasText(postDTO.getExistingImage())) {
             // 기존 이미지가 없고 새로운 이미지를 등록한 경우 이미지 url 변경
             if (postDTO.getImage() != null) {
                 String imageUrl = s3ImageService.upload(postDTO.getImage());
-                studyPostImages.forEach(studyPostImage -> {
+                storyImages.forEach(studyPostImage -> {
                     studyPostImage.setUrl(imageUrl);
-                    studyPost.updateImage(studyPostImage);
+                    story.updateImage(studyPostImage);
                 });
             }
         }
@@ -220,7 +220,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -228,33 +228,33 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인 회원이 게시글 작성자거나 owner인지 확인
-        Long ownerId = studyPost.getStudy().getMemberStudies().stream()
+        Long ownerId = story.getStudy().getMemberStudies().stream()
                 .filter(StudyMember::getIsOwned)
                 .map(memberStudy -> memberStudy.getMember().getId())
                 .findFirst()
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_OWNER_NOT_FOUND));
 
-        if (studyPost.getMember().getId().equals(memberId) ||
+        if (story.getMember().getId().equals(memberId) ||
             memberId.equals(ownerId)) {
 
-            studyPostImageRepository.deleteAllByStudyPostId(postId);
-            studyPostCommentRepository.deleteAllByStudyPostId(postId);
-            likedStudyPostRepository.deleteAllByStudyPostId(postId);
-            studyPostReportRepository.deleteAllByStudyPostId(postId);
+            storyImageRepository.deleteAllByStoryId(postId);
+            storyCommentRepository.deleteAllByStoryId(postId);
+            likedStoryRepository.deleteAllByStoryId(postId);
+            storyReportRepository.deleteAllByStoryId(postId);
 
-            member.deleteStudyPost(studyPost);
-            study.deleteStudyPost(studyPost);
-            studyPostRepository.delete(studyPost);
+            member.deleteStudyPost(story);
+            study.deleteStudyPost(story);
+            storyRepository.delete(story);
 
         } else {
             throw new StudyHandler(ErrorStatus._STUDY_POST_DELETION_INVALID);
         }
 
-        return StudyPostResDTO.PostPreviewDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostPreviewDTO.toDTO(story);
     }
 
     /**
@@ -275,7 +275,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -283,28 +283,28 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 이미 좋아요를 눌렀다면 다시 좋아요 할 수 없음
-        if (likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId).isPresent()) {
+        if (likedStoryRepository.findByMemberIdAndStoryId(memberId, postId).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_ALREADY_LIKED);
         }
 
         //=== Feature ===//
-        LikedStudyPost likedStudyPost = LikedStudyPost.builder()
+        LikedStory likedStory = LikedStory.builder()
                 .member(member)
-                .studyPost(studyPost)
+                .story(story)
                 .build();
 
-        likedStudyPost = likedStudyPostRepository.save(likedStudyPost);
-        member.addStudyLikedPost(likedStudyPost);
-        studyPost.addLikedPost(likedStudyPost);
+        likedStory = likedStoryRepository.save(likedStory);
+        member.addStudyLikedPost(likedStory);
+        story.addLikedPost(likedStory);
 
-        studyPost.plusLikeNum();
-        studyPost = studyPostRepository.save(studyPost);
+        story.plusLikeNum();
+        story = storyRepository.save(story);
 
-        return StudyPostResDTO.PostLikeNumDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostLikeNumDTO.toDTO(story);
     }
 
     /**
@@ -325,7 +325,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -333,20 +333,20 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         //=== Feature ===//
-        LikedStudyPost likedStudyPost = likedStudyPostRepository.findByMemberIdAndStudyPostId(memberId, postId)
+        LikedStory likedStory = likedStoryRepository.findByMemberIdAndStoryId(memberId, postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_LIKED_POST_NOT_FOUND));
 
-        member.deleteStudyLikedPost(likedStudyPost);
-        studyPost.deleteLikedPost(likedStudyPost);
-        studyPost.minusLikeNum();
-        likedStudyPostRepository.delete(likedStudyPost);
-        studyPostRepository.save(studyPost);
+        member.deleteStudyLikedPost(likedStory);
+        story.deleteLikedPost(likedStory);
+        story.minusLikeNum();
+        likedStoryRepository.delete(likedStory);
+        storyRepository.save(story);
 
-        return StudyPostResDTO.PostLikeNumDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostLikeNumDTO.toDTO(story);
     }
 
 /* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
@@ -369,7 +369,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -377,14 +377,14 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         //=== Feature ===//
         Integer anonymousNum = getAnonymousNum(postId, commentRequestDTO, member);
 
-        StudyPostComment studyPostComment = StudyPostComment.builder()
-                .studyPost(studyPost)
+        StoryComment storyComment = StoryComment.builder()
+                .story(story)
                 .member(member)
                 .content(commentRequestDTO.getContent())
                 .likeCount(0)
@@ -395,15 +395,15 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .anonymousNum(anonymousNum)
                 .build();
 
-        studyPostCommentRepository.save(studyPostComment);
+        storyCommentRepository.save(storyComment);
 
-        studyPost.setCommentNum(studyPostCommentRepository.findAllByStudyPostId(postId).size());
-        studyPostRepository.save(studyPost);
+        story.setCommentNum(storyCommentRepository.findAllByStoryId(postId).size());
+        storyRepository.save(story);
 
-        studyPost.addComment(studyPostComment);
-        member.addComment(studyPostComment);
+        story.addComment(storyComment);
+        member.addComment(storyComment);
 
-        return StudyPostCommentResponseDTO.CommentDTO.toDTO(studyPostComment, "익명"+anonymousNum, defaultImage);
+        return StudyPostCommentResponseDTO.CommentDTO.toDTO(storyComment, "익명"+anonymousNum, defaultImage);
     }
 
     /**
@@ -424,7 +424,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -432,18 +432,18 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 부모 댓글이 존재하는지 확인
-        StudyPostComment parentComment = studyPostCommentRepository.findById(commentId)
+        StoryComment parentComment = storyCommentRepository.findById(commentId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         //=== Feature ===//
         Integer anonymousNum = getAnonymousNum(postId, commentRequestDTO, member);
 
-        StudyPostComment studyPostComment = StudyPostComment.builder()
-                .studyPost(studyPost)
+        StoryComment storyComment = StoryComment.builder()
+                .story(story)
                 .member(member)
                 .content(commentRequestDTO.getContent())
                 .likeCount(0)
@@ -454,16 +454,16 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .isDeleted(false)
                 .build();
 
-        studyPostCommentRepository.save(studyPostComment);
+        storyCommentRepository.save(storyComment);
 
-        studyPost.setCommentNum(studyPostCommentRepository.findAllByStudyPostId(postId).size());
-        studyPostRepository.save(studyPost);
+        story.setCommentNum(storyCommentRepository.findAllByStoryId(postId).size());
+        storyRepository.save(story);
 
-        studyPost.addComment(studyPostComment);
-        member.addComment(studyPostComment);
-        parentComment.addChildrenComment(studyPostComment);
+        story.addComment(storyComment);
+        member.addComment(storyComment);
+        parentComment.addChildrenComment(storyComment);
 
-        return StudyPostCommentResponseDTO.CommentDTO.toDTO(studyPostComment, "익명"+anonymousNum, defaultImage);
+        return StudyPostCommentResponseDTO.CommentDTO.toDTO(storyComment, "익명"+anonymousNum, defaultImage);
     }
 
     /**
@@ -478,25 +478,25 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
     private Integer getAnonymousNum(Long postId, StudyPostCommentRequestDTO.CommentDTO commentRequestDTO, Member member) {
         Integer anonymousNum = null;
 
-        List<StudyPostComment> studyPostComments = studyPostCommentRepository.findAllByStudyPostId(postId);
-        List<StudyPostComment> myStudyPostComments = studyPostCommentRepository.findAllByMemberIdAndStudyPostId(member.getId(), postId);
+        List<StoryComment> storyComments = storyCommentRepository.findAllByStoryId(postId);
+        List<StoryComment> myStoryComments = storyCommentRepository.findAllByMemberIdAndStoryId(member.getId(), postId);
 
         // 회원이 익명 댓글을 요청할 경우 anonymousNum 부여
         if (commentRequestDTO.getIsAnonymous()) {
             // anonymousNum의 (최댓값+1) 계산
             int maxAnonymousNum = 0;
-            for (StudyPostComment studyPostComment : studyPostComments) {
-                if (studyPostComment.getAnonymousNum() != null && studyPostComment.getAnonymousNum() > maxAnonymousNum) {
-                    maxAnonymousNum = studyPostComment.getAnonymousNum();
+            for (StoryComment storyComment : storyComments) {
+                if (storyComment.getAnonymousNum() != null && storyComment.getAnonymousNum() > maxAnonymousNum) {
+                    maxAnonymousNum = storyComment.getAnonymousNum();
                 }
             }
             anonymousNum = maxAnonymousNum+1;
             // 회원의 댓글 이력이 존재하는 경우 익명 작성 여부 확인
             // 해당 post에 익명으로 댓글을 남긴 이력이 있으면 해당 번호를 가져옴
-            if (!myStudyPostComments.isEmpty()) {
-                for (StudyPostComment myStudyPostComment : myStudyPostComments) {
-                    if (myStudyPostComment.getIsAnonymous()) {
-                        anonymousNum = myStudyPostComment.getAnonymousNum();
+            if (!myStoryComments.isEmpty()) {
+                for (StoryComment myStoryComment : myStoryComments) {
+                    if (myStoryComment.getIsAnonymous()) {
+                        anonymousNum = myStoryComment.getAnonymousNum();
                     }
                 }
                 // 댓글은 있지만 익명으로 댓글을 남긴 이력이 없으면 그대로 최댓값+1 부여
@@ -523,7 +523,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -531,26 +531,26 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
-        StudyPostComment studyPostComment = studyPostCommentRepository.findById(commentId)
+        StoryComment storyComment = storyCommentRepository.findById(commentId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         // 댓글 작성자인지 확인
-        if(!studyPostComment.getMember().equals(member)) {
+        if(!storyComment.getMember().equals(member)) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_DELETE_INVALID);
         }
 
         //=== Feature ===//
 
-        if (studyPostComment.getIsDeleted()) {
+        if (storyComment.getIsDeleted()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_ALREADY_DELETED);
         }
-        studyPostComment.deleteComment();
-        studyPost.updateComment(studyPostComment);
-        member.updateComment(studyPostComment);
+        storyComment.deleteComment();
+        story.updateComment(storyComment);
+        member.updateComment(storyComment);
 
-        studyPostCommentRepository.save(studyPostComment);
+        storyCommentRepository.save(storyComment);
         return new StudyPostCommentResponseDTO.CommentIdDTO(commentId);
     }
 
@@ -564,8 +564,8 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
      */
     @Override
     public StudyPostCommentResponseDTO.CommentPreviewDTO likeComment(Long studyId, Long postId, Long commentId) {
-        StudyPostComment studyPostComment = saveStudyPostComment(studyId, postId, commentId, Boolean.TRUE);
-        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
+        StoryComment storyComment = saveStudyPostComment(studyId, postId, commentId, Boolean.TRUE);
+        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(storyComment);
     }
 
     /**
@@ -578,8 +578,8 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
      */
     @Override
     public StudyPostCommentResponseDTO.CommentPreviewDTO dislikeComment(Long studyId, Long postId, Long commentId) {
-        StudyPostComment studyPostComment = saveStudyPostComment(studyId, postId, commentId, Boolean.FALSE);
-        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
+        StoryComment storyComment = saveStudyPostComment(studyId, postId, commentId, Boolean.FALSE);
+        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(storyComment);
     }
 
     /**
@@ -591,7 +591,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
      * @param isLiked 좋아요 혹은 싫어요 어부를 입력 받습니다.
      * @return SavePostComment 객체를 반환합니다.
      */
-    private StudyPostComment saveStudyPostComment(Long studyId, Long postId, Long commentId, Boolean isLiked) {
+    private StoryComment saveStudyPostComment(Long studyId, Long postId, Long commentId, Boolean isLiked) {
 
         //=== Exception ===//
 
@@ -602,7 +602,7 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPostComment studyPostComment = studyPostCommentRepository.findById(commentId)
+        StoryComment storyComment = storyCommentRepository.findById(commentId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -610,36 +610,36 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findById(postId)
+        storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // 이미 좋아요나 싫어요를 눌렀다면 싫어요 할 수 없음
-        if (likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE).isPresent()) {
+        if (likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_ALREADY_LIKED);
         }
-        if (likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE).isPresent()) {
+        if (likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE).isPresent()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_ALREADY_DISLIKED);
         }
 
         //=== Feature ===//
-        LikedStudyComment likedStudyComment = LikedStudyComment.builder()
-                .studyPostComment(studyPostComment)
+        LikedStoryComment likedStoryComment = LikedStoryComment.builder()
+                .storyComment(storyComment)
                 .member(member)
                 .isLiked(isLiked)
                 .build();
 
-        likedStudyComment = likedStudyCommentRepository.save(likedStudyComment);
-        member.addStudyLikedComment(likedStudyComment);
-        studyPostComment.addLikedComment(likedStudyComment);
+        likedStoryComment = likedStoryCommentRepository.save(likedStoryComment);
+        member.addStudyLikedComment(likedStoryComment);
+        storyComment.addLikedComment(likedStoryComment);
 
-        if (likedStudyComment.getIsLiked()) {
-            studyPostComment.plusLikeCount();
+        if (likedStoryComment.getIsLiked()) {
+            storyComment.plusLikeCount();
         } else {
-            studyPostComment.plusDislikeCount();
+            storyComment.plusDislikeCount();
         }
 
-        studyPostCommentRepository.save(studyPostComment);
-        return studyPostComment;
+        storyCommentRepository.save(storyComment);
+        return storyComment;
     }
 
     /**
@@ -656,11 +656,11 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
 
-        LikedStudyComment likedStudyComment = likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE)
+        LikedStoryComment likedStoryComment = likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, Boolean.TRUE)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_LIKED_COMMENT_NOT_FOUND));
 
-        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStudyComment);
-        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
+        StoryComment storyComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStoryComment);
+        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(storyComment);
     }
 
     /**
@@ -677,11 +677,11 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
 
-        LikedStudyComment likedStudyComment = likedStudyCommentRepository.findByMemberIdAndStudyPostCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE)
+        LikedStoryComment likedStoryComment = likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, commentId, Boolean.FALSE)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_DISLIKED_COMMENT_NOT_FOUND));
 
-        StudyPostComment studyPostComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStudyComment);
-        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(studyPostComment);
+        StoryComment storyComment = deleteStudyLikedComment(studyId, postId, commentId, memberId, likedStoryComment);
+        return StudyPostCommentResponseDTO.CommentPreviewDTO.toDTO(storyComment);
     }
 
     /**
@@ -690,19 +690,19 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
      * @param postId 타겟이 되는 스터디 게시글의 아이디를 입력 받습니다.
      * @param commentId 좋아요 혹은 싫어요를 취소할 타겟 댓글의 아이디를 입력 받습니다.
      * @param memberId 댓글에 좋아요 혹은 싫어요를 누른 회원의 아이디를 입력 받습니다.
-     * @param likedStudyComment DB에서 삭제할 StudyLikedComment 객체를 입력 받습니다.
+     * @param likedStoryComment DB에서 삭제할 StudyLikedComment 객체를 입력 받습니다.
      * @return 삭제된 StudyLikedComment 객체를 반환합니다.
      */
-    private StudyPostComment deleteStudyLikedComment(Long studyId, Long postId, Long commentId, Long memberId, LikedStudyComment likedStudyComment) {
+    private StoryComment deleteStudyLikedComment(Long studyId, Long postId, Long commentId, Long memberId, LikedStoryComment likedStoryComment) {
 
         //=== Exception ===//
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        studyPostRepository.findById(postId)
+        storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
-        StudyPostComment studyPostComment = studyPostCommentRepository.findById(commentId)
+        StoryComment storyComment = storyCommentRepository.findById(commentId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -710,23 +710,23 @@ public class StudyPostCommandServiceImpl implements StudyPostCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 댓글에 반응한 사람인지 확인
-        if (!likedStudyComment.getMember().equals(member)) {
+        if (!likedStoryComment.getMember().equals(member)) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_COMMENT_DELETE_INVALID);
         }
 
         //=== Feature ===//
-        member.deleteStudyLikedComment(likedStudyComment);
-        studyPostComment.deleteLikedComment(likedStudyComment);
+        member.deleteStudyLikedComment(likedStoryComment);
+        storyComment.deleteLikedComment(likedStoryComment);
 
-        if (likedStudyComment.getIsLiked()) {
-            studyPostComment.minusLikeCount();
+        if (likedStoryComment.getIsLiked()) {
+            storyComment.minusLikeCount();
         } else {
-            studyPostComment.minusDislikeCount();
+            storyComment.minusDislikeCount();
         }
 
-        likedStudyCommentRepository.delete(likedStudyComment);
-        studyPostCommentRepository.save(studyPostComment);
-        return studyPostComment;
+        likedStoryCommentRepository.delete(likedStoryComment);
+        storyCommentRepository.save(storyComment);
+        return storyComment;
     }
 
 }

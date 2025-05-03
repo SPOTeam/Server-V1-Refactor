@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
-import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
+import com.example.spot.refactor.story.domain.aggregate.StoryImage;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,11 +37,11 @@ public class StudyImageResponseDTO {
         private final String imageUrl;
         private final Long postId;
 
-        public static ImageDTO toDTO(StudyPostImage studyPostImage) {
+        public static ImageDTO toDTO(StoryImage storyImage) {
             return ImageDTO.builder()
-                    .postId(studyPostImage.getStudyPost().getId())
-                    .imageId(studyPostImage.getId())
-                    .imageUrl(studyPostImage.getUrl())
+                    .postId(storyImage.getStory().getId())
+                    .imageId(storyImage.getId())
+                    .imageUrl(storyImage.getUrl())
                     .build();
         }
     }

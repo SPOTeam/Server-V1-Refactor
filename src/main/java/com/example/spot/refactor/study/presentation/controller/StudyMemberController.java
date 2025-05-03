@@ -5,9 +5,9 @@ import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.study.application.MemberStudyCommandService;
 import com.example.spot.refactor.study.application.MemberStudyQueryService;
 import com.example.spot.refactor.member.domain.validation.annotation.ExistMember;
-import com.example.spot.refactor.schedule.domain.validation.annotation.ExistStudySchedule;
+import com.example.spot.refactor.schedule.domain.validation.annotation.ExistSchedule;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPost;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistStory;
 import com.example.spot.refactor.todo.domain.validation.annotation.ExistStudyToDo;
 import com.example.spot.refactor.vote.domain.validation.annotation.ExistStudyVote;
 import com.example.spot.legacy.validation.annotation.IntSize;
@@ -267,7 +267,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}")
     public ApiResponse<ScheduleResponseDTO.MonthlyScheduleDTO> getSchedule(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId) {
+            @PathVariable @ExistSchedule Long scheduleId) {
         ScheduleResponseDTO.MonthlyScheduleDTO scheduleDTO = memberStudyQueryService.getSchedule(studyId, scheduleId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, scheduleDTO);
     }
@@ -300,7 +300,7 @@ public class StudyMemberController {
     @PatchMapping("/studies/{studyId}/schedules/{scheduleId}")
     public ApiResponse<ScheduleResponseDTO.ScheduleDTO> modSchedule(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleModDTO) {
         ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_UPDATED, scheduleResponseDTO);
@@ -450,7 +450,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> createAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
         StudyQuizResponseDTO.QuizDTO quizResponseDTO = memberStudyCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_CREATED, quizResponseDTO);
@@ -467,7 +467,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> getAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyQueryService.getAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, quizDTO);
@@ -485,7 +485,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
     public ApiResponse<StudyQuizResponseDTO.AttendanceDTO> attendantStudy(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
         StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = memberStudyCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
         if (attendanceResponseDTO.getIsCorrect()) {
@@ -507,7 +507,7 @@ public class StudyMemberController {
     @DeleteMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
     public ApiResponse<StudyQuizResponseDTO.QuizDTO> deleteAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, quizDTO);
@@ -524,7 +524,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
     public ApiResponse<StudyQuizResponseDTO.AttendanceListDTO> getAllAttendances(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudySchedule Long scheduleId,
+            @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
         StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = memberStudyQueryService.getAllAttendances(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_ATTENDANCES_FOUND, attendanceListDTO);
@@ -559,7 +559,7 @@ public class StudyMemberController {
     @PostMapping("/studies/{studyId}/posts/{postId}/reports")
     public ApiResponse<StudyPostResDTO.PostPreviewDTO> reportStudyPost(
             @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStudyPost Long postId) {
+            @PathVariable @ExistStory Long postId) {
         StudyPostResDTO.PostPreviewDTO postPreviewDTO = memberStudyCommandService.reportStudyPost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_REPORTED, postPreviewDTO);
     }

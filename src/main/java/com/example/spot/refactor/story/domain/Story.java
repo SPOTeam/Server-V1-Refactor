@@ -2,12 +2,12 @@ package com.example.spot.refactor.story.domain;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.story.domain.aggregate.LikedStudyPost;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostComment;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostImage;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostReport;
+import com.example.spot.refactor.story.domain.aggregate.LikedStory;
+import com.example.spot.refactor.story.domain.aggregate.StoryComment;
+import com.example.spot.refactor.story.domain.aggregate.StoryImage;
+import com.example.spot.refactor.story.domain.aggregate.StoryReport;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
 import jakarta.persistence.*;
 
@@ -22,7 +22,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyPost extends BaseEntity {
+public class Story extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class StudyPost extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private StudyPostCategory studyPostCategory;
+    private StoryCategory storyCategory;
 
     @Column(nullable = false)
     private String title;
@@ -66,52 +66,52 @@ public class StudyPost extends BaseEntity {
     private Integer commentNum;
 
     @Builder.Default
-    @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
-    private List<StudyPostImage> images = new ArrayList<>();
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
+    private List<StoryImage> images = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
-    private List<StudyPostComment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
+    private List<StoryComment> comments = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
-    private List<LikedStudyPost> likedPosts = new ArrayList<>();
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
+    private List<LikedStory> likedStories = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "studyPost", cascade = CascadeType.ALL)
-    private List<StudyPostReport> studyPostReports = new ArrayList<>();
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
+    private List<StoryReport> storyReports = new ArrayList<>();
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addImage(StudyPostImage image) {
+    public void addImage(StoryImage image) {
         images.add(image);
-        image.setStudyPost(this);
+        image.setStory(this);
     }
 
-    public void addComment(StudyPostComment comment) {
+    public void addComment(StoryComment comment) {
         comments.add(comment);
-        comment.setStudyPost(this);
+        comment.setStory(this);
     }
 
-    public void addLikedPost(LikedStudyPost likedPost) {
-        likedPosts.add(likedPost);
-        likedPost.setStudyPost(this);
+    public void addLikedPost(LikedStory likedPost) {
+        likedStories.add(likedPost);
+        likedPost.setStory(this);
     }
 
-    public void deleteImage(StudyPostImage image) {
+    public void deleteImage(StoryImage image) {
         images.remove(image);
     }
 
-    public void deleteComment(StudyPostComment comment) {
+    public void deleteComment(StoryComment comment) {
         comments.remove(comment);
     }
 
-    public void deleteLikedPost(LikedStudyPost likedPost) {
-        likedPosts.remove(likedPost);
+    public void deleteLikedPost(LikedStory likedPost) {
+        likedStories.remove(likedPost);
     }
 
-    public void updateComment(StudyPostComment studyPostComment) {
-        comments.set(comments.indexOf(studyPostComment), studyPostComment);
+    public void updateComment(StoryComment storyComment) {
+        comments.set(comments.indexOf(storyComment), storyComment);
     }
 
     public void plusHitNum() {
@@ -132,13 +132,13 @@ public class StudyPost extends BaseEntity {
         study.updateStudyPost(this);
     }
 
-    public void addStudyPostReport(StudyPostReport studyPostReport) {
-        studyPostReports.add(studyPostReport);
+    public void addStudyPostReport(StoryReport storyReport) {
+        storyReports.add(storyReport);
     }
 
     public void updatePost(StudyPostRequestDTO.PostDTO requestDTO) {
         isAnnouncement = requestDTO.getIsAnnouncement();
-        studyPostCategory = requestDTO.getStudyPostCategory();
+        storyCategory = requestDTO.getStoryCategory();
         title = requestDTO.getTitle();
         content = requestDTO.getContent();
 
@@ -152,7 +152,7 @@ public class StudyPost extends BaseEntity {
         study.updateStudyPost(this);
     }
 
-    public void updateImage(StudyPostImage studyPostImage) {
-        images.set(images.indexOf(studyPostImage), studyPostImage);
+    public void updateImage(StoryImage storyImage) {
+        images.set(images.indexOf(storyImage), storyImage);
     }
 }

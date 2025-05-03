@@ -1,7 +1,7 @@
 package com.example.spot.refactor.story.domain;
 
-import com.example.spot.refactor.story.domain.QStudyPost;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.QStory;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -10,13 +10,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class StudyPostRepositoryCustomImpl implements StudyPostRepositoryCustom {
+public class StoryRepositoryCustomImpl implements StoryRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<StudyPost> findAnnouncementsByStudyId(Long studyId, Pageable pageable) {
-        QStudyPost studyPost = QStudyPost.studyPost;
+    public List<Story> findAnnouncementsByStudyId(Long studyId, Pageable pageable) {
+        QStory studyPost = QStory.story;
         return queryFactory.selectFrom(studyPost)
                 .where(studyPost.study.id.eq(studyId))
                 .where(studyPost.isAnnouncement.eq(true))
@@ -27,22 +27,22 @@ public class StudyPostRepositoryCustomImpl implements StudyPostRepositoryCustom 
     }
 
     @Override
-    public List<StudyPost> findAllByStudyIdAndTheme(Long studyId, StudyPostCategory studyPostCategory, Pageable pageable) {
+    public List<Story> findAllByStudyIdAndTheme(Long studyId, StoryCategory storyCategory, Pageable pageable) {
 
-        QStudyPost studyPost = QStudyPost.studyPost;
-        return queryFactory.selectFrom(studyPost)
-                .where(studyPost.study.id.eq(studyId))  // studyId가 일치하는지 확인
-                .where(studyPost.studyPostCategory.eq(studyPostCategory))       // category가 일치하는지 확인
-                .orderBy(studyPost.createdAt.desc())    // 최신순 정렬
+        QStory story = QStory.story;
+        return queryFactory.selectFrom(story)
+                .where(story.study.id.eq(studyId))  // studyId가 일치하는지 확인
+                .where(story.storyCategory.eq(storyCategory))       // category가 일치하는지 확인
+                .orderBy(story.createdAt.desc())    // 최신순 정렬
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
     @Override
-    public List<StudyPost> findAllByStudyId(Long studyId, Pageable pageable) {
+    public List<Story> findAllByStudyId(Long studyId, Pageable pageable) {
 
-        QStudyPost studyPost = QStudyPost.studyPost;
+        QStory studyPost = QStory.story;
         return queryFactory.selectFrom(studyPost)
                 .where(studyPost.study.id.eq(studyId))  // studyId가 일치하는지 확인
                 .orderBy(studyPost.createdAt.desc())    // 최신순 정렬

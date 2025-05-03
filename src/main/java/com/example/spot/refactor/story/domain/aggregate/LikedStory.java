@@ -2,7 +2,14 @@ package com.example.spot.refactor.story.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import com.example.spot.refactor.story.domain.Story;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,18 +21,16 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LikedStudyComment extends BaseEntity {
+public class LikedStory extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, columnDefinition = "BIT DEFAULT 1")
-    private Boolean isLiked;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_post_comment_id", nullable = false)
-    private StudyPostComment studyPostComment;
+    @JoinColumn(name = "story_id", nullable = false)
+    private Story story;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)

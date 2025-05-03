@@ -1,16 +1,16 @@
 package com.example.spot.refactor.story.domain.validation.annotation;
 
-import com.example.spot.refactor.story.domain.validation.validator.ExistLikedStudyCommentValidator;
+import com.example.spot.refactor.story.domain.validation.validator.ExistLikedStoryCommentValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = ExistLikedStudyCommentValidator.class)
+@Constraint(validatedBy = ExistLikedStoryCommentValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExistLikedStudyComment {
+public @interface ExistLikedStoryComment {
     String message() default "해당하는 댓글 반응이 존재하지 않습니다.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

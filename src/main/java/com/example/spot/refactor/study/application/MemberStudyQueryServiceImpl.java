@@ -10,16 +10,16 @@ import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
 import com.example.spot.refactor.schedule.domain.repository.QuizRepository;
 import com.example.spot.refactor.schedule.domain.repository.QuizSubmissionRepository;
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
+import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.story.domain.StudyPost;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.vote.domain.*;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
+import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.todo.domain.StudyToDoRepository;
 import com.example.spot.refactor.study.presentation.dto.response.ScheduleResponseDTO;
@@ -68,7 +68,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
 
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
-    private final StudyPostRepository studyPostRepository;
+    private final StoryRepository storyRepository;
     private final ScheduleRepository scheduleRepository;
     private final StudyMemberRepository studyMemberRepository;
     private final QuizSubmissionRepository quizSubmissionRepository;
@@ -94,13 +94,13 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
             throw new GeneralException(ErrorStatus._ONLY_STUDY_MEMBER_CAN_ACCESS_ANNOUNCEMENT_POST);
 
         // 스터디 공지사항 조회
-        StudyPost studyPost = studyPostRepository.findByStudyIdAndIsAnnouncement(
+        Story story = storyRepository.findByStudyIdAndIsAnnouncement(
             studyId, true).orElseThrow(() -> new GeneralException(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // DTO로 변환하여 반환
         return StudyPostResponseDTO.builder()
-            .title(studyPost.getTitle())
-            .content(studyPost.getContent()).build();
+            .title(story.getTitle())
+            .content(story.getContent()).build();
     }
 
     /**
@@ -395,7 +395,7 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
         List<ScheduleResponseDTO.MonthlyScheduleDTO> monthlyScheduleDTOS = new ArrayList<>();
 
         study.getSchedules().forEach(schedule -> {
-                    if (schedule.getStudySchedulePeriod().equals(StudySchedulePeriod.NONE)) {
+                    if (schedule.getSchedulePeriod().equals(SchedulePeriod.NONE)) {
                         addSchedule(schedule, year, month, monthlyScheduleDTOS, isStudyMember);
                     } else {
                         addPeriodSchedules(schedule, year, month, monthlyScheduleDTOS, isStudyMember);
@@ -483,16 +483,16 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 monthlyScheduleDTOS.add(ScheduleResponseDTO.MonthlyScheduleDTO.toDTOWithDate(schedule, startedAt, finishedAt, isStudyMember));
             }
 
-            if (schedule.getStudySchedulePeriod().equals(StudySchedulePeriod.DAILY)) {
+            if (schedule.getSchedulePeriod().equals(SchedulePeriod.DAILY)) {
                 startedAt = startedAt.plusDays(1);
                 finishedAt = finishedAt.plusDays(1);
-            } else if (schedule.getStudySchedulePeriod().equals(StudySchedulePeriod.WEEKLY)) {
+            } else if (schedule.getSchedulePeriod().equals(SchedulePeriod.WEEKLY)) {
                 startedAt = startedAt.plusWeeks(1);
                 finishedAt = finishedAt.plusWeeks(1);
-            } else if (schedule.getStudySchedulePeriod().equals(StudySchedulePeriod.BIWEEKLY)) {
+            } else if (schedule.getSchedulePeriod().equals(SchedulePeriod.BIWEEKLY)) {
                 startedAt = startedAt.plusWeeks(2);
                 finishedAt = finishedAt.plusWeeks(2);
-            } else if (schedule.getStudySchedulePeriod().equals(StudySchedulePeriod.MONTHLY)) {
+            } else if (schedule.getSchedulePeriod().equals(SchedulePeriod.MONTHLY)) {
                 startedAt = startedAt.plusMonths(1);
                 finishedAt = finishedAt.plusMonths(1);
             }
@@ -717,9 +717,9 @@ public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
-        List<StudyImageResponseDTO.ImageDTO> images = studyPostRepository.findAllByStudyId(studyId, pageRequest)
+        List<StudyImageResponseDTO.ImageDTO> images = storyRepository.findAllByStudyId(studyId, pageRequest)
                 .stream()
-                .sorted(Comparator.comparing(StudyPost::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
                 .flatMap(studyPost -> studyPost.getImages().stream())
                 .map(StudyImageResponseDTO.ImageDTO::toDTO)
                 .toList();

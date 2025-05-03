@@ -13,6 +13,8 @@ import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
 import com.example.spot.refactor.schedule.domain.repository.QuizRepository;
 import com.example.spot.refactor.schedule.domain.repository.QuizSubmissionRepository;
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.aggregate.StoryReport;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
@@ -20,14 +22,12 @@ import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.vote.domain.*;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.story.domain.StudyPost;
-import com.example.spot.refactor.story.domain.aggregate.StudyPostReport;
 import com.example.spot.legacy.repository.MemberReportRepository;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.legacy.repository.NotificationRepository;
-import com.example.spot.refactor.story.domain.repository.StudyPostReportRepository;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
+import com.example.spot.refactor.story.domain.repository.StoryReportRepository;
+import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.todo.domain.StudyToDoRepository;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
@@ -82,11 +82,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
     private final StudyVoteRepository studyVoteRepository;
     private final StudyVoteOptionRepository studyVoteOptionRepository;
     private final MemberReportRepository memberReportRepository;
-    private final StudyPostReportRepository studyPostReportRepository;
+    private final StoryReportRepository storyReportRepository;
 
     private final StudyMemberRepository studyMemberRepository;
     private final QuizSubmissionRepository quizSubmissionRepository;
-    private final StudyPostRepository studyPostRepository;
+    private final StoryRepository storyRepository;
     private final StudyVoteParticipantRepository studyVoteParticipantRepository;
     private final StudyToDoRepository studyToDoRepository;
     private final NotificationRepository notificationRepository;
@@ -347,7 +347,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .startedAt(scheduleRequestDTO.getStartedAt())
                 .finishedAt(scheduleRequestDTO.getFinishedAt())
                 .isAllDay(scheduleRequestDTO.getIsAllDay())
-                .studySchedulePeriod(scheduleRequestDTO.getStudySchedulePeriod())
+                .schedulePeriod(scheduleRequestDTO.getSchedulePeriod())
                 .build();
 
         // 알림 생성
@@ -430,7 +430,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         LocalDate finishDate = scheduleRequestDTO.getFinishedAt().toLocalDate();
         System.out.println(startDate);
         System.out.println(finishDate);
-        switch (scheduleRequestDTO.getStudySchedulePeriod()) {
+        switch (scheduleRequestDTO.getSchedulePeriod()) {
             case DAILY :
                 // 시작일과 종료일이 일치해야 함
                 if (finishDate.equals(startDate.plusDays(1)) ||
@@ -952,7 +952,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -960,18 +960,18 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         //=== Feature ===//
-        StudyPostReport studyPostReport = StudyPostReport.builder()
-                .studyPost(studyPost)
+        StoryReport storyReport = StoryReport.builder()
+                .story(story)
                 .build();
 
-        studyPostReport = studyPostReportRepository.save(studyPostReport);
-        studyPost.addStudyPostReport(studyPostReport);
+        storyReport = storyReportRepository.save(storyReport);
+        story.addStudyPostReport(storyReport);
 
-        return StudyPostResDTO.PostPreviewDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostPreviewDTO.toDTO(story);
     }
 
 /* ----------------------------- 스터디 To-Do List 관련 API ------------------------------------- */

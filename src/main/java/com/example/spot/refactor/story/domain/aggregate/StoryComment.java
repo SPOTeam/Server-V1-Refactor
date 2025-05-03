@@ -2,7 +2,7 @@ package com.example.spot.refactor.story.domain.aggregate;
 
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.story.domain.StudyPost;
+import com.example.spot.refactor.story.domain.Story;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyPostComment extends BaseEntity {
+public class StoryComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class StudyPostComment extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_post_id", nullable = false)
-    private StudyPost studyPost;
+    @JoinColumn(name = "story_id", nullable = false)
+    private Story story;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,30 +52,30 @@ public class StudyPostComment extends BaseEntity {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
-    private StudyPostComment parentComment;
+    private StoryComment parentComment;
 
     @Builder.Default
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private List<StudyPostComment> childrenComment = new ArrayList<>();
+    private List<StoryComment> childrenComment = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "studyPostComment", cascade = CascadeType.ALL)
-    private List<LikedStudyComment> likedComments = new ArrayList<>();
+    @OneToMany(mappedBy = "storyComment", cascade = CascadeType.ALL)
+    private List<LikedStoryComment> likedComments = new ArrayList<>();
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
-    public void addChildrenComment(StudyPostComment studyPostComment) {
-        childrenComment.add(studyPostComment);
-        studyPostComment.setParentComment(this);
+    public void addChildrenComment(StoryComment storyComment) {
+        childrenComment.add(storyComment);
+        storyComment.setParentComment(this);
     }
 
-    public void addLikedComment(LikedStudyComment likedStudyComment) {
-        likedComments.add(likedStudyComment);
-        likedStudyComment.setStudyPostComment(this);
+    public void addLikedComment(LikedStoryComment likedStoryComment) {
+        likedComments.add(likedStoryComment);
+        likedStoryComment.setStoryComment(this);
     }
 
-    public void deleteLikedComment(LikedStudyComment likedStudyComment) {
-        likedComments.remove(likedStudyComment);
+    public void deleteLikedComment(LikedStoryComment likedStoryComment) {
+        likedComments.remove(likedStoryComment);
     }
 
     public void deleteComment() {

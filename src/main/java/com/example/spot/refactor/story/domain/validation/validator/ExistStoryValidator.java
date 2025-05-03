@@ -1,8 +1,8 @@
 package com.example.spot.refactor.story.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
-import com.example.spot.refactor.story.domain.validation.annotation.ExistStudyPost;
+import com.example.spot.refactor.story.domain.StoryRepository;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistStory;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistStudyPostValidator implements ConstraintValidator<ExistStudyPost, Long> {
+public class ExistStoryValidator implements ConstraintValidator<ExistStory, Long> {
 
-    private final StudyPostRepository studyPostRepository;
+    private final StoryRepository storyRepository;
 
     @Override
-    public void initialize(ExistStudyPost constraintAnnotation) {}
+    public void initialize(ExistStory constraintAnnotation) {}
 
     @Override
     public boolean isValid(Long studyPostId, ConstraintValidatorContext context) {
@@ -25,7 +25,7 @@ public class ExistStudyPostValidator implements ConstraintValidator<ExistStudyPo
 
         if (studyPostId == null) {
             errorStatus = ErrorStatus._STUDY_POST_NULL;
-        } else if (!studyPostRepository.existsById(studyPostId)) {
+        } else if (!storyRepository.existsById(studyPostId)) {
             errorStatus = ErrorStatus._STUDY_POST_NOT_FOUND;
         } else {
             errorStatus = ErrorStatus._STUDY_POST_NOT_FOUND; // ignore

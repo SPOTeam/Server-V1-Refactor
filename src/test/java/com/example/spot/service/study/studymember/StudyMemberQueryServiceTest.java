@@ -2,17 +2,17 @@ package com.example.spot.service.study.studymember;
 
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;
+import com.example.spot.refactor.story.domain.Story;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.todo.domain.StudyToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.refactor.story.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.story.domain.StudyPost;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
-import com.example.spot.refactor.story.domain.StudyPostRepository;
+import com.example.spot.refactor.story.domain.StoryRepository;
 import com.example.spot.refactor.todo.domain.StudyToDoRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.study.application.MemberStudyQueryServiceImpl;
@@ -60,7 +60,7 @@ public class StudyMemberQueryServiceTest {
     @Mock
     private MemberRepository memberRepository;
     @Mock
-    private StudyPostRepository studyPostRepository;
+    private StoryRepository storyRepository;
     @Mock
     private ScheduleRepository scheduleRepository;
     @Mock
@@ -121,17 +121,17 @@ public class StudyMemberQueryServiceTest {
         long studyId = 1L;
         String title = "공지";
         String content = "공지입니다.";
-        StudyPost studyPost = StudyPost.builder()
+        Story story = Story.builder()
                 .title(title)
                 .content(content)
-                .studyPostCategory(StudyPostCategory.WELCOME)
+                .storyCategory(StoryCategory.WELCOME)
                 .isAnnouncement(true)
                 .build();
 
         StudyMember studyMember = StudyMember.builder()
                         .introduction(title).study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
 
-        when(studyPostRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.of(studyPost));
+        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.of(story));
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
 
@@ -168,7 +168,7 @@ public class StudyMemberQueryServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
-        when(studyPostRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.empty());
+        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.empty());
 
         // when & then
         assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyAnnouncementPost(studyId));

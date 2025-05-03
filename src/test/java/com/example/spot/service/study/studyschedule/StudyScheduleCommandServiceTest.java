@@ -4,10 +4,10 @@ import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.Notification;
 import com.example.spot.refactor.schedule.domain.Schedule;
+import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.member.domain.enums.Gender;
-import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
@@ -88,34 +88,34 @@ class StudyScheduleCommandServiceTest {
     @Test
     @DisplayName("스터디 일정 생성 - 기본 일정인 경우 (성공)")
     void addSchedule_None_Success() {
-        addScheduleSuccess(StudySchedulePeriod.NONE);
+        addScheduleSuccess(SchedulePeriod.NONE);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Daily 일정인 경우 (성공)")
     void addSchedule_Daily_Success() {
-        addScheduleSuccess(StudySchedulePeriod.DAILY);
+        addScheduleSuccess(SchedulePeriod.DAILY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Weekly 일정인 경우(성공)")
     void addSchedule_Weekly() {
-        addScheduleSuccess(StudySchedulePeriod.WEEKLY);
+        addScheduleSuccess(SchedulePeriod.WEEKLY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Biweekly 일정인 경우")
     void addSchedule_Biweekly() {
-        addScheduleSuccess(StudySchedulePeriod.BIWEEKLY);
+        addScheduleSuccess(SchedulePeriod.BIWEEKLY);
     }
 
     @Test
     @DisplayName("스터디 일정 생성 - Monthly 일정인 경우")
     void addSchedule_Monthly() {
-        addScheduleSuccess(StudySchedulePeriod.MONTHLY);
+        addScheduleSuccess(SchedulePeriod.MONTHLY);
     }
 
-    private void addScheduleSuccess(StudySchedulePeriod studySchedulePeriod) {
+    private void addScheduleSuccess(SchedulePeriod schedulePeriod) {
 
         // given
         Long studyId = 1L;
@@ -130,7 +130,7 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .studySchedulePeriod(studySchedulePeriod)
+                .schedulePeriod(schedulePeriod)
                 .build();
 
         schedule = Schedule.builder()
@@ -142,7 +142,7 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .studySchedulePeriod(studySchedulePeriod)
+                .schedulePeriod(schedulePeriod)
                 .build();
 
         study1.addSchedule(schedule);
@@ -341,7 +341,7 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(3))
                 .isAllDay(false)
-                .studySchedulePeriod(StudySchedulePeriod.NONE)
+                .schedulePeriod(SchedulePeriod.NONE)
                 .build();
 
         schedule = Schedule.builder()
@@ -352,7 +352,7 @@ class StudyScheduleCommandServiceTest {
                 .startedAt(startedAt)
                 .finishedAt(startedAt.plusHours(2))
                 .isAllDay(false)
-                .studySchedulePeriod(StudySchedulePeriod.WEEKLY)
+                .schedulePeriod(SchedulePeriod.WEEKLY)
                 .build();
 
         study.addSchedule(schedule);

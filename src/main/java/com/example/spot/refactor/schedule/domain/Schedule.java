@@ -3,7 +3,7 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.schedule.domain.enums.StudySchedulePeriod;
+import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import jakarta.persistence.*;
 
@@ -58,14 +58,14 @@ public class Schedule extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StudySchedulePeriod studySchedulePeriod;
+    private SchedulePeriod schedulePeriod;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
     public Schedule(Study study, Member member, String title, String location,
                     LocalDateTime staredAt, LocalDateTime finishedAt,
-                    Boolean isAllDay, StudySchedulePeriod studySchedulePeriod) {
+                    Boolean isAllDay, SchedulePeriod schedulePeriod) {
         this.study = study;
         this.member = member;
         this.title = title;
@@ -73,7 +73,7 @@ public class Schedule extends BaseEntity {
         this.startedAt = staredAt;
         this.finishedAt = finishedAt;
         this.isAllDay = isAllDay;
-        this.studySchedulePeriod = studySchedulePeriod;
+        this.schedulePeriod = schedulePeriod;
         this.quizList = new ArrayList<>();
     }
 
@@ -90,7 +90,7 @@ public class Schedule extends BaseEntity {
         this.startedAt = scheduleDTO.getStartedAt();
         this.finishedAt = scheduleDTO.getFinishedAt();
         this.isAllDay = scheduleDTO.getIsAllDay();
-        this.studySchedulePeriod = scheduleDTO.getStudySchedulePeriod();
+        this.schedulePeriod = scheduleDTO.getSchedulePeriod();
     }
 
 }

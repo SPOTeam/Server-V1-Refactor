@@ -1,6 +1,6 @@
 package com.example.spot.refactor.story.domain.aggregate;
 
-import com.example.spot.refactor.story.domain.StudyPost;
+import com.example.spot.refactor.story.domain.Story;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyPostReport {
+public class StoryReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +22,14 @@ public class StudyPostReport {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_post_id", nullable = false)
-    private StudyPost studyPost;
+    @JoinColumn(name = "story_id", nullable = false)
+    private Story story;
 
 /* ----------------------------- 생성자 ------------------------------------- */
 
     @Builder
-    public StudyPostReport(StudyPost studyPost) {
-        this.studyPost = studyPost;
+    public StoryReport(Story story) {
+        this.story = story;
     }
 
 }

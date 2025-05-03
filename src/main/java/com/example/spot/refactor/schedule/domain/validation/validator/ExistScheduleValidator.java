@@ -2,7 +2,7 @@ package com.example.spot.refactor.schedule.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.schedule.domain.ScheduleRepository;
-import com.example.spot.refactor.schedule.domain.validation.annotation.ExistStudySchedule;
+import com.example.spot.refactor.schedule.domain.validation.annotation.ExistSchedule;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistStudyScheduleValidator implements ConstraintValidator<ExistStudySchedule, Long> {
+public class ExistScheduleValidator implements ConstraintValidator<ExistSchedule, Long> {
 
     private final ScheduleRepository scheduleRepository;
 
     @Override
-    public void initialize(ExistStudySchedule constraintAnnotation) {}
+    public void initialize(ExistSchedule constraintAnnotation) {}
 
     @Override
     public boolean isValid(Long scheduleId, ConstraintValidatorContext context) {

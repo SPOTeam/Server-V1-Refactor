@@ -1,8 +1,8 @@
 package com.example.spot.refactor.story.domain.validation.validator;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.refactor.story.domain.repository.LikedStudyCommentRepository;
-import com.example.spot.refactor.story.domain.validation.annotation.ExistLikedStudyComment;
+import com.example.spot.refactor.story.domain.repository.LikedStoryCommentRepository;
+import com.example.spot.refactor.story.domain.validation.annotation.ExistLikedStoryComment;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ExistLikedStudyCommentValidator implements ConstraintValidator<ExistLikedStudyComment, Long> {
+public class ExistLikedStoryCommentValidator implements ConstraintValidator<ExistLikedStoryComment, Long> {
 
-    private final LikedStudyCommentRepository likedStudyCommentRepository;
+    private final LikedStoryCommentRepository likedStoryCommentRepository;
 
     @Override
-    public void initialize(ExistLikedStudyComment constraintAnnotation) {}
+    public void initialize(ExistLikedStoryComment constraintAnnotation) {}
 
     @Override
     public boolean isValid(Long likedCommentId, ConstraintValidatorContext context) {
@@ -25,7 +25,7 @@ public class ExistLikedStudyCommentValidator implements ConstraintValidator<Exis
 
         if (likedCommentId == null) {
             errorStatus = ErrorStatus._STUDY_POST_COMMENT_REACTIOM_ID_NULL;
-        } else if (!likedStudyCommentRepository.existsById(likedCommentId)) {
+        } else if (!likedStoryCommentRepository.existsById(likedCommentId)) {
             errorStatus = ErrorStatus._STUDY_POST_COMMENT_REACTION_NOT_FOUND;
         } else {
             errorStatus = ErrorStatus._STUDY_POST_COMMENT_NOT_FOUND; // ignore

@@ -1,7 +1,7 @@
 package com.example.spot.refactor.story.domain.aggregate;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.refactor.story.domain.StudyPost;
+import com.example.spot.refactor.story.domain.Story;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +21,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudyPostImage extends BaseEntity {
+public class StoryImage extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +32,6 @@ public class StudyPostImage extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_post_id", nullable = false)
-    private StudyPost studyPost;
+    @JoinColumn(name = "story_id", nullable = false)
+    private Story story;
 }
