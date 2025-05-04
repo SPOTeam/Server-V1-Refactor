@@ -1,8 +1,8 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuiz;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
+import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +23,11 @@ public class StudyQuizResponseDTO {
         private final String question;
         private final LocalDateTime createdAt;
 
-        public static QuizDTO toDTO(StudyQuiz studyQuiz) {
+        public static QuizDTO toDTO(Quiz quiz) {
             return QuizDTO.builder()
-                    .quizId(studyQuiz.getId())
-                    .question(studyQuiz.getQuestion())
-                    .createdAt(studyQuiz.getCreatedAt())
+                    .quizId(quiz.getId())
+                    .question(quiz.getQuestion())
+                    .createdAt(quiz.getCreatedAt())
                     .build();
         }
     }
@@ -44,14 +44,14 @@ public class StudyQuizResponseDTO {
         private final Integer tryNum;
         private final LocalDateTime createdAt;
 
-        public static AttendanceDTO toDTO(StudyQuizSubmission studyQuizSubmission, Integer tryNum) {
+        public static AttendanceDTO toDTO(QuizSubmission quizSubmission, Integer tryNum) {
             return AttendanceDTO.builder()
-                    .memberId(studyQuizSubmission.getMember().getId())
-                    .quizId(studyQuizSubmission.getStudyQuiz().getId())
-                    .attendanceId(studyQuizSubmission.getId())
-                    .isCorrect(studyQuizSubmission.getIsCorrect())
+                    .memberId(quizSubmission.getMember().getId())
+                    .quizId(quizSubmission.getQuiz().getId())
+                    .attendanceId(quizSubmission.getId())
+                    .isCorrect(quizSubmission.getIsCorrect())
                     .tryNum(tryNum)
-                    .createdAt(studyQuizSubmission.getCreatedAt())
+                    .createdAt(quizSubmission.getCreatedAt())
                     .build();
         }
     }
@@ -65,10 +65,10 @@ public class StudyQuizResponseDTO {
         private final Long quizId;
         private final List<StudyMemberDTO> studyMembers;
 
-        public static AttendanceListDTO toDTO(StudyQuiz studyQuiz, List<StudyMemberDTO> studyMembers) {
+        public static AttendanceListDTO toDTO(Quiz quiz, List<StudyMemberDTO> studyMembers) {
             return AttendanceListDTO.builder()
-                    .scheduleId(studyQuiz.getStudySchedule().getId())
-                    .quizId(studyQuiz.getId())
+                    .scheduleId(quiz.getSchedule().getId())
+                    .quizId(quiz.getId())
                     .studyMembers(studyMembers)
                     .build();
         }

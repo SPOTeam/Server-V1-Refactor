@@ -1,27 +1,27 @@
 package com.example.spot.refactor.member.domain;
 
 import com.example.spot.legacy.domain.*;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuiz;
+import com.example.spot.refactor.schedule.domain.Schedule;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.aggregate.LikedStoryComment;
+import com.example.spot.refactor.story.domain.aggregate.LikedStory;
 import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.enums.Carrier;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
+import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
 import com.example.spot.legacy.domain.mapping.MemberScrap;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.member.domain.association.MemberTheme;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVote;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteParticipant;
+import com.example.spot.refactor.todo.domain.ToDo;
+import com.example.spot.refactor.vote.domain.Vote;
+import com.example.spot.refactor.vote.domain.aggregate.VoteParticipant;
 import com.example.spot.refactor.member.domain.association.PreferredRegion;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudySchedule;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.StoryComment;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class Member extends BaseEntity {
     //== 회원의 출석 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyQuizSubmission> studyQuizSubmissionList = new ArrayList<>();
+    private List<QuizSubmission> quizSubmissionList = new ArrayList<>();
 
     //== 회원이 참여하는 스터디 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -178,32 +178,32 @@ public class Member extends BaseEntity {
     //== 회원이 작성한 스터디 게시글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyPost> studyPostList = new ArrayList<>();
+    private List<Story> storyList = new ArrayList<>();
 
     //== 회원이 좋아요한 스터디 게시글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<LikedStudyPost> likedStudyPostList = new ArrayList<>();
+    private List<LikedStory> likedStoryList = new ArrayList<>();
 
     //== 회원이 작성한 스터디 게시글 댓글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyPostComment> studyPostCommentList = new ArrayList<>();
+    private List<StoryComment> storyCommentList = new ArrayList<>();
 
     //== 회원이 좋아요한 게시글 댓글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<LikedStudyComment> likedStudyCommentList = new ArrayList<>();
+    private List<LikedStoryComment> likedStoryCommentList = new ArrayList<>();
 
     //== 회원이 생성한 투표 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyVote> studyVoteList = new ArrayList<>();
+    private List<Vote> voteList = new ArrayList<>();
 
     //== 회원이 투표한 항목 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyVoteParticipant> studyVoteParticipantList = new ArrayList<>();
+    private List<VoteParticipant> voteParticipantList = new ArrayList<>();
 
     //== 회원이 선호하는 지역 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -213,16 +213,16 @@ public class Member extends BaseEntity {
     //== 회원이 생성한 스터디 퀴즈 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyQuiz> studyQuizList = new ArrayList<>();
+    private List<Quiz> quizList = new ArrayList<>();
 
     //== 회원이 생성한 스터디 일정 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudySchedule> studyScheduleList = new ArrayList<>();
+    private List<Schedule> scheduleList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<StudyToDo> studyToDos = new ArrayList<>();
+    private List<ToDo> toDos = new ArrayList<>();
 
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
@@ -247,20 +247,20 @@ public class Member extends BaseEntity {
         memberTheme.setMember(this); // 양방향 관계 설정
     }
 
-    public void addMemberAttendance(StudyQuizSubmission studyQuizSubmission) {
-        if (this.studyQuizSubmissionList == null) {
-            this.studyQuizSubmissionList = new ArrayList<>();
+    public void addMemberAttendance(QuizSubmission quizSubmission) {
+        if (this.quizSubmissionList == null) {
+            this.quizSubmissionList = new ArrayList<>();
         }
-        this.studyQuizSubmissionList.add(studyQuizSubmission);
-        studyQuizSubmission.setMember(this);
+        this.quizSubmissionList.add(quizSubmission);
+        quizSubmission.setMember(this);
     }
 
-    public void addVote(StudyVote studyVote) {
-        if (this.studyVoteList == null) {
-            this.studyVoteList = new ArrayList<>();
+    public void addVote(Vote vote) {
+        if (this.voteList == null) {
+            this.voteList = new ArrayList<>();
         }
-        this.studyVoteList.add(studyVote);
-        studyVote.setMember(this);
+        this.voteList.add(vote);
+        vote.setMember(this);
     }
 
     public void updateThemes(List<MemberTheme> memberThemes) {
@@ -296,83 +296,83 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
     }
 
-    public void addStudyPost(StudyPost studyPost) {
-        if (this.studyPostList == null) {
-            this.studyPostList = new ArrayList<>();
+    public void addStudyPost(Story story) {
+        if (this.storyList == null) {
+            this.storyList = new ArrayList<>();
         }
-        this.studyPostList.add(studyPost);
-        studyPost.setMember(this);
+        this.storyList.add(story);
+        story.setMember(this);
     }
 
-    public void addStudyLikedComment(LikedStudyComment likedStudyComment) {
+    public void addStudyLikedComment(LikedStoryComment likedStoryComment) {
         if (this.likedCommentList == null) {
             this.likedCommentList = new ArrayList<>();
         }
-        this.likedStudyCommentList.add(likedStudyComment);
-        likedStudyComment.setMember(this);
+        this.likedStoryCommentList.add(likedStoryComment);
+        likedStoryComment.setMember(this);
     }
 
-    public void addMemberVote(StudyVoteParticipant studyVoteParticipant) {
-        if (this.studyVoteParticipantList == null) {
-            this.studyVoteParticipantList = new ArrayList<>();
+    public void addMemberVote(VoteParticipant voteParticipant) {
+        if (this.voteParticipantList == null) {
+            this.voteParticipantList = new ArrayList<>();
         }
-        this.studyVoteParticipantList.add(studyVoteParticipant);
-        studyVoteParticipant.setMember(this);
+        this.voteParticipantList.add(voteParticipant);
+        voteParticipant.setMember(this);
     }
 
-    public void updateVote(StudyVote studyVote) {
-        studyVoteList.set(studyVoteList.indexOf(studyVote), studyVote);
+    public void updateVote(Vote vote) {
+        voteList.set(voteList.indexOf(vote), vote);
     }
 
-    public void deleteStudyPost(StudyPost studyPost) {
-        this.studyPostList.remove(studyPost);
+    public void deleteStudyPost(Story story) {
+        this.storyList.remove(story);
     }
 
-    public void updateStudyPost(StudyPost studyPost) {
-        studyPostList.set(studyPostList.indexOf(studyPost), studyPost);
+    public void updateStudyPost(Story story) {
+        storyList.set(storyList.indexOf(story), story);
     }
 
-    public void updateComment(StudyPostComment studyPostComment) {
-        studyPostCommentList.set(studyPostCommentList.indexOf(studyPostComment), studyPostComment);
+    public void updateComment(StoryComment storyComment) {
+        storyCommentList.set(storyCommentList.indexOf(storyComment), storyComment);
     }
 
-    public void addStudyLikedPost(LikedStudyPost likedStudyPost) {
-        if (this.likedStudyPostList == null) {
-            this.likedStudyPostList = new ArrayList<>();
+    public void addStudyLikedPost(LikedStory likedStory) {
+        if (this.likedStoryList == null) {
+            this.likedStoryList = new ArrayList<>();
         }
-        this.likedStudyPostList.add(likedStudyPost);
-        likedStudyPost.setMember(this);
+        this.likedStoryList.add(likedStory);
+        likedStory.setMember(this);
     }
 
-    public void deleteStudyLikedPost(LikedStudyPost likedStudyPost) {
-        this.likedStudyPostList.remove(likedStudyPost);
+    public void deleteStudyLikedPost(LikedStory likedStory) {
+        this.likedStoryList.remove(likedStory);
     }
 
-    public void deleteStudyLikedComment(LikedStudyComment likedStudyComment) {
-        this.likedStudyCommentList.remove(likedStudyComment);
+    public void deleteStudyLikedComment(LikedStoryComment likedStoryComment) {
+        this.likedStoryCommentList.remove(likedStoryComment);
     }
 
-    public void addComment(StudyPostComment studyPostComment) {
-        this.studyPostCommentList.add(studyPostComment);
+    public void addComment(StoryComment storyComment) {
+        this.storyCommentList.add(storyComment);
     }
 
-    public void deleteVote(StudyVote studyVote) {
-        this.studyVoteList.remove(studyVote);
+    public void deleteVote(Vote vote) {
+        this.voteList.remove(vote);
     }
 
-    public void addQuiz(StudyQuiz studyQuiz) {
-        this.studyQuizList.add(studyQuiz);
-        studyQuiz.setMember(this);
+    public void addQuiz(Quiz quiz) {
+        this.quizList.add(quiz);
+        quiz.setMember(this);
     }
 
-    public void addSchedule(StudySchedule studySchedule) {
-        this.studyScheduleList.add(studySchedule);
-        studySchedule.setMember(this);
+    public void addSchedule(Schedule schedule) {
+        this.scheduleList.add(schedule);
+        schedule.setMember(this);
 
     }
 
-    public void updateSchedule(StudySchedule studySchedule) {
-        studyScheduleList.set(studyScheduleList.indexOf(studySchedule), studySchedule);
+    public void updateSchedule(Schedule schedule) {
+        scheduleList.set(scheduleList.indexOf(schedule), schedule);
     }
 
     public void toAdmin() {
@@ -383,8 +383,8 @@ public class Member extends BaseEntity {
         this.memberReportList.add(memberReport);
     }
 
-    public void addToDoList(StudyToDo studyToDo) {
-        this.studyToDos.add(studyToDo);
+    public void addToDoList(ToDo toDo) {
+        this.toDos.add(toDo);
     }
 
 }

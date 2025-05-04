@@ -1,8 +1,8 @@
 package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.study.domain.aggregate.studypost.LikedStudyComment;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostComment;
+import com.example.spot.refactor.story.domain.aggregate.LikedStoryComment;
+import com.example.spot.refactor.story.domain.aggregate.StoryComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class StudyPostCommentResponseDTO {
         private final Integer likeCount;
         private final Integer dislikeCount;
 
-        public static CommentDTO toDTO(StudyPostComment comment, String name, String defaultImage) {
+        public static CommentDTO toDTO(StoryComment comment, String name, String defaultImage) {
             return CommentDTO.builder()
                     .commentId(comment.getId())
                     .member(MemberInfoDTO.toDTO(comment.getMember(), name, comment.getIsAnonymous(), defaultImage))
@@ -77,7 +77,7 @@ public class StudyPostCommentResponseDTO {
         private final Integer likeCount;
         private final Integer dislikeCount;
 
-        public static CommentPreviewDTO toDTO(StudyPostComment comment) {
+        public static CommentPreviewDTO toDTO(StoryComment comment) {
             return CommentPreviewDTO.builder()
                     .commentId(comment.getId())
                     .likeCount(comment.getLikeCount())
@@ -94,7 +94,7 @@ public class StudyPostCommentResponseDTO {
         private final Long postId;
         private final List<CommentReplyDTO> comments;
 
-        public static CommentReplyListDTO toDTO(Long postId, List<StudyPostComment> comments, Member member, String defaultImage) {
+        public static CommentReplyListDTO toDTO(Long postId, List<StoryComment> comments, Member member, String defaultImage) {
             return CommentReplyListDTO.builder()
                     .postId(postId)
                     .comments(comments.stream()
@@ -118,7 +118,7 @@ public class StudyPostCommentResponseDTO {
         private final String isLiked;
         private final List<CommentReplyDTO> applies;
 
-        public static CommentReplyDTO toDTO(StudyPostComment comment, Member member, String defaultImage) {
+        public static CommentReplyDTO toDTO(StoryComment comment, Member member, String defaultImage) {
 
             String anonymity = "익명" + comment.getAnonymousNum();
             return CommentReplyDTO.builder()
@@ -130,15 +130,15 @@ public class StudyPostCommentResponseDTO {
                     .isDeleted(comment.getIsDeleted())
                     .isLiked(getIsLiked(comment, member))
                     .applies(comment.getChildrenComment().stream()
-                            .sorted(Comparator.comparing(StudyPostComment::getCreatedAt))
+                            .sorted(Comparator.comparing(StoryComment::getCreatedAt))
                             .map(child -> CommentReplyDTO.toDTO(child, member, defaultImage))
                             .toList())
                     .build();
         }
 
-        private static String getIsLiked(StudyPostComment comment, Member member) {
+        private static String getIsLiked(StoryComment comment, Member member) {
             String isLiked = "NONE";
-            for (LikedStudyComment likedComment : comment.getLikedComments()) {
+            for (LikedStoryComment likedComment : comment.getLikedComments()) {
                 if (likedComment.getMember().equals(member)) {
                     if (likedComment.getIsLiked()) {
                         isLiked = "LIKED";

@@ -1,6 +1,6 @@
 package com.example.spot.refactor.study.presentation.dto.request;
 
-import com.example.spot.refactor.study.domain.enums.StudyPostCategory;
+import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.legacy.validation.annotation.TextLength;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class StudyPostRequestDTO {
 
         @NotNull
         @Schema(description = "테마", example = "WELCOME")
-        private StudyPostCategory studyPostCategory;
+        private StoryCategory storyCategory;
 
         @NotNull
         @TextLength(min = 1, max = 50)

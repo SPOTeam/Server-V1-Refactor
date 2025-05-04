@@ -1,15 +1,15 @@
 package com.example.spot.legacy.web.dto.search;
 
-import com.example.spot.refactor.study.domain.aggregate.studyregion.Region;
-import com.example.spot.refactor.study.domain.aggregate.studyregion.StudyRegion;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.Theme;
+import com.example.spot.refactor.study.domain.aggregate.Region;
+import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
+import com.example.spot.refactor.study.domain.aggregate.Theme;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.study.domain.enums.StudyLikeStatus;
 import com.example.spot.refactor.study.domain.enums.StudyState;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.PreferredStudy;
-import com.example.spot.refactor.study.domain.aggregate.studytheme.StudyTheme;
-import com.example.spot.refactor.study.domain.aggregate.Study;
+import com.example.spot.refactor.study.domain.aggregate.StudyTheme;
+import com.example.spot.refactor.study.domain.Study;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,26 +7,29 @@ import com.example.spot.refactor.common.api.exception.handler.StudyHandler;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.legacy.domain.MemberReport;
 import com.example.spot.legacy.domain.Notification;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.*;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDo;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.*;
+import com.example.spot.refactor.schedule.domain.*;
+import com.example.spot.refactor.schedule.domain.aggregate.Quiz;
+import com.example.spot.refactor.schedule.domain.aggregate.QuizSubmission;
+import com.example.spot.refactor.schedule.domain.repository.QuizRepository;
+import com.example.spot.refactor.schedule.domain.repository.QuizSubmissionRepository;
+import com.example.spot.refactor.schedule.domain.ScheduleRepository;
+import com.example.spot.refactor.story.domain.Story;
+import com.example.spot.refactor.story.domain.aggregate.StoryReport;
+import com.example.spot.refactor.todo.domain.ToDo;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.legacy.domain.enums.NotifyType;
 import com.example.spot.refactor.member.domain.enums.Status;
-import com.example.spot.refactor.study.domain.aggregate.studyschedule.StudyQuizSubmission;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMember;
-import com.example.spot.refactor.study.domain.aggregate.studyvote.StudyVoteParticipant;
-import com.example.spot.refactor.study.domain.aggregate.Study;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPost;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostReport;
+import com.example.spot.refactor.study.domain.aggregate.StudyMember;
+import com.example.spot.refactor.vote.domain.*;
+import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.legacy.repository.MemberReportRepository;
 import com.example.spot.refactor.member.domain.MemberRepository;
-import com.example.spot.refactor.study.domain.aggregate.studymember.StudyMemberRepository;
+import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.legacy.repository.NotificationRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostReportRepository;
-import com.example.spot.refactor.study.domain.aggregate.studypost.StudyPostRepository;
-import com.example.spot.refactor.study.domain.repository.StudyRepository;
-import com.example.spot.refactor.study.domain.aggregate.studytodo.StudyToDoRepository;
+import com.example.spot.refactor.story.domain.repository.StoryReportRepository;
+import com.example.spot.refactor.story.domain.StoryRepository;
+import com.example.spot.refactor.study.domain.StudyRepository;
+import com.example.spot.refactor.todo.domain.ToDoRepository;
 import com.example.spot.refactor.study.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyMemberReportDTO;
@@ -49,6 +52,12 @@ import com.example.spot.refactor.study.presentation.dto.response.StudyApplyRespo
 
 import java.time.LocalDate;
 import java.util.Objects;
+
+import com.example.spot.refactor.vote.domain.aggregate.VoteOption;
+import com.example.spot.refactor.vote.domain.aggregate.VoteParticipant;
+import com.example.spot.refactor.vote.domain.repository.VoteOptionRepository;
+import com.example.spot.refactor.vote.domain.repository.VoteParticipantRepository;
+import com.example.spot.refactor.vote.domain.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -68,18 +77,18 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
     private final MemberRepository memberRepository;
     private final StudyRepository studyRepository;
-    private final StudyScheduleRepository studyScheduleRepository;
-    private final StudyQuizRepository studyQuizRepository;
-    private final StudyVoteRepository studyVoteRepository;
-    private final StudyVoteOptionRepository studyVoteOptionRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final QuizRepository quizRepository;
+    private final VoteRepository voteRepository;
+    private final VoteOptionRepository voteOptionRepository;
     private final MemberReportRepository memberReportRepository;
-    private final StudyPostReportRepository studyPostReportRepository;
+    private final StoryReportRepository storyReportRepository;
 
     private final StudyMemberRepository studyMemberRepository;
-    private final StudyQuizSubmissionRepository studyQuizSubmissionRepository;
-    private final StudyPostRepository studyPostRepository;
-    private final StudyVoteParticipantRepository studyVoteParticipantRepository;
-    private final StudyToDoRepository studyToDoRepository;
+    private final QuizSubmissionRepository quizSubmissionRepository;
+    private final StoryRepository storyRepository;
+    private final VoteParticipantRepository voteParticipantRepository;
+    private final ToDoRepository toDoRepository;
     private final NotificationRepository notificationRepository;
 
     // S3 Service
@@ -330,7 +339,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // Period 기반 시작일 종료일 제한
         checkStartAndFinishDate(scheduleRequestDTO);
 
-        StudySchedule studySchedule = StudySchedule.builder()
+        Schedule schedule = Schedule.builder()
                 .study(study)
                 .member(member)
                 .title(scheduleRequestDTO.getTitle())
@@ -338,7 +347,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .startedAt(scheduleRequestDTO.getStartedAt())
                 .finishedAt(scheduleRequestDTO.getFinishedAt())
                 .isAllDay(scheduleRequestDTO.getIsAllDay())
-                .studySchedulePeriod(scheduleRequestDTO.getStudySchedulePeriod())
+                .schedulePeriod(scheduleRequestDTO.getSchedulePeriod())
                 .build();
 
         // 알림 생성
@@ -362,11 +371,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 notificationRepository.save(notification);
             });
 
-        studyScheduleRepository.save(studySchedule);
-        study.addSchedule(studySchedule);
-        member.addSchedule(studySchedule);
+        scheduleRepository.save(schedule);
+        study.addSchedule(schedule);
+        member.addSchedule(schedule);
 
-        return ScheduleResponseDTO.ScheduleDTO.toDTO(studySchedule);
+        return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
 
     /**
@@ -387,7 +396,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudySchedule studySchedule = studyScheduleRepository.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -395,11 +404,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 일정 생성자인지 확인
-        studyScheduleRepository.findByIdAndMemberId(scheduleId, memberId)
+        scheduleRepository.findByIdAndMemberId(scheduleId, memberId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._SCHEDULE_MOD_INVALID));
 
         // 해당 스터디의 일정인지 확인
-        studyScheduleRepository.findByIdAndStudyId(scheduleId, studyId)
+        scheduleRepository.findByIdAndStudyId(scheduleId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
 
         //=== Feature ===//
@@ -407,13 +416,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // Period 기반 시작일 종료일 제한
         checkStartAndFinishDate(scheduleModDTO);
 
-        studySchedule.modSchedule(scheduleModDTO);
-        studySchedule = studyScheduleRepository.save(studySchedule);
+        schedule.modSchedule(scheduleModDTO);
+        schedule = scheduleRepository.save(schedule);
 
-        study.updateSchedule(studySchedule);
-        member.updateSchedule(studySchedule);
+        study.updateSchedule(schedule);
+        member.updateSchedule(schedule);
 
-        return ScheduleResponseDTO.ScheduleDTO.toDTO(studySchedule);
+        return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
 
     private static void checkStartAndFinishDate(ScheduleRequestDTO.ScheduleDTO scheduleRequestDTO) {
@@ -421,7 +430,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         LocalDate finishDate = scheduleRequestDTO.getFinishedAt().toLocalDate();
         System.out.println(startDate);
         System.out.println(finishDate);
-        switch (scheduleRequestDTO.getStudySchedulePeriod()) {
+        switch (scheduleRequestDTO.getSchedulePeriod()) {
             case DAILY :
                 // 시작일과 종료일이 일치해야 함
                 if (finishDate.equals(startDate.plusDays(1)) ||
@@ -468,13 +477,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        StudySchedule studySchedule = studyScheduleRepository.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
         // 해당 스터디에서 생성된 일정인지 확인
-        if (!studySchedule.getStudy().equals(study)) {
+        if (!schedule.getStudy().equals(study)) {
             throw new StudyHandler(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND);
         }
 
@@ -485,25 +494,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 이미 출석 퀴즈가 생성되었는지 확인
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
-        List<StudyQuiz> todayQuizzes = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        List<Quiz> todayQuizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
         if (!todayQuizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_ALREADY_EXIST);
         }
 
         //=== Feature ===//
-        StudyQuiz studyQuiz = StudyQuiz.builder()
-                .studySchedule(studySchedule)
+        Quiz quiz = Quiz.builder()
+                .schedule(schedule)
                 .member(member)
                 .question(quizRequestDTO.getQuestion())
                 .answer(quizRequestDTO.getAnswer())
                 .createdAt(quizRequestDTO.getCreatedAt())
                 .build();
 
-        studyQuiz = studyQuizRepository.save(studyQuiz);
-        studySchedule.addQuiz(studyQuiz);
-        member.addQuiz(studyQuiz);
+        quiz = quizRepository.save(quiz);
+        schedule.addQuiz(quiz);
+        member.addQuiz(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(studyQuiz);
+        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
     }
 
     /**
@@ -529,25 +538,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 생성된 출석 퀴즈 조회
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
-        List<StudyQuiz> studyQuizs = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
-        if (studyQuizs.isEmpty()) {
+        List<Quiz> quizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        if (quizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_FOUND);
         }
-        StudyQuiz studyQuiz = studyQuizs.get(0);
+        Quiz quiz = quizzes.get(0);
 
         // 로그인한 회원이 스터디 회원인지 확인
         studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), study.getId(), StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 퀴즈 제한시간 확인
-        if (attendanceRequestDTO.getDateTime().isAfter(studyQuiz.getCreatedAt().plusMinutes(5))) {
+        if (attendanceRequestDTO.getDateTime().isAfter(quiz.getCreatedAt().plusMinutes(5))) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_VALID);
         }
 
         // 이미 출석이 완료되었거나 시도 횟수를 초과하였는지 확인
-        List<StudyQuizSubmission> attendanceList = studyQuizSubmissionRepository.findByStudyQuizIdAndMemberId(studyQuiz.getId(), member.getId());
+        List<QuizSubmission> attendanceList = quizSubmissionRepository.findByQuizIdAndMemberId(quiz.getId(), member.getId());
         int try_num = 0;
-        for (StudyQuizSubmission attendance : attendanceList) {
+        for (QuizSubmission attendance : attendanceList) {
             if (attendance.getIsCorrect())
                 throw new StudyHandler(ErrorStatus._STUDY_ATTENDANCE_ALREADY_EXIST);
             else
@@ -559,18 +568,18 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
 
         //=== Feature ===//
         Boolean isCorrect;
-        if (attendanceRequestDTO.getAnswer().equals(studyQuiz.getAnswer())) {
+        if (attendanceRequestDTO.getAnswer().equals(quiz.getAnswer())) {
             isCorrect = Boolean.TRUE;
         } else {
             isCorrect = Boolean.FALSE;
         }
 
-        StudyQuizSubmission studyQuizSubmission = new StudyQuizSubmission(isCorrect);
-        member.addMemberAttendance(studyQuizSubmission);
-        studyQuiz.addMemberAttendance(studyQuizSubmission);
-        studyQuizSubmission = studyQuizSubmissionRepository.save(studyQuizSubmission);
+        QuizSubmission quizSubmission = new QuizSubmission(isCorrect);
+        member.addMemberAttendance(quizSubmission);
+        quiz.addMemberAttendance(quizSubmission);
+        quizSubmission = quizSubmissionRepository.save(quizSubmission);
 
-        return StudyQuizResponseDTO.AttendanceDTO.toDTO(studyQuizSubmission, try_num+1);
+        return StudyQuizResponseDTO.AttendanceDTO.toDTO(quizSubmission, try_num+1);
     }
 
     /**
@@ -596,11 +605,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         // 요청한 날짜에 생성된 출석 퀴즈 조회
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atStartOfDay().plusDays(1);
-        List<StudyQuiz> todayQuizzes = studyQuizRepository.findAllByStudyScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
+        List<Quiz> todayQuizzes = quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay);
         if (todayQuizzes.isEmpty()) {
             throw new StudyHandler(ErrorStatus._STUDY_QUIZ_NOT_FOUND);
         }
-        StudyQuiz studyQuiz = todayQuizzes.get(0);
+        Quiz quiz = todayQuizzes.get(0);
 
         // 로그인한 회원이 스터디 회원인지 확인
         studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member.getId(), study.getId(), StudyApplicationStatus.APPROVED)
@@ -611,14 +620,14 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_QUIZ_DELETION_INVALID));
 
         //=== Feature ===//
-        studyQuizSubmissionRepository.findByStudyQuizId(studyQuiz.getId())
+        quizSubmissionRepository.findByQuizId(quiz.getId())
                 .forEach(memberAttendance -> {
-                    studyQuiz.deleteMemberAttendance(memberAttendance);
-                    studyQuizSubmissionRepository.delete(memberAttendance);
+                    quiz.deleteMemberAttendance(memberAttendance);
+                    quizSubmissionRepository.delete(memberAttendance);
                 });
-        studyQuizRepository.delete(studyQuiz);
+        quizRepository.delete(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(studyQuiz);
+        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
     }
 
 
@@ -647,7 +656,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
-        StudyVote studyVote = StudyVote.builder()
+        Vote vote = Vote.builder()
                 .study(study)
                 .member(loginMember)
                 .title(voteDTO.getTitle())
@@ -656,34 +665,34 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .build();
 
         // Vote 저장
-        studyVote = studyVoteRepository.save(studyVote);
+        vote = voteRepository.save(vote);
         // Option 저장
-        studyVote = createOption(studyVote, voteDTO);
+        vote = createOption(vote, voteDTO);
         // 연관관계 매핑
-        loginMember.addVote(studyVote);
-        study.addVote(studyVote);
+        loginMember.addVote(vote);
+        study.addVote(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
      * 스터디 투표의 항목을 생성하는 메서드입니다.
      * createVote 메서드 내부에서 사용되는 메서드입니다.
-     * @param studyVote 항목을 생성할 타겟 투표를 입력 받습니다.
+     * @param vote 항목을 생성할 타겟 투표를 입력 받습니다.
      * @param voteDTO 생성할 투표의 제목, 항목 목록, 중복 선택 가능 여부, 종료 일시를 입력 받습니다.
      * @return 투표 객체를 반환합니다.
      */
-    private StudyVote createOption(StudyVote studyVote, StudyVoteRequestDTO.VoteDTO voteDTO) {
+    private Vote createOption(Vote vote, StudyVoteRequestDTO.VoteDTO voteDTO) {
         voteDTO.getOptions()
                 .forEach(stringOption -> {
-                    StudyVoteOption studyVoteOption = StudyVoteOption.builder()
-                            .studyVote(studyVote)
+                    VoteOption voteOption = VoteOption.builder()
+                            .vote(vote)
                             .content(stringOption)
                             .build();
-                    studyVoteOption = studyVoteOptionRepository.save(studyVoteOption);
-                    studyVote.addOption(studyVoteOption);
+                    voteOption = voteOptionRepository.save(voteOption);
+                    vote.addOption(voteOption);
                 });
-        return studyVoteRepository.save(studyVote);
+        return voteRepository.save(vote);
     }
 
     /**
@@ -704,9 +713,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -714,40 +723,40 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 중복 선택이 허용되지 않는 투표는 여러 개의 option을 선택할 수 없음
-        if (!studyVote.getIsMultipleChoice() && votedOptionDTO.getOptionIdList().size() > 1) {
+        if (!vote.getIsMultipleChoice() && votedOptionDTO.getOptionIdList().size() > 1) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_MULTIPLE_CHOICE_NOT_VALID);
         }
 
         // 한 번 참여한 투표는 다시 참여할 수 없음
-        studyVoteOptionRepository.findAllByStudyVoteId(voteId)
+        voteOptionRepository.findAllByVoteId(voteId)
                 .forEach(option -> {
-                    if (studyVoteParticipantRepository.existsByMemberIdAndStudyVoteOptionId(loginMember.getId(), option.getId())) {
+                    if (voteParticipantRepository.existsByMemberIdAndVoteOptionId(loginMember.getId(), option.getId())) {
                             throw new StudyHandler(ErrorStatus._STUDY_VOTE_RE_PARTICIPATION_INVALID);
                     }
                 });
 
         //=== Feature ===//
-        List<StudyVoteParticipant> studyVoteParticipants = votedOptionDTO.getOptionIdList().stream()
+        List<VoteParticipant> voteParticipants = votedOptionDTO.getOptionIdList().stream()
                 .map(optionId -> {
-                    StudyVoteOption votedStudyVoteOption = studyVoteOptionRepository.findById(optionId)
+                    VoteOption votedVoteOption = voteOptionRepository.findById(optionId)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
-                    studyVoteOptionRepository.findByIdAndStudyVoteId(optionId, voteId)
+                    voteOptionRepository.findByIdAndVoteId(optionId, voteId)
                             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
 
-                    StudyVoteParticipant studyVoteParticipant = StudyVoteParticipant.builder()
+                    VoteParticipant voteParticipant = VoteParticipant.builder()
                             .member(loginMember)
-                            .studyVoteOption(votedStudyVoteOption)
+                            .voteOption(votedVoteOption)
                             .build();
 
-                    studyVoteParticipant = studyVoteParticipantRepository.save(studyVoteParticipant);
-                    loginMember.addMemberVote(studyVoteParticipant);
-                    votedStudyVoteOption.addMemberVote(studyVoteParticipant);
+                    voteParticipant = voteParticipantRepository.save(voteParticipant);
+                    loginMember.addMemberVote(voteParticipant);
+                    votedVoteOption.addMemberVote(voteParticipant);
 
-                    return studyVoteParticipant;
+                    return voteParticipant;
                 })
                 .toList();
 
-        return StudyVoteResponseDTO.VotedOptionDTO.toDTO(studyVote, loginMember, studyVoteParticipants);
+        return StudyVoteResponseDTO.VotedOptionDTO.toDTO(vote, loginMember, voteParticipants);
     }
 
     /**
@@ -768,7 +777,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -776,33 +785,33 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 투표 생성자인지 확인
-        if (!loginMember.equals(studyVote.getMember())) {
+        if (!loginMember.equals(vote.getMember())) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_CREATOR_NOT_AUTHORIZED);
         }
 
         // 한 명이라도 투표에 참여했으면 투표 편집 불가
-        studyVoteOptionRepository.findAllByStudyVoteId(voteId)
+        voteOptionRepository.findAllByVoteId(voteId)
                 .forEach(option -> {
-                    if (studyVoteParticipantRepository.existsByStudyVoteOptionId(option.getId())) {
+                    if (voteParticipantRepository.existsByVoteOptionId(option.getId())) {
                         throw new StudyHandler(ErrorStatus._STUDY_VOTE_IS_IN_PROGRESS);
                     }
                 });
 
         //=== Feature ===//
         for (StudyVoteRequestDTO.OptionDTO optionDTO : voteDTO.getOptions()) {
-            StudyVoteOption studyVoteOption = studyVoteOptionRepository.findById(optionDTO.getOptionId())
+            VoteOption voteOption = voteOptionRepository.findById(optionDTO.getOptionId())
                     .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_OPTION_NOT_FOUND));
-            studyVoteOption.setContent(optionDTO.getContent());
-            studyVoteOption = studyVoteOptionRepository.save(studyVoteOption);
-            studyVote.updateOption(studyVoteOption);
+            voteOption.setContent(optionDTO.getContent());
+            voteOption = voteOptionRepository.save(voteOption);
+            vote.updateOption(voteOption);
         }
 
-        studyVote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
-        studyVote = studyVoteRepository.save(studyVote);
-        loginMember.updateVote(studyVote);
-        study.updateVote(studyVote);
+        vote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
+        vote = voteRepository.save(vote);
+        loginMember.updateVote(vote);
+        study.updateVote(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
@@ -822,9 +831,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyVote studyVote = studyVoteRepository.findById(voteId)
+        Vote vote = voteRepository.findById(voteId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
-        studyVoteRepository.findByIdAndStudyId(voteId, studyId)
+        voteRepository.findByIdAndStudyId(voteId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_VOTE_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -832,17 +841,17 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 로그인한 회원이 투표 생성자인지 확인
-        if (!loginMember.equals(studyVote.getMember())) {
+        if (!loginMember.equals(vote.getMember())) {
             throw new StudyHandler(ErrorStatus._STUDY_VOTE_CREATOR_NOT_AUTHORIZED);
         }
 
         //=== Feature ===//
         deleteOptions(voteId);
-        loginMember.deleteVote(studyVote);
-        study.deleteVote(studyVote);
-        studyVoteRepository.delete(studyVote);
+        loginMember.deleteVote(vote);
+        study.deleteVote(vote);
+        voteRepository.delete(vote);
 
-        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(studyVote);
+        return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
@@ -851,11 +860,11 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
      * @param voteId 항목을 삭제할 타겟 투표의 아이디를 입력 받습니다.
      */
     private void deleteOptions(Long voteId) {
-        List<StudyVoteOption> studyVoteOptions = studyVoteOptionRepository.findAllByStudyVoteId(voteId);
-        studyVoteOptions.forEach(option -> {
+        List<VoteOption> voteOptions = voteOptionRepository.findAllByVoteId(voteId);
+        voteOptions.forEach(option -> {
             option.deleteAllMemberVotes();
-            studyVoteParticipantRepository.deleteAll(studyVoteParticipantRepository.findAllByStudyVoteOptionId(option.getId()));
-            studyVoteOptionRepository.delete(option);
+            voteParticipantRepository.deleteAll(voteParticipantRepository.findAllByVoteOptionId(option.getId()));
+            voteOptionRepository.delete(option);
         });
     }
 
@@ -943,7 +952,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
         studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        StudyPost studyPost = studyPostRepository.findById(postId)
+        Story story = storyRepository.findById(postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
         // 로그인한 회원이 스터디 회원인지 확인
@@ -951,18 +960,18 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         // 해당 스터디의 게시글인지 확인
-        studyPostRepository.findByIdAndStudyId(postId, studyId)
+        storyRepository.findByIdAndStudyId(postId, studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         //=== Feature ===//
-        StudyPostReport studyPostReport = StudyPostReport.builder()
-                .studyPost(studyPost)
+        StoryReport storyReport = StoryReport.builder()
+                .story(story)
                 .build();
 
-        studyPostReport = studyPostReportRepository.save(studyPostReport);
-        studyPost.addStudyPostReport(studyPostReport);
+        storyReport = storyReportRepository.save(storyReport);
+        story.addStudyPostReport(storyReport);
 
-        return StudyPostResDTO.PostPreviewDTO.toDTO(studyPost);
+        return StudyPostResDTO.PostPreviewDTO.toDTO(story);
     }
 
 /* ----------------------------- 스터디 To-Do List 관련 API ------------------------------------- */
@@ -996,7 +1005,7 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // To-Do List 생성
-        StudyToDo studyToDo = StudyToDo.builder()
+        ToDo toDo = ToDo.builder()
             .study(study)
             .member(member)
             .date(toDoListCreateDTO.getDate())
@@ -1005,14 +1014,14 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             .build();
 
         // To-Do List 저장
-        studyToDo.setToDoList();
-        studyToDoRepository.save(studyToDo);
+        toDo.setToDoList();
+        toDoRepository.save(toDo);
 
         // To-Do List 생성 DTO 반환
         return ToDoListCreateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .content(studyToDo.getContent())
-            .createdAt(studyToDo.getCreatedAt())
+            .id(toDo.getId())
+            .content(toDo.getContent())
+            .createdAt(toDo.getCreatedAt())
             .build();
     }
 
@@ -1032,23 +1041,23 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
     public ToDoListUpdateResponseDTO checkToDoList(Long studyId, Long toDoListId) {
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 변경하는 회원이 스터디 회원이 아니면 예외 처리
         Long currentUserId = SecurityUtils.getCurrentUserId();
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 체크 상태 변경
-        studyToDo.check();
+        toDo.check();
 
         // 스터디 회원의 To-Do List 중 하나가 완료 되면, 해당 스터디의 모든 회원에게 알림 전송
-        if (studyToDo.isDone()){
+        if (toDo.isDone()){
             List<Member> members = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED).stream()
                 .map(StudyMember::getMember)
                 .toList();
@@ -1056,9 +1065,9 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             // 알림을 생성할 회원이 없으면 알림 생성하지 않음
             if (members.isEmpty()){
                 return ToDoListUpdateResponseDTO.builder()
-                    .id(studyToDo.getId())
-                    .isDone(studyToDo.isDone())
-                    .updatedAt(studyToDo.getUpdatedAt())
+                    .id(toDo.getId())
+                    .isDone(toDo.isDone())
+                    .updatedAt(toDo.getUpdatedAt())
                     .build();
             }
 
@@ -1066,8 +1075,8 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             members.forEach(studyMember -> {
                 Notification notification = Notification.builder()
                     .member(studyMember)
-                    .notifierName(studyToDo.getMember().getName()) // To-Do 완료한 회원 이름
-                    .study(studyToDo.getStudy())
+                    .notifierName(toDo.getMember().getName()) // To-Do 완료한 회원 이름
+                    .study(toDo.getStudy())
                     .type(NotifyType.TO_DO_UPDATE)
                     .isChecked(Boolean.FALSE)
                     .build();
@@ -1076,13 +1085,13 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         }
 
         // To-Do List 저장
-        studyToDoRepository.save(studyToDo);
+        toDoRepository.save(toDo);
 
         // To-Do List 변경 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
@@ -1102,29 +1111,29 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
         ToDoListCreateDTO toDoListCreateDTO) {
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 수정하는 회원이 스터디 회원이 아니면 예외 처리
         Long currentUserId = SecurityUtils.getCurrentUserId();
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 수정
-        studyToDo.update(toDoListCreateDTO.getContent(), toDoListCreateDTO.getDate());
+        toDo.update(toDoListCreateDTO.getContent(), toDoListCreateDTO.getDate());
 
         // To-Do List 저장
-        studyToDoRepository.save(studyToDo);
+        toDoRepository.save(toDo);
 
         // To-Do List 변경 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
@@ -1148,25 +1157,25 @@ public class MemberStudyCommandServiceImpl implements MemberStudyCommandService 
             throw new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND);
 
         // To-Do List 조회
-        StudyToDo studyToDo = studyToDoRepository.findById(toDoListId)
+        ToDo toDo = toDoRepository.findById(toDoListId)
             .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_TODO_NOT_FOUND));
 
         // To-Do List가 속한 스터디가 아니면 예외 처리
-        if (!Objects.equals(studyToDo.getStudy().getId(), studyId))
+        if (!Objects.equals(toDo.getStudy().getId(), studyId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_IS_NOT_BELONG_TO_STUDY);
 
         // To-Do List를 삭제하는 회원의 ID와 To-Do List를 생성한 회원의 ID가 다르면 예외 처리
-        if (!studyToDo.getMember().getId().equals(currentUserId))
+        if (!toDo.getMember().getId().equals(currentUserId))
             throw new StudyHandler(ErrorStatus._STUDY_TODO_NOT_AUTHORIZED);
 
         // To-Do List 삭제
-        studyToDoRepository.deleteById(toDoListId);
+        toDoRepository.deleteById(toDoListId);
 
         // To-Do List 삭제 DTO 반환
         return ToDoListUpdateResponseDTO.builder()
-            .id(studyToDo.getId())
-            .isDone(studyToDo.isDone())
-            .updatedAt(studyToDo.getUpdatedAt())
+            .id(toDo.getId())
+            .isDone(toDo.isDone())
+            .updatedAt(toDo.getUpdatedAt())
             .build();
     }
 
