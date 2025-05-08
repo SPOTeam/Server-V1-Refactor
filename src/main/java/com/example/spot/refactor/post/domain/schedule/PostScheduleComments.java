@@ -1,4 +1,4 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.post.domain.schedule;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.post.domain.Post;
@@ -14,28 +14,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostScheduleRealTime extends BaseEntity {
+public class PostScheduleComments extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer ranking;
     private String title;
     private Integer commentCount;
-    private Integer likeCount;
-    private Integer hitCount;
 
-    private PostScheduleRealTime(Integer rank, String title, Integer commentCount, Integer likeCount, Integer hitCount) {
+    private PostScheduleComments(Integer rank, String title, Integer commentCount) {
         this.ranking = rank;
         this.title = title;
         this.commentCount = commentCount;
-        this.likeCount = likeCount;
-        this.hitCount = hitCount;
     }
 
-    public static PostScheduleRealTime of(Post post, Integer rank) {
+    public static PostScheduleComments of(Post post, Integer rank) {
         int commentSize = post.getPostCommentList().size();
-        int likeSize = post.getLikedPostList().size();
-        int hitSize = post.getHitNum();
-        return new PostScheduleRealTime(rank, post.getTitle(), commentSize, likeSize, hitSize);
+        return new PostScheduleComments(rank, post.getTitle(), commentSize);
     }
 }

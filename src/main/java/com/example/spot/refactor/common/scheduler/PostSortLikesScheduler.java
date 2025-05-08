@@ -1,7 +1,7 @@
 package com.example.spot.refactor.common.scheduler;
 
 import com.example.spot.refactor.post.domain.Post;
-import com.example.spot.legacy.domain.PostScheduleLikes;
+import com.example.spot.refactor.post.domain.schedule.PostScheduleLikes;
 import com.example.spot.legacy.repository.PostRepository;
 import com.example.spot.legacy.repository.PostScheduleLikesRepository;
 import lombok.RequiredArgsConstructor;
