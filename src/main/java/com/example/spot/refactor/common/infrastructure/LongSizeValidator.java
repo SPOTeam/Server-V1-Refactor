@@ -1,7 +1,7 @@
-package com.example.spot.legacy.validation.validator;
+package com.example.spot.refactor.common.infrastructure;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
-import com.example.spot.legacy.validation.annotation.LongSize;
+import com.example.spot.refactor.common.presentation.validator.LongSize;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.AllArgsConstructor;

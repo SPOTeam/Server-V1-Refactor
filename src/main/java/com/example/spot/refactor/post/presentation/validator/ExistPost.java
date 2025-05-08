@@ -1,6 +1,6 @@
-package com.example.spot.legacy.validation.annotation;
+package com.example.spot.refactor.post.presentation.validator;
 
-import com.example.spot.legacy.validation.validator.ExistPostValidator;
+import com.example.spot.refactor.post.infrastructure.ExistPostValidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

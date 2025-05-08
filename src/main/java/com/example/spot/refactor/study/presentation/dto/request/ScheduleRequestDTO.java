@@ -1,7 +1,7 @@
 package com.example.spot.refactor.study.presentation.dto.request;
 
 import com.example.spot.refactor.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.legacy.validation.annotation.TextLength;
+import com.example.spot.refactor.common.presentation.validator.TextLength;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,8 +1,8 @@
-package com.example.spot.legacy.validation.validator;
+package com.example.spot.refactor.post.infrastructure;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.post.domain.PostRepository;
-import com.example.spot.legacy.validation.annotation.ExistPost;
+import com.example.spot.refactor.post.presentation.validator.ExistPost;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -6,7 +6,7 @@ import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO.NicknameDuplicateDTO;
 import com.example.spot.refactor.member.presentation.dto.rsa.Rsa;
 import com.example.spot.refactor.member.application.auth.AuthService;
-import com.example.spot.legacy.validation.annotation.TextLength;
+import com.example.spot.refactor.common.presentation.validator.TextLength;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;

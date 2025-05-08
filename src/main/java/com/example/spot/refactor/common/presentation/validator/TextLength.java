@@ -1,6 +1,6 @@
-package com.example.spot.legacy.validation.annotation;
+package com.example.spot.refactor.common.presentation.validator;
 
-import com.example.spot.legacy.validation.validator.TextLengthValidator;
+import com.example.spot.refactor.common.infrastructure.TextLengthValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

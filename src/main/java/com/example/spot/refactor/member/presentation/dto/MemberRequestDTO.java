@@ -3,7 +3,7 @@ package com.example.spot.refactor.member.presentation.dto;
 import com.example.spot.refactor.member.domain.enums.Carrier;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.validation.annotation.TextLength;
+import com.example.spot.refactor.common.presentation.validator.TextLength;
 import jakarta.validation.constraints.AssertTrue;
 
 import java.time.LocalDate;

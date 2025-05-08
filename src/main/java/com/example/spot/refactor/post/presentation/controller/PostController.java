@@ -5,7 +5,7 @@ import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.post.application.PostCommandService;
 import com.example.spot.refactor.post.application.PostQueryService;
-import com.example.spot.legacy.validation.annotation.ExistPost;
+import com.example.spot.refactor.post.presentation.validator.ExistPost;
 import com.example.spot.refactor.comment.presentation.dto.CommentCreateRequest;
 import com.example.spot.refactor.comment.presentation.dto.CommentCreateResponse;
 import com.example.spot.refactor.comment.presentation.dto.CommentLikeResponse;

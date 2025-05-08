@@ -2,9 +2,9 @@ package com.example.spot.refactor.study.presentation.dto.request;
 
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.validation.annotation.IntSize;
-import com.example.spot.legacy.validation.annotation.LongSize;
-import com.example.spot.legacy.validation.annotation.TextLength;
+import com.example.spot.refactor.common.presentation.validator.IntSize;
+import com.example.spot.refactor.common.presentation.validator.LongSize;
+import com.example.spot.refactor.common.presentation.validator.TextLength;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
