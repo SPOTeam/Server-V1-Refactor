@@ -2,7 +2,7 @@ package com.example.spot.refactor.post.domain;
 
 import com.example.spot.refactor.post.domain.association.LikedPost;
 import com.example.spot.refactor.comment.domain.PostComment;
-import com.example.spot.legacy.domain.PostImage;
+import com.example.spot.refactor.post.domain.association.PostImage;
 import com.example.spot.legacy.domain.PostReport;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.post.domain.enums.Board;
