@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.notification;
+package com.example.spot.refactor.notification.application.notification;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.GeneralException;

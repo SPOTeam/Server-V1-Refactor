@@ -4,8 +4,8 @@ import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO;
-import com.example.spot.legacy.service.notification.NotificationCommandService;
-import com.example.spot.legacy.service.notification.NotificationQueryService;
+import com.example.spot.refactor.notification.application.notification.NotificationCommandService;
+import com.example.spot.refactor.notification.application.notification.NotificationQueryService;
 
 import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO;
 import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
