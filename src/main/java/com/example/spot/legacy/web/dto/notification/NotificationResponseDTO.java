@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.notification;
 
-import com.example.spot.legacy.domain.enums.NotifyType;
+import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

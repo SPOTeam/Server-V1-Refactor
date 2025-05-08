@@ -1,7 +1,7 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.notification.domain;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.legacy.domain.enums.NotifyType;
+import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.Member;
 

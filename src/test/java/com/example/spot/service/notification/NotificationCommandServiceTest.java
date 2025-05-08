@@ -8,9 +8,9 @@ import static org.mockito.Mockito.when;
 
 import com.example.spot.refactor.common.api.exception.GeneralException;
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Notification;
+import com.example.spot.refactor.notification.domain.Notification;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.legacy.domain.enums.NotifyType;
+import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;

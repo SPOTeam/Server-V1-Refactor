@@ -2,8 +2,8 @@ package com.example.spot.legacy.service.notification;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.GeneralException;
-import com.example.spot.legacy.domain.Notification;
-import com.example.spot.legacy.domain.enums.NotifyType;
+import com.example.spot.refactor.notification.domain.Notification;
+import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationListDTO;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationListDTO.NotificationDTO;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
