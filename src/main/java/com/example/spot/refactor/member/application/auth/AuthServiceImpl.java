@@ -22,7 +22,7 @@ import com.example.spot.refactor.member.domain.enums.LoginType;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.member.domain.auth.RefreshTokenRepository;
-import com.example.spot.legacy.repository.rsa.RSAKeyRepository;
+import com.example.spot.refactor.member.domain.rsa.RSAKeyRepository;
 import com.example.spot.refactor.member.domain.auth.verification.VerificationCodeRepository;
 import com.example.spot.refactor.common.security.utils.JwtTokenProvider;
 import com.example.spot.refactor.common.security.utils.MemberUtils;
