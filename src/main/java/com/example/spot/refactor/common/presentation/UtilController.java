@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.controller;
+package com.example.spot.refactor.common.presentation;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
