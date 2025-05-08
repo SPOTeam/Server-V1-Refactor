@@ -6,17 +6,17 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.refactor.common.api.exception.GeneralException;
-import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.refactor.notification.domain.Notification;
-import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.refactor.notification.domain.enums.NotifyType;
-import com.example.spot.refactor.study.domain.aggregate.StudyMember;
-import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.refactor.notification.domain.NotificationRepository;
-import com.example.spot.refactor.notification.application.notification.NotificationCommandServiceImpl;
-import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.common.api.exception.GeneralException;
+import com.example.spot.member.domain.Member;
+import com.example.spot.notification.domain.Notification;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.notification.domain.enums.NotifyType;
+import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.notification.domain.NotificationRepository;
+import com.example.spot.notification.application.notification.NotificationCommandServiceImpl;
+import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 
 import java.util.Optional;
 
