@@ -2,11 +2,11 @@ package com.example.spot.refactor.study.application;
 
 import com.example.spot.refactor.study.domain.enums.StudySortBy;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
-import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
-import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.HotKeywordDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.MyPageDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.StudyPreviewDTO;
+import com.example.spot.refactor.study.presentation.dto.request.SearchRequestStudyDTO;
+import com.example.spot.refactor.study.presentation.dto.request.SearchRequestStudyWithThemeDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyInfoResponseDTO;
 
 import org.springframework.data.domain.Pageable;

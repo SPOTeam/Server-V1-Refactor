@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.search;
+package com.example.spot.refactor.study.presentation.dto.request;
 
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import io.swagger.v3.oas.annotations.media.Schema;

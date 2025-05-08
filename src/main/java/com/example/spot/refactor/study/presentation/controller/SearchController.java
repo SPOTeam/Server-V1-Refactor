@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.controller;
+package com.example.spot.refactor.study.presentation.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
@@ -7,11 +7,11 @@ import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.refactor.study.application.StudyCommandService;
 import com.example.spot.refactor.study.application.StudyQueryService;
-import com.example.spot.legacy.web.dto.search.SearchRequestStudyDTO;
-import com.example.spot.legacy.web.dto.search.SearchRequestStudyWithThemeDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.HotKeywordDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.MyPageDTO;
-import com.example.spot.legacy.web.dto.search.SearchResponseDTO.StudyPreviewDTO;
+import com.example.spot.refactor.study.presentation.dto.request.SearchRequestStudyDTO;
+import com.example.spot.refactor.study.presentation.dto.request.SearchRequestStudyWithThemeDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
+import com.example.spot.refactor.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

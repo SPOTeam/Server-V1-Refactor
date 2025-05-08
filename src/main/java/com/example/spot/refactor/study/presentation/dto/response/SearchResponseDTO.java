@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.search;
+package com.example.spot.refactor.study.presentation.dto.response;
 
 import com.example.spot.refactor.study.domain.aggregate.Region;
 import com.example.spot.refactor.study.domain.aggregate.StudyRegion;
