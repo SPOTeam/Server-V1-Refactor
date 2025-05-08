@@ -1,6 +1,5 @@
 package com.example.spot.story.domain;
 
-import com.example.spot.refactor.story.domain.QStory;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

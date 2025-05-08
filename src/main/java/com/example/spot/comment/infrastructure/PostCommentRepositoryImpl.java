@@ -1,6 +1,7 @@
 package com.example.spot.comment.infrastructure;
 
-import static com.example.spot.legacy.domain.QPostComment.*;
+
+import static com.example.spot.comment.domain.QPostComment.*;
 
 import com.example.spot.comment.domain.PostComment;
 import com.example.spot.comment.domain.PostCommentRepositoryCustom;

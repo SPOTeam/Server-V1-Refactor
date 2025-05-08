@@ -7,8 +7,6 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.refactor.story.domain.aggregate.*;
-import com.example.spot.refactor.story.domain.repository.*;
 import com.example.spot.story.domain.aggregate.LikedStory;
 import com.example.spot.story.domain.aggregate.LikedStoryComment;
 import com.example.spot.story.domain.aggregate.StoryComment;

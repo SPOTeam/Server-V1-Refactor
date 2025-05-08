@@ -1,9 +1,9 @@
 package com.example.spot.post.infrastructure;
 
+import com.example.spot.comment.domain.QPostComment;
 import com.example.spot.post.domain.Post;
-import com.example.spot.legacy.domain.QLikedPost;
-import com.example.spot.legacy.domain.QPost;
-import com.example.spot.legacy.domain.QPostComment;
+import com.example.spot.post.domain.QPost;
+import com.example.spot.post.domain.association.QLikedPost;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.PostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,6 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
+@Component
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
