@@ -16,7 +16,7 @@ import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.notification.domain.NotificationRepository;
 import com.example.spot.legacy.service.notification.NotificationCommandServiceImpl;
-import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 
 import java.util.Optional;
 

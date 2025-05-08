@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.notification;
+package com.example.spot.refactor.notification.presentation.dto.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

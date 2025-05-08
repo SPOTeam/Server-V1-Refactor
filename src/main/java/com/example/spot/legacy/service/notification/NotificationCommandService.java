@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.notification;
 
-import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 
 public interface NotificationCommandService {
 

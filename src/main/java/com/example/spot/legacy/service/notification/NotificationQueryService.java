@@ -1,7 +1,7 @@
 package com.example.spot.legacy.service.notification;
 
-import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationListDTO;
-import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
+import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO;
+import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
 
 import org.springframework.data.domain.Pageable;
 

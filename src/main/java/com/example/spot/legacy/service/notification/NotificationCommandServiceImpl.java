@@ -7,7 +7,7 @@ import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.refactor.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
