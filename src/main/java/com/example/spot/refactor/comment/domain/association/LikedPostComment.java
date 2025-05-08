@@ -1,6 +1,7 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.comment.domain.association;
 
 
+import com.example.spot.refactor.comment.domain.PostComment;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.member.domain.Member;
 

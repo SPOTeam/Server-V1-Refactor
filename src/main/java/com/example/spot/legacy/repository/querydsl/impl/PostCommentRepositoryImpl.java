@@ -2,7 +2,7 @@ package com.example.spot.legacy.repository.querydsl.impl;
 
 import static com.example.spot.legacy.domain.QPostComment.*;
 
-import com.example.spot.legacy.domain.PostComment;
+import com.example.spot.refactor.comment.domain.PostComment;
 import com.example.spot.legacy.repository.querydsl.PostCommentRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,8 @@
 package com.example.spot.refactor.member.domain;
 
 import com.example.spot.legacy.domain.*;
+import com.example.spot.refactor.comment.domain.PostComment;
+import com.example.spot.refactor.comment.domain.association.LikedPostComment;
 import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.refactor.schedule.domain.Schedule;
 import com.example.spot.refactor.schedule.domain.aggregate.Quiz;

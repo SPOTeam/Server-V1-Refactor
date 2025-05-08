@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.post;
 
-import com.example.spot.legacy.domain.PostComment;
+import com.example.spot.refactor.comment.domain.PostComment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
