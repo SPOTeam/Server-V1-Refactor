@@ -1,7 +1,7 @@
-package com.example.spot.legacy.domain.mapping;
+package com.example.spot.refactor.post.domain.association;
 
 import com.example.spot.refactor.member.domain.Member;
-import com.example.spot.legacy.domain.Post;
+import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

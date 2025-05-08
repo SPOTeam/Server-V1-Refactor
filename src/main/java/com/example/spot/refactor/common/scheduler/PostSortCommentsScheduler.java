@@ -1,6 +1,6 @@
 package com.example.spot.refactor.common.scheduler;
 
-import com.example.spot.legacy.domain.Post;
+import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.legacy.domain.PostScheduleComments;
 import com.example.spot.legacy.repository.PostRepository;
 import com.example.spot.legacy.repository.PostScheduleCommentsRepository;

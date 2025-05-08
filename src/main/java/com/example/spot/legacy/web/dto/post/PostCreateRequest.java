@@ -1,6 +1,6 @@
 package com.example.spot.legacy.web.dto.post;
 
-import com.example.spot.legacy.domain.enums.Board;
+import com.example.spot.refactor.post.domain.enums.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

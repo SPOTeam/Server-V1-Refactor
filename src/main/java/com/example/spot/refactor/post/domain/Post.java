@@ -1,8 +1,12 @@
-package com.example.spot.legacy.domain;
+package com.example.spot.refactor.post.domain;
 
+import com.example.spot.legacy.domain.LikedPost;
+import com.example.spot.legacy.domain.PostComment;
+import com.example.spot.legacy.domain.PostImage;
+import com.example.spot.legacy.domain.PostReport;
 import com.example.spot.refactor.common.entity.BaseEntity;
-import com.example.spot.legacy.domain.enums.Board;
-import com.example.spot.legacy.domain.mapping.MemberScrap;
+import com.example.spot.refactor.post.domain.enums.Board;
+import com.example.spot.refactor.post.domain.association.MemberScrap;
 import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
 import com.example.spot.refactor.member.domain.Member;
 

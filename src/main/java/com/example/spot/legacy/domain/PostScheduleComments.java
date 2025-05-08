@@ -1,6 +1,8 @@
 package com.example.spot.legacy.domain;
 
 import com.example.spot.refactor.common.entity.BaseEntity;
+import com.example.spot.refactor.post.domain.Post;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
