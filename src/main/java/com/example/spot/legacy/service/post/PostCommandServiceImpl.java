@@ -3,7 +3,7 @@ package com.example.spot.legacy.service.post;
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.common.api.exception.handler.PostHandler;
-import com.example.spot.legacy.domain.LikedPost;
+import com.example.spot.refactor.post.domain.association.LikedPost;
 import com.example.spot.refactor.comment.domain.association.LikedPostComment;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.post.domain.Post;
