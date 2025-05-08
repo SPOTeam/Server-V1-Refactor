@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.post;
+package com.example.spot.refactor.post.application;
 
 import com.example.spot.refactor.comment.domain.association.LikedPostCommentRepository;
 import lombok.RequiredArgsConstructor;

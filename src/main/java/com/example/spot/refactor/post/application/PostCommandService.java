@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.post;
+package com.example.spot.refactor.post.application;
 
 import com.example.spot.refactor.comment.presentation.dto.CommentCreateRequest;
 import com.example.spot.refactor.comment.presentation.dto.CommentCreateResponse;

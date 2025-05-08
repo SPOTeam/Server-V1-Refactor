@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.post;
+package com.example.spot.refactor.post.application;
 
 public interface LikedPostQueryService {
     long countByPostId(Long postId);
