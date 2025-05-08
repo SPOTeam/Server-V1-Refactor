@@ -1,6 +1,4 @@
-package com.example.spot.legacy.repository.querydsl;
-
-import com.example.spot.refactor.comment.domain.PostComment;
+package com.example.spot.refactor.comment.domain;
 
 import java.util.List;
 

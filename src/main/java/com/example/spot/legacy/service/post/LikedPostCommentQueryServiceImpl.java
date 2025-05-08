@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.repository.LikedPostCommentRepository;
+import com.example.spot.refactor.comment.domain.association.LikedPostCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

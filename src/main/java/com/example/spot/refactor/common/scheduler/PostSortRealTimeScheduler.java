@@ -3,7 +3,7 @@ package com.example.spot.refactor.common.scheduler;
 import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.refactor.post.domain.schedule.PostScheduleRealTime;
 import com.example.spot.refactor.post.domain.PostRepository;
-import com.example.spot.legacy.repository.PostScheduleRealTimeRepository;
+import com.example.spot.refactor.post.domain.schedule.PostScheduleRealTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
