@@ -1,4 +1,4 @@
-package com.example.spot.legacy.repository;
+package com.example.spot.refactor.report;
 
 import com.example.spot.refactor.report.domain.PostReport;
 import com.example.spot.refactor.post.domain.enums.PostStatus;

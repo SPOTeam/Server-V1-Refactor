@@ -17,7 +17,7 @@ import com.example.spot.refactor.post.domain.association.LikedPostRepository;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.post.domain.association.MemberScrapRepository;
 import com.example.spot.refactor.comment.domain.PostCommentRepository;
-import com.example.spot.legacy.repository.PostReportRepository;
+import com.example.spot.refactor.report.PostReportRepository;
 import com.example.spot.refactor.post.domain.PostRepository;
 import com.example.spot.legacy.web.dto.post.CommentCreateRequest;
 import com.example.spot.legacy.web.dto.post.CommentCreateResponse;

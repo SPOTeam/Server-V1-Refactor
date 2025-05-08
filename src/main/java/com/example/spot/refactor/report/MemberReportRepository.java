@@ -1,4 +1,4 @@
-package com.example.spot.legacy.repository;
+package com.example.spot.refactor.report;
 
 import com.example.spot.refactor.report.domain.MemberReport;
 import org.springframework.data.jpa.repository.JpaRepository;

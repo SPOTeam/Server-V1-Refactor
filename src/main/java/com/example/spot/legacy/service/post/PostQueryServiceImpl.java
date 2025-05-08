@@ -9,7 +9,7 @@ import com.example.spot.refactor.post.domain.enums.PostStatus;
 import com.example.spot.refactor.post.domain.association.MemberScrap;
 import com.example.spot.refactor.post.domain.association.MemberScrapRepository;
 import com.example.spot.refactor.comment.domain.PostCommentRepository;
-import com.example.spot.legacy.repository.PostReportRepository;
+import com.example.spot.refactor.report.PostReportRepository;
 import com.example.spot.refactor.post.domain.PostRepository;
 import com.example.spot.legacy.web.dto.post.CommentDetailResponse;
 import com.example.spot.legacy.web.dto.post.CommentResponse;
