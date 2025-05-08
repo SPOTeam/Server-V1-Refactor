@@ -1,7 +1,7 @@
 package com.example.spot.refactor.member.presentation.dto;
 
 import com.example.spot.refactor.member.domain.enums.LoginType;
-import com.example.spot.legacy.domain.enums.Reason;
+import com.example.spot.refactor.member.domain.enums.Reason;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.member.presentation.dto.token.TokenResponseDTO.TokenDTO;

@@ -6,7 +6,7 @@ import com.example.spot.refactor.common.api.exception.handler.MemberHandler;
 import com.example.spot.refactor.member.domain.association.StudyJoinReason;
 import com.example.spot.refactor.member.domain.enums.Gender;
 import com.example.spot.refactor.member.domain.enums.LoginType;
-import com.example.spot.legacy.domain.enums.Reason;
+import com.example.spot.refactor.member.domain.enums.Reason;
 import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.enums.ThemeType;
 import com.example.spot.refactor.member.domain.association.StudyJoinReasonRepository;
