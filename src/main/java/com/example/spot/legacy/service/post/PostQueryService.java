@@ -1,11 +1,11 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.web.dto.post.CommentResponse;
-import com.example.spot.legacy.web.dto.post.PostAnnouncementResponse;
-import com.example.spot.legacy.web.dto.post.PostBest5Response;
-import com.example.spot.legacy.web.dto.post.PostPagingResponse;
-import com.example.spot.legacy.web.dto.post.PostRepresentativeResponse;
-import com.example.spot.legacy.web.dto.post.PostSingleResponse;
+import com.example.spot.refactor.comment.presentation.dto.CommentResponse;
+import com.example.spot.refactor.post.presentation.controller.PostAnnouncementResponse;
+import com.example.spot.refactor.post.presentation.dto.PostBest5Response;
+import com.example.spot.refactor.post.presentation.dto.PostPagingResponse;
+import com.example.spot.refactor.post.presentation.dto.PostRepresentativeResponse;
+import com.example.spot.refactor.post.presentation.dto.PostSingleResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface PostQueryService {

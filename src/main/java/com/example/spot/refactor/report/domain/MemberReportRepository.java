@@ -1,6 +1,5 @@
-package com.example.spot.refactor.report;
+package com.example.spot.refactor.report.domain;
 
-import com.example.spot.refactor.report.domain.MemberReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,16 +1,16 @@
 package com.example.spot.legacy.service.post;
 
-import com.example.spot.legacy.web.dto.post.CommentCreateRequest;
-import com.example.spot.legacy.web.dto.post.CommentCreateResponse;
-import com.example.spot.legacy.web.dto.post.CommentLikeResponse;
-import com.example.spot.legacy.web.dto.post.PostCreateRequest;
-import com.example.spot.legacy.web.dto.post.PostCreateResponse;
-import com.example.spot.legacy.web.dto.post.PostLikeResponse;
-import com.example.spot.legacy.web.dto.post.PostReportResponse;
-import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
-import com.example.spot.legacy.web.dto.post.ScrapAllDeleteRequest;
-import com.example.spot.legacy.web.dto.post.ScrapPostResponse;
-import com.example.spot.legacy.web.dto.post.ScrapsPostDeleteResponse;
+import com.example.spot.refactor.comment.presentation.dto.CommentCreateRequest;
+import com.example.spot.refactor.comment.presentation.dto.CommentCreateResponse;
+import com.example.spot.refactor.comment.presentation.dto.CommentLikeResponse;
+import com.example.spot.refactor.post.presentation.dto.PostCreateRequest;
+import com.example.spot.refactor.post.presentation.dto.PostCreateResponse;
+import com.example.spot.refactor.post.presentation.dto.PostLikeResponse;
+import com.example.spot.refactor.report.presentation.dto.PostReportResponse;
+import com.example.spot.refactor.post.presentation.dto.PostUpdateRequest;
+import com.example.spot.refactor.post.presentation.dto.ScrapAllDeleteRequest;
+import com.example.spot.refactor.post.presentation.dto.ScrapPostResponse;
+import com.example.spot.refactor.post.presentation.dto.ScrapsPostDeleteResponse;
 
 
 public interface PostCommandService {

@@ -22,7 +22,7 @@ import com.example.spot.refactor.member.domain.enums.Status;
 import com.example.spot.refactor.study.domain.aggregate.StudyMember;
 import com.example.spot.refactor.vote.domain.*;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.refactor.report.MemberReportRepository;
+import com.example.spot.refactor.report.domain.MemberReportRepository;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.notification.domain.NotificationRepository;

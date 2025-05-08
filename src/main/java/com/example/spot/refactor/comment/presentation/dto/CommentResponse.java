@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.post;
+package com.example.spot.refactor.comment.presentation.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

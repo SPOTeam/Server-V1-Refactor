@@ -1,6 +1,5 @@
-package com.example.spot.refactor.report;
+package com.example.spot.refactor.report.domain;
 
-import com.example.spot.refactor.report.domain.PostReport;
 import com.example.spot.refactor.post.domain.enums.PostStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

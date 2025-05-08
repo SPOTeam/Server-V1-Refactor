@@ -7,7 +7,7 @@ import com.example.spot.refactor.report.domain.PostReport;
 import com.example.spot.refactor.common.entity.BaseEntity;
 import com.example.spot.refactor.post.domain.enums.Board;
 import com.example.spot.refactor.post.domain.association.MemberScrap;
-import com.example.spot.legacy.web.dto.post.PostUpdateRequest;
+import com.example.spot.refactor.post.presentation.dto.PostUpdateRequest;
 import com.example.spot.refactor.member.domain.Member;
 
 import jakarta.persistence.*;
