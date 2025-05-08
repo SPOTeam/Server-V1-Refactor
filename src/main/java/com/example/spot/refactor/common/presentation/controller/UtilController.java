@@ -2,7 +2,7 @@ package com.example.spot.refactor.common.presentation.controller;
 
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
-import com.example.spot.legacy.service.s3.S3ImageService;
+import com.example.spot.refactor.common.application.s3.S3ImageService;
 import com.example.spot.refactor.common.presentation.dto.util.response.ImageResponse;
 import com.example.spot.refactor.common.presentation.dto.util.response.ImageResponse.ImageUploadResponse;
 import io.swagger.v3.oas.annotations.Operation;

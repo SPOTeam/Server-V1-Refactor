@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.s3;
+package com.example.spot.refactor.common.application.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

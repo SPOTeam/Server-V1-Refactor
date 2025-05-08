@@ -30,7 +30,7 @@ import com.example.spot.refactor.post.presentation.dto.PostUpdateRequest;
 import com.example.spot.refactor.post.presentation.dto.ScrapAllDeleteRequest;
 import com.example.spot.refactor.post.presentation.dto.ScrapPostResponse;
 import com.example.spot.refactor.post.presentation.dto.ScrapsPostDeleteResponse;
-import com.example.spot.legacy.service.s3.S3ImageService;
+import com.example.spot.refactor.common.application.s3.S3ImageService;
 import com.example.spot.refactor.common.presentation.dto.util.response.ImageResponse.ImageUploadResponse;
 import com.example.spot.refactor.common.presentation.dto.util.response.ImageResponse.Images;
 import lombok.RequiredArgsConstructor;

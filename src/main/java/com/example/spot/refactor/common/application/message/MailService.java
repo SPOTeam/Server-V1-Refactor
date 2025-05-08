@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.message;
+package com.example.spot.refactor.common.application.message;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

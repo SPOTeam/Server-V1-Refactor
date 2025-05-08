@@ -30,7 +30,7 @@ import com.example.spot.refactor.common.security.utils.RSAUtils;
 import com.example.spot.refactor.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
-import com.example.spot.legacy.service.message.MailService;
+import com.example.spot.refactor.common.application.message.MailService;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.refactor.member.presentation.dto.naver.NaverCallback;
 import com.example.spot.refactor.member.presentation.dto.naver.NaverMember;

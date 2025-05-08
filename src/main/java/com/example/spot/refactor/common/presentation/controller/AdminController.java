@@ -4,7 +4,7 @@ import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.common.api.exception.GeneralException;
-import com.example.spot.legacy.service.admin.AdminService;
+import com.example.spot.refactor.common.application.admin.AdminService;
 import com.example.spot.refactor.common.presentation.dto.admin.AdminResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

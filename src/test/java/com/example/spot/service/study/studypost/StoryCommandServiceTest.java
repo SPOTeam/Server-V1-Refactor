@@ -19,7 +19,7 @@ import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
 import com.example.spot.refactor.notification.domain.NotificationRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.study.application.StudyPostCommandServiceImpl;
-import com.example.spot.legacy.service.s3.S3ImageService;
+import com.example.spot.refactor.common.application.s3.S3ImageService;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.request.StudyPostRequestDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyPostCommentResponseDTO;

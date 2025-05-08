@@ -1,4 +1,4 @@
-package com.example.spot.legacy.service.admin;
+package com.example.spot.refactor.common.application.admin;
 
 import com.example.spot.refactor.common.api.code.status.ErrorStatus;
 import com.example.spot.refactor.common.api.exception.handler.MemberHandler;

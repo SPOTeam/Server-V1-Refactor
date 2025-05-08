@@ -42,7 +42,7 @@ import com.example.spot.refactor.study.presentation.dto.response.StudyTerminatio
 import com.example.spot.refactor.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
-import com.example.spot.legacy.service.s3.S3ImageService;
+import com.example.spot.refactor.common.application.s3.S3ImageService;
 import com.example.spot.refactor.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.refactor.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.refactor.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;

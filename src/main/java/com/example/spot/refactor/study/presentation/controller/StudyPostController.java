@@ -3,7 +3,7 @@ package com.example.spot.refactor.study.presentation.controller;
 import com.example.spot.refactor.common.api.ApiResponse;
 import com.example.spot.refactor.common.api.code.status.SuccessStatus;
 import com.example.spot.refactor.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.legacy.service.s3.S3ImageService;
+import com.example.spot.refactor.common.application.s3.S3ImageService;
 import com.example.spot.refactor.study.application.StudyPostCommandService;
 import com.example.spot.refactor.study.application.StudyPostQueryService;
 import com.example.spot.refactor.study.domain.validation.annotation.ExistStudy;
