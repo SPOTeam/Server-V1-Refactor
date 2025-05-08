@@ -16,7 +16,7 @@ import com.example.spot.refactor.story.domain.enums.StoryCategory;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.legacy.repository.NotificationRepository;
+import com.example.spot.refactor.notification.domain.NotificationRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.study.application.StudyPostCommandServiceImpl;
 import com.example.spot.legacy.service.s3.S3ImageService;

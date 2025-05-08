@@ -15,7 +15,7 @@ import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.refactor.study.domain.Study;
 import com.example.spot.refactor.member.domain.MemberRepository;
 import com.example.spot.refactor.study.domain.repository.StudyMemberRepository;
-import com.example.spot.legacy.repository.NotificationRepository;
+import com.example.spot.refactor.notification.domain.NotificationRepository;
 import com.example.spot.refactor.study.domain.StudyRepository;
 import com.example.spot.refactor.common.security.utils.SecurityUtils;
 import com.example.spot.legacy.service.s3.S3ImageService;

@@ -12,7 +12,7 @@ import com.example.spot.refactor.member.domain.Member;
 import com.example.spot.refactor.notification.domain.Notification;
 import com.example.spot.refactor.notification.domain.enums.NotifyType;
 import com.example.spot.refactor.study.domain.Study;
-import com.example.spot.legacy.repository.NotificationRepository;
+import com.example.spot.refactor.notification.domain.NotificationRepository;
 import com.example.spot.legacy.service.notification.NotificationQueryServiceImpl;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.NotificationListDTO;
 import com.example.spot.legacy.web.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;

@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.spot.legacy.repository.NotificationRepository;
+import com.example.spot.refactor.notification.domain.NotificationRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
