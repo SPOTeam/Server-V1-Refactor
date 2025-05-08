@@ -1,7 +1,7 @@
 package com.example.spot.refactor.common.scheduler;
 
 import com.example.spot.legacy.service.admin.AdminService;
-import com.example.spot.legacy.web.dto.admin.AdminResponseDTO;
+import com.example.spot.refactor.common.presentation.dto.admin.AdminResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

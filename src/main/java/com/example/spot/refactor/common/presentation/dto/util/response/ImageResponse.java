@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.util.response;
+package com.example.spot.refactor.common.presentation.dto.util.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

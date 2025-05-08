@@ -1,4 +1,4 @@
-package com.example.spot.legacy.web.dto.admin;
+package com.example.spot.refactor.common.presentation.dto.admin;
 
 import com.example.spot.refactor.member.domain.Member;
 import lombok.AccessLevel;

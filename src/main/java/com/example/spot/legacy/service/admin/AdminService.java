@@ -1,6 +1,6 @@
 package com.example.spot.legacy.service.admin;
 
-import com.example.spot.legacy.web.dto.admin.AdminResponseDTO;
+import com.example.spot.refactor.common.presentation.dto.admin.AdminResponseDTO;
 
 public interface AdminService {
 
