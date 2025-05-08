@@ -1,6 +1,4 @@
-package com.example.spot.legacy.repository.querydsl;
-
-import com.example.spot.refactor.post.domain.Post;
+package com.example.spot.refactor.post.domain;
 
 import java.util.List;
 

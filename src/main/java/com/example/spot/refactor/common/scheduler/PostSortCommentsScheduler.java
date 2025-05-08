@@ -2,7 +2,7 @@ package com.example.spot.refactor.common.scheduler;
 
 import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.refactor.post.domain.schedule.PostScheduleComments;
-import com.example.spot.legacy.repository.PostRepository;
+import com.example.spot.refactor.post.domain.PostRepository;
 import com.example.spot.legacy.repository.PostScheduleCommentsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;

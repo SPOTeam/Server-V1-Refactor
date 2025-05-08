@@ -1,6 +1,5 @@
-package com.example.spot.legacy.repository;
+package com.example.spot.refactor.post.domain.association;
 
-import com.example.spot.refactor.post.domain.association.LikedPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package com.example.spot.legacy.repository;
+package com.example.spot.refactor.post.domain.association;
 
 import com.example.spot.refactor.post.domain.enums.Board;
-import com.example.spot.refactor.post.domain.association.MemberScrap;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

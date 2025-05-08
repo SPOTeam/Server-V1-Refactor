@@ -1,11 +1,11 @@
-package com.example.spot.legacy.repository.querydsl.impl;
+package com.example.spot.refactor.post.infrastructure;
 
 import com.example.spot.refactor.post.domain.Post;
 import com.example.spot.legacy.domain.QLikedPost;
 import com.example.spot.legacy.domain.QPost;
 import com.example.spot.legacy.domain.QPostComment;
 import com.example.spot.refactor.post.domain.enums.Board;
-import com.example.spot.legacy.repository.querydsl.PostRepositoryCustom;
+import com.example.spot.refactor.post.domain.PostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
