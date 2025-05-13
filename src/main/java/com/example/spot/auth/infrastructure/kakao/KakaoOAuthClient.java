@@ -1,4 +1,4 @@
-package com.example.spot.auth.application.legacy;
+package com.example.spot.auth.infrastructure.kakao;
 
 import com.example.spot.auth.presentation.dto.kakao.KaKaoOAuthToken;
 import com.example.spot.auth.presentation.dto.kakao.KaKaoOAuthToken.KaKaoOAuthTokenDTO;
@@ -21,11 +21,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-@Deprecated
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KaKaoOAuthService {
+public class KakaoOAuthClient {
 
     @Value("${spring.OAuth2.kakao.url}")
     private String KAKAO_SNS_URL;

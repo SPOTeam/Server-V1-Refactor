@@ -74,54 +74,6 @@ public class MemberController {
     }
 
 
-    @Tag(name = "테스트 용 API", description = "테스트 용 API")
-    @Operation(summary = "!테스트 용! [회원 가입 및 로그인] 카카오 로그인 및 회원가입 ",
-        description = """
-            ## [회원 가입 및 로그인] 카카오 로그인의 모든 과정이 구현되어 있습니다. 
-            가입 테스트를 위해 구현한 테스트 용 카카오 로그인입니다. 
-            서버 파트 및 테스트를 원하는 분들은 본 API로 회원 가입 및 로그인을 진행하시면 됩니다. 
-            Swagger에서 요청하는 것이 아닌, 브라우저에서 직접 요청해주세요. 
-            ## www.teamspot.site/spot/login/kakao 
-            ## localhost:8080/spot/login/kakao  
-            
-           생성된 회원의 액세스 토큰과 Email이 반환 됩니다. """)
-    @GetMapping("/login/kakao")
-    public void login() throws IOException {
-        memberService.redirectURL();
-    }
-
-    @Tag(name = "테스트 용 API", description = "테스트 용 API")
-    @Operation(summary = "!서버 용! [회원 가입 및 로그인] 카카오 로그인 및 회원가입 리다이렉트용 API ",
-        description = """
-            ## [회원 가입 및 로그인] 카카오 로그인의 모든 과정이 구현되어 있습니다. 
-            가입 테스트를 위해 구현한 테스트 용 리다이렉트 URL입니다. 
-            서버 파트 및 테스트를 원하는 분들은 본 API로 회원 가입 및 로그인을 진행하시면 됩니다. 
-            Swagger에서 요청하는 것이 아닌, 브라우저에서 직접 요청해주세요. 
-            ## www.teamspot.site/spot/login/kakao
-            ## localhost:8080/spot/login/kakao  
-            
-           생성된 회원의 액세스 토큰과 Email이 반환 됩니다. """)
-    @GetMapping("/members/sign-in/kakao/redirect")
-    public ApiResponse<MemberResponseDTO.SocialLoginSignInDTO> redirectURL(@RequestParam String code) throws IOException {
-        SocialLoginSignInDTO dto = memberService.signUpByKAKAOForTest(code);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_CREATED, dto);
-    }
-
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @Operation(summary = "[회원 가입 및 로그인] 카카오 로그인 및 회원가입. ",
-        description = """
-            ## [회원 가입 및 로그인] 프론트에서 발급 밭은 액세스 토큰을 통해 회원 가입 및 로그인을 진행합니다. 
-            연동을 위해 구현된 API입니다. 발급 받은 accessToken을 Param에 첨부하여 API를 호출해주세요.
-            생성된 회원의 액세스 토큰과 Email이 반환 됩니다. 
-            """)
-
-    @Parameter(name = "accessToken", description = "카카오 액세스 토큰을 입력 해 주세요. ", required = true)
-    @GetMapping("/members/sign-in/kakao")
-    public ApiResponse<MemberResponseDTO.SocialLoginSignInDTO> signInByKaKao(@RequestParam String accessToken) throws JsonProcessingException {
-        SocialLoginSignInDTO dto = memberService.signUpByKAKAO(accessToken);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_CREATED, dto);
-    }
-
     @Tag(name = "회원 관리 API", description = "회원 관리 API")
     @PostMapping("/members/theme")
     @Operation(summary = "[회원 정보 업데이트] 관심 분야 입력 및 수정",
