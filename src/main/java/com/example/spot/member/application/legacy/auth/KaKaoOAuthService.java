@@ -1,4 +1,4 @@
-package com.example.spot.member.application.auth;
+package com.example.spot.member.application.legacy.auth;
 
 import com.example.spot.member.presentation.dto.kakao.KaKaoOAuthToken;
 import com.example.spot.member.presentation.dto.kakao.KaKaoOAuthToken.KaKaoOAuthTokenDTO;
@@ -21,6 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Deprecated
 @Service
 @Slf4j
 @RequiredArgsConstructor

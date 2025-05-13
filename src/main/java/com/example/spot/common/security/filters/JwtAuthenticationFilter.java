@@ -2,9 +2,9 @@ package com.example.spot.common.security.filters;
 
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.auth.TempUserDetails;
-import com.example.spot.member.application.MemberService;
+import com.example.spot.member.application.legacy.MemberService;
 import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.member.application.UserDetailsServiceCustom;
+import com.example.spot.member.application.legacy.UserDetailsServiceCustom;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

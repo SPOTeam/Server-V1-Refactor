@@ -1,4 +1,4 @@
-package com.example.spot.member.application;
+package com.example.spot.member.application.legacy;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
@@ -18,7 +18,7 @@ import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberReasonDTO
 import com.example.spot.member.domain.auth.CustomUserDetails;
 import com.example.spot.member.domain.auth.RefreshToken;
 import com.example.spot.member.domain.auth.RefreshTokenRepository;
-import com.example.spot.member.application.auth.KaKaoOAuthService;
+import com.example.spot.member.application.legacy.auth.KaKaoOAuthService;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.RegionDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberSignInDTO;
@@ -63,6 +63,7 @@ import java.util.UUID;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
+@Deprecated
 public class MemberServiceImpl implements MemberService {
 
     @PersistenceContext

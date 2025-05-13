@@ -1,4 +1,4 @@
-package com.example.spot.member.application.auth;
+package com.example.spot.member.application.legacy.auth;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 public class NaverOAuthService {

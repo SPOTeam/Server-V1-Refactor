@@ -1,4 +1,4 @@
-package com.example.spot.member.application.auth;
+package com.example.spot.member.application.legacy.auth;
 
 
 import com.example.spot.common.api.code.status.ErrorStatus;
@@ -59,6 +59,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 @Transactional

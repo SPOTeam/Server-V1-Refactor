@@ -1,4 +1,4 @@
-package com.example.spot.member.application.auth;
+package com.example.spot.member.application.legacy.auth;
 
 import com.example.spot.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO;
 import com.example.spot.member.presentation.dto.rsa.Rsa;
@@ -12,6 +12,7 @@ import com.example.spot.member.presentation.dto.token.TokenResponseDTO.TokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Deprecated
 public interface AuthService {
 
     // 리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급

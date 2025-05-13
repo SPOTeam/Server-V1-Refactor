@@ -1,4 +1,4 @@
-package com.example.spot.member.application;
+package com.example.spot.member.application.legacy;
 
 
 import com.example.spot.member.domain.Member;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
+@Deprecated
 public interface MemberService extends UserDetailsService {
     // 테스트 용 멤버 생성
     MemberResponseDTO.MemberTestDTO testMember(MemberInfoListDTO memberInfoListDTO);
