@@ -6,7 +6,7 @@ import com.example.spot.common.security.oauth.CustomOAuth2UserService;
 import com.example.spot.common.security.oauth.CustomOAuthSuccessHandler;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.application.legacy.MemberService;
-import com.example.spot.member.application.legacy.UserDetailsServiceCustom;
+import com.example.spot.auth.application.refactor.UserDetailsServiceCustom;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;

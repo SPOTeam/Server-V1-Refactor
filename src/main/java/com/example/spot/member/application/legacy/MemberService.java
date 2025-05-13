@@ -18,20 +18,8 @@ public interface MemberService extends UserDetailsService {
     // 테스트 용 멤버 생성
     MemberResponseDTO.MemberTestDTO testMember(MemberInfoListDTO memberInfoListDTO);
 
-
-
-    Member findMemberByEmail(String email);
-
-    boolean isMemberExists(String email);
-
-    MemberResponseDTO.MemberUpdateDTO updateTheme(Long memberId, MemberThemeDTO requestDTO);
-    MemberResponseDTO.MemberUpdateDTO updateRegion(Long memberId, MemberRegionDTO requestDTO);
     MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberUpdateDTO requestDTO);
-    MemberResponseDTO.MemberUpdateDTO updateStudyReason(Long memberId, MemberReasonDTO requestDTO);
 
-    MemberResponseDTO.MemberThemeDTO getThemes(Long memberId);
-    MemberResponseDTO.MemberRegionDTO getRegions(Long memberId);
-    MemberResponseDTO.MemberStudyReasonDTO getStudyReasons(Long memberId);
     MemberResponseDTO.MemberUpdateDTO toAdmin(Long memberId);
 
     @Transactional

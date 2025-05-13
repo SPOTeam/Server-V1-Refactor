@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.controller;
+package com.example.spot.member.presentation.controller.legacy;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
@@ -9,19 +9,15 @@ import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberStudyReasonDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberTestDTO;
-import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,7 +29,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.spot.auth.presentation.dto.google.GoogleExampleResponse.EXAMPLE_RESPONSE;
@@ -74,35 +69,7 @@ public class MemberController {
     }
 
 
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @PostMapping("/members/theme")
-    @Operation(summary = "[회원 정보 업데이트] 관심 분야 입력 및 수정",
-        description = """
-            ## [회원 정보 업데이트] 해당하는 회원의 관심 분야를 입력 및 수정 합니다.
-            테마를 리스트 형식으로 입력 받습니다.
-            대상 회원의 식별 아이디와 수정 시각이 반환 됩니다. 
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberUpdateDTO> updateThemes(
-        @RequestBody @Valid MemberRequestDTO.MemberThemeDTO requestDTO){
-        MemberUpdateDTO memberUpdateDTO = memberService.updateTheme(SecurityUtils.getCurrentUserId(), requestDTO);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_THEME_UPDATE, memberUpdateDTO);
-    }
 
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @PostMapping("/members/region")
-    @Operation(summary = "[회원 정보 업데이트] 관심 지역 입력 및 수정",
-        description = """
-            ## [회원 정보 업데이트] 해당하는 회원의 관심 지역을 입력 및 수정 합니다.
-            지역 코드를 리스트 형식으로 입력 받습니다.
-            대상 회원의 식별 아이디와 수정 시각이 반환 됩니다. 
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberUpdateDTO> updateRegions(
-        @RequestBody @Valid MemberRequestDTO.MemberRegionDTO requestDTO){
-        MemberUpdateDTO memberUpdateDTO = memberService.updateRegion(SecurityUtils.getCurrentUserId(), requestDTO);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_REGION_UPDATE, memberUpdateDTO);
-    }
     @Tag(name = "회원 관리 API", description = "회원 관리 API")
     @PostMapping("/members/user-info")
     @Operation(summary = "[회원 정보 업데이트] 개인 정보 입력 및 수정",
@@ -118,72 +85,7 @@ public class MemberController {
         return ApiResponse.onSuccess(SuccessStatus._MEMBER_INFO_UPDATE, memberUpdateDTO);
     }
 
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @PostMapping("/members/study-reasons")
-    @Operation(summary = "[회원 정보 업데이트] 스터디 이유 입력 및 수정",
-        description = """
-            ## [회원 정보 업데이트] 해당하는 회원의 스터디 이유를 입력 및 수정 합니다.
-            업데이트 할 회원의 정보를 입력 받습니다.
-            
-            꾸준한 학습, 습관이필요해요(1) \n
-            상호 피드백이 필요해요(2), \n
-            네트워킹을 하고 싶어요(3), \n
-            자격증을 취득하고 싶어요(4), \n
-            대회에 참가하여 수상하고 싶어요(5),\n 
-            다양한 의견을 나누고 싶어요(6); \n
-            
-            이유에 해당하는 숫자를 리스트 형식으로 입력 받습니다.
-            
-            대상 회원의 식별 아이디와 수정 시각이 반환 됩니다. 
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberUpdateDTO> updateMemberStudyReason(
-        @RequestBody @Valid MemberRequestDTO.MemberReasonDTO requestDTO){
-        MemberUpdateDTO memberUpdateDTO = memberService.updateStudyReason(SecurityUtils.getCurrentUserId(), requestDTO);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_INFO_UPDATE, memberUpdateDTO);
-    }
 
-    @Tag(name = "회원 조회 API", description = "회원 조회 API")
-    @GetMapping("/members/theme")
-    @Operation(summary = "[회원 정보 조회] 관심 분야 조회",
-        description = """
-            ## [회원 정보 조회] 해당하는 회원의 관심 분야를 조회 합니다.
-            
-            관심 분야를 리스트 형식으로 응답합니다.
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberResponseDTO.MemberThemeDTO> getThemes(){
-        MemberResponseDTO.MemberThemeDTO memberThemeDTO = memberService.getThemes(SecurityUtils.getCurrentUserId());
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_THEME_UPDATE, memberThemeDTO);
-    }
-
-    @Tag(name = "회원 조회 API", description = "회원 조회 API")
-    @GetMapping("/members/region")
-    @Operation(summary = "[회원 정보 조회] 관심 지역 조회",
-        description = """
-            ## [회원 정보 조회] 해당하는 회원의 관심 지역을 조회 합니다.
-            
-            관심 지역을 리스트 형식으로 응답합니다.
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberResponseDTO.MemberRegionDTO> getRegions(){
-        MemberRegionDTO memberRegionDTO = memberService.getRegions(SecurityUtils.getCurrentUserId());
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_REGION_UPDATE, memberRegionDTO);
-    }
-
-    @Tag(name = "회원 조회 API", description = "회원 조회 API")
-    @GetMapping("/members/study-reasons")
-    @Operation(summary = "[회원 정보 조회] 스터디 이유 조회",
-        description = """
-            ## [회원 정보 조회] 해당하는 회원의 스터디 이유를 조회 합니다.
-            
-            스터디 이유를 리스트 형식으로 응답합니다.
-            """,
-        security = @SecurityRequirement(name = "accessToken"))
-    public ApiResponse<MemberResponseDTO.MemberStudyReasonDTO> getStudyReasons(){
-        MemberStudyReasonDTO memberStudyReasonDTO = memberService.getStudyReasons(SecurityUtils.getCurrentUserId());
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_FOUND, memberStudyReasonDTO);
-    }
 
 
     @Tag(name = "구글 로그인 API", description = "구글 OAuth2 로그인 API")

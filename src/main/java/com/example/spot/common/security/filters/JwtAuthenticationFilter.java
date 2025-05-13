@@ -4,7 +4,7 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.auth.domain.TempUserDetails;
 import com.example.spot.member.application.legacy.MemberService;
 import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.member.application.legacy.UserDetailsServiceCustom;
+import com.example.spot.auth.application.refactor.UserDetailsServiceCustom;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

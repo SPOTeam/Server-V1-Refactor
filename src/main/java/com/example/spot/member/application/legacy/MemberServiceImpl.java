@@ -66,25 +66,12 @@ import java.util.UUID;
 @Deprecated
 public class MemberServiceImpl implements MemberService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    // OAuth
-    private final KakaoOAuthClient kakaoOAuthClient;
-
     // JWT
     private final JwtTokenProvider jwtTokenProvider;
 
-    // Response
-    private final HttpServletResponse response;
 
     // Repository
     private final MemberRepository memberRepository;
-    private final ThemeRepository themeRepository;
-    private final RegionRepository regionRepository;
-    private final MemberThemeRepository memberThemeRepository;
-    private final PreferredRegionRepository preferredRegionRepository;
-    private final StudyJoinReasonRepository studyJoinReasonRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
 
@@ -110,94 +97,30 @@ public class MemberServiceImpl implements MemberService {
 
 
     /**
-     * 회원의 테마 정보를 업데이트합니다.
-     * @param memberId 회원 ID
-     * @param requestDTO 업데이트할 테마 정보
-     * @return 업데이트된 회원 정보와 업데이트 시간
-     * @throws MemberHandler 회원이 존재하지 않을 경우
-     * @throws GeneralException 테마가 존재하지 않을 경우
+     * 회원의 프로필을 업데이트 합니다.
+     * @param memberId 변경할 회원 ID
+     * @param requestDTO 변경할 회원 정보
+     * @return 변경 된 회원 ID와 변경 시간
+     * @throws MemberHandler 회원을 찾을 수 없을 경우
      */
     @Override
-    public MemberUpdateDTO updateTheme(Long memberId, MemberThemeDTO requestDTO) {
+    public MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberRequestDTO.MemberUpdateDTO requestDTO) {
         // 회원 조회
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 테마 정보 조회
-        List<Theme> themes = requestDTO.getThemes().stream()
-            .map(themeType -> themeRepository.findByThemeType(themeType).orElseThrow(() -> new GeneralException(ErrorStatus._THEME_NOT_FOUND)))
-            .toList();
-
-        // MemberTheme 객체 생성
-        List<MemberTheme> memberThemes = themes.stream()
-            .map(theme -> MemberTheme.builder().member(member).theme(theme).build())
-            .toList();
-
-        // 기존의 MemberTheme 삭제
-        if (memberThemeRepository.existsByMemberId(member.getId()))
-            memberThemeRepository.deleteByMemberId(member.getId());
-
-        // 새로운 MemberTheme과 PreferredRegion을 저장
-        memberThemeRepository.saveAll(memberThemes);
+                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 회원 정보 업데이트
-        member.updateThemes(memberThemes);
+        member.updateInfo(requestDTO);
 
         // 회원 정보 저장
         memberRepository.save(member);
 
         // 업데이트된 회원 정보 반환
-        return MemberUpdateDTO.builder()
-            .memberId(member.getId())
-            .updatedAt(member.getUpdatedAt())
-            .build();
+        return MemberResponseDTO.MemberUpdateDTO.builder()
+                .memberId(member.getId())
+                .updatedAt(member.getUpdatedAt())
+                .build();
     }
-
-    /**
-     * 회원의 지역 정보를 업데이트합니다.
-     * @param memberId 회원 ID
-     * @param requestDTO 업데이트할 지역 정보
-     * @return 업데이트된 회원 정보와 업데이트 시간
-     * @throws MemberHandler 회원이 존재하지 않을 경우
-     * @throws GeneralException 지역이 존재하지 않을 경우
-     *
-     */
-    @Override
-    public MemberUpdateDTO updateRegion(Long memberId, MemberRegionDTO requestDTO) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 지역 정보 조회
-        List<Region> regions = requestDTO.getRegions().stream()
-            .map(regionCode -> regionRepository.findByCode(regionCode).orElseThrow(() -> new GeneralException(ErrorStatus._REGION_NOT_FOUND)))
-            .toList();
-
-        // PreferredRegion 객체 생성
-        List<PreferredRegion> preferredRegions = regions.stream()
-            .map(region -> PreferredRegion.builder().member(member).region(region).build())
-            .toList();
-
-        // 기존의 MemberTheme과 PreferredRegion 삭제
-        if (preferredRegionRepository.existsByMemberId(member.getId()))
-            preferredRegionRepository.deleteByMemberId(member.getId());
-
-        // 새로운 PreferredRegion을 저장
-        preferredRegionRepository.saveAll(preferredRegions);
-
-        // 회원 정보 업데이트
-        member.updateRegions(preferredRegions);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
-
-        // 업데이트된 회원 정보 반환
-        return MemberUpdateDTO.builder()
-            .memberId(member.getId())
-            .updatedAt(member.getUpdatedAt())
-            .build();
-    }
-
 
     /**
      * 회원의 정보를 조회합니다.
@@ -226,199 +149,6 @@ public class MemberServiceImpl implements MemberService {
             .password(member.getPassword())
             .enabled(true)
             .authorities(authorities)
-            .build();
-    }
-
-    /**
-     * 회원의 이메일로 회원을 조회합니다.
-     * @param email 회원 이메일
-     * @return 회원 객체
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     */
-    @Override
-    public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-    }
-
-    /**
-     * 회원의 존재 여부를 확인합니다.
-     * @param email 회원 이메일
-     * @return 회원 존재 여부
-     */
-    @Override
-    public boolean isMemberExists(String email) {
-        return memberRepository.existsByEmail(email);
-    }
-
-    /**
-     * 회원의 프로필을 업데이트 합니다.
-     * @param memberId 변경할 회원 ID
-     * @param requestDTO 변경할 회원 정보
-     * @return 변경 된 회원 ID와 변경 시간
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     */
-    @Override
-    public MemberUpdateDTO updateProfile(Long memberId, MemberRequestDTO.MemberUpdateDTO requestDTO) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 회원 정보 업데이트
-        member.updateInfo(requestDTO);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
-
-        // 업데이트된 회원 정보 반환
-        return MemberUpdateDTO.builder()
-            .memberId(member.getId())
-            .updatedAt(member.getUpdatedAt())
-            .build();
-    }
-
-    /**
-     * 회원의 스터디 참여 이유를 변경합니다.
-     * @param memberId 변경할 회원 ID
-     * @param requestDTO 변경할 이유 정보
-     * @return 변경 된 회원 ID와 변경 시간
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     */
-    @Override
-    public MemberUpdateDTO updateStudyReason(Long memberId, MemberReasonDTO requestDTO) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 이유 정보 조회
-        List<Reason> reasons = requestDTO.getReasons().stream()
-            .map(Reason::fromCode)
-            .toList();
-
-        // StudyReason 객체 생성
-        List<StudyJoinReason> studyJoinReasons = reasons.stream()
-            .map(reason -> StudyJoinReason.builder().member(member).reason(reason.getCode()).build())
-            .toList();
-
-        // 기존의 StudyReason 삭제
-        if (studyJoinReasonRepository.existsByMemberId(member.getId()))
-            studyJoinReasonRepository.deleteByMemberId(member.getId());
-
-        // 새로운 StudyReason 저장
-        studyJoinReasonRepository.saveAll(studyJoinReasons);
-
-        // 회원 정보 업데이트
-        member.updateReasons(studyJoinReasons);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
-
-        // 업데이트된 회원 정보 반환
-        return MemberUpdateDTO.builder()
-            .memberId(member.getId())
-            .updatedAt(member.getUpdatedAt())
-            .build();
-    }
-
-    /**
-     * 회원의 테마 정보를 조회합니다.
-     * @param memberId 조회할 회원 ID
-     * @return 회원의 테마 정보 및 회원 ID
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     * @throws MemberHandler 회원 테마 정보를 찾을 수 없을 경우
-     */
-    @Override
-    public MemberResponseDTO.MemberThemeDTO getThemes(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        if (member.getMemberThemeList().isEmpty())
-            throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
-
-        List<Theme> themes = member.getMemberThemeList().stream()
-            .map(MemberTheme::getTheme)
-            .toList();
-
-        List<ThemeType> themeTypes = themes.stream()
-            .map(Theme::getThemeType)
-            .toList();
-
-        return MemberResponseDTO.MemberThemeDTO.builder()
-            .memberId(member.getId())
-            .themes(themeTypes)
-            .build();
-    }
-
-
-    /**
-     * 회원의 지역 정보를 조회합니다.
-     * @param memberId 조회할 회원 ID
-     * @return 회원의 지역 정보 및 회원 ID
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     * @throws MemberHandler 회원 지역 정보를 찾을 수 없을 경우
-     */
-    @Override
-    public MemberResponseDTO.MemberRegionDTO getRegions(Long memberId) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 회원의 지역 정보가 없을 경우
-        if (member.getRegions().isEmpty())
-            throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
-
-        // 회원의 지역 정보 조회
-        List<Region> regions = member.getPreferredRegionList().stream()
-            .map(PreferredRegion::getRegion)
-            .toList();
-
-        // 지역 정보 DTO로 변환
-        List<RegionDTO> codes = regions.stream()
-            .map(region -> RegionDTO.builder()
-                .province(region.getProvince())
-                .district(region.getDistrict())
-                .neighborhood(region.getNeighborhood())
-                .code(region.getCode())
-                .build())
-            .toList();
-
-        // 회원의 지역 정보 반환
-        return MemberResponseDTO.MemberRegionDTO.builder()
-            .memberId(member.getId())
-            .regions(codes)
-            .build();
-    }
-
-    /**
-     * 회원의 스터디 참여 이유를 조회합니다.
-     * @param memberId 조회할 회원 ID
-     * @return 회원의 스터디 참여 이유 및 회원 ID
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     * @throws MemberHandler 회원 스터디 참여 이유를 찾을 수 없을 경우
-     */
-    @Override
-    public MemberStudyReasonDTO getStudyReasons(Long memberId) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 회원의 스터디 참여 이유가 없을 경우
-        if (member.getStudyJoinReasonList().isEmpty())
-            throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
-
-        // 회원의 스터디 참여 이유 ID 조회
-        List<Long> reasonNums = member.getStudyJoinReasonList().stream()
-            .map(StudyJoinReason::getReason)
-            .toList();
-
-        // 이유 ID를 이유 객체로 변환
-        List<Reason> reasons = reasonNums.stream()
-            .map(Reason::fromCode)
-            .toList();
-
-        // 회원의 스터디 참여 이유 반환
-        return MemberStudyReasonDTO.builder()
-            .memberId(member.getId())
-            .reasons(reasons)
             .build();
     }
 
@@ -475,10 +205,10 @@ public class MemberServiceImpl implements MemberService {
         // 회원 저장
         memberRepository.save(member);
 
-        // 테마 정보 저장
-        updateTheme(member.getId(), memberInfoListDTO.getThemes());
-        // 지역 정보 저장
-        updateRegion(member.getId(), memberInfoListDTO.getRegions());
+        // // 테마 정보 저장
+        // updateTheme(member.getId(), memberInfoListDTO.getThemes());
+        // // 지역 정보 저장
+        // updateRegion(member.getId(), memberInfoListDTO.getRegions());
 
         // 토큰 생성
         TokenDTO token = jwtTokenProvider.createToken(member.getId());

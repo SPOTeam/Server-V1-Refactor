@@ -1,6 +1,8 @@
-package com.example.spot.member.application.legacy;
+package com.example.spot.auth.application.refactor.impl;
 
 import com.example.spot.auth.domain.TempUserDetails;
+import com.example.spot.auth.application.refactor.UserDetailsServiceCustom;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Deprecated
 public class UserDetailsServiceCustomImpl implements UserDetailsServiceCustom {
 
     @Override

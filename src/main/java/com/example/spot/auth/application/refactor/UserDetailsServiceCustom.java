@@ -1,7 +1,7 @@
-package com.example.spot.member.application.legacy;
+package com.example.spot.auth.application.refactor;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Deprecated
+
 public interface UserDetailsServiceCustom extends UserDetailsService {
 }
