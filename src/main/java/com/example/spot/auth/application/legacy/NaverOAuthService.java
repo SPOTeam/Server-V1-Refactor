@@ -1,10 +1,10 @@
-package com.example.spot.member.application.legacy.auth;
+package com.example.spot.auth.application.legacy;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
-import com.example.spot.member.presentation.dto.naver.NaverCallback;
-import com.example.spot.member.presentation.dto.naver.NaverMember;
-import com.example.spot.member.presentation.dto.naver.NaverOAuthToken;
+import com.example.spot.auth.presentation.dto.naver.NaverCallback;
+import com.example.spot.auth.presentation.dto.naver.NaverMember;
+import com.example.spot.auth.presentation.dto.naver.NaverOAuthToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

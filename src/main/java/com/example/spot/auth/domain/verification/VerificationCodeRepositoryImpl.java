@@ -1,9 +1,9 @@
-package com.example.spot.member.domain.auth.verification;
+package com.example.spot.auth.domain.verification;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
-import com.example.spot.member.domain.auth.VerificationCode;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.domain.VerificationCode;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

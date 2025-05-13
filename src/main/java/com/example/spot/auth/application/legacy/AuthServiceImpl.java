@@ -1,11 +1,11 @@
-package com.example.spot.member.application.legacy.auth;
+package com.example.spot.auth.application.legacy;
 
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.auth.RsaKey;
+import com.example.spot.auth.domain.RsaKey;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.member.domain.association.MemberThemeRepository;
 import com.example.spot.member.domain.association.PreferredRegionRepository;
@@ -14,16 +14,16 @@ import com.example.spot.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO
 import com.example.spot.member.presentation.dto.MemberResponseDTO.CheckMemberDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.NicknameDuplicateDTO;
 import com.example.spot.member.presentation.dto.rsa.Rsa;
-import com.example.spot.member.domain.auth.RefreshToken;
-import com.example.spot.member.domain.auth.VerificationCode;
+import com.example.spot.auth.domain.RefreshToken;
+import com.example.spot.auth.domain.VerificationCode;
 import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.member.domain.auth.RefreshTokenRepository;
+import com.example.spot.auth.domain.RefreshTokenRepository;
 import com.example.spot.member.domain.rsa.RSAKeyRepository;
-import com.example.spot.member.domain.auth.verification.VerificationCodeRepository;
+import com.example.spot.auth.domain.verification.VerificationCodeRepository;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.common.security.utils.MemberUtils;
 import com.example.spot.common.security.utils.RSAUtils;
@@ -32,11 +32,11 @@ import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.common.application.message.MailService;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
-import com.example.spot.member.presentation.dto.naver.NaverCallback;
-import com.example.spot.member.presentation.dto.naver.NaverMember;
-import com.example.spot.member.presentation.dto.naver.NaverOAuthToken;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.auth.presentation.dto.naver.NaverCallback;
+import com.example.spot.auth.presentation.dto.naver.NaverMember;
+import com.example.spot.auth.presentation.dto.naver.NaverOAuthToken;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
 
 import java.security.PrivateKey;
 import java.security.SecureRandom;

@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.dto.naver;
+package com.example.spot.auth.presentation.dto.naver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

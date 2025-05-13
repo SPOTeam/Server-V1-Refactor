@@ -1,6 +1,6 @@
 package com.example.spot.member.domain.rsa;
 
-import com.example.spot.member.domain.auth.RsaKey;
+import com.example.spot.auth.domain.RsaKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

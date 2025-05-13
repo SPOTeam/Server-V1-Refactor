@@ -1,6 +1,6 @@
 package com.example.spot.member.application.legacy;
 
-import com.example.spot.member.domain.auth.TempUserDetails;
+import com.example.spot.auth.domain.TempUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

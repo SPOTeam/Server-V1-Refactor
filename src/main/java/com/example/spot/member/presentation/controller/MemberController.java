@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.spot.member.presentation.dto.google.GoogleExampleResponse.EXAMPLE_RESPONSE;
+import static com.example.spot.auth.presentation.dto.google.GoogleExampleResponse.EXAMPLE_RESPONSE;
 
 @RestController
 @RequestMapping("/spot")

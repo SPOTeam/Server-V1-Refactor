@@ -1,19 +1,19 @@
-package com.example.spot.member.presentation.controller;
+package com.example.spot.auth.presentation.controller;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.NicknameDuplicateDTO;
 import com.example.spot.member.presentation.dto.rsa.Rsa;
-import com.example.spot.member.application.legacy.auth.AuthService;
+import com.example.spot.auth.application.legacy.AuthService;
 import com.example.spot.common.presentation.validator.TextLength;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
-import com.example.spot.member.presentation.dto.naver.NaverCallback;
-import com.example.spot.member.presentation.dto.naver.NaverOAuthToken;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.auth.presentation.dto.naver.NaverCallback;
+import com.example.spot.auth.presentation.dto.naver.NaverOAuthToken;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

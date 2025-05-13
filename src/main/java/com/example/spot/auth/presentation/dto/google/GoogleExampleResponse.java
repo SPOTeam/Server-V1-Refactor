@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.dto.google;
+package com.example.spot.auth.presentation.dto.google;
 
 public class GoogleExampleResponse {
 

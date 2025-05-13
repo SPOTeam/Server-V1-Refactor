@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.dto.kakao;
+package com.example.spot.auth.presentation.dto.kakao;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

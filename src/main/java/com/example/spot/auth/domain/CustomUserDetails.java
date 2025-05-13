@@ -1,18 +1,24 @@
-package com.example.spot.member.domain.auth;
-
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+package com.example.spot.auth.domain;
 
 import java.util.Collection;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TempUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
-    private String email; // 사용자 이름
+    private String email; // 사용자 email
+    private Long memberId; // 사용자 이름
+    private String password; // 비밀번호
+    private boolean enabled; // 계정 활성화 여부
     private Collection<? extends GrantedAuthority> authorities; // 사용자 권한
 
     @Override
@@ -22,12 +28,12 @@ public class TempUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return memberId.toString();
     }
 
     @Override

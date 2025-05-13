@@ -4,7 +4,7 @@ import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Reason;
 import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
 import lombok.*;
 
 import java.util.List;

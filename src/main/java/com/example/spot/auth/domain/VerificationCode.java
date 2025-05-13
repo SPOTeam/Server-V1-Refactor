@@ -1,4 +1,4 @@
-package com.example.spot.member.domain.auth;
+package com.example.spot.auth.domain;
 
 import lombok.Builder;
 import lombok.Getter;

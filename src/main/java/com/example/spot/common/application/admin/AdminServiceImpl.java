@@ -4,7 +4,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.member.domain.auth.RefreshTokenRepository;
+import com.example.spot.auth.domain.RefreshTokenRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.common.presentation.dto.admin.AdminResponseDTO;
 import lombok.RequiredArgsConstructor;

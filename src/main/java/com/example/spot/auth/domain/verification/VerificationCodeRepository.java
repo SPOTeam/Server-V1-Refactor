@@ -1,7 +1,7 @@
-package com.example.spot.member.domain.auth.verification;
+package com.example.spot.auth.domain.verification;
 
-import com.example.spot.member.domain.auth.VerificationCode;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.domain.VerificationCode;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 
 public interface VerificationCodeRepository {
 

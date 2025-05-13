@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.dto.token;
+package com.example.spot.auth.presentation.dto.token;
 
 import lombok.*;
 
