@@ -2,6 +2,7 @@ package com.example.spot.auth.presentation.controller;
 
 import java.io.IOException;
 
+import com.example.spot.auth.application.JwtTokenService;
 import com.example.spot.auth.application.KakaoAuthService;
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
@@ -37,8 +38,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
+    // Deprecated
     private final AuthService authService;
+
+    // Newly added
+    private final JwtTokenService jwtTokenService;
     private final KakaoAuthService kakaoAuthService;
+
+
+/* ----------------------------- JWT 토큰 관리 API ------------------------------------- */
 
     @Tag(name = "회원 관리 API", description = "회원 관리 API")
     @Operation(summary = "[세션 유지] 액세스 토큰 재발급 API",
@@ -51,7 +59,7 @@ public class AuthController {
     @PostMapping("/reissue")
     public ApiResponse<TokenDTO> reissueToken(HttpServletRequest request,
         @RequestHeader("refreshToken") String refreshToken){
-        return ApiResponse.onSuccess(SuccessStatus._CREATED, authService.reissueToken(refreshToken));
+        return ApiResponse.onSuccess(SuccessStatus._CREATED, jwtTokenService.reissueToken(refreshToken));
     }
 
 /* ----------------------------- 공통 회원 관리 API ------------------------------------- */
