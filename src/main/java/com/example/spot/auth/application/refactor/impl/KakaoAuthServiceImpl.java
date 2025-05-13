@@ -1,4 +1,4 @@
-package com.example.spot.auth.application.impl;
+package com.example.spot.auth.application.refactor.impl;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.spot.auth.application.KakaoAuthService;
+import com.example.spot.auth.application.refactor.KakaoAuthService;
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.domain.RefreshTokenRepository;
 import com.example.spot.auth.infrastructure.kakao.KakaoOAuthClient;

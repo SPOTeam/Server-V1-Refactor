@@ -1,11 +1,11 @@
-package com.example.spot.auth.application.impl;
+package com.example.spot.auth.application.refactor.impl;
 
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.spot.auth.application.JwtTokenService;
+import com.example.spot.auth.application.refactor.JwtTokenService;
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.domain.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;

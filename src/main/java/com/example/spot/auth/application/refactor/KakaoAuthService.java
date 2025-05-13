@@ -1,4 +1,4 @@
-package com.example.spot.auth.application;
+package com.example.spot.auth.application.refactor;
 
 import java.io.IOException;
 

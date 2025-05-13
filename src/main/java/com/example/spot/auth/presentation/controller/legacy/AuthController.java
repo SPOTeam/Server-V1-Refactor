@@ -1,9 +1,5 @@
-package com.example.spot.auth.presentation.controller;
+package com.example.spot.auth.presentation.controller.legacy;
 
-import java.io.IOException;
-
-import com.example.spot.auth.application.JwtTokenService;
-import com.example.spot.auth.application.KakaoAuthService;
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
@@ -18,10 +14,8 @@ import com.example.spot.auth.presentation.dto.naver.NaverCallback;
 import com.example.spot.auth.presentation.dto.naver.NaverOAuthToken;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
+@Deprecated
 @RestController
 @RequestMapping("/spot")
 @RequiredArgsConstructor
@@ -41,26 +36,6 @@ public class AuthController {
     // Deprecated
     private final AuthService authService;
 
-    // Newly added
-    private final JwtTokenService jwtTokenService;
-    private final KakaoAuthService kakaoAuthService;
-
-
-/* ----------------------------- JWT 토큰 관리 API ------------------------------------- */
-
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @Operation(summary = "[세션 유지] 액세스 토큰 재발급 API",
-        description = """
-            ## [세션 유지] 액세스 토큰을 재발급 하는 API입니다.
-            리프레시 토큰을 통해 액세스 토큰을 재발급 합니다.
-            리프레시 토큰의 만료 기간 이전인 경우에만 재발급이 가능합니다.
-            액세스 토큰을 재발급 하는 경우, 리프레시 토큰도 재발급 됩니다.
-            """)
-    @PostMapping("/reissue")
-    public ApiResponse<TokenDTO> reissueToken(HttpServletRequest request,
-        @RequestHeader("refreshToken") String refreshToken){
-        return ApiResponse.onSuccess(SuccessStatus._CREATED, jwtTokenService.reissueToken(refreshToken));
-    }
 
 /* ----------------------------- 공통 회원 관리 API ------------------------------------- */
 
@@ -162,54 +137,7 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus._MEMBER_SIGNED_IN, socialLoginSignInDTO);
     }
 
-    /* ----------------------------- 카카오 로그인/회원가입 API ------------------------------------- */
-    @Tag(name = "테스트 용 API", description = "테스트 용 API")
-    @Operation(summary = "!테스트 용! [회원 가입 및 로그인] 카카오 로그인 및 회원가입 ",
-            description = """
-            ## [회원 가입 및 로그인] 카카오 로그인의 모든 과정이 구현되어 있습니다. 
-            가입 테스트를 위해 구현한 테스트 용 카카오 로그인입니다. 
-            서버 파트 및 테스트를 원하는 분들은 본 API로 회원 가입 및 로그인을 진행하시면 됩니다. 
-            Swagger에서 요청하는 것이 아닌, 브라우저에서 직접 요청해주세요. 
-            ## www.teamspot.site/spot/login/kakao 
-            ## localhost:8080/spot/login/kakao  
-            
-           생성된 회원의 액세스 토큰과 Email이 반환 됩니다. """)
-    @GetMapping("/login/kakao")
-    public void login() throws IOException {
-        kakaoAuthService.redirectURL();
-    }
 
-    @Tag(name = "테스트 용 API", description = "테스트 용 API")
-    @Operation(summary = "!서버 용! [회원 가입 및 로그인] 카카오 로그인 및 회원가입 리다이렉트용 API ",
-            description = """
-            ## [회원 가입 및 로그인] 카카오 로그인의 모든 과정이 구현되어 있습니다. 
-            가입 테스트를 위해 구현한 테스트 용 리다이렉트 URL입니다. 
-            서버 파트 및 테스트를 원하는 분들은 본 API로 회원 가입 및 로그인을 진행하시면 됩니다. 
-            Swagger에서 요청하는 것이 아닌, 브라우저에서 직접 요청해주세요. 
-            ## www.teamspot.site/spot/login/kakao
-            ## localhost:8080/spot/login/kakao  
-            
-           생성된 회원의 액세스 토큰과 Email이 반환 됩니다. """)
-    @GetMapping("/members/sign-in/kakao/redirect")
-    public ApiResponse<MemberResponseDTO.SocialLoginSignInDTO> redirectURL(@RequestParam String code) throws IOException {
-        SocialLoginSignInDTO dto = kakaoAuthService.signUpByKAKAOForTest(code);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_CREATED, dto);
-    }
-
-    @Tag(name = "회원 관리 API", description = "회원 관리 API")
-    @Operation(summary = "[회원 가입 및 로그인] 카카오 로그인 및 회원가입. ",
-            description = """
-            ## [회원 가입 및 로그인] 프론트에서 발급 밭은 액세스 토큰을 통해 회원 가입 및 로그인을 진행합니다. 
-            연동을 위해 구현된 API입니다. 발급 받은 accessToken을 Param에 첨부하여 API를 호출해주세요.
-            생성된 회원의 액세스 토큰과 Email이 반환 됩니다. 
-            """)
-
-    @Parameter(name = "accessToken", description = "카카오 액세스 토큰을 입력 해 주세요. ", required = true)
-    @GetMapping("/members/sign-in/kakao")
-    public ApiResponse<MemberResponseDTO.SocialLoginSignInDTO> signInByKaKao(@RequestParam String accessToken) throws JsonProcessingException {
-        SocialLoginSignInDTO dto = kakaoAuthService.signUpByKAKAO(accessToken);
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_CREATED, dto);
-    }
 
 /* ----------------------------- 일반 로그인/회원가입 API ------------------------------------- */
 
