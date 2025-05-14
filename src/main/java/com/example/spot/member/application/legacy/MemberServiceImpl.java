@@ -59,6 +59,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+
+// TODO 추후 삭제 예정 -> 구글 로그인 관련 로직이 남아있음
+
 @Service
 @Slf4j
 @Transactional
@@ -66,35 +69,7 @@ import java.util.UUID;
 @Deprecated
 public class MemberServiceImpl implements MemberService {
 
-    // JWT
-    private final JwtTokenProvider jwtTokenProvider;
-
-
-    // Repository
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-
-
-    /**
-     * 리프레시 토큰을 DB에 저장합니다.
-     * @param member 리프레시 토큰을 발급한 회원 정보
-     * @param token 발급된 토큰 정보
-     */
-    private void saveRefreshToken(Member member, TokenDTO token) {
-        // 기존 리프레시 토큰 삭제
-        if (refreshTokenRepository.existsByMemberId(member.getId()))
-            refreshTokenRepository.deleteAllByMemberId(member.getId());
-
-        // DB에 저장하기 위한 새로운 리프레시 토큰 객체 생성
-        RefreshToken refreshToken = RefreshToken.builder()
-            .memberId(member.getId())
-            .token(token.getRefreshToken())
-            .build();
-
-        // 리프레시 토큰 저장
-        refreshTokenRepository.save(refreshToken);
-    }
-
 
     /**
      * 회원의 정보를 조회합니다.
@@ -125,79 +100,6 @@ public class MemberServiceImpl implements MemberService {
             .authorities(authorities)
             .build();
     }
-
-    /**
-     * 회원에게 관리자 권한을 부여합니다.
-     * @param memberId 관리자로 변경할 회원 ID
-     * @return 변경 된 회원 ID와 변경 시간
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     */
-    @Override
-    public MemberUpdateDTO toAdmin(Long memberId) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 관리자 권한 부여
-        member.toAdmin();
-
-        // 회원 정보 저장
-        memberRepository.save(member);
-
-        // 변경 된 회원 정보 반환
-        return MemberUpdateDTO.builder()
-            .memberId(member.getId())
-            .updatedAt(member.getUpdatedAt())
-            .build();
-    }
-
-    /**
-     * 테스트 회원을 생성합니다.
-     * @param memberInfoListDTO 생성할 회원 정보
-     * @return 생성된 회원 개인 정보와 토큰
-     */
-    @Override
-    public MemberTestDTO testMember(MemberInfoListDTO memberInfoListDTO) {
-
-        // 회원 생성
-        Member member = Member.builder()
-                .name(memberInfoListDTO.getName())
-                .nickname(memberInfoListDTO.getNickname())
-                .birth(memberInfoListDTO.getBirth())
-                .gender(Gender.UNKNOWN)
-                .email(memberInfoListDTO.getEmail())
-                .carrier(memberInfoListDTO.getCarrier())
-                .phone(memberInfoListDTO.getPhone())
-                .password(UUID.randomUUID().toString())
-                .profileImage(memberInfoListDTO.getProfileImage())
-                .personalInfo(memberInfoListDTO.isPersonalInfo())
-                .idInfo(memberInfoListDTO.isIdInfo())
-                .loginType(LoginType.NORMAL)
-                .status(Status.ON)
-                .build();
-
-        // 회원 저장
-        memberRepository.save(member);
-
-        // // 테마 정보 저장
-        // updateTheme(member.getId(), memberInfoListDTO.getThemes());
-        // // 지역 정보 저장
-        // updateRegion(member.getId(), memberInfoListDTO.getRegions());
-
-        // 토큰 생성
-        TokenDTO token = jwtTokenProvider.createToken(member.getId());
-
-        // 리프레시 토큰 저장
-        saveRefreshToken(member, token);
-
-        // 회원 정보 반환
-        return MemberTestDTO.builder()
-            .memberId(member.getId())
-            .email(member.getEmail())
-            .tokens(token)
-            .build();
-    }
-
 
     /**
      * 문자열로 입력된 회원 ID를 Long 타입으로 파싱합니다.

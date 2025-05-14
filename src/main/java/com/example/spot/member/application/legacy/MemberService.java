@@ -13,13 +13,9 @@ import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
+// TODO 추후 삭제 예정 -> 구글 로그인 관련 로직이 남아있음
 @Deprecated
 public interface MemberService extends UserDetailsService {
-    // 테스트 용 멤버 생성
-    MemberResponseDTO.MemberTestDTO testMember(MemberInfoListDTO memberInfoListDTO);
-
-
-    MemberResponseDTO.MemberUpdateDTO toAdmin(Long memberId);
 
     @Transactional
     void save(Member member);
