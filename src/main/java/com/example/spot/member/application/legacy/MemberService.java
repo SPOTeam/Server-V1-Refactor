@@ -18,7 +18,6 @@ public interface MemberService extends UserDetailsService {
     // 테스트 용 멤버 생성
     MemberResponseDTO.MemberTestDTO testMember(MemberInfoListDTO memberInfoListDTO);
 
-    MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberUpdateDTO requestDTO);
 
     MemberResponseDTO.MemberUpdateDTO toAdmin(Long memberId);
 

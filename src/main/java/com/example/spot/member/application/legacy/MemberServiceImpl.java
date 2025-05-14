@@ -97,32 +97,6 @@ public class MemberServiceImpl implements MemberService {
 
 
     /**
-     * 회원의 프로필을 업데이트 합니다.
-     * @param memberId 변경할 회원 ID
-     * @param requestDTO 변경할 회원 정보
-     * @return 변경 된 회원 ID와 변경 시간
-     * @throws MemberHandler 회원을 찾을 수 없을 경우
-     */
-    @Override
-    public MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberRequestDTO.MemberUpdateDTO requestDTO) {
-        // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 회원 정보 업데이트
-        member.updateInfo(requestDTO);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
-
-        // 업데이트된 회원 정보 반환
-        return MemberResponseDTO.MemberUpdateDTO.builder()
-                .memberId(member.getId())
-                .updatedAt(member.getUpdatedAt())
-                .build();
-    }
-
-    /**
      * 회원의 정보를 조회합니다.
      * @param username 회원 식별자(ID)
      * @return 회원 정보
