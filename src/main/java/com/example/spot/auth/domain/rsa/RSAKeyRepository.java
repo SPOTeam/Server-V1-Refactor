@@ -1,4 +1,4 @@
-package com.example.spot.member.domain.rsa;
+package com.example.spot.auth.domain.rsa;
 
 import com.example.spot.auth.domain.RsaKey;
 import org.springframework.data.jpa.repository.JpaRepository;

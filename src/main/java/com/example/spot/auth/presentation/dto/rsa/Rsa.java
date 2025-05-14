@@ -1,4 +1,4 @@
-package com.example.spot.member.presentation.dto.rsa;
+package com.example.spot.auth.presentation.dto.rsa;
 
 import lombok.*;
 
