@@ -11,7 +11,7 @@ import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.common.security.oauth.adpter.CustomOAuth2User;
 import com.example.spot.common.security.oauth.adpter.google.GoogleUserInfo;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

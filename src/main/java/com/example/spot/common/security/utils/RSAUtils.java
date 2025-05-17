@@ -2,7 +2,7 @@ package com.example.spot.common.security.utils;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
-import com.example.spot.member.domain.auth.RsaKey;
+import com.example.spot.auth.domain.RsaKey;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;

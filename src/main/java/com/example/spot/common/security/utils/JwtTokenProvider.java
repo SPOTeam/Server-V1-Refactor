@@ -2,8 +2,8 @@ package com.example.spot.common.security.utils;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO;
-import com.example.spot.member.presentation.dto.token.TokenResponseDTO.TokenDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
