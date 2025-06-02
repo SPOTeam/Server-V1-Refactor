@@ -3,14 +3,14 @@ package com.example.spot.service.study.studypost;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.aggregate.LikedStory;
-import com.example.spot.story.domain.aggregate.LikedStoryComment;
-import com.example.spot.story.domain.aggregate.StoryComment;
+import com.example.spot.story.domain.association.LikedStory;
+import com.example.spot.story.domain.association.LikedStoryComment;
+import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
@@ -18,7 +18,7 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyPostQueryServiceImpl;
+import com.example.spot.story.domain.application.StoryQueryServiceImpl;
 import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +66,7 @@ class StoryQueryServiceTest {
     private StoryCommentRepository storyCommentRepository;
 
     @InjectMocks
-    private StudyPostQueryServiceImpl studyPostQueryService;
+    private StoryQueryServiceImpl studyPostQueryService;
 
     private static PageRequest pageRequest;
 

@@ -3,7 +3,7 @@ package com.example.spot.vote.domain;
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.study.domain.Study;
-import com.example.spot.vote.domain.aggregate.VoteOption;
+import com.example.spot.vote.domain.association.VoteOption;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.example.spot.story.domain.repository;
 
-import com.example.spot.story.domain.aggregate.LikedStory;
+import com.example.spot.story.domain.association.LikedStory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

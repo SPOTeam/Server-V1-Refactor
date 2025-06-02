@@ -1,6 +1,6 @@
 package com.example.spot.member.domain.association;
 
-import com.example.spot.study.domain.aggregate.Region;
+import com.example.spot.study.domain.association.Region;
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
 import jakarta.persistence.*;

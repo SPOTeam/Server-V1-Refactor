@@ -1,14 +1,14 @@
 package com.example.spot.study.presentation.dto.response;
 
-import com.example.spot.study.domain.aggregate.Region;
-import com.example.spot.study.domain.aggregate.StudyRegion;
-import com.example.spot.study.domain.aggregate.Theme;
+import com.example.spot.study.domain.association.Region;
+import com.example.spot.study.domain.association.StudyRegion;
+import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.enums.StudyLikeStatus;
 import com.example.spot.study.domain.enums.StudyState;
 import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.member.domain.association.PreferredStudy;
-import com.example.spot.study.domain.aggregate.StudyTheme;
+import com.example.spot.study.domain.association.StudyTheme;
 import com.example.spot.study.domain.Study;
 
 import java.time.LocalDateTime;

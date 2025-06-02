@@ -5,15 +5,15 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.story.domain.aggregate.LikedStory;
-import com.example.spot.story.domain.aggregate.LikedStoryComment;
-import com.example.spot.story.domain.aggregate.StoryComment;
+import com.example.spot.story.domain.association.LikedStory;
+import com.example.spot.story.domain.association.LikedStoryComment;
+import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.repository.StoryImageRepository;
 import com.example.spot.story.domain.repository.StoryReportRepository;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.story.domain.enums.StoryCategory;
@@ -22,7 +22,7 @@ import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyPostCommandServiceImpl;
+import com.example.spot.story.domain.application.StoryCommandServiceImpl;
 import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
@@ -86,7 +86,7 @@ class StoryCommandServiceTest {
     private S3ImageService s3ImageService;
 
     @InjectMocks
-    private StudyPostCommandServiceImpl studyPostCommandService;
+    private StoryCommandServiceImpl studyPostCommandService;
 
     private static Study study;
     private static Member member1;

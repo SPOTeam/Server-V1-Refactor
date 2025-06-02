@@ -5,7 +5,7 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.study.domain.Study;
@@ -14,7 +14,7 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.MemberStudyCommandServiceImpl;
+import com.example.spot.study.application.StudyMemberCommandServiceImpl;
 import com.example.spot.study.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.study.presentation.dto.response.ScheduleResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +65,7 @@ class StudyScheduleCommandServiceTest {
     private NotificationRepository notificationRepository;
 
     @InjectMocks
-    private MemberStudyCommandServiceImpl memberStudyCommandService;
+    private StudyMemberCommandServiceImpl memberStudyCommandService;
 
     private static Study study1;
     private static Member member1;

@@ -3,7 +3,7 @@ package com.example.spot.service.study.studymember;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.todo.domain.ToDo;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
@@ -15,7 +15,7 @@ import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.todo.domain.ToDoRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.application.MemberStudyQueryServiceImpl;
+import com.example.spot.study.application.StudyMemberQueryServiceImpl;
 import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
@@ -53,7 +53,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class StudyMemberQueryServiceTest {
 
     @InjectMocks
-    private MemberStudyQueryServiceImpl memberStudyQueryService;
+    private StudyMemberQueryServiceImpl memberStudyQueryService;
 
     @Mock
     private StudyMemberRepository studyMemberRepository;

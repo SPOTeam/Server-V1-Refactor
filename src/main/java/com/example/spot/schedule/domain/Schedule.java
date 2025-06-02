@@ -1,7 +1,7 @@
 package com.example.spot.schedule.domain;
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.schedule.domain.aggregate.Quiz;
+import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.study.domain.Study;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.study.presentation.dto.request.ScheduleRequestDTO;

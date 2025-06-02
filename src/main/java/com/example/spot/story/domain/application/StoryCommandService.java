@@ -1,11 +1,11 @@
-package com.example.spot.study.application;
+package com.example.spot.story.domain.application;
 
 import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
 
-public interface StudyPostCommandService {
+public interface StoryCommandService {
 
     // 스터디 게시글 생성
     StudyPostResDTO.PostPreviewDTO createPost(Long studyId, StudyPostRequestDTO.PostDTO postRequestDTO);

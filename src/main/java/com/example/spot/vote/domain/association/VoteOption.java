@@ -1,4 +1,4 @@
-package com.example.spot.vote.domain.aggregate;
+package com.example.spot.vote.domain.association;
 import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.vote.domain.Vote;
 import jakarta.persistence.CascadeType;

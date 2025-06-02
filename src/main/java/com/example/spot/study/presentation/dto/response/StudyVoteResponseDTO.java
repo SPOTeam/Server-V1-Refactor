@@ -2,8 +2,8 @@ package com.example.spot.study.presentation.dto.response;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.vote.domain.Vote;
-import com.example.spot.vote.domain.aggregate.VoteParticipant;
-import com.example.spot.vote.domain.aggregate.VoteOption;
+import com.example.spot.vote.domain.association.VoteParticipant;
+import com.example.spot.vote.domain.association.VoteOption;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

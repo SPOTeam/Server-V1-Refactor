@@ -1,6 +1,6 @@
 package com.example.spot.vote.domain.repository;
 
-import com.example.spot.vote.domain.aggregate.VoteParticipant;
+import com.example.spot.vote.domain.association.VoteParticipant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

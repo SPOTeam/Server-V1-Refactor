@@ -1,4 +1,4 @@
-package com.example.spot.story.domain.aggregate;
+package com.example.spot.story.domain.association;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;

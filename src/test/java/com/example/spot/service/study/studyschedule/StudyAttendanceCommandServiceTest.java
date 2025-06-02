@@ -3,19 +3,19 @@ package com.example.spot.service.study.studyschedule;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.aggregate.Quiz;
-import com.example.spot.schedule.domain.aggregate.QuizSubmission;
+import com.example.spot.schedule.domain.association.Quiz;
+import com.example.spot.schedule.domain.association.QuizSubmission;
 import com.example.spot.schedule.domain.repository.QuizRepository;
 import com.example.spot.schedule.domain.repository.QuizSubmissionRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.MemberStudyCommandServiceImpl;
+import com.example.spot.study.application.StudyMemberCommandServiceImpl;
 import com.example.spot.study.presentation.dto.request.StudyQuizRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyQuizResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +63,7 @@ class StudyAttendanceCommandServiceTest {
     private QuizSubmissionRepository quizSubmissionRepository;
 
     @InjectMocks
-    private MemberStudyCommandServiceImpl memberStudyCommandService;
+    private StudyMemberCommandServiceImpl memberStudyCommandService;
 
     private static Study study;
     private static Member member1;

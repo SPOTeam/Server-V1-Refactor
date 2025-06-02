@@ -3,15 +3,15 @@ package com.example.spot.study.domain;
 
 import static com.example.spot.study.domain.QStudy.*;
 
-import com.example.spot.study.domain.aggregate.Region;
-import com.example.spot.study.domain.aggregate.StudyRegion;
+import com.example.spot.study.domain.association.Region;
+import com.example.spot.study.domain.association.StudyRegion;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.Status;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudySortBy;
 import com.example.spot.study.domain.enums.StudyState;
 import com.example.spot.study.domain.enums.ThemeType;
-import com.example.spot.study.domain.aggregate.StudyTheme;
+import com.example.spot.study.domain.association.StudyTheme;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

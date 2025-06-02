@@ -2,8 +2,8 @@ package com.example.spot.study.presentation.controller;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
-import com.example.spot.study.application.MemberStudyCommandService;
-import com.example.spot.study.application.MemberStudyQueryService;
+import com.example.spot.study.application.StudyMemberCommandService;
+import com.example.spot.study.application.StudyMemberQueryService;
 import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.schedule.domain.validation.annotation.ExistSchedule;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
@@ -54,8 +54,8 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class StudyMemberController {
 
-    private final MemberStudyQueryService memberStudyQueryService;
-    private final MemberStudyCommandService memberStudyCommandService;
+    private final StudyMemberQueryService studyMemberQueryService;
+    private final StudyMemberCommandService studyMemberCommandService;
 
 /* ----------------------------- 진행중인 스터디 관련 API ------------------------------------- */
 
@@ -67,7 +67,7 @@ public class StudyMemberController {
         """)
     @DeleteMapping("/studies/{studyId}/withdrawal")
     public ApiResponse<StudyWithdrawalResponseDTO.WithdrawalDTO> withdrawFromStudy(@PathVariable Long studyId) {
-        StudyWithdrawalResponseDTO.WithdrawalDTO withdrawalDTO = memberStudyCommandService.withdrawFromStudy(studyId);
+        StudyWithdrawalResponseDTO.WithdrawalDTO withdrawalDTO = studyMemberCommandService.withdrawFromStudy(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_DELETED, withdrawalDTO);
     }
 
@@ -83,7 +83,7 @@ public class StudyMemberController {
             @PathVariable Long studyId,
             @RequestBody StudyHostWithdrawRequestDTO requestDTO) {
         StudyWithdrawalResponseDTO.WithdrawalDTO withdrawalDTO =
-                memberStudyCommandService.withdrawHostFromStudy(studyId, requestDTO);
+                studyMemberCommandService.withdrawHostFromStudy(studyId, requestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_DELETED, withdrawalDTO);
     }
 
@@ -99,7 +99,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @RequestParam @TextLength(min=1, max=30) String performance
     ) {
-        StudyTerminationResponseDTO.TerminationDTO terminationDTO = memberStudyCommandService.terminateStudy(studyId, performance);
+        StudyTerminationResponseDTO.TerminationDTO terminationDTO = studyMemberCommandService.terminateStudy(studyId, performance);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_TERMINATED, terminationDTO);
     }
 
@@ -117,7 +117,7 @@ public class StudyMemberController {
     @Parameter(name = "studyId", description = "모집중인 스터디의 ID를 입력 받습니다.", required = true)
     public ApiResponse<StudyApplicantDTO> getIsApplied(@PathVariable @ExistStudy Long studyId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
-            memberStudyQueryService.isApplied(studyId));
+            studyMemberQueryService.isApplied(studyId));
     }
 
     @Tag(name = "모집중인 스터디")
@@ -129,7 +129,7 @@ public class StudyMemberController {
     @Parameter(name = "studyId", description = "모집중인 스터디의 ID를 입력 받습니다.", required = true)
     public ApiResponse<StudyMemberResponseDTO> getAllApplicants(@PathVariable @ExistStudy Long studyId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
-            memberStudyQueryService.findStudyApplicants(studyId));
+            studyMemberQueryService.findStudyApplicants(studyId));
     }
     @Tag(name = "모집중인 스터디")
     @Operation(summary = "[모집중인 스터디] 스터디 신청 정보(이름, 자기소개) 불러오기", description = """ 
@@ -143,7 +143,7 @@ public class StudyMemberController {
         @PathVariable @ExistStudy Long studyId,
         @PathVariable @ExistMember Long applicantId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
-            memberStudyQueryService.findStudyApplication(studyId, applicantId));
+            studyMemberQueryService.findStudyApplication(studyId, applicantId));
     }
     @Tag(name = "모집중인 스터디")
     @Operation(summary = "[모집중인 스터디] 스터디 신청 처리하기", description = """ 
@@ -160,7 +160,7 @@ public class StudyMemberController {
         @PathVariable @ExistMember Long applicantId,
         @RequestParam boolean isAccept) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_UPDATED,
-            memberStudyCommandService.acceptAndRejectStudyApply(applicantId, studyId, isAccept));
+            studyMemberCommandService.acceptAndRejectStudyApply(applicantId, studyId, isAccept));
     }
 
     @Tag(name = "테스트 용 API", description = "테스트 용 API")
@@ -183,7 +183,7 @@ public class StudyMemberController {
         @PathVariable @ExistMember Long applicantId,
         @RequestParam boolean isAccept) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_UPDATED,
-            memberStudyCommandService.acceptAndRejectStudyApplyForTest(applicantId, studyId, isAccept));
+            studyMemberCommandService.acceptAndRejectStudyApplyForTest(applicantId, studyId, isAccept));
     }
 
 
@@ -196,7 +196,7 @@ public class StudyMemberController {
         """)
     @GetMapping("/studies/{studyId}/announce")
     public ApiResponse<StudyPostResponseDTO> getRecentAnnouncement(@PathVariable @ExistStudy Long studyId) {
-        StudyPostResponseDTO studyPostResponseDTO = memberStudyQueryService.findStudyAnnouncementPost(studyId);
+        StudyPostResponseDTO studyPostResponseDTO = studyMemberQueryService.findStudyAnnouncementPost(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_FOUND, studyPostResponseDTO);
     }
     @Tag(name = "스터디 상세 정보")
@@ -209,7 +209,7 @@ public class StudyMemberController {
         @PathVariable @ExistStudy Long studyId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "1") int size){
-        StudyScheduleResponseDTO studyScheduleResponseDTO = memberStudyQueryService.findStudySchedule(studyId, PageRequest.of(page, size));
+        StudyScheduleResponseDTO studyScheduleResponseDTO = studyMemberQueryService.findStudySchedule(studyId, PageRequest.of(page, size));
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, studyScheduleResponseDTO);
     }
     @Tag(name = "스터디 상세 정보")
@@ -220,7 +220,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/members")
     public ApiResponse<StudyMemberResponseDTO> getStudyMembers(
         @PathVariable @ExistStudy Long studyId){
-        StudyMemberResponseDTO studyMemberResponseDTO = memberStudyQueryService.findStudyMembers(studyId);
+        StudyMemberResponseDTO studyMemberResponseDTO = studyMemberQueryService.findStudyMembers(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_FOUND, studyMemberResponseDTO);
     }
 
@@ -234,7 +234,7 @@ public class StudyMemberController {
     public ApiResponse<StudyMemberResDTO.StudyHostDTO> getStudyHost(
             @PathVariable @ExistStudy Long studyId)
     {
-        StudyMemberResDTO.StudyHostDTO studyHostDTO = memberStudyQueryService.getStudyHost(studyId);
+        StudyMemberResDTO.StudyHostDTO studyHostDTO = studyMemberQueryService.getStudyHost(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, studyHostDTO);
     }
 
@@ -253,7 +253,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @RequestParam @IntSize(min = 1) Integer year,
             @RequestParam @IntSize(min = 1, max= 12) Integer month) {
-        ScheduleResponseDTO.MonthlyScheduleListDTO monthlyScheduleDTO = memberStudyQueryService.getMonthlySchedules(studyId, year, month);
+        ScheduleResponseDTO.MonthlyScheduleListDTO monthlyScheduleDTO = studyMemberQueryService.getMonthlySchedules(studyId, year, month);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, monthlyScheduleDTO);
     }
 
@@ -268,7 +268,7 @@ public class StudyMemberController {
     public ApiResponse<ScheduleResponseDTO.MonthlyScheduleDTO> getSchedule(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId) {
-        ScheduleResponseDTO.MonthlyScheduleDTO scheduleDTO = memberStudyQueryService.getSchedule(studyId, scheduleId);
+        ScheduleResponseDTO.MonthlyScheduleDTO scheduleDTO = studyMemberQueryService.getSchedule(studyId, scheduleId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, scheduleDTO);
     }
 
@@ -284,7 +284,7 @@ public class StudyMemberController {
     public ApiResponse<ScheduleResponseDTO.ScheduleDTO> addSchedule(
             @PathVariable @ExistStudy Long studyId,
             @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleRequestDTO) {
-        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = memberStudyCommandService.addSchedule(studyId, scheduleRequestDTO);
+        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = studyMemberCommandService.addSchedule(studyId, scheduleRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_CREATED, scheduleResponseDTO);
     }
 
@@ -302,7 +302,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleModDTO) {
-        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
+        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = studyMemberCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_UPDATED, scheduleResponseDTO);
     }
 
@@ -319,7 +319,7 @@ public class StudyMemberController {
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> createVote(
             @PathVariable @ExistStudy Long studyId,
             @RequestBody @Valid StudyVoteRequestDTO.VoteDTO voteDTO) {
-        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.createVote(studyId, voteDTO);
+        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = studyMemberCommandService.createVote(studyId, voteDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_CREATED, votePreviewDTO);
     }
 
@@ -335,7 +335,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VotedOptionDTO votedOptionDTO) {
-        StudyVoteResponseDTO.VotedOptionDTO votedOptionResDTO = memberStudyCommandService.vote(studyId, voteId, votedOptionDTO);
+        StudyVoteResponseDTO.VotedOptionDTO votedOptionResDTO = studyMemberCommandService.vote(studyId, voteId, votedOptionDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_PARTICIPATED, votedOptionResDTO);
     }
 
@@ -351,7 +351,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistVote Long voteId,
             @RequestBody @Valid StudyVoteRequestDTO.VoteUpdateDTO voteDTO) {
-        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.updateVote(studyId, voteId, voteDTO);
+        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = studyMemberCommandService.updateVote(studyId, voteId, voteDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_UPDATED, votePreviewDTO);
     }
 
@@ -366,7 +366,7 @@ public class StudyMemberController {
     public ApiResponse<StudyVoteResponseDTO.VotePreviewDTO> deleteVote(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistVote Long voteId) {
-        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = memberStudyCommandService.deleteVote(studyId, voteId);
+        StudyVoteResponseDTO.VotePreviewDTO votePreviewDTO = studyMemberCommandService.deleteVote(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DELETED, votePreviewDTO);
     }
 
@@ -379,7 +379,7 @@ public class StudyMemberController {
     @GetMapping("/studies/{studyId}/votes")
     public ApiResponse<StudyVoteResponseDTO.VoteListDTO> getAllVotes(
             @PathVariable @ExistStudy Long studyId) {
-        StudyVoteResponseDTO.VoteListDTO voteListDTO = memberStudyQueryService.getAllVotes(studyId);
+        StudyVoteResponseDTO.VoteListDTO voteListDTO = studyMemberQueryService.getAllVotes(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_FOUND, voteListDTO);
     }
 
@@ -396,12 +396,12 @@ public class StudyMemberController {
     public ApiResponse<?> getVote(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistVote Long voteId) {
-        Boolean isCompleted = memberStudyQueryService.getIsCompleted(voteId);
+        Boolean isCompleted = studyMemberQueryService.getIsCompleted(voteId);
         if (isCompleted) {
-            StudyVoteResponseDTO.CompletedVoteDTO completedVoteDTO = memberStudyQueryService.getVoteInCompletion(studyId, voteId);
+            StudyVoteResponseDTO.CompletedVoteDTO completedVoteDTO = studyMemberQueryService.getVoteInCompletion(studyId, voteId);
             return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_FOUND, completedVoteDTO);
         } else {
-            StudyVoteResponseDTO.VoteDTO voteDTO = memberStudyQueryService.getVoteInProgress(studyId, voteId);
+            StudyVoteResponseDTO.VoteDTO voteDTO = studyMemberQueryService.getVoteInProgress(studyId, voteId);
             return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_FOUND, voteDTO);
         }
     }
@@ -417,7 +417,7 @@ public class StudyMemberController {
     public ApiResponse<StudyVoteResponseDTO.CompletedVoteDetailDTO> getCompletedVoteDetail(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistVote Long voteId) {
-        StudyVoteResponseDTO.CompletedVoteDetailDTO completedVoteDetailDTO = memberStudyQueryService.getCompletedVoteDetail(studyId, voteId);
+        StudyVoteResponseDTO.CompletedVoteDetailDTO completedVoteDetailDTO = studyMemberQueryService.getCompletedVoteDetail(studyId, voteId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_VOTE_DETAIL_STATUS_FOUND, completedVoteDetailDTO);
     }
 
@@ -433,7 +433,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) Integer limit) {
-        StudyImageResponseDTO.ImageListDTO imageListDTO = memberStudyQueryService.getAllStudyImages(studyId, PageRequest.of(offset, limit));
+        StudyImageResponseDTO.ImageListDTO imageListDTO = studyMemberQueryService.getAllStudyImages(studyId, PageRequest.of(offset, limit));
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_IMAGES_FOUND, imageListDTO);
     }
 
@@ -452,7 +452,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
-        StudyQuizResponseDTO.QuizDTO quizResponseDTO = memberStudyCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
+        StudyQuizResponseDTO.QuizDTO quizResponseDTO = studyMemberCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_CREATED, quizResponseDTO);
     }
 
@@ -469,7 +469,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyQueryService.getAttendanceQuiz(studyId, scheduleId, date);
+        StudyQuizResponseDTO.QuizDTO quizDTO = studyMemberQueryService.getAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, quizDTO);
     }
 
@@ -487,7 +487,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestBody @Valid StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
-        StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = memberStudyCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
+        StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = studyMemberCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
         if (attendanceResponseDTO.getIsCorrect()) {
             return ApiResponse.onSuccess(SuccessStatus._STUDY_ATTENDANCE_CREATED_CORRECT_ANSWER, attendanceResponseDTO);
         } else {
@@ -509,7 +509,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
+        StudyQuizResponseDTO.QuizDTO quizDTO = studyMemberCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, quizDTO);
     }
 
@@ -526,7 +526,7 @@ public class StudyMemberController {
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = memberStudyQueryService.getAllAttendances(studyId, scheduleId, date);
+        StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = studyMemberQueryService.getAllAttendances(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_ATTENDANCES_FOUND, attendanceListDTO);
     }
 
@@ -545,7 +545,7 @@ public class StudyMemberController {
     public ApiResponse<MemberResponseDTO.ReportedMemberDTO> reportStudyMember(
             @PathVariable @ExistStudy Long studyId, @PathVariable @ExistMember Long memberId,
             @RequestBody @Valid StudyMemberReportDTO studyMemberReportDTO) {
-        MemberResponseDTO.ReportedMemberDTO reportedMemberDTO = memberStudyCommandService.reportStudyMember(studyId, memberId, studyMemberReportDTO);
+        MemberResponseDTO.ReportedMemberDTO reportedMemberDTO = studyMemberCommandService.reportStudyMember(studyId, memberId, studyMemberReportDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_REPORTED, reportedMemberDTO);
     }
 
@@ -560,7 +560,7 @@ public class StudyMemberController {
     public ApiResponse<StudyPostResDTO.PostPreviewDTO> reportStudyPost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StudyPostResDTO.PostPreviewDTO postPreviewDTO = memberStudyCommandService.reportStudyPost(studyId, postId);
+        StudyPostResDTO.PostPreviewDTO postPreviewDTO = studyMemberCommandService.reportStudyPost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_REPORTED, postPreviewDTO);
     }
 
@@ -576,7 +576,7 @@ public class StudyMemberController {
     public ApiResponse<ToDoListCreateResponseDTO> createToDoList(
         @PathVariable @ExistStudy Long studyId,
         @RequestBody @Valid ToDoListRequestDTO.ToDoListCreateDTO request) {
-        ToDoListCreateResponseDTO toDoList = memberStudyCommandService.createToDoList(studyId,
+        ToDoListCreateResponseDTO toDoList = studyMemberCommandService.createToDoList(studyId,
             request);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_CREATED, toDoList);
     }
@@ -596,7 +596,7 @@ public class StudyMemberController {
         @PathVariable @ExistStudy Long studyId,
         @PathVariable @ExistToDo Long toDoId,
         @RequestBody @Valid ToDoListRequestDTO.ToDoListCreateDTO request) {
-        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.updateToDoList(
+        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = studyMemberCommandService.updateToDoList(
             studyId, toDoId, request);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_UPDATED, toDoListUpdateResponseDTO);
     }
@@ -620,7 +620,7 @@ public class StudyMemberController {
     public ApiResponse<ToDoListUpdateResponseDTO> checkToDoList(
         @PathVariable @ExistStudy Long studyId,
         @PathVariable @ExistToDo Long toDoId) {
-        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.checkToDoList(
+        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = studyMemberCommandService.checkToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_UPDATED, toDoListUpdateResponseDTO);
     }
@@ -638,7 +638,7 @@ public class StudyMemberController {
     public ApiResponse<ToDoListUpdateResponseDTO> deleteToDoList(
         @PathVariable @ExistStudy Long studyId,
         @PathVariable @ExistToDo Long toDoId) {
-        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = memberStudyCommandService.deleteToDoList(
+        ToDoListUpdateResponseDTO toDoListUpdateResponseDTO = studyMemberCommandService.deleteToDoList(
             studyId, toDoId);
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_DELETED, toDoListUpdateResponseDTO);
     }
@@ -659,7 +659,7 @@ public class StudyMemberController {
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam LocalDate date) {
-        ToDoListSearchResponseDTO toDoList = memberStudyQueryService.getToDoList(studyId, date,
+        ToDoListSearchResponseDTO toDoList = studyMemberQueryService.getToDoList(studyId, date,
             PageRequest.of(page, size));
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_FOUND, toDoList);
     }
@@ -681,7 +681,7 @@ public class StudyMemberController {
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam LocalDate date) {
-        ToDoListSearchResponseDTO toDoList = memberStudyQueryService.getMemberToDoList(studyId,
+        ToDoListSearchResponseDTO toDoList = studyMemberQueryService.getMemberToDoList(studyId,
             memberId, date, PageRequest.of(page, size));
         return ApiResponse.onSuccess(SuccessStatus._TO_DO_LIST_FOUND, toDoList);
     }

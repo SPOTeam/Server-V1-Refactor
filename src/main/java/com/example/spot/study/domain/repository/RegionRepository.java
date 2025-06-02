@@ -1,6 +1,6 @@
 package com.example.spot.study.domain.repository;
 
-import com.example.spot.study.domain.aggregate.Region;
+import com.example.spot.study.domain.association.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

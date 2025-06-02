@@ -5,13 +5,13 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.aggregate.Quiz;
-import com.example.spot.schedule.domain.aggregate.QuizSubmission;
+import com.example.spot.schedule.domain.association.Quiz;
+import com.example.spot.schedule.domain.association.QuizSubmission;
 import com.example.spot.schedule.domain.repository.QuizRepository;
 import com.example.spot.schedule.domain.repository.QuizSubmissionRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.story.domain.Story;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.study.domain.Study;
@@ -36,7 +36,7 @@ import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDo
 
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.vote.domain.Vote;
-import com.example.spot.vote.domain.aggregate.VoteOption;
+import com.example.spot.vote.domain.association.VoteOption;
 import com.example.spot.vote.domain.repository.VoteOptionRepository;
 import com.example.spot.vote.domain.repository.VoteParticipantRepository;
 import com.example.spot.vote.domain.VoteRepository;
@@ -61,7 +61,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberStudyQueryServiceImpl implements MemberStudyQueryService {
+public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
 
     @Value("${image.post.anonymous.profile}")
     private String defaultImage;

@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-public interface MemberStudyQueryService {
+public interface StudyMemberQueryService {
 
     ScheduleResponseDTO.MonthlyScheduleListDTO getMonthlySchedules(Long studyId, int year, int month);
 

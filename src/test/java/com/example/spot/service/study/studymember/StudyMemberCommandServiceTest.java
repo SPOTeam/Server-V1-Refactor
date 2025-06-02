@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.todo.domain.ToDo;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Status;
@@ -18,7 +18,7 @@ import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.todo.domain.ToDoRepository;
-import com.example.spot.study.application.MemberStudyCommandServiceImpl;
+import com.example.spot.study.application.StudyMemberCommandServiceImpl;
 import com.example.spot.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
@@ -48,7 +48,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class StudyMemberCommandServiceTest {
 
     @InjectMocks
-    private MemberStudyCommandServiceImpl memberStudyCommandService;
+    private StudyMemberCommandServiceImpl memberStudyCommandService;
 
     @Mock
     private StudyRepository studyRepository;

@@ -1,4 +1,4 @@
-package com.example.spot.study.application;
+package com.example.spot.story.domain.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -7,16 +7,16 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.story.domain.aggregate.LikedStory;
-import com.example.spot.story.domain.aggregate.LikedStoryComment;
-import com.example.spot.story.domain.aggregate.StoryComment;
-import com.example.spot.story.domain.aggregate.StoryImage;
+import com.example.spot.story.domain.association.LikedStory;
+import com.example.spot.story.domain.association.LikedStoryComment;
+import com.example.spot.story.domain.association.StoryComment;
+import com.example.spot.story.domain.association.StoryImage;
 import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.repository.StoryImageRepository;
 import com.example.spot.story.domain.repository.StoryReportRepository;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.study.domain.Study;
@@ -43,7 +43,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class StudyPostCommandServiceImpl implements StudyPostCommandService {
+public class StoryCommandServiceImpl implements StoryCommandService {
 
     @Value("${image.post.anonymous.profile}")
     private String defaultImage;

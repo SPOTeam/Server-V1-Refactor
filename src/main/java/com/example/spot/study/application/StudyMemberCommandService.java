@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 
-public interface MemberStudyCommandService {
+public interface StudyMemberCommandService {
 
     StudyWithdrawalResponseDTO.WithdrawalDTO withdrawFromStudy(Long studyId);
     StudyWithdrawalResponseDTO.WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyHostWithdrawRequestDTO requestDTO);

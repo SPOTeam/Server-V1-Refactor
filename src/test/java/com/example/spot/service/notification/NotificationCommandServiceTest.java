@@ -11,7 +11,7 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.notification.domain.enums.NotifyType;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;

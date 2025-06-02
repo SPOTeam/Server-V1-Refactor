@@ -1,8 +1,7 @@
-package com.example.spot.story.domain.aggregate;
+package com.example.spot.study.domain.association;
 
-import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.story.domain.Story;
+import com.example.spot.study.domain.Study;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -20,8 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LikedStory extends BaseEntity {
+public class StudyRegion extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +30,20 @@ public class LikedStory extends BaseEntity {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "story_id", nullable = false)
-    private Story story;
+    @JoinColumn(name = "region_id")
+    private Region region;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "study_id")
+    private Study study;
+
+
+    protected StudyRegion() {}
+
+    @Builder
+    public StudyRegion(Region region, Study study) {
+        this.region = region;
+    }
 
 }

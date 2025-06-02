@@ -2,8 +2,8 @@ package com.example.spot.study.domain.repository;
 
 import java.util.List;
 
-import com.example.spot.study.domain.aggregate.Region;
-import com.example.spot.study.domain.aggregate.StudyRegion;
+import com.example.spot.study.domain.association.Region;
+import com.example.spot.study.domain.association.StudyRegion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

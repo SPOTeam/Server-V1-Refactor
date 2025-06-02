@@ -1,8 +1,8 @@
 package com.example.spot.study.presentation.dto.response;
 
-import com.example.spot.schedule.domain.aggregate.Quiz;
-import com.example.spot.schedule.domain.aggregate.QuizSubmission;
-import com.example.spot.study.domain.aggregate.StudyMember;
+import com.example.spot.schedule.domain.association.Quiz;
+import com.example.spot.schedule.domain.association.QuizSubmission;
+import com.example.spot.study.domain.association.StudyMember;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

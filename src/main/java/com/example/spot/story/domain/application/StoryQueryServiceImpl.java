@@ -1,4 +1,4 @@
-package com.example.spot.study.application;
+package com.example.spot.story.domain.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -9,7 +9,7 @@ import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.study.domain.Study;
-import com.example.spot.story.domain.aggregate.StoryComment;
+import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class StudyPostQueryServiceImpl implements StudyPostQueryService {
+public class StoryQueryServiceImpl implements StoryQueryService {
 
     private final StoryCommentRepository storyCommentRepository;
     private final LikedStoryRepository likedStoryRepository;

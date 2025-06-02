@@ -1,8 +1,8 @@
 package com.example.spot.study.presentation.dto.response;
 
 import com.example.spot.member.domain.Member;
-import com.example.spot.story.domain.aggregate.LikedStoryComment;
-import com.example.spot.story.domain.aggregate.StoryComment;
+import com.example.spot.story.domain.association.LikedStoryComment;
+import com.example.spot.story.domain.association.StoryComment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

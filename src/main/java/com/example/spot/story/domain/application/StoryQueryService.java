@@ -1,11 +1,11 @@
-package com.example.spot.study.application;
+package com.example.spot.story.domain.application;
 
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
 import org.springframework.data.domain.PageRequest;
 
-public interface StudyPostQueryService {
+public interface StoryQueryService {
 
     // 스터디 게시글 목록 불러오기
     StudyPostResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery);
