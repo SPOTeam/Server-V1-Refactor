@@ -4,7 +4,7 @@ import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.study.domain.Study;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.study.presentation.dto.request.ScheduleRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

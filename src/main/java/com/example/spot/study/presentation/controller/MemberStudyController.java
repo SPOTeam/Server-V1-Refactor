@@ -12,16 +12,16 @@ import com.example.spot.todo.domain.validation.annotation.ExistToDo;
 import com.example.spot.vote.domain.validation.annotation.ExistVote;
 import com.example.spot.common.presentation.validator.IntSize;
 import com.example.spot.common.presentation.validator.TextLength;
-import com.example.spot.study.presentation.dto.request.ScheduleRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
-import com.example.spot.study.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyVoteRequestDTO;
-import com.example.spot.study.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
-import com.example.spot.study.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
@@ -34,7 +34,6 @@ import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDo
 import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
-import com.example.spot.study.presentation.dto.response.StudyScheduleResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,7 +51,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/spot")
 @Validated
-public class StudyMemberController {
+public class MemberStudyController {
 
     private final StudyMemberQueryService studyMemberQueryService;
     private final StudyMemberCommandService studyMemberCommandService;
@@ -166,7 +165,7 @@ public class StudyMemberController {
     @Tag(name = "테스트 용 API", description = "테스트 용 API")
     @Operation(summary = "!테스트 용! [모집중인 스터디] 스터디 신청 처리하기", description = """ 
         ## [모집중인 스터디] 빠른 API 적용를 위해 스터디 신청 처리를 즉시 수행합니다.
-        위 API와 동일한 기능을 수행하지만, 실제 알림이 발송되지 않습니다. 
+        위 API와 동일한 기능을 수행하지만, 실제 알림이 발송되지 않습니다.
         또한 스터디 신청 승인 시,  회원의 상태가 AWAITING_SELF_APPROVAL가 아닌 APPROVED로 변경됩니다.
        
         즉, 바로 스터디 참여가 완료됩니다. 스터디 회원 조회 시, 바로 승인된 회원으로 조회됩니다.
@@ -199,19 +198,7 @@ public class StudyMemberController {
         StudyPostResponseDTO studyPostResponseDTO = studyMemberQueryService.findStudyAnnouncementPost(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_FOUND, studyPostResponseDTO);
     }
-    @Tag(name = "스터디 상세 정보")
-    @Operation(summary = "[스터디 상세 정보] 다가오는 모임 목록 불러오기", description = """ 
-        ## [스터디 상세 정보] 내 스터디 > 스터디 클릭, 로그인한 회원이 참여하는 특정 스터디의 다가오는 모임 목록을 페이징 조회 합니다.
-        현재 시점 이후에 진행되는 모임 일정의 목록을 schedule에서 반환합니다.
-        """)
-    @GetMapping("/studies/{studyId}/upcoming-schedules")
-    public ApiResponse<StudyScheduleResponseDTO> getUpcomingSchedules(
-        @PathVariable @ExistStudy Long studyId,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "1") int size){
-        StudyScheduleResponseDTO studyScheduleResponseDTO = studyMemberQueryService.findStudySchedule(studyId, PageRequest.of(page, size));
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, studyScheduleResponseDTO);
-    }
+
     @Tag(name = "스터디 상세 정보")
     @Operation(summary = "[스터디 상세 정보] 스터디에 참여하는 회원 목록 불러오기", description = """ 
         ## [스터디 상세 정보] 로그인한 회원이 참여하는 특정 스터디의 회원 목록을 전체 조회 합니다.
@@ -237,75 +224,6 @@ public class StudyMemberController {
         StudyMemberResDTO.StudyHostDTO studyHostDTO = studyMemberQueryService.getStudyHost(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, studyHostDTO);
     }
-
-
-/* ----------------------------- 스터디 일정 관련 API ------------------------------------- */
-
-    @Tag(name = "스터디 일정")
-    @Operation(summary = "[스터디 일정] 월별 일정 불러오기", description = """ 
-        ## [스터디 일정] 내 스터디 > 스터디 > 캘린더 클릭, 로그인한 회원이 참여하는 특정 스터디의 일정을 월 단위로 불러옵니다.
-        처음 캘린더를 클릭하면 오늘 날짜가 포함된 연/월에 해당하는 일정 목록이 schedule에서 반환됩니다.
-        캘린더를 넘기면 해당 연/월에 해당하는 일정 목록이 schedule에서 반환됩니다.
-        """)
-    @Parameter(name = "studyId", description = "일정을 불러올 스터디의 id를 입력합니다.", required = true)
-    @GetMapping("/studies/{studyId}/schedules")
-    public ApiResponse<ScheduleResponseDTO.MonthlyScheduleListDTO> getMonthlySchedules(
-            @PathVariable @ExistStudy Long studyId,
-            @RequestParam @IntSize(min = 1) Integer year,
-            @RequestParam @IntSize(min = 1, max= 12) Integer month) {
-        ScheduleResponseDTO.MonthlyScheduleListDTO monthlyScheduleDTO = studyMemberQueryService.getMonthlySchedules(studyId, year, month);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, monthlyScheduleDTO);
-    }
-
-    @Tag(name = "스터디 일정")
-    @Operation(summary = "[스터디 일정] 상세 일정 불러오기", description = """ 
-        ## [스터디 일정] 내 스터디 > 스터디 > 캘린더 > 일정 클릭, 로그인한 회원이 참여하는 특정 스터디의 상세 일정을 불러옵니다.
-        스터디의 일정 정보를 상세하게 불러옵니다.
-        """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "불러올 스터디 일정의 id를 입력합니다.", required = true)
-    @GetMapping("/studies/{studyId}/schedules/{scheduleId}")
-    public ApiResponse<ScheduleResponseDTO.MonthlyScheduleDTO> getSchedule(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId) {
-        ScheduleResponseDTO.MonthlyScheduleDTO scheduleDTO = studyMemberQueryService.getSchedule(studyId, scheduleId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, scheduleDTO);
-    }
-
-    @Tag(name = "스터디 일정")
-    @Operation(summary = "[스터디 일정] 일정 추가하기", description = """ 
-        ## [스터디 일정] 내 스터디 > 스터디 > 캘린더 > 추가 버튼 클릭, 로그인한 회원이 운영하는 특정 스터디에 일정을 추가합니다.
-        로그인한 회원이 owner인 경우 schedule에 새로운 일정을 등록합니다.
-        
-        period에는 [NONE, DAILY, WEEKLY, BIWEEKLY, MONTHLY] 중 하나를 입력해야 합니다.
-        """)
-    @Parameter(name = "studyId", description = "일정을 추가할 스터디의 id를 입력합니다.", required = true)
-    @PostMapping("/studies/{studyId}/schedules")
-    public ApiResponse<ScheduleResponseDTO.ScheduleDTO> addSchedule(
-            @PathVariable @ExistStudy Long studyId,
-            @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleRequestDTO) {
-        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = studyMemberCommandService.addSchedule(studyId, scheduleRequestDTO);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_CREATED, scheduleResponseDTO);
-    }
-
-    @Tag(name = "스터디 일정")
-    @Operation(summary = "[스터디 일정] 일정 변경하기", description = """ 
-        ## [스터디 일정] 내 스터디 > 스터디 > 캘린더 > 일정 클릭, 로그인한 회원이 특정 스터디에 등록한 일정을 수정합니다.
-        로그인한 회원이 owner인 경우 schedule에 등록한 일정을 수정할 수 있습니다.
-        
-        period에는 [NONE, DAILY, WEEKLY, BIWEEKLY, MONTHLY] 중 하나를 입력해야 합니다.
-        """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "변경할 일정의 id를 입력합니다.", required = true)
-    @PatchMapping("/studies/{studyId}/schedules/{scheduleId}")
-    public ApiResponse<ScheduleResponseDTO.ScheduleDTO> modSchedule(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestBody @Valid ScheduleRequestDTO.ScheduleDTO scheduleModDTO) {
-        ScheduleResponseDTO.ScheduleDTO scheduleResponseDTO = studyMemberCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_UPDATED, scheduleResponseDTO);
-    }
-
 
 /* ----------------------------- 스터디 투표 관련 API ------------------------------------- */
 
@@ -436,101 +354,6 @@ public class StudyMemberController {
         StudyImageResponseDTO.ImageListDTO imageListDTO = studyMemberQueryService.getAllStudyImages(studyId, PageRequest.of(offset, limit));
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_IMAGES_FOUND, imageListDTO);
     }
-
-/* ----------------------------- 스터디 출석체크 관련 API ------------------------------------- */
-
-    @Tag(name = "스터디 출석체크")
-    @Operation(summary = "[스터디 출석체크] 출석 퀴즈 생성하기", description = """ 
-        ## [스터디 출석체크] 내 스터디 > 스터디 > 캘린더 > 출석체크 > 퀴즈 만들기 클릭, 로그인한 회원이 운영하는 스터디에 퀴즈를 생성합니다.
-        * 로그인한 회원이 스터디장인 경우 quiz에 새로운 퀴즈를 생성합니다.
-        * createdAt에는 출석 퀴즈를 생성할 날짜를 입력합니다.
-        """)
-    @Parameter(name = "studyId", description = "출석 퀴즈를 생성할 스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "출석 퀴즈를 생성할 일정의 id를 입력합니다.", required = true)
-    @PostMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> createAttendanceQuiz(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestBody @Valid StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
-        StudyQuizResponseDTO.QuizDTO quizResponseDTO = studyMemberCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_CREATED, quizResponseDTO);
-    }
-
-    @Tag(name = "스터디 출석체크")
-    @Operation(summary = "[스터디 출석체크] 출석 퀴즈 불러오기", description = """ 
-        ## [스터디 출석체크] 내 스터디 > 스터디 > 캘린더 > 출석체크, 로그인한 회원이 참여하는 스터디의 퀴즈를 불러옵니다.
-        * 날짜에 해당하는 퀴즈의 아이디와 질문이 반환됩니다.
-        * date에는 출석 퀴즈를 불러올 날짜를 입력합니다.
-        """)
-    @Parameter(name = "studyId", description = "출석 퀴즈를 불러올 스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "출석 퀴즈를 불러올 일정의 id를 입력합니다.", required = true)
-    @GetMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> getAttendanceQuiz(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = studyMemberQueryService.getAttendanceQuiz(studyId, scheduleId, date);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, quizDTO);
-    }
-
-
-    @Tag(name = "스터디 출석체크")
-    @Operation(summary = "[스터디 출석체크] 출석 체크하기", description = """ 
-        ## [스터디 출석체크] 내 스터디 > 스터디 > 캘린더 > 이미지 클릭, 로그인한 회원이 참여하는 스터디에서 오늘의 퀴즈를 풀어 출석을 체크합니다.
-        * 특정 시점의 quiz에 대해 member_attendance 튜플을 추가합니다.
-        * dateTime에는 출석을 체크할 날짜와 시간을 입력합니다.
-        """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "일정의 id를 입력합니다.", required = true)
-    @PostMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
-    public ApiResponse<StudyQuizResponseDTO.AttendanceDTO> attendantStudy(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestBody @Valid StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
-        StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = studyMemberCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
-        if (attendanceResponseDTO.getIsCorrect()) {
-            return ApiResponse.onSuccess(SuccessStatus._STUDY_ATTENDANCE_CREATED_CORRECT_ANSWER, attendanceResponseDTO);
-        } else {
-            return ApiResponse.onSuccess(SuccessStatus._STUDY_ATTENDANCE_CREATED_WRONG_ANSWER, attendanceResponseDTO);
-        }
-    }
-
-    @Tag(name = "스터디 출석체크")
-    @Operation(summary = "[스터디 출석체크] 출석 퀴즈 삭제하기", description = """ 
-        ## [스터디 출석체크] 기한이 지난 출석 퀴즈를 삭제합니다. (화면 X)
-        * PathVariable을 통해 전달받은 정보를 바탕으로 출석 퀴즈를 삭제합니다.
-        * 출석 퀴즈 정보와 함께 퀴즈에 대한 MemberAttendance(회원 출석) 목록도 함께 삭제됩니다.
-        * date에는 출석 퀴즈를 삭제할 날짜를 입력합니다.
-        """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "일정의 id를 입력합니다.", required = true)
-    @DeleteMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> deleteAttendanceQuiz(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = studyMemberCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, quizDTO);
-    }
-
-    @Tag(name = "스터디 출석체크")
-    @Operation(summary = "[스터디 출석체크] 회원 출석부 불러오기", description = """ 
-        ## [스터디 출석체크] 지정된 날짜의 모든 스터디 회원의 출석 여부를 불러옵니다.
-        * 출석체크 화면에 표시되는 스터디 회원 정보(프로필 사진, 이름, 출석 여부, 스터디장 여부) 목록를 반환합니다.
-        * date에는 출석 정보를 확인할 날짜를 입력합니다.
-        """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "scheduleId", description = "출석을 확인할 일정의 id를 입력합니다.", required = true)
-    @GetMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
-    public ApiResponse<StudyQuizResponseDTO.AttendanceListDTO> getAllAttendances(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistSchedule Long scheduleId,
-            @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = studyMemberQueryService.getAllAttendances(studyId, scheduleId, date);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_ATTENDANCES_FOUND, attendanceListDTO);
-    }
-
-
 
 /* ----------------------------- 스터디 회원 신고 관련 API ------------------------------------- */
 

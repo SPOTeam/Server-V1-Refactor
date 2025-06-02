@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.response;
+package com.example.spot.schedule.presentation.dto.response;
 
 
 import java.time.LocalDateTime;

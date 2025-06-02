@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request;
+package com.example.spot.schedule.presentation.dto.request;
 
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.common.presentation.validator.TextLength;

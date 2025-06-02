@@ -1,4 +1,4 @@
-package com.example.spot.story.domain.application;
+package com.example.spot.story.application.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;

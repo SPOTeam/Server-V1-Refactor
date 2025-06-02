@@ -18,7 +18,7 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.domain.application.StoryQueryServiceImpl;
+import com.example.spot.story.application.application.StoryQueryServiceImpl;
 import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
 import org.junit.jupiter.api.BeforeEach;

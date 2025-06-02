@@ -1,4 +1,4 @@
-package com.example.spot.story.domain.application;
+package com.example.spot.story.application.application;
 
 import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;

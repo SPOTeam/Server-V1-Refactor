@@ -21,7 +21,7 @@ import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;

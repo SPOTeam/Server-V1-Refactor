@@ -22,7 +22,7 @@ import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.domain.application.StoryCommandServiceImpl;
+import com.example.spot.story.application.application.StoryCommandServiceImpl;
 import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;

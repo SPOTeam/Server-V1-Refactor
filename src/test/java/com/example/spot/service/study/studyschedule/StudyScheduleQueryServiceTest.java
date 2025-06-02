@@ -13,7 +13,7 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.application.StudyMemberQueryServiceImpl;
-import com.example.spot.study.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

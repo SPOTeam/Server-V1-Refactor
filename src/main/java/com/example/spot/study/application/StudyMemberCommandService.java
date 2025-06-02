@@ -1,14 +1,14 @@
 package com.example.spot.study.application;
 
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.study.presentation.dto.request.ScheduleRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
-import com.example.spot.study.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyVoteRequestDTO;
-import com.example.spot.study.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
-import com.example.spot.study.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
