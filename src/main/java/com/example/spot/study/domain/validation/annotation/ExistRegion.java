@@ -1,6 +1,6 @@
-package com.example.spot.common.presentation.validator;
+package com.example.spot.study.domain.validation.annotation;
 
-import com.example.spot.common.infrastructure.ExistRegionValidator;
+import com.example.spot.study.domain.validation.validator.ExistRegionValidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

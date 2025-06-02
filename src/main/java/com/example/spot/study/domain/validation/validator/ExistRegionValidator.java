@@ -1,8 +1,8 @@
-package com.example.spot.common.infrastructure;
+package com.example.spot.study.domain.validation.validator;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.study.domain.repository.RegionRepository;
-import com.example.spot.common.presentation.validator.ExistRegion;
+import com.example.spot.study.domain.validation.annotation.ExistRegion;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

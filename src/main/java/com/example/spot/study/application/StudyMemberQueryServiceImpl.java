@@ -27,7 +27,7 @@ import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 
 import com.example.spot.common.security.utils.SecurityUtils;
@@ -87,7 +87,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @throws GeneralException 스터디 멤버가 아닌 경우
      */
     @Override
-    public StudyPostResponseDTO findStudyAnnouncementPost(Long studyId) {
+    public StoryResponseDTO findStudyAnnouncementPost(Long studyId) {
 
         // 로그인한 회원이 해당 스터디 회원인지 확인
         if (!isMember(SecurityUtils.getCurrentUserId(), studyId))
@@ -98,7 +98,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
             studyId, true).orElseThrow(() -> new GeneralException(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // DTO로 변환하여 반환
-        return StudyPostResponseDTO.builder()
+        return StoryResponseDTO.builder()
             .title(story.getTitle())
             .content(story.getContent()).build();
     }

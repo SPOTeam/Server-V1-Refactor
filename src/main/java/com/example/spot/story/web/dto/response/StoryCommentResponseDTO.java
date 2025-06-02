@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.response;
+package com.example.spot.story.web.dto.response;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.association.LikedStoryComment;
@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Getter
-public class StudyPostCommentResponseDTO {
+public class StoryCommentResponseDTO {
 
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

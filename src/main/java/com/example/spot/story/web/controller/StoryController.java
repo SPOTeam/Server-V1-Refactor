@@ -1,18 +1,18 @@
-package com.example.spot.study.presentation.controller;
+package com.example.spot.story.web.controller;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.common.application.s3.S3ImageService;
-import com.example.spot.story.application.application.StoryCommandService;
-import com.example.spot.story.application.application.StoryQueryService;
+import com.example.spot.story.application.StoryCommandService;
+import com.example.spot.story.application.StoryQueryService;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
 import com.example.spot.story.domain.validation.annotation.ExistStoryComment;
-import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
+import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
+import com.example.spot.story.web.dto.request.StoryRequestDTO;
+import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/spot")
 @Validated
-public class StudyPostController {
+public class StoryController {
 
     private final StoryQueryService storyQueryService;
     private final StoryCommandService storyCommandService;
@@ -44,10 +44,10 @@ public class StudyPostController {
         """)
     @Parameter(name = "studyId", description = "게시글을 작성할 스터디의 id를 입력합니다.", required = true)
     @PostMapping(value = "/studies/{studyId}/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<StudyPostResDTO.PostPreviewDTO> createPost(
+    public ApiResponse<StoryResDTO.PostPreviewDTO> createPost(
             @PathVariable @ExistStudy Long studyId,
-            @ModelAttribute(name = "post") @Valid StudyPostRequestDTO.PostDTO postRequestDTO) {
-        StudyPostResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.createPost(studyId, postRequestDTO);
+            @ModelAttribute(name = "post") @Valid StoryRequestDTO.PostDTO postRequestDTO) {
+        StoryResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.createPost(studyId, postRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_CREATED, postPreviewDTO);
     }
 
@@ -59,12 +59,12 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "편집할 스터디 게시글의 id를 입력합니다.", required = true)
     @PatchMapping(value = "/studies/{studyId}/posts/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<StudyPostResDTO.PostPreviewDTO> updatePost(
+    public ApiResponse<StoryResDTO.PostPreviewDTO> updatePost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
-            @ModelAttribute(name= "post") @Valid StudyPostRequestDTO.PostDTO postDTO
+            @ModelAttribute(name= "post") @Valid StoryRequestDTO.PostDTO postDTO
     ) {
-        StudyPostResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.updatePost(studyId, postId, postDTO);
+        StoryResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.updatePost(studyId, postId, postDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_UPDATED, postPreviewDTO);
     }
 
@@ -77,10 +77,10 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "삭제할 스터디 게시글의 id를 입력합니다.", required = true)
     @DeleteMapping("/studies/{studyId}/posts/{postId}")
-    public ApiResponse<StudyPostResDTO.PostPreviewDTO> deletePost(
+    public ApiResponse<StoryResDTO.PostPreviewDTO> deletePost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StudyPostResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.deletePost(studyId, postId);
+        StoryResDTO.PostPreviewDTO postPreviewDTO = storyCommandService.deletePost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_DELETED, postPreviewDTO);
     }
 
@@ -95,12 +95,12 @@ public class StudyPostController {
         """)
     @Parameter(name = "studyId", description = "게시글 목록을 불러올 스터디의 id를 입력합니다.", required = true)
     @GetMapping("/studies/{studyId}/posts")
-    public ApiResponse<StudyPostResDTO.PostListDTO> getAllPosts(
+    public ApiResponse<StoryResDTO.PostListDTO> getAllPosts(
             @PathVariable @ExistStudy Long studyId,
             @RequestParam(required = false) StoryCategoryQuery storyCategoryQuery,
             @RequestParam @Min(0) Integer offset,
             @RequestParam @Min(1) Integer limit) {
-        StudyPostResDTO.PostListDTO postListDTO = storyQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, storyCategoryQuery);
+        StoryResDTO.PostListDTO postListDTO = storyQueryService.getAllPosts(PageRequest.of(offset, limit), studyId, storyCategoryQuery);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIST_FOUND, postListDTO);
     }
 
@@ -112,11 +112,11 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "불러올 스터디 게시글의 id를 입력합니다.", required = true)
     @GetMapping("/studies/{studyId}/posts/{postId}")
-    public ApiResponse<StudyPostResDTO.PostDetailDTO> getPost(
+    public ApiResponse<StoryResDTO.PostDetailDTO> getPost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @RequestParam Boolean likeOrScrap) {
-        StudyPostResDTO.PostDetailDTO postDetailDTO = storyQueryService.getPost(studyId, postId, likeOrScrap);
+        StoryResDTO.PostDetailDTO postDetailDTO = storyQueryService.getPost(studyId, postId, likeOrScrap);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_FOUND, postDetailDTO);
     }
 
@@ -128,10 +128,10 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "좋아요를 누를 스터디 게시글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/likes")
-    public ApiResponse<StudyPostResDTO.PostLikeNumDTO> likePost(
+    public ApiResponse<StoryResDTO.PostLikeNumDTO> likePost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StudyPostResDTO.PostLikeNumDTO postLikeNumDTO = storyCommandService.likePost(studyId, postId);
+        StoryResDTO.PostLikeNumDTO postLikeNumDTO = storyCommandService.likePost(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIKED, postLikeNumDTO);
     }
 
@@ -143,10 +143,10 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "좋아요를 취소할 스터디 게시글의 id를 입력합니다.", required = true)
     @DeleteMapping("/studies/{studyId}/posts/{postId}/likes")
-    public ApiResponse<StudyPostResDTO.PostLikeNumDTO> cancelPostLike(
+    public ApiResponse<StoryResDTO.PostLikeNumDTO> cancelPostLike(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StudyPostResDTO.PostLikeNumDTO postLikeNumDTO = storyCommandService.cancelPostLike(studyId, postId);
+        StoryResDTO.PostLikeNumDTO postLikeNumDTO = storyCommandService.cancelPostLike(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_DISLIKED, postLikeNumDTO);
     }
 
@@ -160,11 +160,11 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "댓글을 작성할 스터디 게시글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/comments")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentDTO> createComment(
+    public ApiResponse<StoryCommentResponseDTO.CommentDTO> createComment(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
-            @RequestBody @Valid StudyPostCommentRequestDTO.CommentDTO commentRequestDTO) {
-        StudyPostCommentResponseDTO.CommentDTO commentResponseDTO = storyCommandService.createComment(studyId, postId, commentRequestDTO);
+            @RequestBody @Valid StoryCommentRequestDTO.CommentDTO commentRequestDTO) {
+        StoryCommentResponseDTO.CommentDTO commentResponseDTO = storyCommandService.createComment(studyId, postId, commentRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_CREATED, commentResponseDTO);
     }
 
@@ -177,12 +177,12 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "답글을 작성할 댓글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/replies")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentDTO> createReply(
+    public ApiResponse<StoryCommentResponseDTO.CommentDTO> createReply(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId,
-            @RequestBody @Valid StudyPostCommentRequestDTO.CommentDTO commentRequestDTO) {
-        StudyPostCommentResponseDTO.CommentDTO commentResponseDTO = storyCommandService.createReply(studyId, postId, commentId, commentRequestDTO);
+            @RequestBody @Valid StoryCommentRequestDTO.CommentDTO commentRequestDTO) {
+        StoryCommentResponseDTO.CommentDTO commentResponseDTO = storyCommandService.createReply(studyId, postId, commentId, commentRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_CREATED, commentResponseDTO);
     }
 
@@ -195,11 +195,11 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "삭제할 댓글의 id를 입력합니다.", required = true)
     @PatchMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentIdDTO> deleteComment(
+    public ApiResponse<StoryCommentResponseDTO.CommentIdDTO> deleteComment(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId) {
-        StudyPostCommentResponseDTO.CommentIdDTO commentPreviewDTO = storyCommandService.deleteComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentIdDTO commentPreviewDTO = storyCommandService.deleteComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DELETED, commentPreviewDTO);
     }
 
@@ -212,11 +212,11 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "좋아요를 누를 댓글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/likes")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> likeComment(
+    public ApiResponse<StoryCommentResponseDTO.CommentPreviewDTO> likeComment(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId) {
-        StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.likeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.likeComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_LIKED, commentPreviewDTO);
     }
 
@@ -229,11 +229,11 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "싫어요를 누를 댓글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/dislikes")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> dislikeComment(
+    public ApiResponse<StoryCommentResponseDTO.CommentPreviewDTO> dislikeComment(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId) {
-        StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.dislikeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.dislikeComment(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DISLIKED, commentPreviewDTO);
     }
 
@@ -246,11 +246,11 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "좋아요를 취소할 댓글의 id를 입력합니다.", required = true)
     @DeleteMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/likes")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> cancelCommentLike(
+    public ApiResponse<StoryCommentResponseDTO.CommentPreviewDTO> cancelCommentLike(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId) {
-        StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.cancelCommentLike(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.cancelCommentLike(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_LIKE_CANCELED, commentPreviewDTO);
     }
 
@@ -263,11 +263,11 @@ public class StudyPostController {
     @Parameter(name = "postId", description = "스터디 게시글의 id를 입력합니다.", required = true)
     @Parameter(name = "commentId", description = "싫어요를 취소할 댓글의 id를 입력합니다.", required = true)
     @DeleteMapping("/studies/{studyId}/posts/{postId}/comments/{commentId}/dislikes")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentPreviewDTO> cancelCommentDislike(
+    public ApiResponse<StoryCommentResponseDTO.CommentPreviewDTO> cancelCommentDislike(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId,
             @PathVariable @ExistStoryComment Long commentId) {
-        StudyPostCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.cancelCommentDislike(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO commentPreviewDTO = storyCommandService.cancelCommentDislike(studyId, postId, commentId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_DISLIKE_CANCELED, commentPreviewDTO);
     }
 
@@ -279,10 +279,10 @@ public class StudyPostController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "댓글을 불러올 스터디 게시글의 id를 입력합니다.", required = true)
     @GetMapping("/studies/{studyId}/posts/{postId}/comments")
-    public ApiResponse<StudyPostCommentResponseDTO.CommentReplyListDTO> getAllComments(
+    public ApiResponse<StoryCommentResponseDTO.CommentReplyListDTO> getAllComments(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StudyPostCommentResponseDTO.CommentReplyListDTO commentReplyListDTO = storyQueryService.getAllComments(studyId, postId);
+        StoryCommentResponseDTO.CommentReplyListDTO commentReplyListDTO = storyQueryService.getAllComments(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_COMMENT_FOUND, commentReplyListDTO);
     }
 

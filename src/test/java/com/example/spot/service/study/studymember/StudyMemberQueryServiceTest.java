@@ -20,7 +20,7 @@ import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDo
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -136,7 +136,7 @@ public class StudyMemberQueryServiceTest {
                 Optional.ofNullable(studyMember));
 
         // when
-        StudyPostResponseDTO responseDTO = memberStudyQueryService.findStudyAnnouncementPost(studyId);
+        StoryResponseDTO responseDTO = memberStudyQueryService.findStudyAnnouncementPost(studyId);
 
         // then
         assertEquals(title,responseDTO.getTitle());

@@ -1,4 +1,4 @@
-package com.example.spot.story.application.application;
+package com.example.spot.story.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -17,8 +17,8 @@ import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
+import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -56,7 +56,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      *          2. themeQuery가 null인 경우 필터링 없이 게시글 목록을 반환합니다.
      */
     @Override
-    public StudyPostResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery) {
+    public StoryResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery) {
 
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
@@ -89,14 +89,14 @@ public class StoryQueryServiceImpl implements StoryQueryService {
             totalPosts = storyRepository.countByStudyIdAndStoryCategory(studyId, storyCategory);
         }
 
-        return StudyPostResDTO.PostListDTO.builder()
+        return StoryResDTO.PostListDTO.builder()
                 .studyId(studyId)
                 .posts(stories.stream()
                         .map(studyPost -> {
                             if (likedStoryRepository.existsByMemberIdAndStoryId(memberId, studyPost.getId())) {
-                                return StudyPostResDTO.PostDTO.toDTO(studyPost, true);
+                                return StoryResDTO.PostDTO.toDTO(studyPost, true);
                             } else {
-                                return StudyPostResDTO.PostDTO.toDTO(studyPost, false);
+                                return StoryResDTO.PostDTO.toDTO(studyPost, false);
                             }
                         })
                         .toList())
@@ -116,7 +116,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      */
     @Override
     @Transactional(readOnly = false)
-    public StudyPostResDTO.PostDetailDTO getPost(Long studyId, Long postId, Boolean likeOrScrap) {
+    public StoryResDTO.PostDetailDTO getPost(Long studyId, Long postId, Boolean likeOrScrap) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -151,7 +151,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
         Integer commentNum = storyCommentRepository.findAllByStoryId(postId).size();
         boolean isLiked = likedStoryRepository.existsByMemberIdAndStoryId(memberId, story.getId());
         boolean isWriter = story.getMember().getId().equals(memberId);
-        return StudyPostResDTO.PostDetailDTO.toDTO(story, commentNum, isLiked, isWriter);
+        return StoryResDTO.PostDetailDTO.toDTO(story, commentNum, isLiked, isWriter);
     }
 
 /* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
@@ -163,7 +163,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      * @return 스터디 게시글에 작성된 댓글의 목록을 반환합니다. 하나의 댓글에는 해당 댓글에 대한 답글 목록이 포함되어 있습니다.
      */
     @Override
-    public StudyPostCommentResponseDTO.CommentReplyListDTO getAllComments(Long studyId, Long postId) {
+    public StoryCommentResponseDTO.CommentReplyListDTO getAllComments(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -190,7 +190,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
                 .sorted(Comparator.comparing(StoryComment::getCreatedAt))
                 .toList();
 
-        return StudyPostCommentResponseDTO.CommentReplyListDTO.toDTO(story.getId(), storyComments, member, defaultImage);
+        return StoryCommentResponseDTO.CommentReplyListDTO.toDTO(story.getId(), storyComments, member, defaultImage);
     }
 
 }

@@ -22,12 +22,12 @@ import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.application.application.StoryCommandServiceImpl;
+import com.example.spot.story.application.StoryCommandServiceImpl;
 import com.example.spot.common.application.s3.S3ImageService;
-import com.example.spot.study.presentation.dto.request.StudyPostCommentRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
+import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
+import com.example.spot.story.web.dto.request.StoryRequestDTO;
+import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -161,7 +161,7 @@ class StoryCommandServiceTest {
         Long memberId = 3L;
         Long studyId = 1L;
 
-        StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
+        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -178,7 +178,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of(member1Study, ownerStudy));
 
         // when
-        StudyPostResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
+        StoryResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
 
         // then
         assertNotNull(result);
@@ -194,7 +194,7 @@ class StoryCommandServiceTest {
         Long memberId = 1L;
         Long studyId = 1L;
 
-        StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
+        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
                 .isAnnouncement(false)
                 .storyCategory(StoryCategory.FREE_TALK)
                 .title("잡담")
@@ -211,7 +211,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of(member1Study, ownerStudy));
 
         // when
-        StudyPostResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
+        StoryResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
 
         // then
         assertNotNull(result);
@@ -227,7 +227,7 @@ class StoryCommandServiceTest {
         Long memberId = 2L;
         Long studyId = 1L;
 
-        StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
+        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -255,7 +255,7 @@ class StoryCommandServiceTest {
         Long memberId = 2L;
         Long studyId = 1L;
 
-        StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
+        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -283,7 +283,7 @@ class StoryCommandServiceTest {
         Long memberId = 1L;
         Long studyId = 1L;
 
-        StudyPostRequestDTO.PostDTO postPreviewDTO = StudyPostRequestDTO.PostDTO.builder()
+        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("50자가 넘어가는 제목 "
@@ -327,7 +327,7 @@ class StoryCommandServiceTest {
                 .thenReturn(Optional.of(story1));
 
         // when
-        StudyPostResDTO.PostPreviewDTO result = studyPostCommandService.deletePost(studyId, postId);
+        StoryResDTO.PostPreviewDTO result = studyPostCommandService.deletePost(studyId, postId);
 
         // then
         assertNotNull(result);
@@ -398,7 +398,7 @@ class StoryCommandServiceTest {
         when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
-        StudyPostResDTO.PostLikeNumDTO result = studyPostCommandService.likePost(studyId, postId);
+        StoryResDTO.PostLikeNumDTO result = studyPostCommandService.likePost(studyId, postId);
 
         // then
         assertNotNull(result);
@@ -472,7 +472,7 @@ class StoryCommandServiceTest {
         when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
-        StudyPostResDTO.PostLikeNumDTO result = studyPostCommandService.cancelPostLike(studyId, postId);
+        StoryResDTO.PostLikeNumDTO result = studyPostCommandService.cancelPostLike(studyId, postId);
 
         // then
         assertNotNull(result);
@@ -537,7 +537,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("댓글")
                 .isAnonymous(true)
                 .build();
@@ -550,7 +550,7 @@ class StoryCommandServiceTest {
         when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId)).thenReturn(List.of());
 
         // when
-        StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
+        StoryCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
 
         // then
         assertNotNull(result);
@@ -570,7 +570,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("댓글")
                 .isAnonymous(false)
                 .build();
@@ -583,7 +583,7 @@ class StoryCommandServiceTest {
         when(storyCommentRepository.findAllByMemberIdAndStoryId(memberId, postId)).thenReturn(List.of());
 
         // when
-        StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
+        StoryCommentResponseDTO.CommentDTO result = studyPostCommandService.createComment(studyId, postId, commentDTO);
 
         // then
         assertNotNull(result);
@@ -603,7 +603,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("댓글")
                 .isAnonymous(false)
                 .build();
@@ -635,7 +635,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("답글")
                 .isAnonymous(true)
                 .build();
@@ -650,7 +650,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of());
 
         // when
-        StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService
+        StoryCommentResponseDTO.CommentDTO result = studyPostCommandService
                 .createReply(studyId, postId, commentId, commentDTO);
 
         //then
@@ -672,7 +672,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("답글")
                 .isAnonymous(false)
                 .build();
@@ -687,7 +687,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of());
 
         // when
-        StudyPostCommentResponseDTO.CommentDTO result = studyPostCommandService
+        StoryCommentResponseDTO.CommentDTO result = studyPostCommandService
                 .createReply(studyId, postId, commentId, commentDTO);
 
         //then
@@ -709,7 +709,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("답글")
                 .isAnonymous(false)
                 .build();
@@ -738,7 +738,7 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyPostCommentRequestDTO.CommentDTO commentDTO = StudyPostCommentRequestDTO.CommentDTO.builder()
+        StoryCommentRequestDTO.CommentDTO commentDTO = StoryCommentRequestDTO.CommentDTO.builder()
                 .content("답글")
                 .isAnonymous(false)
                 .build();
@@ -785,7 +785,7 @@ class StoryCommandServiceTest {
         when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
-        StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.likeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.likeComment(studyId, postId, commentId);
 
         // then
         assertNotNull(result);
@@ -860,7 +860,7 @@ class StoryCommandServiceTest {
         when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
-        StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.dislikeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.dislikeComment(studyId, postId, commentId);
 
         // then
         assertNotNull(result);
@@ -933,7 +933,7 @@ class StoryCommandServiceTest {
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when
-        StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
                 .cancelCommentLike(studyId, postId, commentId);
 
         // then
@@ -1002,7 +1002,7 @@ class StoryCommandServiceTest {
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when
-        StudyPostCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService
                 .cancelCommentDislike(studyId, postId, commentId);
 
         // then

@@ -8,7 +8,7 @@ import com.example.spot.story.domain.association.StoryImage;
 import com.example.spot.story.domain.association.StoryReport;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.study.domain.Study;
-import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
+import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -136,7 +136,7 @@ public class Story extends BaseEntity {
         storyReports.add(storyReport);
     }
 
-    public void updatePost(StudyPostRequestDTO.PostDTO requestDTO) {
+    public void updatePost(StoryRequestDTO.PostDTO requestDTO) {
         isAnnouncement = requestDTO.getIsAnnouncement();
         storyCategory = requestDTO.getStoryCategory();
         title = requestDTO.getTitle();

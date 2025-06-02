@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.response;
+package com.example.spot.story.web.dto.response;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudyPostResponseDTO {
+public class StoryResponseDTO {
     private String title;
     private String content;
 }

@@ -1,14 +1,10 @@
 package com.example.spot.study.application;
 
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
-import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyVoteRequestDTO;
-import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
@@ -17,8 +13,6 @@ import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO;
 import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
 import jakarta.validation.Valid;
-
-import java.time.LocalDate;
 
 public interface StudyMemberCommandService {
 
@@ -31,21 +25,6 @@ public interface StudyMemberCommandService {
     StudyApplyResponseDTO acceptAndRejectStudyApply(Long memberId, Long studyId, boolean isAccept);
 
     StudyApplyResponseDTO acceptAndRejectStudyApplyForTest(Long memberId, Long studyId, boolean isAccept);
-
-    // 일정 생성
-    ScheduleResponseDTO.ScheduleDTO addSchedule(Long studyId, ScheduleRequestDTO.ScheduleDTO scheduleRequestDTO);
-
-    // 일정 수정
-    ScheduleResponseDTO.ScheduleDTO modSchedule(Long studyId, Long scheduleId, ScheduleRequestDTO.ScheduleDTO scheduleModDTO);
-
-    // 스터디 퀴즈 생성
-    StudyQuizResponseDTO.QuizDTO createAttendanceQuiz(Long studyId, Long scheduleId, StudyQuizRequestDTO.QuizDTO quizRequestDTO);
-
-    // 스터디 출석
-    StudyQuizResponseDTO.AttendanceDTO attendantStudy(Long studyId, Long scheduleId, StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO);
-
-    // 스터디 퀴즈 삭제
-    StudyQuizResponseDTO.QuizDTO deleteAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
 
     // 스터디 투표 생성
     StudyVoteResponseDTO.VotePreviewDTO createVote(Long studyId, StudyVoteRequestDTO.VoteDTO voteDTO);
@@ -63,7 +42,7 @@ public interface StudyMemberCommandService {
     MemberResponseDTO.ReportedMemberDTO reportStudyMember(Long studyId, Long memberId, @Valid StudyMemberReportDTO studyMemberReportDTO);
 
     // 스터디 게시글 신고
-    StudyPostResDTO.PostPreviewDTO reportStudyPost(Long studyId, Long postId);
+    StoryResDTO.PostPreviewDTO reportStudyPost(Long studyId, Long postId);
 
     // 투두 리스트 생성
     ToDoListCreateResponseDTO createToDoList(Long studyId, ToDoListRequestDTO.ToDoListCreateDTO toDoListCreateDTO);

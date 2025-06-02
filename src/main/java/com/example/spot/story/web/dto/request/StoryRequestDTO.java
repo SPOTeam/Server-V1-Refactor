@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request;
+package com.example.spot.story.web.dto.request;
 
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.common.presentation.validator.TextLength;
@@ -8,7 +8,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class StudyPostRequestDTO {
+public class StoryRequestDTO {
 
     @Getter
     @Setter

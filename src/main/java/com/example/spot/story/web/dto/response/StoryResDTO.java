@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.response;
+package com.example.spot.story.web.dto.response;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class StudyPostResDTO {
+public class StoryResDTO {
 
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

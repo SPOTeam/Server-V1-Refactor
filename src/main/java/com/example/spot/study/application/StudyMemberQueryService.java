@@ -7,7 +7,7 @@ import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 
 
@@ -23,7 +23,7 @@ public interface StudyMemberQueryService {
     ScheduleResponseDTO.MonthlyScheduleDTO getSchedule(Long studyId, Long scheduleId);
 
     // 스터디 공지 게시글 불러오기
-    StudyPostResponseDTO findStudyAnnouncementPost(Long studyId);
+    StoryResponseDTO findStudyAnnouncementPost(Long studyId);
 
     // 스터디 다가오는 모임 일정 불러오기
     StudyScheduleResponseDTO findStudySchedule(Long studyId, Pageable pageable);

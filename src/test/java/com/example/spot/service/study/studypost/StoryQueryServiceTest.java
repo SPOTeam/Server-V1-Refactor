@@ -18,9 +18,9 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.application.application.StoryQueryServiceImpl;
-import com.example.spot.study.presentation.dto.response.StudyPostCommentResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResDTO;
+import com.example.spot.story.application.StoryQueryServiceImpl;
+import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.web.dto.response.StoryResDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -149,7 +149,7 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when
-        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, null);
+        StoryResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, null);
 
         // then
         assertNotNull(result);
@@ -178,7 +178,7 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when
-        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.FREE_TALK);
+        StoryResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.FREE_TALK);
 
         // then
         assertNotNull(result);
@@ -207,7 +207,7 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when
-        StudyPostResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.ANNOUNCEMENT);
+        StoryResDTO.PostListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.ANNOUNCEMENT);
 
         // then
         assertNotNull(result);
@@ -286,7 +286,7 @@ class StoryQueryServiceTest {
                 .thenReturn(false);
 
         // when
-        StudyPostResDTO.PostDetailDTO result = studyPostQueryService.getPost(studyId, postId, false);
+        StoryResDTO.PostDetailDTO result = studyPostQueryService.getPost(studyId, postId, false);
 
         // then
         assertNotNull(result);
@@ -319,7 +319,7 @@ class StoryQueryServiceTest {
                 .thenReturn(false);
 
         // when
-        StudyPostResDTO.PostDetailDTO result = studyPostQueryService.getPost(studyId, postId, true);
+        StoryResDTO.PostDetailDTO result = studyPostQueryService.getPost(studyId, postId, true);
 
         // then
         assertNotNull(result);
@@ -394,7 +394,7 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
 
         // when
-        StudyPostCommentResponseDTO.CommentReplyListDTO result = studyPostQueryService.getAllComments(studyId, postId);
+        StoryCommentResponseDTO.CommentReplyListDTO result = studyPostQueryService.getAllComments(studyId, postId);
 
         // then
         assertNotNull(result);
