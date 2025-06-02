@@ -39,8 +39,7 @@ public interface StudyQueryService {
         SearchRequestStudyDTO request, StudySortBy sortBy);
 
     // 내 특정 관심사 스터디 페이징 조회
-    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId,
-                                                            SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
+    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId, SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
 
     // 내 관심 지역 스터디 페이징 조회
     StudyPreviewDTO findInterestRegionStudiesByConditionsAll(

@@ -203,40 +203,4 @@ public class MemberStudyController {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, studyHostDTO);
     }
 
-    /* ----------------------------- 스터디 이미지 관련 API ------------------------------------- */
-
-
-
-
-    /* ----------------------------- 스터디 회원 신고 관련 API ------------------------------------- */
-
-    @Tag(name = "스터디 신고")
-    @Operation(summary = "[스터디 신고] 스터디원 신고하기", description = """ 
-            ## [스터디 신고] 로그인한 회원이 참여하는 스터디의 다른 회원을 신고합니다.
-            신고당한 회원의 id와 이름이 반환됩니다.
-            """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "memberId", description = "신고할 스터디원의 id를 입력합니다.", required = true)
-    @PostMapping("/studies/{studyId}/members/{memberId}/reports")
-    public ApiResponse<MemberResponseDTO.ReportedMemberDTO> reportStudyMember(
-            @PathVariable @ExistStudy Long studyId, @PathVariable @ExistMember Long memberId,
-            @RequestBody @Valid StudyMemberReportDTO studyMemberReportDTO) {
-        MemberResponseDTO.ReportedMemberDTO reportedMemberDTO = studyMemberCommandService.reportStudyMember(studyId, memberId, studyMemberReportDTO);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_REPORTED, reportedMemberDTO);
-    }
-
-    @Tag(name = "스터디 신고")
-    @Operation(summary = "[스터디 신고] 스터디 게시글 신고하기", description = """ 
-            ## [스터디 신고] 로그인한 회원이 참여하는 스터디의 게시글을 신고합니다.
-            신고당한 스터디 게시글의 id와 제목이 반환됩니다.
-            """)
-    @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
-    @Parameter(name = "postId", description = "신고할 스터디 게시글의 id를 입력합니다.", required = true)
-    @PostMapping("/studies/{studyId}/posts/{postId}/reports")
-    public ApiResponse<StoryResDTO.PostPreviewDTO> reportStudyPost(
-            @PathVariable @ExistStudy Long studyId,
-            @PathVariable @ExistStory Long postId) {
-        StoryResDTO.PostPreviewDTO postPreviewDTO = studyMemberCommandService.reportStudyPost(studyId, postId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_REPORTED, postPreviewDTO);
-    }
 }

@@ -1,6 +1,5 @@
-package com.example.spot.story.domain.repository;
+package com.example.spot.report.domain;
 
-import com.example.spot.story.domain.association.StoryReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

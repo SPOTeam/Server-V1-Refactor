@@ -1,4 +1,4 @@
-package com.example.spot.story.domain.association;
+package com.example.spot.report.domain;
 
 import com.example.spot.story.domain.Story;
 import jakarta.persistence.*;

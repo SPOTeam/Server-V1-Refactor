@@ -6,6 +6,7 @@ import com.example.spot.comment.domain.association.LikedPostComment;
 import com.example.spot.member.domain.Member;
 import com.example.spot.post.domain.Post;
 import com.example.spot.comment.domain.PostComment;
+import com.example.spot.report.application.ReportCommandServiceImpl;
 import com.example.spot.report.domain.PostReport;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.association.MemberScrap;
@@ -91,6 +92,9 @@ class PostCommandServiceTest {
 
     @InjectMocks
     private PostCommandServiceImpl postCommandService;
+
+    @InjectMocks
+    private ReportCommandServiceImpl reportCommandService;
 
     private static Member member1;
     private static Member member2;
@@ -1016,7 +1020,7 @@ class PostCommandServiceTest {
         when(postReportRepository.save(any(PostReport.class))).thenReturn(postReport);
 
         // when
-        PostReportResponse result = postCommandService.reportPost(postId, memberId);
+        PostReportResponse result = reportCommandService.reportPost(postId, memberId);
 
         // then
         assertNotNull(result);
@@ -1036,7 +1040,7 @@ class PostCommandServiceTest {
         when(postReportRepository.existsByPostIdAndMemberId(postId, memberId)).thenReturn(false);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.reportPost(postId, memberId));
+        assertThrows(PostHandler.class, () -> reportCommandService.reportPost(postId, memberId));
     }
 
     @Test
@@ -1051,7 +1055,7 @@ class PostCommandServiceTest {
         when(postReportRepository.existsByPostIdAndMemberId(postId, memberId)).thenReturn(true);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.reportPost(postId, memberId));
+        assertThrows(PostHandler.class, () -> reportCommandService.reportPost(postId, memberId));
     }
 
 

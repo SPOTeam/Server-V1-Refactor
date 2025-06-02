@@ -5,10 +5,7 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.report.domain.MemberReport;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.association.StoryReport;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.member.domain.enums.Status;
@@ -18,17 +15,14 @@ import com.example.spot.report.domain.MemberReportRepository;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
-import com.example.spot.story.domain.repository.StoryReportRepository;
+import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.common.application.s3.S3ImageService;
-import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO.WithdrawalDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
 
@@ -278,91 +272,5 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
      */
     private boolean isOwner(Long memberId, Long studyId) {
         return studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(memberId, studyId, true).isPresent();
-    }
-
-    /**
-     * 스터디원을 신고하고 신고 내역을 저장하는 메서드입니다.
-     * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param memberId 신고할 회원의 아이디를 입력 받습니다.
-     * @param studyMemberReportDTO 신고 사유를 입력 받습니다.
-     * @return 신고를 당한 회원의 아이디와 이름을 반환합니다.
-     */
-    @Override
-    public MemberResponseDTO.ReportedMemberDTO reportStudyMember(Long studyId, Long memberId, StudyMemberReportDTO studyMemberReportDTO) {
-
-        //=== Exception ===//
-        Long reporterId = SecurityUtils.getCurrentUserId();
-        SecurityUtils.verifyUserId(reporterId);
-
-        Member reporter = memberRepository.findById(reporterId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        Study study = studyRepository.findById(studyId)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        // 로그인한 회원이 스터디 회원인지 확인
-        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(reporterId, studyId, StudyApplicationStatus.APPROVED)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
-
-        // 신고당한 회원이 스터디 회원인지 확인
-        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
-
-        // 자기 자신을 신고할 수 없음
-        if (reporterId.equals(memberId)) {
-            throw new StudyHandler(ErrorStatus._STUDY_MEMBER_REPORT_INVALID);
-        }
-
-
-        //=== Feature ===//
-        MemberReport memberReport = MemberReport.builder()
-                .content(studyMemberReportDTO.getContent())
-                .member(member)
-                .build();
-
-        memberReport = memberReportRepository.save(memberReport);
-        member.addMemberReport(memberReport);
-
-        return MemberResponseDTO.ReportedMemberDTO.toDTO(member);
-    }
-
-    /**
-     * 스터디 게시글을 신고하고 신고 내역을 저장하는 메서드입니다.
-     * @param studyId 타겟 스터디의 아이디를 입력합니다.
-     * @param postId 신고할 게시글의 아이디를 입력합니다.
-     * @return 신고를 당한 스터디 게시글의 아이디와 제목을 반환합니다.
-     */
-    @Override
-    public StoryResDTO.PostPreviewDTO reportStudyPost(Long studyId, Long postId) {
-
-        //=== Exception ===//
-        Long reporterId = SecurityUtils.getCurrentUserId();
-        SecurityUtils.verifyUserId(reporterId);
-
-        memberRepository.findById(reporterId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        studyRepository.findById(studyId)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-        Story story = storyRepository.findById(postId)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
-
-        // 로그인한 회원이 스터디 회원인지 확인
-        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(reporterId, studyId, StudyApplicationStatus.APPROVED)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
-
-        // 해당 스터디의 게시글인지 확인
-        storyRepository.findByIdAndStudyId(postId, studyId)
-                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_NOT_FOUND));
-
-        //=== Feature ===//
-        StoryReport storyReport = StoryReport.builder()
-                .story(story)
-                .build();
-
-        storyReport = storyReportRepository.save(storyReport);
-        story.addStudyPostReport(storyReport);
-
-        return StoryResDTO.PostPreviewDTO.toDTO(story);
     }
 }

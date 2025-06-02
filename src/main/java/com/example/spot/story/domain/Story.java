@@ -5,7 +5,7 @@ import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.story.domain.association.LikedStory;
 import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.association.StoryImage;
-import com.example.spot.story.domain.association.StoryReport;
+import com.example.spot.report.domain.StoryReport;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.study.domain.Study;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;

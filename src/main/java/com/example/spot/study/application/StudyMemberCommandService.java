@@ -30,11 +30,4 @@ public interface StudyMemberCommandService {
 
     // 스터디 승인 거절 테스트
     StudyApplyResponseDTO acceptAndRejectStudyApplyForTest(Long memberId, Long studyId, boolean isAccept);
-
-    // 스터디 회원 신고
-    MemberResponseDTO.ReportedMemberDTO reportStudyMember(Long studyId, Long memberId, @Valid StudyMemberReportDTO studyMemberReportDTO);
-
-    // 스터디 게시글 신고
-    StoryResDTO.PostPreviewDTO reportStudyPost(Long studyId, Long postId);
-
 }

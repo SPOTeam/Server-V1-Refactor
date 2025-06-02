@@ -599,32 +599,4 @@ public class PostCommandServiceImpl implements PostCommandService {
                 .cancelScraps(deletePostResponses)
                 .build();
     }
-
-    @Override
-    public PostReportResponse reportPost(Long postId, Long memberId) {
-
-        // 동일한 게시글에 대한 중복 신고 방지
-        if (postReportRepository.existsByPostIdAndMemberId(postId, memberId)) {
-            throw new PostHandler(ErrorStatus._POST_ALREADY_REPORTED);
-        }
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
-
-        if (post.getMember().getId().equals(memberId)) {
-            throw new PostHandler(ErrorStatus._POST_REPORT_SELF);
-        }
-
-        PostReport postReport = PostReport.builder()
-                .postStatus(PostStatus.신고접수)
-                .post(post)
-                .member(member).build();
-
-        postReportRepository.save(postReport);
-
-        return PostReportResponse.toDTO(postId, memberId);
-    }
 }

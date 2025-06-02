@@ -12,7 +12,7 @@ import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.repository.StoryImageRepository;
-import com.example.spot.story.domain.repository.StoryReportRepository;
+import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
