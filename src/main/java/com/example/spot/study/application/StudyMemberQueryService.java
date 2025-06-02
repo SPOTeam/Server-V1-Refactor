@@ -18,9 +18,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface StudyMemberQueryService {
 
-    // 스터디 공지 게시글 불러오기
-    StoryResponseDTO findStudyAnnouncementPost(Long studyId);
-
     // 참여하는 회원 목록 불러오기
     StudyMemberResponseDTO findStudyMembers(Long studyId);
 
@@ -35,8 +32,5 @@ public interface StudyMemberQueryService {
 
     // 스터디 신청 여부 확인
     StudyApplicantDTO isApplied(Long studyId);
-
-    // 스터디 이미지 목록 조회
-    StudyImageResponseDTO.ImageListDTO getAllStudyImages(Long studyId, PageRequest pageRequest);
 
 }

@@ -179,17 +179,6 @@ public class MemberStudyController {
     /* ----------------------------- 스터디 상세 정보 관련 API ------------------------------------- */
 
     @Tag(name = "스터디 상세 정보")
-    @Operation(summary = "[스터디 상세 정보] 스터디 최근 공지 1개 불러오기", description = """ 
-            ## [스터디 상세 정보] 내 스터디 > 스터디 클릭, 로그인한 회원이 참여하는 특정 스터디의 최근 공지 1개를 불러옵니다.
-            study_post의 announced_at이 가장 최근인 공지 1개가 반환됩니다.
-            """)
-    @GetMapping("/studies/{studyId}/announce")
-    public ApiResponse<StoryResponseDTO> getRecentAnnouncement(@PathVariable @ExistStudy Long studyId) {
-        StoryResponseDTO storyResponseDTO = studyMemberQueryService.findStudyAnnouncementPost(studyId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_FOUND, storyResponseDTO);
-    }
-
-    @Tag(name = "스터디 상세 정보")
     @Operation(summary = "[스터디 상세 정보] 스터디에 참여하는 회원 목록 불러오기", description = """ 
             ## [스터디 상세 정보] 로그인한 회원이 참여하는 특정 스터디의 회원 목록을 전체 조회 합니다.
             member_study에서 application_status=APPROVED인 회원의 목록(이름, 프로필 사진 포함)이 반환됩니다.
@@ -214,21 +203,10 @@ public class MemberStudyController {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, studyHostDTO);
     }
 
-    /* ----------------------------- 스터디 갤러리 관련 API ------------------------------------- */
-    @Tag(name = "스터디 이미지")
-    @Operation(summary = "[스터디 갤러리] 스터디 이미지 목록 불러오기", description = """ 
-            ## [스터디 갤러리] 내 스터디 > 스터디 > 갤러리 클릭, 로그인한 회원이 참여하는 스터디의 이미지 목록을 불러옵니다.
-            study_post에 존재하는 모든 게시글의 이미지를 최신순으로 반환합니다.
-            """)
-    @Parameter(name = "studyId", description = "이미지 목록을 불러올 스터디의 id를 입력합니다.", required = true)
-    @GetMapping("/studies/{studyId}/images")
-    public ApiResponse<StudyImageResponseDTO.ImageListDTO> getAllStudyImages(
-            @PathVariable @ExistStudy Long studyId,
-            @RequestParam @Min(0) Integer offset,
-            @RequestParam @Min(1) Integer limit) {
-        StudyImageResponseDTO.ImageListDTO imageListDTO = studyMemberQueryService.getAllStudyImages(studyId, PageRequest.of(offset, limit));
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_IMAGES_FOUND, imageListDTO);
-    }
+    /* ----------------------------- 스터디 이미지 관련 API ------------------------------------- */
+
+
+
 
     /* ----------------------------- 스터디 회원 신고 관련 API ------------------------------------- */
 

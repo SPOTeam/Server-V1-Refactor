@@ -1,11 +1,13 @@
 package com.example.spot.story.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
+import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.enums.StoryCategory;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.study.domain.Study;
@@ -19,6 +21,7 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
 import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -154,7 +157,43 @@ public class StoryQueryServiceImpl implements StoryQueryService {
         return StoryResDTO.PostDetailDTO.toDTO(story, commentNum, isLiked, isWriter);
     }
 
-/* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
+    /**
+     * 스터디 최근 공지사항을 1개 조회합니다.
+     *
+     * @param studyId 스터디 ID
+     * @return 제목과 내용을 반환합니다.
+     * @throws GeneralException 스터디 공지사항이 존재하지 않는 경우
+     * @throws GeneralException 스터디 멤버가 아닌 경우
+     */
+    @Override
+    public StoryResponseDTO findStudyAnnouncementPost(Long studyId) {
+
+        // 로그인한 회원이 해당 스터디 회원인지 확인
+        if (!isMember(SecurityUtils.getCurrentUserId(), studyId))
+            throw new GeneralException(ErrorStatus._ONLY_STUDY_MEMBER_CAN_ACCESS_ANNOUNCEMENT_POST);
+
+        // 스터디 공지사항 조회
+        Story story = storyRepository.findByStudyIdAndIsAnnouncement(
+                studyId, true).orElseThrow(() -> new GeneralException(ErrorStatus._STUDY_POST_NOT_FOUND));
+
+        // DTO로 변환하여 반환
+        return StoryResponseDTO.builder()
+                .title(story.getTitle())
+                .content(story.getContent()).build();
+    }
+
+    /**
+     * 회원이 스터디 구성원인지 확인합니다.
+     *
+     * @param memberId 확인 하려는 회원 ID
+     * @param studyId  확인 하려는 스터디 ID
+     * @return 스터디 참여 여부를 반환합니다.
+     */
+    private boolean isMember(Long memberId, Long studyId) {
+        return studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED).isPresent();
+    }
+
+    /* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
 
     /**
      * 특정 스터디 게시글의 모든 댓글을 조회하는 메서드입니다.
@@ -191,6 +230,42 @@ public class StoryQueryServiceImpl implements StoryQueryService {
                 .toList();
 
         return StoryCommentResponseDTO.CommentReplyListDTO.toDTO(story.getId(), storyComments, member, defaultImage);
+    }
+
+
+/* ----------------------------- 스터디 갤러리 관련 API ------------------------------------- */
+
+    /**
+     * 스터디 게시판에 업로드한 이미지 목록을 불러오는 메서드입니다.
+     * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
+     * @param pageRequest 페이징에 필요한 페이지 번호와 크기를 입력 받습니다.
+     * @return 스터디 아이디와 해당 스터디에 업로드된 이미지 목록을 반환합니다.
+     */
+    @Override
+    public StudyImageResponseDTO.ImageListDTO getAllStudyImages(Long studyId, PageRequest pageRequest) {
+
+        //=== Exception ===//
+        Long memberId = SecurityUtils.getCurrentUserId();
+        SecurityUtils.verifyUserId(memberId);
+        studyRepository.findById(studyId)
+                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new StudyHandler(ErrorStatus._MEMBER_NOT_FOUND));
+
+        // 로그인한 회원이 스터디 회원인지 확인
+        studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED)
+                .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
+
+        //=== Feature ===//
+        List<StudyImageResponseDTO.ImageDTO> images = storyRepository.findAllByStudyId(studyId, pageRequest)
+                .stream()
+                .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
+                .flatMap(studyPost -> studyPost.getImages().stream())
+                .map(StudyImageResponseDTO.ImageDTO::toDTO)
+                .toList();
+
+        return StudyImageResponseDTO.ImageListDTO.toDTO(studyId, images);
+
     }
 
 }
