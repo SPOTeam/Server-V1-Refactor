@@ -31,8 +31,8 @@ import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO.ToDoListDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO.ToDoListDTO;
 
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.vote.domain.Vote;

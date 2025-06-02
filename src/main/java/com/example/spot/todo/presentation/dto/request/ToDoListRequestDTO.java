@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request;
+package com.example.spot.todo.presentation.dto.request;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

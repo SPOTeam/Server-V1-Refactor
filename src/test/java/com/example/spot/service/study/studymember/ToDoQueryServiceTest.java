@@ -16,7 +16,7 @@ import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.todo.domain.ToDoRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.study.application.StudyMemberQueryServiceImpl;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
@@ -50,7 +50,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StudyMemberQueryServiceTest {
+public class ToDoQueryServiceTest {
 
     @InjectMocks
     private StudyMemberQueryServiceImpl memberStudyQueryService;

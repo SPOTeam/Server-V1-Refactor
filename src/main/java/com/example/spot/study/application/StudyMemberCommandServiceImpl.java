@@ -36,9 +36,9 @@ import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseD
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO.WithdrawalDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
 

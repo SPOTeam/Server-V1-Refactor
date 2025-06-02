@@ -8,9 +8,9 @@ import com.example.spot.story.web.dto.response.StoryResDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
-import com.example.spot.study.presentation.dto.request.ToDoListRequestDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
 import jakarta.validation.Valid;
 

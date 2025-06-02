@@ -1,6 +1,6 @@
 package com.example.spot.study.application;
 
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;

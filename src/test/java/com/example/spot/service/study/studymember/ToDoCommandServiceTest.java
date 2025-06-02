@@ -19,9 +19,9 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.todo.domain.ToDoRepository;
 import com.example.spot.study.application.StudyMemberCommandServiceImpl;
-import com.example.spot.study.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
@@ -45,7 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StudyMemberCommandServiceTest {
+public class ToDoCommandServiceTest {
 
     @InjectMocks
     private StudyMemberCommandServiceImpl memberStudyCommandService;
