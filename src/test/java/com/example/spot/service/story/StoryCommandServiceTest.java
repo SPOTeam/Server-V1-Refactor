@@ -1,4 +1,4 @@
-package com.example.spot.service.study.studypost;
+package com.example.spot.service.story;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;

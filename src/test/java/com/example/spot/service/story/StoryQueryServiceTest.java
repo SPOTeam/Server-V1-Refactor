@@ -1,5 +1,6 @@
-package com.example.spot.service.study.studypost;
+package com.example.spot.service.story;
 
+import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
@@ -10,6 +11,7 @@ import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.StoryRepository;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
@@ -375,7 +377,71 @@ class StoryQueryServiceTest {
         assertThrows(StudyHandler.class, () ->studyPostQueryService.getPost(studyId, postId, false));
     }
 
-/*-------------------------------------------------------- 댓글 목록 조회 ------------------------------------------------------------------------*/
+/* ------------------------------------------------ 스터디 공지사항 조회  --------------------------------------------------- */
+
+    @Test
+    @DisplayName("스터디 공지사항 조회 - 성공")
+    void 스터디_공지사항_조회_성공(){
+
+        // given
+        long studyId = 1L;
+        String title = "공지";
+        String content = "공지입니다.";
+        Story story = Story.builder()
+                .title(title)
+                .content(content)
+                .storyCategory(StoryCategory.WELCOME)
+                .isAnnouncement(true)
+                .build();
+
+        StudyMember studyMember = StudyMember.builder()
+                .introduction(title).study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+
+        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.of(story));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+                Optional.ofNullable(studyMember));
+
+        // when
+        StoryResponseDTO responseDTO = studyPostQueryService.findStudyAnnouncementPost(studyId);
+
+        // then
+        assertEquals(title,responseDTO.getTitle());
+        assertEquals(content, responseDTO.getContent());
+    }
+
+    @Test
+    @DisplayName("스터디 공지사항 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
+    void 스터디_공지사항_조회_실패_1(){
+
+        // given
+        long studyId = 1L;
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+                Optional.empty());
+
+        // when & then
+        assertThrows(GeneralException.class, () -> studyPostQueryService.findStudyAnnouncementPost(studyId));
+    }
+
+    @Test
+    @DisplayName("스터디 공지사항 조회 - 스터디 공지 글이 없는 경우")
+    void 스터디_공지사항_조회_실패_2(){
+
+        // given
+        long studyId = 1L;
+        StudyMember studyMember = StudyMember.builder()
+                .introduction("title").study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+
+
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+                Optional.ofNullable(studyMember));
+        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(GeneralException.class, () -> studyPostQueryService.findStudyAnnouncementPost(studyId));
+    }
+
+
+    /*-------------------------------------------------------- 댓글 목록 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 목록 조회 - (성공)")

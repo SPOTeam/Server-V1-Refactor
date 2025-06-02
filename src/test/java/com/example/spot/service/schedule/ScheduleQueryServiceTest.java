@@ -1,9 +1,13 @@
-package com.example.spot.service.study.studyschedule;
+package com.example.spot.service.schedule;
 
+import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
+import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
+import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
+import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.study.domain.association.StudyMember;
@@ -12,7 +16,6 @@ import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyMemberQueryServiceImpl;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,15 +37,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyScheduleQueryServiceTest {
+class ScheduleQueryServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -50,12 +56,11 @@ class StudyScheduleQueryServiceTest {
     private StudyRepository studyRepository;
     @Mock
     private StudyMemberRepository studyMemberRepository;
-
     @Mock
     private ScheduleRepository scheduleRepository;
 
     @InjectMocks
-    private StudyMemberQueryServiceImpl memberStudyQueryService;
+    private ScheduleQueryServiceImpl scheduleQueryService;
 
     private static Study study1;
     private static Study study2;
@@ -86,6 +91,9 @@ class StudyScheduleQueryServiceTest {
         when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member1.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(true);
         when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member2.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(false);
         when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(owner.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(true);
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(
+                member1.getId(), study1.getId(),StudyApplicationStatus.APPROVED)
+        ).thenReturn(Optional.of(member1Study1));
 
         when(scheduleRepository.findById(schedule1.getId())).thenReturn(Optional.of(schedule1));
         when(scheduleRepository.findById(schedule2.getId())).thenReturn(Optional.of(schedule2));
@@ -107,7 +115,7 @@ class StudyScheduleQueryServiceTest {
         getAuthentication(memberId);
 
         // when
-        ScheduleResponseDTO.MonthlyScheduleListDTO result = memberStudyQueryService.getMonthlySchedules(studyId, 2024, 1);
+        ScheduleResponseDTO.MonthlyScheduleListDTO result = scheduleQueryService.getMonthlySchedules(studyId, 2024, 1);
 
         // then
         assertThat(result).isNotNull();
@@ -129,7 +137,7 @@ class StudyScheduleQueryServiceTest {
         getAuthentication(memberId);
 
         // when
-        ScheduleResponseDTO.MonthlyScheduleListDTO result = memberStudyQueryService.getMonthlySchedules(studyId, 2024, 1);
+        ScheduleResponseDTO.MonthlyScheduleListDTO result = scheduleQueryService.getMonthlySchedules(studyId, 2024, 1);
 
         // then
         assertThat(result).isNotNull();
@@ -152,7 +160,7 @@ class StudyScheduleQueryServiceTest {
         getAuthentication(memberId);
 
         // when
-        ScheduleResponseDTO.MonthlyScheduleDTO result = memberStudyQueryService.getSchedule(scheduleId, studyId);
+        ScheduleResponseDTO.MonthlyScheduleDTO result = scheduleQueryService.getSchedule(scheduleId, studyId);
 
         // then
         assertThat(result).isNotNull();
@@ -172,10 +180,44 @@ class StudyScheduleQueryServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getSchedule(scheduleId, studyId));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getSchedule(scheduleId, studyId));
     }
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+/* ------------------------------------------------ 스터디 모임 목록 조회  --------------------------------------------------- */
+
+    @Test
+    @DisplayName("스터디 모임 목록 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
+    void 스터디_모임_목록_조회_실패_1(){
+
+        // given
+        Long memberId = 1L;
+        Long studyId = 2L;
+
+        // 사용자 인증 정보 생성
+        getAuthentication(memberId);
+
+        // when & then
+        assertThrows(GeneralException.class, () -> scheduleQueryService.findStudySchedule(studyId, Pageable.unpaged()));
+    }
+
+    @Test
+    @DisplayName("스터디 모임 목록 조회 - 스터디 모임 일정이 존재하지 않는 경우")
+    void 스터디_모임_목록_조회_실패_2(){
+
+        // given
+        Long memberId = 1L;
+        Long studyId = 2L;
+
+        // 사용자 인증 정보 생성
+        getAuthentication(memberId);
+
+        // when & then
+        assertThrows(GeneralException.class, () -> scheduleQueryService.findStudySchedule(studyId, Pageable.unpaged()));
+    }
+
+
+
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void initMember() {
         member1 = Member.builder()

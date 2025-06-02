@@ -1,7 +1,8 @@
-package com.example.spot.service.study.studyschedule;
+package com.example.spot.service.schedule;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.schedule.application.ScheduleCommandServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.schedule.domain.association.QuizSubmission;
@@ -15,7 +16,6 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyMemberCommandServiceImpl;
 import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyAttendanceCommandServiceTest {
+class AttendanceCommandServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -63,7 +63,7 @@ class StudyAttendanceCommandServiceTest {
     private QuizSubmissionRepository quizSubmissionRepository;
 
     @InjectMocks
-    private StudyMemberCommandServiceImpl memberStudyCommandService;
+    private ScheduleCommandServiceImpl scheduleCommandService;
 
     private static Study study;
     private static Member member1;
@@ -130,7 +130,7 @@ class StudyAttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
+        StudyQuizResponseDTO.QuizDTO result = scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -154,7 +154,7 @@ class StudyAttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -173,7 +173,7 @@ class StudyAttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -192,7 +192,7 @@ class StudyAttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -214,7 +214,7 @@ class StudyAttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -242,7 +242,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance));
 
         // when
-        StudyQuizResponseDTO.AttendanceDTO result = memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO);
+        StudyQuizResponseDTO.AttendanceDTO result = scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -276,7 +276,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
     }
 
     @Test
@@ -307,7 +307,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
     }
 
     @Test
@@ -341,7 +341,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
     }
 
     @Test
@@ -370,7 +370,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
     }
 
     @Test
@@ -398,7 +398,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(ownerAttendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
     }
 
     @Test
@@ -426,7 +426,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
+        StudyQuizResponseDTO.QuizDTO result = scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
 
         // then
         assertThat(result).isNotNull();
@@ -460,7 +460,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
     }
 
     @Test
@@ -486,7 +486,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
     }
 
     @Test
@@ -514,7 +514,7 @@ class StudyAttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
     }
 
 /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/

@@ -1,8 +1,9 @@
-package com.example.spot.service.study.studyschedule;
+package com.example.spot.service.schedule;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
+import com.example.spot.schedule.application.ScheduleCommandServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.study.domain.association.StudyMember;
@@ -14,7 +15,6 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyMemberCommandServiceImpl;
 import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyScheduleCommandServiceTest {
+class ScheduleCommandServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -65,7 +65,7 @@ class StudyScheduleCommandServiceTest {
     private NotificationRepository notificationRepository;
 
     @InjectMocks
-    private StudyMemberCommandServiceImpl memberStudyCommandService;
+    private ScheduleCommandServiceImpl scheduleCommandService;
 
     private static Study study1;
     private static Member member1;
@@ -160,7 +160,7 @@ class StudyScheduleCommandServiceTest {
         when(scheduleRepository.save(schedule)).thenReturn(schedule);
 
         // when
-        ScheduleResponseDTO.ScheduleDTO result = memberStudyCommandService.addSchedule(studyId, scheduleRequestDTO);
+        ScheduleResponseDTO.ScheduleDTO result = scheduleCommandService.addSchedule(studyId, scheduleRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -250,7 +250,7 @@ class StudyScheduleCommandServiceTest {
         when(scheduleRepository.save(schedule)).thenReturn(schedule);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.addSchedule(studyId, scheduleRequestDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.addSchedule(studyId, scheduleRequestDTO));
     }
 
     @Test
@@ -273,7 +273,7 @@ class StudyScheduleCommandServiceTest {
         when(scheduleRepository.save(schedule)).thenReturn(schedule);
 
         // when
-        ScheduleResponseDTO.ScheduleDTO result = memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
+        ScheduleResponseDTO.ScheduleDTO result = scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -295,7 +295,7 @@ class StudyScheduleCommandServiceTest {
         ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member2, study1);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
     }
 
     @Test
@@ -310,7 +310,7 @@ class StudyScheduleCommandServiceTest {
         ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
     }
 
     @Test
@@ -325,7 +325,7 @@ class StudyScheduleCommandServiceTest {
         ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
+        assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
     }
 
     private ScheduleRequestDTO.ScheduleDTO getScheduleModDTO(

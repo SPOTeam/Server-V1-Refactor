@@ -1,7 +1,8 @@
-package com.example.spot.service.study.studyschedule;
+package com.example.spot.service.schedule;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.schedule.domain.association.QuizSubmission;
@@ -15,7 +16,6 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.application.StudyMemberQueryServiceImpl;
 import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class StudyAttendanceQueryServiceTest {
+class AttendanceQueryServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -61,7 +61,7 @@ class StudyAttendanceQueryServiceTest {
     private QuizSubmissionRepository quizSubmissionRepository;
 
     @InjectMocks
-    private StudyMemberQueryServiceImpl memberStudyQueryService;
+    private ScheduleQueryServiceImpl scheduleQueryService;
 
     private static Study study;
     private static Member member1;
@@ -118,7 +118,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        StudyQuizResponseDTO.AttendanceListDTO result = memberStudyQueryService.getAllAttendances(studyId, schedule.getId(), date);
+        StudyQuizResponseDTO.AttendanceListDTO result = scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date);
 
         // then
         assertThat(result).isNotNull();
@@ -141,7 +141,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member2.getId());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAllAttendances(studyId, schedule.getId(), date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date));
     }
 
     @Test
@@ -155,7 +155,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member2.getId());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAllAttendances(studyId, schedule.getId(), date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date));
     }
 
     @Test
@@ -169,7 +169,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAllAttendances(studyId, 2L, date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAllAttendances(studyId, 2L, date));
     }
 
     @Test
@@ -183,7 +183,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = memberStudyQueryService.getAttendanceQuiz(studyId, schedule.getId(), date);
+        StudyQuizResponseDTO.QuizDTO result = scheduleQueryService.getAttendanceQuiz(studyId, schedule.getId(), date);
 
         // then
         assertThat(result).isNotNull();
@@ -202,7 +202,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAttendanceQuiz(studyId, schedule.getId(), date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAttendanceQuiz(studyId, schedule.getId(), date));
     }
 
     @Test
@@ -216,7 +216,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member2.getId());
 
         // when
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAttendanceQuiz(studyId, schedule.getId(), date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAttendanceQuiz(studyId, schedule.getId(), date));
     }
 
     @Test
@@ -230,7 +230,7 @@ class StudyAttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        assertThrows(StudyHandler.class, () -> memberStudyQueryService.getAttendanceQuiz(studyId, 2L, date));
+        assertThrows(StudyHandler.class, () -> scheduleQueryService.getAttendanceQuiz(studyId, 2L, date));
     }
 
 
