@@ -5,7 +5,7 @@ import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyVoteResponseDTO;
+import com.example.spot.vote.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
@@ -18,15 +18,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface StudyMemberQueryService {
 
-    ScheduleResponseDTO.MonthlyScheduleListDTO getMonthlySchedules(Long studyId, int year, int month);
-
-    ScheduleResponseDTO.MonthlyScheduleDTO getSchedule(Long studyId, Long scheduleId);
-
     // 스터디 공지 게시글 불러오기
     StoryResponseDTO findStudyAnnouncementPost(Long studyId);
-
-    // 스터디 다가오는 모임 일정 불러오기
-    StudyScheduleResponseDTO findStudySchedule(Long studyId, Pageable pageable);
 
     // 참여하는 회원 목록 불러오기
     StudyMemberResponseDTO findStudyMembers(Long studyId);
@@ -43,34 +36,7 @@ public interface StudyMemberQueryService {
     // 스터디 신청 여부 확인
     StudyApplicantDTO isApplied(Long studyId);
 
-    // 금일 회원 출석 여부 불러오기
-    StudyQuizResponseDTO.AttendanceListDTO getAllAttendances(Long studyId, Long scheduleId, LocalDate date);
-
-    // 스터디 출석퀴즈 조회
-    StudyQuizResponseDTO.QuizDTO getAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
-
-    // 스터디 투표 목록 조회
-    StudyVoteResponseDTO.VoteListDTO getAllVotes(Long studyId);
-
-    // 스터디 투표 마감 여부 조회
-    Boolean getIsCompleted(Long voteId);
-
-    // 스터디 투표(진행중) 조회
-    StudyVoteResponseDTO.VoteDTO getVoteInProgress(Long studyId, Long voteId);
-
-    // 스터디 투표(마감) 조회
-    StudyVoteResponseDTO.CompletedVoteDTO getVoteInCompletion(Long studyId, Long voteId);
-
-    // 스터디 투표 현황 조회
-    StudyVoteResponseDTO.CompletedVoteDetailDTO getCompletedVoteDetail(Long studyId, Long voteId);
-
     // 스터디 이미지 목록 조회
     StudyImageResponseDTO.ImageListDTO getAllStudyImages(Long studyId, PageRequest pageRequest);
-
-    // 내 투두 리스트 조회
-    ToDoListResponseDTO.ToDoListSearchResponseDTO getToDoList(Long studyId, LocalDate date, PageRequest pageRequest);
-
-    // 스터디 원 투두 리스트 조회
-    ToDoListResponseDTO.ToDoListSearchResponseDTO getMemberToDoList(Long studyId, Long memberId, LocalDate date, PageRequest pageRequest);
 
 }
