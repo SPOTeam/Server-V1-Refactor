@@ -1,9 +1,9 @@
 package com.example.spot.common.config;
 
-import com.example.spot.study.domain.aggregate.Theme;
+import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.study.domain.repository.RegionRepository;
-import com.example.spot.study.domain.aggregate.Region;
+import com.example.spot.study.domain.association.Region;
 import com.example.spot.study.domain.repository.ThemeRepository;
 import java.io.IOException;
 import java.io.InputStreamReader;

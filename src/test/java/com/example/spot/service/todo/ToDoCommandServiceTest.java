@@ -1,0 +1,248 @@
+package com.example.spot.service.todo;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.when;
+
+import com.example.spot.common.api.exception.handler.StudyHandler;
+import com.example.spot.member.domain.Member;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.todo.application.ToDoCommandServiceImpl;
+import com.example.spot.todo.domain.ToDo;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.member.domain.enums.Status;
+import com.example.spot.study.domain.Study;
+import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.todo.domain.ToDoRepository;
+import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Optional;
+
+import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+public class ToDoCommandServiceTest {
+
+    @InjectMocks
+    private ToDoCommandServiceImpl toDoCommandService;
+
+    @Mock
+    private StudyRepository studyRepository;
+
+    @Mock
+    private StudyMemberRepository studyMemberRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
+    private ToDoRepository toDoRepository;
+
+    @Mock
+    private Study study;
+
+    @Mock
+    private Member member;
+
+    @Mock
+    private StudyMember studyMember;
+
+    @Mock
+    private ToDo toDo;
+
+    private ToDoListCreateDTO requestDTO;
+
+    @BeforeEach
+    void init() {
+        requestDTO  = ToDoListCreateDTO.builder()
+                .content("test")
+                .date(LocalDate.EPOCH)
+                .build();
+
+        given(toDo.getStudy()).willReturn(study);
+        given(study.getId()).willReturn(1L);
+        given(toDo.getMember()).willReturn(member);
+        given(member.getId()).willReturn(1L);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken("1", null, Collections.emptyList());
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+
+    /* ---------------------------- To-Do 생성 관련 메서드  ---------------------------- */
+
+    @Test
+    @DisplayName("To-Do 생성 - 성공")
+    void createToDoList() {
+        // given
+        when(studyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(study));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+                Optional.ofNullable(studyMember));
+        when(memberRepository.findById(anyLong())).thenReturn(Optional.ofNullable(member));
+
+        when(toDoRepository.save(any())).thenReturn(toDo);
+
+        // when
+        ToDoListCreateResponseDTO responseDTO = toDoCommandService.createToDoList(1L, requestDTO);
+
+        // then
+        assertEquals(responseDTO.getContent(), requestDTO.getContent());
+    }
+
+    @Test
+    @DisplayName("To-Do 생성 - 스터디 회원이 아닌 경우")
+    void ToDo_생성_시_스터디_회원이_아닌_경우() {
+        // given
+        when(studyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(study));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+                Optional.empty());
+
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.createToDoList(1L, requestDTO);
+        });
+    }
+
+    /* ---------------------------- To-Do 수정 관련 메서드  ---------------------------- */
+
+    @Test
+    @DisplayName("To-Do 수정 - 성공")
+    void ToDo_수정_성공() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+
+        // when
+        ToDoListUpdateResponseDTO responseDTO = toDoCommandService.updateToDoList(1L,1L,  requestDTO);
+
+        // then
+        assertEquals(false, responseDTO.isDone());
+
+    }
+
+    @Test
+    @DisplayName("To-Do 수정 - To-Do가 없는 경우")
+    void ToDo_수정_시_ToDo가_없는_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+        });
+    }
+
+    @Test
+    @DisplayName("To-Do 수정 - To-Do가 다른 스터디의 것인 경우")
+    void ToDo_수정_시_ToDo가_다른_스터디의_것인_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+        given(toDo.getStudy()).willReturn(Mockito.mock(Study.class));
+        given(toDo.getStudy().getId()).willReturn(2L);
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+        });
+    }
+
+    @Test
+    @DisplayName("To-Do 수정 - To-Do가 다른 회원의 것인 경우")
+    void ToDo_수정_시_ToDo가_다른_회원의_것인_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+        given(toDo.getMember()).willReturn(Mockito.mock(Member.class));
+        given(toDo.getMember().getId()).willReturn(2L);
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+        });
+    }
+
+    /* ---------------------------- To-Do 삭제 관련 메서드  ---------------------------- */
+
+    @Test
+    @DisplayName("To-Do 삭제 - 성공")
+    void ToDo_삭제_성공() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
+                Optional.ofNullable(studyMember));
+
+        // when
+        ToDoListUpdateResponseDTO responseDTO = toDoCommandService.deleteToDoList(1L, 1L);
+
+        // then
+        verify(toDoRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("To-Do 삭제 - To-Do가 없는 경우")
+    void ToDo_삭제_시_ToDo가_없는_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.deleteToDoList(1L, 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("To-Do 삭제 - To-Do가 다른 스터디의 것인 경우")
+    void ToDo_삭제_시_ToDo가_다른_스터디의_것인_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+        given(toDo.getStudy()).willReturn(Mockito.mock(Study.class));
+        given(toDo.getStudy().getId()).willReturn(2L);
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.deleteToDoList(1L, 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("To-Do 삭제 - To-Do가 다른 회원의 것인 경우")
+    void ToDo_삭제_시_ToDo가_다른_회원의_것인_경우() {
+        // given
+        when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
+        given(toDo.getMember()).willReturn(Mockito.mock(Member.class));
+        given(toDo.getMember().getId()).willReturn(2L);
+
+        // when & then
+        assertThrows(StudyHandler.class, () -> {
+            toDoCommandService.deleteToDoList(1L, 1L);
+        });
+    }
+
+
+
+}

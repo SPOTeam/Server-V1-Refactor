@@ -2,71 +2,53 @@ package com.example.spot.service.study.studymember;
 
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
-import com.example.spot.story.domain.Story;
-import com.example.spot.study.domain.aggregate.StudyMember;
-import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.todo.domain.ToDo;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.todo.domain.ToDoRepository;
-import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.application.MemberStudyQueryServiceImpl;
-import com.example.spot.study.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
+import com.example.spot.study.application.StudyMemberQueryServiceImpl;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
-import com.example.spot.study.presentation.dto.response.StudyPostResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyScheduleResponseDTO;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.example.spot.todo.domain.ToDo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class StudyMemberQueryServiceTest {
 
     @InjectMocks
-    private MemberStudyQueryServiceImpl memberStudyQueryService;
+    private StudyMemberQueryServiceImpl studyMemberQueryService;
 
     @Mock
     private StudyMemberRepository studyMemberRepository;
-    @Mock
-    private MemberRepository memberRepository;
+
     @Mock
     private StoryRepository storyRepository;
     @Mock
     private ScheduleRepository scheduleRepository;
-    @Mock
-    private ToDoRepository toDoRepository;
-    @Mock
-    private SecurityUtils securityUtils;
 
     private static Member member;
     private static Member member2;
@@ -84,14 +66,10 @@ public class StudyMemberQueryServiceTest {
         member2 = Member.builder()
                 .id(2L)
                 .build();
-
-
         study = Study.builder()
                 .build();
-
         studyMember = StudyMember.builder()
                 .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
-
         apply = StudyMember.builder()
                 .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED).build();
         studyMember2 = StudyMember.builder()
@@ -111,116 +89,6 @@ public class StudyMemberQueryServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    /* ------------------------------------------------ 스터디 공지사항 조회  --------------------------------------------------- */
-
-    @Test
-    @DisplayName("스터디 공지사항 조회 - 성공")
-    void 스터디_공지사항_조회_성공(){
-
-        // given
-        long studyId = 1L;
-        String title = "공지";
-        String content = "공지입니다.";
-        Story story = Story.builder()
-                .title(title)
-                .content(content)
-                .storyCategory(StoryCategory.WELCOME)
-                .isAnnouncement(true)
-                .build();
-
-        StudyMember studyMember = StudyMember.builder()
-                        .introduction(title).study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
-
-        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.of(story));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
-                Optional.ofNullable(studyMember));
-
-        // when
-        StudyPostResponseDTO responseDTO = memberStudyQueryService.findStudyAnnouncementPost(studyId);
-
-        // then
-        assertEquals(title,responseDTO.getTitle());
-        assertEquals(content, responseDTO.getContent());
-    }
-
-    @Test
-    @DisplayName("스터디 공지사항 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
-    void 스터디_공지사항_조회_실패_1(){
-
-        // given
-        long studyId = 1L;
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
-                Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyAnnouncementPost(studyId));
-    }
-
-    @Test
-    @DisplayName("스터디 공지사항 조회 - 스터디 공지 글이 없는 경우")
-    void 스터디_공지사항_조회_실패_2(){
-
-        // given
-        long studyId = 1L;
-        StudyMember studyMember = StudyMember.builder()
-                .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
-
-
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
-                Optional.ofNullable(studyMember));
-        when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyAnnouncementPost(studyId));
-    }
-
-    /* ------------------------------------------------ 스터디 모임 목록 조회  --------------------------------------------------- */
-
-    @Test
-    @DisplayName("스터디 모임 목록 조회 - 성공")
-    void 스터디_모임_목록_조회_성공(){
-        // given
-        Long studyId = 1L;
-        String title = "title";
-
-        Schedule schedule1 = Schedule.builder().id(1L).title(title).build();
-        Schedule schedule2 = Schedule.builder().id(2L).title("title1").build();
-        when(scheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(List.of(schedule1, schedule2));
-
-        // when
-        StudyScheduleResponseDTO responseDTO = memberStudyQueryService.findStudySchedule(studyId, Pageable.unpaged());
-
-        // then
-        assertEquals(2, responseDTO.getTotalElements());
-        assertEquals(title, responseDTO.getSchedules().get(0).getTitle());
-    }
-
-    @Test
-    @DisplayName("스터디 모임 목록 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
-    void 스터디_모임_목록_조회_실패_1(){
-        // given
-        long studyId = 1L;
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
-                Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudySchedule(studyId, Pageable.unpaged()));
-    }
-
-    @Test
-    @DisplayName("스터디 모임 목록 조회 - 스터디 모임 일정이 존재하지 않는 경우")
-    void 스터디_모임_목록_조회_실패_2(){
-        // given
-        long studyId = 1L;
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
-                Optional.of(studyMember));
-        when(scheduleRepository.findAllByStudyId(studyId, Pageable.unpaged())).thenReturn(Collections.emptyList());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudySchedule(studyId, Pageable.unpaged()));
-    }
-
-
     /* ------------------------------------------------ 특정 스터디 회원 목록 전체 조회  --------------------------------------------------- */
 
     @Test
@@ -232,7 +100,7 @@ public class StudyMemberQueryServiceTest {
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(List.of(studyMember));
 
         // when
-        StudyMemberResponseDTO responseDTO = memberStudyQueryService.findStudyMembers(studyId);
+        StudyMemberResponseDTO responseDTO = studyMemberQueryService.findStudyMembers(studyId);
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -249,7 +117,7 @@ public class StudyMemberQueryServiceTest {
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(List.of());
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyMembers(studyId));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyMembers(studyId));
     }
 
 
@@ -266,7 +134,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(List.of(apply));
 
         // when
-        StudyMemberResponseDTO responseDTO = memberStudyQueryService.findStudyApplicants(1L);
+        StudyMemberResponseDTO responseDTO = studyMemberQueryService.findStudyApplicants(1L);
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -282,7 +150,7 @@ public class StudyMemberQueryServiceTest {
                 Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyApplicants(1L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyApplicants(1L));
     }
 
     @Test
@@ -296,7 +164,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyApplicants(1L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyApplicants(1L));
     }
 
 
@@ -312,7 +180,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(Optional.ofNullable(apply));
 
         // when
-        StudyApplyMemberDTO responseDTO = memberStudyQueryService.findStudyApplication(100L, 1L);
+        StudyApplyMemberDTO responseDTO = studyMemberQueryService.findStudyApplication(100L, 1L);
 
         // then
         assertEquals(1L, responseDTO.getMemberId());
@@ -326,7 +194,7 @@ public class StudyMemberQueryServiceTest {
                 Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyApplication(100L, 1L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyApplication(100L, 1L));
     }
 
     @Test
@@ -340,7 +208,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyApplication(100L, 1L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyApplication(100L, 1L));
     }
 
     @Test
@@ -354,7 +222,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(Optional.ofNullable(studyMember));
 
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.findStudyApplication(100L, 1L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyApplication(100L, 1L));
     }
 
 
@@ -370,7 +238,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(true);
 
         // when
-        StudyApplicantDTO responseDTO = memberStudyQueryService.isApplied(100L);
+        StudyApplicantDTO responseDTO = studyMemberQueryService.isApplied(100L);
 
         // then
         assertEquals(100L, responseDTO.getStudyId());
@@ -384,112 +252,6 @@ public class StudyMemberQueryServiceTest {
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.ofNullable(studyMember));
         // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.isApplied(100L));
+        assertThrows(GeneralException.class, () -> studyMemberQueryService.isApplied(100L));
     }
-
-    /* ------------------------------------------------ To-Do 조회  --------------------------------------------------- */
-
-    @Test
-    @DisplayName("To-Do 조회 - 성공")
-    void ToDo_조회_성공() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of(toDo));
-        when(toDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
-                .thenReturn(1L);
-
-        // when
-        ToDoListSearchResponseDTO responseDTO = memberStudyQueryService.getToDoList(1L, LocalDate.MAX, PageRequest.of(0, 10));
-
-        // then
-        assertEquals(1, responseDTO.getTotalElements());
-        assertEquals(1L, responseDTO.getContent().get(0).getId());
-    }
-
-    @Test
-    @DisplayName("To-Do 조회 - 로그인 한 회원이 스터디 회원이 아닌 경우")
-    void ToDo_조회_시_로그인_한_회원이_스터디_회원이_아닌_경우() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
-    }
-
-    @Test
-    @DisplayName("To-Do 조회 - 회원의 To-Do가 존재하지 않는 경우")
-    void ToDo가_존재하지_않는_경우() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
-    }
-
-    /* ------------------------------------------------ 다른 스터디원의 To-Do 조회  --------------------------------------------------- */
-
-    @Test
-    @DisplayName("특정 스터디 원 To-Do 조회 - 성공")
-    void 스터디_원_ToDo_조회_성공() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 1L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(2L, 1L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of(toDo));
-        when(toDoRepository.countByStudyIdAndMemberIdAndDate(anyLong(), anyLong(), any()))
-                .thenReturn(1L);
-
-        // when
-        ToDoListSearchResponseDTO responseDTO = memberStudyQueryService.getMemberToDoList(1L, 2L, LocalDate.MAX, PageRequest.of(0, 10));
-
-        // then
-        assertEquals(1, responseDTO.getTotalElements());
-        assertEquals(1L, responseDTO.getContent().get(0).getId());
-    }
-
-    @Test
-    @DisplayName("특정 스터디 원 To-Do 조회 - 로그인 한 회원이 스터디 회원이 아닌 경우")
-    void 스터디_원_ToDo_조회_시_로그인_한_회원이_스터디_회원이_아닌_경우() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
-    }
-
-    @Test
-    @DisplayName("특정 스터디 원 To-Do 조회 - 조회 하려는 회원이 스터디 회원이 아닌 경우")
-    void 스터디_원_ToDo_조회_시_조회_하려는_회원이_스터디_회원이_아닌_경우() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(2L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
-    }
-
-    @Test
-    @DisplayName("특정 스터디 원 To-Do 조회 - 회원의 To-Do가 존재하지 않는 경우")
-    void 스터디_원_ToDo가_존재하지_않는_경우() {
-        // given
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, 100L, StudyApplicationStatus.APPROVED))
-                .thenReturn(Optional.ofNullable(studyMember));
-        when(toDoRepository.findByStudyIdAndMemberIdAndDateOrderByCreatedAtDesc(anyLong(), anyLong(), any(), any()))
-                .thenReturn(List.of());
-
-        // when & then
-        assertThrows(GeneralException.class, () -> memberStudyQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
-    }
-
 }

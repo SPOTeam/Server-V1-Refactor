@@ -2,13 +2,13 @@ package com.example.spot.story.domain;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.story.domain.aggregate.LikedStory;
-import com.example.spot.story.domain.aggregate.StoryComment;
-import com.example.spot.story.domain.aggregate.StoryImage;
-import com.example.spot.story.domain.aggregate.StoryReport;
+import com.example.spot.story.domain.association.LikedStory;
+import com.example.spot.story.domain.association.StoryComment;
+import com.example.spot.story.domain.association.StoryImage;
+import com.example.spot.report.domain.StoryReport;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.study.domain.Study;
-import com.example.spot.study.presentation.dto.request.StudyPostRequestDTO;
+import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -136,7 +136,7 @@ public class Story extends BaseEntity {
         storyReports.add(storyReport);
     }
 
-    public void updatePost(StudyPostRequestDTO.PostDTO requestDTO) {
+    public void updatePost(StoryRequestDTO.PostDTO requestDTO) {
         isAnnouncement = requestDTO.getIsAnnouncement();
         storyCategory = requestDTO.getStoryCategory();
         title = requestDTO.getTitle();

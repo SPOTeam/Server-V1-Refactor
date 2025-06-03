@@ -19,16 +19,19 @@ public interface StudyQueryService {
     // 스터디 정보 조회
     StudyInfoResponseDTO.StudyInfoDTO getStudyInfo(Long studyId);
 
-    // 마이페이지 용 스터디 갯수 조회
+    // 마이페이지 용 스터디 개수 조회
     MyPageDTO getMyPageStudyCount(Long memberId);
 
+    // 스터디 목록 조회
     StudyPreviewDTO findStudies(Pageable pageable, StudySortBy sortBy);
 
+    // 조건별 스터디 목록 조회
     StudyPreviewDTO findStudiesByConditions(Pageable pageable, SearchRequestStudyDTO request, StudySortBy sortBy);
 
     // 내 추천 스터디 조회
     StudyPreviewDTO findRecommendStudies(Long memberId);
 
+    // 회원별 관심 Best 스터디 3개 조회
     StudyPreviewDTO findInterestedStudies(Long memberId);
 
     // 내 관심사 스터디 페이징 조회
@@ -36,8 +39,7 @@ public interface StudyQueryService {
         SearchRequestStudyDTO request, StudySortBy sortBy);
 
     // 내 특정 관심사 스터디 페이징 조회
-    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId,
-                                                            SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
+    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId, SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
 
     // 내 관심 지역 스터디 페이징 조회
     StudyPreviewDTO findInterestRegionStudiesByConditionsAll(

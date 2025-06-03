@@ -1,6 +1,6 @@
 package com.example.spot.schedule.domain.repository;
 
-import com.example.spot.schedule.domain.aggregate.Quiz;
+import com.example.spot.schedule.domain.association.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

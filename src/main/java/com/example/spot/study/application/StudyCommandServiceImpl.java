@@ -1,19 +1,19 @@
 package com.example.spot.study.application;
 
-import com.example.spot.study.domain.aggregate.StudyRegion;
+import com.example.spot.study.domain.association.StudyRegion;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.aggregate.Region;
-import com.example.spot.study.domain.aggregate.StudyMember;
-import com.example.spot.study.domain.aggregate.Theme;
+import com.example.spot.study.domain.association.Region;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.study.domain.enums.StudyLikeStatus;
 import com.example.spot.study.domain.enums.StudyState;
 import com.example.spot.member.domain.association.PreferredStudy;
-import com.example.spot.study.domain.aggregate.StudyTheme;
+import com.example.spot.study.domain.association.StudyTheme;
 import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;

@@ -2,8 +2,8 @@ package com.example.spot.study.domain.repository;
 
 import java.util.List;
 
-import com.example.spot.study.domain.aggregate.StudyTheme;
-import com.example.spot.study.domain.aggregate.Theme;
+import com.example.spot.study.domain.association.StudyTheme;
+import com.example.spot.study.domain.association.Theme;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;

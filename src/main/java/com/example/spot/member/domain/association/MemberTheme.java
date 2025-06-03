@@ -1,7 +1,7 @@
 package com.example.spot.member.domain.association;
 
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.aggregate.Theme;
+import com.example.spot.study.domain.association.Theme;
 import com.example.spot.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
