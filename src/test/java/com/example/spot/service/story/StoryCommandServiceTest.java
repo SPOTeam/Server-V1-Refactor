@@ -11,8 +11,6 @@ import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
-import com.example.spot.story.domain.repository.StoryImageRepository;
-import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
@@ -69,10 +67,6 @@ class StoryCommandServiceTest {
     private StoryRepository storyRepository;
     @Mock
     private LikedStoryRepository likedStoryRepository;
-    @Mock
-    private StoryImageRepository storyImageRepository;
-    @Mock
-    private StoryReportRepository storyReportRepository;
 
     @Mock
     private StoryCommentRepository storyCommentRepository;
