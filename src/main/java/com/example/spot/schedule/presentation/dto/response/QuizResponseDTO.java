@@ -12,19 +12,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class StudyQuizResponseDTO {
+public class QuizResponseDTO {
 
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class QuizDTO {
+    public static class QuestionDTO {
 
         private final Long quizId;
         private final String question;
         private final LocalDateTime createdAt;
 
-        public static QuizDTO toDTO(Quiz quiz) {
-            return QuizDTO.builder()
+        public static QuestionDTO toDTO(Quiz quiz) {
+            return QuestionDTO.builder()
                     .quizId(quiz.getId())
                     .question(quiz.getQuestion())
                     .createdAt(quiz.getCreatedAt())
@@ -63,9 +63,9 @@ public class StudyQuizResponseDTO {
 
         private final Long scheduleId;
         private final Long quizId;
-        private final List<StudyMemberDTO> studyMembers;
+        private final List<AttendingMemberDTO> studyMembers;
 
-        public static AttendanceListDTO toDTO(Quiz quiz, List<StudyMemberDTO> studyMembers) {
+        public static AttendanceListDTO toDTO(Quiz quiz, List<AttendingMemberDTO> studyMembers) {
             return AttendanceListDTO.builder()
                     .scheduleId(quiz.getSchedule().getId())
                     .quizId(quiz.getId())
@@ -77,7 +77,7 @@ public class StudyQuizResponseDTO {
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class StudyMemberDTO {
+    public static class AttendingMemberDTO {
 
         private final Long memberId;
         private final String name;
@@ -85,8 +85,8 @@ public class StudyQuizResponseDTO {
         private final Boolean isOwned;
         private final Boolean isAttending;
 
-        public static StudyMemberDTO toDTO(StudyMember studyMember, Boolean isAttending) {
-            return StudyMemberDTO.builder()
+        public static AttendingMemberDTO toDTO(StudyMember studyMember, Boolean isAttending) {
+            return AttendingMemberDTO.builder()
                     .memberId(studyMember.getMember().getId())
                     .name(studyMember.getMember().getName())
                     .profileImage(studyMember.getMember().getProfileImage())

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-public class StudyQuizRequestDTO {
+public class QuizRequestDTO {
 
     @Getter
     @Builder

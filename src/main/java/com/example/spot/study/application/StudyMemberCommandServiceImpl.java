@@ -18,13 +18,11 @@ import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
+import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.common.application.s3.S3ImageService;
-import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO.WithdrawalDTO;
-import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +55,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
      * @param studyId 타겟 회원이 탈퇴하고자 하는 스터디의 아이디를 입력 받습니다.
      * @return 탈퇴한 스터디의 아이디와 이름, 탈퇴한 회원의 아이디와 이름이 반환됩니다.
      */
-    public StudyWithdrawalResponseDTO.WithdrawalDTO withdrawFromStudy(Long studyId) {
+    public StudyMemberResponseDTO.WithdrawalDTO withdrawFromStudy(Long studyId) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -83,11 +81,11 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
 
         studyMemberRepository.delete(studyMember);
 
-        return StudyWithdrawalResponseDTO.WithdrawalDTO.toDTO(member, study);
+        return StudyMemberResponseDTO.WithdrawalDTO.toDTO(member, study);
     }
 
     @Override
-    public WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyHostWithdrawRequestDTO requestDTO) {
+    public StudyMemberResponseDTO.WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyMemberRequestDTO.HostWithdrawDTO hostWithdrawDTO) {
         // Authorization
         Long hostId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(hostId);
@@ -99,17 +97,17 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
             throw new StudyHandler(ErrorStatus._STUDY_OWNER_ONLY_CAN_WITHDRAW);
         }
 
-        StudyMember newHostStudy = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(requestDTO.getNewHostId(), studyId, StudyApplicationStatus.APPROVED)
+        StudyMember newHostStudy = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(hostWithdrawDTO.getNewHostId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_EXIST));
 
         studyMemberRepository.delete(studyMember);
 
         newHostStudy.setIsOwned(true);
-        newHostStudy.setReason(requestDTO.getReason());
+        newHostStudy.setReason(hostWithdrawDTO.getReason());
 
         studyMemberRepository.save(newHostStudy);
 
-        return StudyWithdrawalResponseDTO.WithdrawalDTO.toDTO(newHostStudy.getMember(), newHostStudy.getStudy());
+        return StudyMemberResponseDTO.WithdrawalDTO.toDTO(newHostStudy.getMember(), newHostStudy.getStudy());
     }
     /**
      * 운영중인 스터디를 종료하는 메서드입니다. 스터디장만 호출 가능합니다.
@@ -118,7 +116,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
      * @param performance   종료할 스터디의 성과를 입력 받습니다.
      * @return 종료된 스터디의 아이디, 이름, 상태를 반환합니다.
      */
-    public StudyTerminationResponseDTO.TerminationDTO terminateStudy(Long studyId, String performance) {
+    public StudyResponseDTO.TerminationDTO terminateStudy(Long studyId, String performance) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -142,7 +140,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
         study.terminateStudy(performance);
         studyRepository.save(study);
 
-        return StudyTerminationResponseDTO.TerminationDTO.toDTO(study);
+        return StudyResponseDTO.TerminationDTO.toDTO(study);
     }
 
     /**
@@ -159,7 +157,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
      * @throws MemberHandler 스터디 장을 찾을 수 없을 때
      */
     @Override
-    public StudyApplyResponseDTO acceptAndRejectStudyApply(Long memberId, Long studyId,
+    public StudyMemberResponseDTO.ApplicationStatusDTO acceptAndRejectStudyApply(Long memberId, Long studyId,
         boolean isAccept) {
 
         // 신청을 처리하는 회원이 스터디 소유자인지 확인
@@ -204,7 +202,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
         }
 
         // 스터디 신청 처리 결과 반환
-        return StudyApplyResponseDTO.builder()
+        return StudyMemberResponseDTO.ApplicationStatusDTO.builder()
             .status(studyMember.getStatus())
             .updatedAt(studyMember.getUpdatedAt())
             .build();
@@ -225,7 +223,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
      *
      */
     @Override
-    public StudyApplyResponseDTO acceptAndRejectStudyApplyForTest(Long memberId, Long studyId,
+    public StudyMemberResponseDTO.ApplicationStatusDTO acceptAndRejectStudyApplyForTest(Long memberId, Long studyId,
         boolean isAccept) {
 
         // 스터디 신청을 처리하는 회원이 스터디 소유자인지 확인
@@ -258,7 +256,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
         }
 
         // 스터디 신청 처리 결과 반환
-        return StudyApplyResponseDTO.builder()
+        return StudyMemberResponseDTO.ApplicationStatusDTO.builder()
             .status(studyMember.getStatus())
             .updatedAt(studyMember.getUpdatedAt())
             .build();

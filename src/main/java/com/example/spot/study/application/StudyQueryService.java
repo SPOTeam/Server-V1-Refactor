@@ -2,13 +2,13 @@ package com.example.spot.study.application;
 
 import com.example.spot.study.domain.enums.StudySortBy;
 import com.example.spot.study.domain.enums.ThemeType;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyDTO;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyWithThemeDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestWithThemeDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO;
 
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import org.springframework.data.domain.Pageable;
 
 public interface StudyQueryService {
@@ -17,7 +17,7 @@ public interface StudyQueryService {
     HotKeywordDTO getHotKeyword();
 
     // 스터디 정보 조회
-    StudyInfoResponseDTO.StudyInfoDTO getStudyInfo(Long studyId);
+    StudyResponseDTO.StudyInfoDTO getStudyInfo(Long studyId);
 
     // 마이페이지 용 스터디 개수 조회
     MyPageDTO getMyPageStudyCount(Long memberId);
@@ -26,7 +26,7 @@ public interface StudyQueryService {
     StudyPreviewDTO findStudies(Pageable pageable, StudySortBy sortBy);
 
     // 조건별 스터디 목록 조회
-    StudyPreviewDTO findStudiesByConditions(Pageable pageable, SearchRequestStudyDTO request, StudySortBy sortBy);
+    StudyPreviewDTO findStudiesByConditions(Pageable pageable, StudySearchRequestDTO request, StudySortBy sortBy);
 
     // 내 추천 스터디 조회
     StudyPreviewDTO findRecommendStudies(Long memberId);
@@ -36,22 +36,22 @@ public interface StudyQueryService {
 
     // 내 관심사 스터디 페이징 조회
     StudyPreviewDTO findInterestStudiesByConditionsAll(Pageable pageable, Long memberId,
-        SearchRequestStudyDTO request, StudySortBy sortBy);
+        StudySearchRequestDTO request, StudySortBy sortBy);
 
     // 내 특정 관심사 스터디 페이징 조회
-    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId, SearchRequestStudyDTO request, ThemeType theme, StudySortBy sortBy);
+    StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable, Long memberId, StudySearchRequestDTO request, ThemeType theme, StudySortBy sortBy);
 
     // 내 관심 지역 스터디 페이징 조회
     StudyPreviewDTO findInterestRegionStudiesByConditionsAll(
-            Pageable pageable, Long memberId, SearchRequestStudyWithThemeDTO request, StudySortBy sortBy);
+            Pageable pageable, Long memberId, StudySearchRequestWithThemeDTO request, StudySortBy sortBy);
 
     // 내 특정 관심 지역 스터디 페이징 조회
     StudyPreviewDTO findInterestRegionStudiesByConditionsSpecific(
-            Pageable pageable, Long memberId, SearchRequestStudyWithThemeDTO request, String regionCode, StudySortBy sortBy);
+            Pageable pageable, Long memberId, StudySearchRequestWithThemeDTO request, String regionCode, StudySortBy sortBy);
 
     // 모집 중 스터디 조회
     StudyPreviewDTO findRecruitingStudiesByConditions(
-            Pageable pageable, SearchRequestStudyWithThemeDTO request, StudySortBy sortBy);
+            Pageable pageable, StudySearchRequestWithThemeDTO request, StudySortBy sortBy);
 
     // 찜한 스터디 조회
     StudyPreviewDTO findLikedStudies(Long memberId, Pageable pageable);

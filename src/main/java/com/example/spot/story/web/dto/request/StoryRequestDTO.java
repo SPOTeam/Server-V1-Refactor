@@ -13,9 +13,9 @@ public class StoryRequestDTO {
     @Getter
     @Setter
     @Builder
-    @Schema(name = "StudyPostDTO")
+    @Schema(name = "StoryDTO")
     @AllArgsConstructor
-    public static class PostDTO {
+    public static class StoryDTO {
 
         @NotNull
         @Schema(description = "공지 여부", example = "false")

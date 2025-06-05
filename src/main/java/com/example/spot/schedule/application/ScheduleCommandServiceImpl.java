@@ -21,9 +21,9 @@ import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
-import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.QuizRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -204,7 +204,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
      * @return 생성된 퀴즈의 아이디와 질문이 반환됩니다.
      */
     @Override
-    public StudyQuizResponseDTO.QuizDTO createAttendanceQuiz(Long studyId, Long scheduleId, StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
+    public QuizResponseDTO.QuestionDTO createAttendanceQuiz(Long studyId, Long scheduleId, QuizRequestDTO.QuizDTO quizRequestDTO) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -247,7 +247,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
         schedule.addQuiz(quiz);
         member.addQuiz(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
+        return QuizResponseDTO.QuestionDTO.toDTO(quiz);
     }
 
     /**
@@ -259,7 +259,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
      * @return 회원 아이디, 퀴즈 아이디, 출석 아이디, 정답 여부, 시도 횟수, 출석 정보 생성 시각을 반환합니다.
      */
     @Override
-    public StudyQuizResponseDTO.AttendanceDTO attendantStudy(Long studyId, Long scheduleId, StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
+    public QuizResponseDTO.AttendanceDTO attendantStudy(Long studyId, Long scheduleId, QuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -314,7 +314,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
         quiz.addMemberAttendance(quizSubmission);
         quizSubmission = quizSubmissionRepository.save(quizSubmission);
 
-        return StudyQuizResponseDTO.AttendanceDTO.toDTO(quizSubmission, try_num+1);
+        return QuizResponseDTO.AttendanceDTO.toDTO(quizSubmission, try_num+1);
     }
 
     /**
@@ -326,7 +326,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
      * @return 삭제된 퀴즈의 아이디와 질문을 반환합니다.
      */
     @Override
-    public StudyQuizResponseDTO.QuizDTO deleteAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date) {
+    public QuizResponseDTO.QuestionDTO deleteAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -362,7 +362,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
                 });
         quizRepository.delete(quiz);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
+        return QuizResponseDTO.QuestionDTO.toDTO(quiz);
     }
 
 

@@ -13,13 +13,12 @@ import com.example.spot.schedule.domain.association.QuizSubmission;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.schedule.domain.repository.QuizRepository;
 import com.example.spot.schedule.domain.repository.QuizSubmissionRepository;
-import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -129,7 +128,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
      * @throws GeneralException 스터디 멤버가 아닌 경우
      */
     @Override
-    public StudyScheduleResponseDTO findStudySchedule(Long studyId, Pageable pageable) {
+    public ScheduleResponseDTO.SchedulePageDTO findStudySchedule(Long studyId, Pageable pageable) {
 
         // 로그인한 회원이 해당 스터디 회원인지 확인
         if (!isMember(SecurityUtils.getCurrentUserId(), studyId))
@@ -143,7 +142,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
             throw new GeneralException(ErrorStatus._STUDY_SCHEDULE_NOT_FOUND);
 
         // DTO로 변환하여 반환
-        List<StudyScheduleResponseDTO.StudyScheduleDTO> scheduleDTOS = schedules.stream().map(schedule -> StudyScheduleResponseDTO.StudyScheduleDTO.builder()
+        List<ScheduleResponseDTO.SchedulePreviewDTO> scheduleDTOS = schedules.stream().map(schedule -> ScheduleResponseDTO.SchedulePreviewDTO.builder()
                 .title(schedule.getTitle())
                 .location(schedule.getLocation())
                 .startedAt(schedule.getStartedAt())
@@ -151,7 +150,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
                 .build()).toList();
 
         // 페이징 처리
-        return new StudyScheduleResponseDTO(new PageImpl<>(scheduleDTOS, pageable, schedules.size()), scheduleDTOS, schedules.size());
+        return new ScheduleResponseDTO.SchedulePageDTO(new PageImpl<>(scheduleDTOS, pageable, schedules.size()), scheduleDTOS, schedules.size());
     }
 
     /**
@@ -233,7 +232,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
      * @return 모든 스터디 회원에 대한 정보와 출석 여부를 담은 리스트를 반환합니다.
      */
     @Override
-    public StudyQuizResponseDTO.AttendanceListDTO getAllAttendances(Long studyId, Long scheduleId, LocalDate date) {
+    public QuizResponseDTO.AttendanceListDTO getAllAttendances(Long studyId, Long scheduleId, LocalDate date) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -258,25 +257,25 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_FOUND));
 
         //=== Feature ===//
-        List<StudyQuizResponseDTO.StudyMemberDTO> studyMembers = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED).stream()
+        List<QuizResponseDTO.AttendingMemberDTO> studyMembers = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED).stream()
                 .map(memberStudy -> {
                     List<QuizSubmission> attendanceList = quizSubmissionRepository.findByQuizIdAndMemberId(quiz.getId(), memberStudy.getMember().getId());
                     for (QuizSubmission attendance : attendanceList) {
                         // MemberAttendance에 퀴즈에 대한 정답이 저장되어 있으면 금일 출석 성공
                         if (attendance.getIsCorrect())
-                            return StudyQuizResponseDTO.StudyMemberDTO.toDTO(memberStudy, Boolean.TRUE);
+                            return QuizResponseDTO.AttendingMemberDTO.toDTO(memberStudy, Boolean.TRUE);
                     }
                     // 퀴즈를 풀지 않았거나 MemberAttendance에 오답만 저장되어 있으면 금일 출석 실패
-                    return StudyQuizResponseDTO.StudyMemberDTO.toDTO(memberStudy, Boolean.FALSE);
+                    return QuizResponseDTO.AttendingMemberDTO.toDTO(memberStudy, Boolean.FALSE);
                 })
                 .toList();
 
-        return StudyQuizResponseDTO.AttendanceListDTO.toDTO(quiz, studyMembers);
+        return QuizResponseDTO.AttendanceListDTO.toDTO(quiz, studyMembers);
 
     }
 
     @Override
-    public StudyQuizResponseDTO.QuizDTO getAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date) {
+    public QuizResponseDTO.QuestionDTO getAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -307,7 +306,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService {
         }
         Quiz quiz = todayQuizzes.get(0);
 
-        return StudyQuizResponseDTO.QuizDTO.toDTO(quiz);
+        return QuizResponseDTO.QuestionDTO.toDTO(quiz);
     }
 
 

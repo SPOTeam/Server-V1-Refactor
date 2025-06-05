@@ -24,10 +24,9 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.repository.StudyThemeRepository;
 import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.study.application.StudyCommandServiceImpl;
-import com.example.spot.study.presentation.dto.request.StudyJoinRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyRegisterRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyRegisterResponseDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
+import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -115,7 +114,7 @@ class StudyCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyJoinRequestDTO.StudyJoinDTO studyJoinRequestDTO = StudyJoinRequestDTO.StudyJoinDTO.builder()
+        StudyMemberRequestDTO.JoinDTO joinDTO = StudyMemberRequestDTO.JoinDTO.builder()
                 .introduction("Hi")
                 .build();
 
@@ -125,7 +124,7 @@ class StudyCommandServiceTest {
                 .study(study)
                 .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
-                .introduction(studyJoinRequestDTO.getIntroduction())
+                .introduction(joinDTO.getIntroduction())
                 .build();
 
         when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
@@ -136,7 +135,7 @@ class StudyCommandServiceTest {
                 .thenReturn(studyMember);
 
         // when
-        StudyJoinResponseDTO.JoinDTO result = studyCommandService.applyToStudy(studyId, studyJoinRequestDTO);
+        StudyMemberResponseDTO.JoinDTO result = studyCommandService.applyToStudy(studyId, joinDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -154,7 +153,7 @@ class StudyCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyJoinRequestDTO.StudyJoinDTO studyJoinRequestDTO = StudyJoinRequestDTO.StudyJoinDTO.builder()
+        StudyMemberRequestDTO.JoinDTO joinDTO = StudyMemberRequestDTO.JoinDTO.builder()
                 .introduction("Hi")
                 .build();
 
@@ -164,7 +163,7 @@ class StudyCommandServiceTest {
                 .study(study)
                 .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
-                .introduction(studyJoinRequestDTO.getIntroduction())
+                .introduction(joinDTO.getIntroduction())
                 .build();
 
         when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
@@ -175,7 +174,7 @@ class StudyCommandServiceTest {
                 .thenReturn(studyMember);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, studyJoinRequestDTO));
+        assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, joinDTO));
     }
 
     @Test
@@ -193,7 +192,7 @@ class StudyCommandServiceTest {
                 .maxPeople(1L)
                 .build();
 
-        StudyJoinRequestDTO.StudyJoinDTO studyJoinRequestDTO = StudyJoinRequestDTO.StudyJoinDTO.builder()
+        StudyMemberRequestDTO.JoinDTO joinDTO = StudyMemberRequestDTO.JoinDTO.builder()
                 .introduction("Hi")
                 .build();
 
@@ -203,7 +202,7 @@ class StudyCommandServiceTest {
                 .study(study)
                 .status(StudyApplicationStatus.APPLIED)
                 .isOwned(false)
-                .introduction(studyJoinRequestDTO.getIntroduction())
+                .introduction(joinDTO.getIntroduction())
                 .build();
 
         when(studyMemberRepository.countByStatusAndStudyId(StudyApplicationStatus.APPROVED, studyId))
@@ -214,7 +213,7 @@ class StudyCommandServiceTest {
                 .thenReturn(studyMember);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, studyJoinRequestDTO));
+        assertThrows(StudyHandler.class, () -> studyCommandService.applyToStudy(studyId, joinDTO));
     }
 
     @Test
@@ -226,7 +225,7 @@ class StudyCommandServiceTest {
 
         getAuthentication(memberId);
 
-        StudyRegisterRequestDTO.RegisterDTO registerDTO = StudyRegisterRequestDTO.RegisterDTO.builder()
+        StudyMemberRequestDTO.RegisterDTO registerDTO = StudyMemberRequestDTO.RegisterDTO.builder()
                 .themes(List.of(ThemeType.자격증))
                 .title("새로운 스터디")
                 .goal("목표")
@@ -268,7 +267,7 @@ class StudyCommandServiceTest {
         when(studyThemeRepository.save(any(StudyTheme.class))).thenReturn(studyTheme);
 
         // when
-        StudyRegisterResponseDTO.RegisterDTO result = studyCommandService.registerStudy(registerDTO);
+        StudyResponseDTO.RegisterDTO result = studyCommandService.registerStudy(registerDTO);
 
         // then
         assertThat(result).isNotNull();

@@ -16,7 +16,7 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -118,7 +118,7 @@ class AttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        StudyQuizResponseDTO.AttendanceListDTO result = scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date);
+        QuizResponseDTO.AttendanceListDTO result = scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date);
 
         // then
         assertThat(result).isNotNull();
@@ -126,7 +126,7 @@ class AttendanceQueryServiceTest {
         assertThat(result.getQuizId()).isEqualTo(quiz.getId());
         assertThat(result.getStudyMembers()).size().isEqualTo(2); // 전체 인원 2명
         assertThat(result.getStudyMembers().stream()
-                .filter(StudyQuizResponseDTO.StudyMemberDTO::getIsAttending)
+                .filter(QuizResponseDTO.AttendingMemberDTO::getIsAttending)
                 .toList()).size().isEqualTo(1); // 출석 인원 1명
     }
 
@@ -183,7 +183,7 @@ class AttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = scheduleQueryService.getAttendanceQuiz(studyId, schedule.getId(), date);
+        QuizResponseDTO.QuestionDTO result = scheduleQueryService.getAttendanceQuiz(studyId, schedule.getId(), date);
 
         // then
         assertThat(result).isNotNull();

@@ -3,6 +3,7 @@ package com.example.spot.service.story;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
+import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.LikedStory;
@@ -12,7 +13,6 @@ import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.repository.StoryImageRepository;
-import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
@@ -27,7 +27,7 @@ import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,14 +68,14 @@ class StoryCommandServiceTest {
     @Mock
     private StoryRepository storyRepository;
     @Mock
-    private LikedStoryRepository likedStoryRepository;
-    @Mock
     private StoryImageRepository storyImageRepository;
+    @Mock
+    private StoryCommentRepository storyCommentRepository;
     @Mock
     private StoryReportRepository storyReportRepository;
 
     @Mock
-    private StoryCommentRepository storyCommentRepository;
+    private LikedStoryRepository likedStoryRepository;
     @Mock
     private LikedStoryCommentRepository likedStoryCommentRepository;
 
@@ -161,7 +161,7 @@ class StoryCommandServiceTest {
         Long memberId = 3L;
         Long studyId = 1L;
 
-        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
+        StoryRequestDTO.StoryDTO postPreviewDTO = StoryRequestDTO.StoryDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -178,7 +178,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of(member1Study, ownerStudy));
 
         // when
-        StoryResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
+        StoryResponseDTO.StoryPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
 
         // then
         assertNotNull(result);
@@ -194,7 +194,7 @@ class StoryCommandServiceTest {
         Long memberId = 1L;
         Long studyId = 1L;
 
-        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
+        StoryRequestDTO.StoryDTO postPreviewDTO = StoryRequestDTO.StoryDTO.builder()
                 .isAnnouncement(false)
                 .storyCategory(StoryCategory.FREE_TALK)
                 .title("잡담")
@@ -211,7 +211,7 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of(member1Study, ownerStudy));
 
         // when
-        StoryResDTO.PostPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
+        StoryResponseDTO.StoryPreviewDTO result = studyPostCommandService.createPost(studyId, postPreviewDTO);
 
         // then
         assertNotNull(result);
@@ -227,7 +227,7 @@ class StoryCommandServiceTest {
         Long memberId = 2L;
         Long studyId = 1L;
 
-        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
+        StoryRequestDTO.StoryDTO postPreviewDTO = StoryRequestDTO.StoryDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -255,7 +255,7 @@ class StoryCommandServiceTest {
         Long memberId = 2L;
         Long studyId = 1L;
 
-        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
+        StoryRequestDTO.StoryDTO postPreviewDTO = StoryRequestDTO.StoryDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("공지")
@@ -283,7 +283,7 @@ class StoryCommandServiceTest {
         Long memberId = 1L;
         Long studyId = 1L;
 
-        StoryRequestDTO.PostDTO postPreviewDTO = StoryRequestDTO.PostDTO.builder()
+        StoryRequestDTO.StoryDTO postPreviewDTO = StoryRequestDTO.StoryDTO.builder()
                 .isAnnouncement(true)
                 .storyCategory(StoryCategory.INFO_SHARING)
                 .title("50자가 넘어가는 제목 "
@@ -327,7 +327,7 @@ class StoryCommandServiceTest {
                 .thenReturn(Optional.of(story1));
 
         // when
-        StoryResDTO.PostPreviewDTO result = studyPostCommandService.deletePost(studyId, postId);
+        StoryResponseDTO.StoryPreviewDTO result = studyPostCommandService.deletePost(studyId, postId);
 
         // then
         assertNotNull(result);
@@ -398,7 +398,7 @@ class StoryCommandServiceTest {
         when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
-        StoryResDTO.PostLikeNumDTO result = studyPostCommandService.likePost(studyId, postId);
+        StoryResponseDTO.StoryLikeNumDTO result = studyPostCommandService.likePost(studyId, postId);
 
         // then
         assertNotNull(result);
@@ -472,7 +472,7 @@ class StoryCommandServiceTest {
         when(storyRepository.save(any(Story.class))).thenReturn(story1);
 
         // when
-        StoryResDTO.PostLikeNumDTO result = studyPostCommandService.cancelPostLike(studyId, postId);
+        StoryResponseDTO.StoryLikeNumDTO result = studyPostCommandService.cancelPostLike(studyId, postId);
 
         // then
         assertNotNull(result);

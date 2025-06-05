@@ -26,7 +26,7 @@ import com.example.spot.comment.presentation.dto.CommentLikeResponse;
 import com.example.spot.post.presentation.dto.PostCreateRequest;
 import com.example.spot.post.presentation.dto.PostCreateResponse;
 import com.example.spot.post.presentation.dto.PostLikeResponse;
-import com.example.spot.report.presentation.dto.PostReportResponse;
+import com.example.spot.report.presentation.dto.PostReportDTO;
 import com.example.spot.post.presentation.dto.PostUpdateRequest;
 import com.example.spot.post.presentation.dto.ScrapAllDeleteRequest;
 import com.example.spot.post.presentation.dto.ScrapPostResponse;
@@ -1020,7 +1020,7 @@ class PostCommandServiceTest {
         when(postReportRepository.save(any(PostReport.class))).thenReturn(postReport);
 
         // when
-        PostReportResponse result = reportCommandService.reportPost(postId, memberId);
+        PostReportDTO result = reportCommandService.reportPost(postId, memberId);
 
         // then
         assertNotNull(result);

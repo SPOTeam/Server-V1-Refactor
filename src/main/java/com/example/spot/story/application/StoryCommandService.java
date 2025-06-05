@@ -3,24 +3,24 @@ package com.example.spot.story.application;
 import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 
 public interface StoryCommandService {
 
     // 스터디 게시글 생성
-    StoryResDTO.PostPreviewDTO createPost(Long studyId, StoryRequestDTO.PostDTO postRequestDTO);
+    StoryResponseDTO.StoryPreviewDTO createPost(Long studyId, StoryRequestDTO.StoryDTO postRequestDTO);
 
     // 스터디 게시글 편집
-    StoryResDTO.PostPreviewDTO updatePost(Long studyId, Long postId, StoryRequestDTO.PostDTO postDTO);
+    StoryResponseDTO.StoryPreviewDTO updatePost(Long studyId, Long postId, StoryRequestDTO.StoryDTO storyDTO);
 
     // 스터디 게시글 삭제
-    StoryResDTO.PostPreviewDTO deletePost(Long studyId, Long postId);
+    StoryResponseDTO.StoryPreviewDTO deletePost(Long studyId, Long postId);
 
     // 스터디 게시글 좋아요
-    StoryResDTO.PostLikeNumDTO likePost(Long studyId, Long postId);
+    StoryResponseDTO.StoryLikeNumDTO likePost(Long studyId, Long postId);
 
     // 스터디 게시글 좋아요 취소
-    StoryResDTO.PostLikeNumDTO cancelPostLike(Long studyId, Long postId);
+    StoryResponseDTO.StoryLikeNumDTO cancelPostLike(Long studyId, Long postId);
 
     // 스터디 게시글 댓글 생성
     StoryCommentResponseDTO.CommentDTO createComment(Long studyId, Long postId, StoryCommentRequestDTO.CommentDTO commentRequestDTO);

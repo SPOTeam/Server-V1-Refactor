@@ -7,8 +7,8 @@ import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.study.application.StudyCommandService;
 import com.example.spot.study.application.StudyQueryService;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyDTO;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyWithThemeDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestWithThemeDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
@@ -82,7 +82,7 @@ public class SearchController {
             조건에 맞게 검색된 스터디 목록이 반환 됩니다."""
     )
     public ApiResponse<StudyPreviewDTO> allStudiesByConditions(
-        @ModelAttribute @Valid SearchRequestStudyDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy) {
@@ -118,7 +118,7 @@ public class SearchController {
     @Operation(
         summary = "[내 관심사 스터디 조회] 내 '전체' 관심사 스터디 조회",
         description = """
-            ## [내 관심사 스터디 조회] 입력한 조건에 맞는 회원의 전체 관심 분야의 스터디를 조회 합니다. 
+            ## [내 관심사 스터디 조회] 입력한 조건에 맞는 회원의 전체 관심 분야의 스터디를 조회 합니다.
             메인 화면에서 사용 하실 경우, 페이지 번호는 0, 페이지 크기는 3으로 설정하여 사용하시면 됩니다.
             조건에 맞게 검색된 스터디 목록이 반환 됩니다.""",
         security = @SecurityRequirement(name = "accessToken")
@@ -126,7 +126,7 @@ public class SearchController {
     @Parameter(name = "searchRequestStudyDTO", description = """
     조회할 스터디의 검색 조건을 입력 받습니다.
     - gender: 성별 (MALE, FEMALE, UNKNOWN)
-    - minAge: 18 이상의 정수 
+    - minAge: 18 이상의 정수
     - maxAge: 60 이하의 정수 
     - isOnline: 스터디 온라인 진행 여부 (true, false)
     - hasFee: 스터디 활동비 유무 (true, false)
@@ -137,7 +137,7 @@ public class SearchController {
     @Parameter(name = "size", description = "조회할 페이지 크기를 입력 받습니다. 페이지 크기는 1 이상의 정수 입니다. ", required = true)
     @Parameter(name = "sortBy", description = "정렬 기준을 입력 받습니다.", required = true)
     public ApiResponse<StudyPreviewDTO> interestStudiesByConditionsAll(
-        @ModelAttribute @Valid SearchRequestStudyDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy
@@ -171,7 +171,7 @@ public class SearchController {
     @Parameter(name = "sortBy", description = "정렬 기준을 입력 받습니다.", required = true)
     public ApiResponse<StudyPreviewDTO> interestStudiesByConditionsSpecific(
         @RequestParam ThemeType theme,
-        @ModelAttribute @Valid SearchRequestStudyDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy
@@ -209,7 +209,7 @@ public class SearchController {
     @Parameter(name = "size", description = "조회할 페이지 크기를 입력 받습니다. 페이지 크기는 1 이상의 정수 입니다. ", required = true)
     @Parameter(name = "sortBy", description = "정렬 기준을 입력 받습니다.", required = true)
     public ApiResponse<StudyPreviewDTO> interestRegionStudiesByConditionsAll(
-        @ModelAttribute @Valid SearchRequestStudyWithThemeDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestWithThemeDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy
@@ -244,7 +244,7 @@ public class SearchController {
     @Parameter(name = "sortBy", description = "정렬 기준을 입력 받습니다.", required = true)
     public ApiResponse<StudyPreviewDTO> interestRegionStudiesByConditionsSpecific(
         @RequestParam String regionCode,
-        @ModelAttribute @Valid SearchRequestStudyWithThemeDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestWithThemeDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy
@@ -279,7 +279,7 @@ public class SearchController {
     @Parameter(name = "size", description = "조회할 페이지 크기를 입력 받습니다. 페이지 크기는 1 이상의 정수 입니다. ", required = true)
     @Parameter(name = "sortBy", description = "정렬 기준을 입력 받습니다.", required = true)
     public ApiResponse<StudyPreviewDTO> recruitingStudiesByConditions(
-        @ModelAttribute @Valid SearchRequestStudyWithThemeDTO searchRequestStudyDTO,
+        @ModelAttribute @Valid StudySearchRequestWithThemeDTO searchRequestStudyDTO,
         @RequestParam @Min(0) Integer page,
         @RequestParam @Min(1) Integer size,
         @RequestParam StudySortBy sortBy) {

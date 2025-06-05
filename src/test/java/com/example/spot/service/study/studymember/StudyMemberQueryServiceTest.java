@@ -10,8 +10,6 @@ import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
 import com.example.spot.todo.domain.ToDo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,7 +98,7 @@ public class StudyMemberQueryServiceTest {
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(List.of(studyMember));
 
         // when
-        StudyMemberResponseDTO responseDTO = studyMemberQueryService.findStudyMembers(studyId);
+        StudyMemberResponseDTO.StudyMemberListDTO responseDTO = studyMemberQueryService.findStudyMembers(studyId);
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -134,7 +132,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(List.of(apply));
 
         // when
-        StudyMemberResponseDTO responseDTO = studyMemberQueryService.findStudyApplicants(1L);
+        StudyMemberResponseDTO.StudyMemberListDTO responseDTO = studyMemberQueryService.findStudyApplicants(1L);
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -180,7 +178,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(Optional.ofNullable(apply));
 
         // when
-        StudyApplyMemberDTO responseDTO = studyMemberQueryService.findStudyApplication(100L, 1L);
+        StudyMemberResponseDTO.ApplyingMemberDTO responseDTO = studyMemberQueryService.findStudyApplication(100L, 1L);
 
         // then
         assertEquals(1L, responseDTO.getMemberId());
@@ -238,7 +236,7 @@ public class StudyMemberQueryServiceTest {
                 .thenReturn(true);
 
         // when
-        StudyApplicantDTO responseDTO = studyMemberQueryService.isApplied(100L);
+        StudyMemberResponseDTO.AppliedStudyDTO responseDTO = studyMemberQueryService.isApplied(100L);
 
         // then
         assertEquals(100L, responseDTO.getStudyId());

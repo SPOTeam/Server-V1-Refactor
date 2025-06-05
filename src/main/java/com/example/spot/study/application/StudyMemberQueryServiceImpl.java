@@ -4,30 +4,21 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.story.domain.Story;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
 
 import com.example.spot.common.security.utils.SecurityUtils;
 
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 import lombok.RequiredArgsConstructor;
 import com.example.spot.common.api.exception.GeneralException;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyMemberDTO;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -50,7 +41,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @throws GeneralException 스터디 멤버가 아닌 경우
      */
     @Override
-    public StudyMemberResponseDTO findStudyMembers(Long studyId) {
+    public StudyMemberResponseDTO.StudyMemberListDTO findStudyMembers(Long studyId) {
 
         // 스터디 멤버 조회
         List<StudyMember> memberStudies = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED);
@@ -60,13 +51,13 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
             throw new GeneralException(ErrorStatus._STUDY_MEMBER_NOT_FOUND);
 
         // DTO로 변환하여 반환
-        List<StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberDTO.builder()
+        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
                 .memberId(memberStudy.getMember().getId())
                 .nickname(memberStudy.getMember().getName())
                 .profileImage(memberStudy.getMember().getProfileImage())
                 .build()).toList();
         // DTO로 변환하여 반환
-        return new StudyMemberResponseDTO(memberDTOS);
+        return new StudyMemberResponseDTO.StudyMemberListDTO(memberDTOS);
     }
 
 
@@ -79,7 +70,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @throws GeneralException 조회 하는 회원이 스터디 장이 아닌 경우
      */
     @Override
-    public StudyMemberResponseDTO findStudyApplicants(Long studyId) {
+    public StudyMemberResponseDTO.StudyMemberListDTO findStudyApplicants(Long studyId) {
 
         // 로그인한 회원이 해당 스터디 장인지 확인
         if (!isOwner(SecurityUtils.getCurrentUserId(), studyId))
@@ -93,18 +84,18 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
             throw new GeneralException(ErrorStatus._STUDY_APPLICANT_NOT_FOUND);
 
         // DTO로 변환하여 반환
-        List<StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberDTO.builder()
+        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
                 .memberId(memberStudy.getMember().getId())
                 .nickname(memberStudy.getMember().getName())
                 .profileImage(memberStudy.getMember().getProfileImage())
                 .build()).toList();
 
         // DTO로 변환하여 반환
-        return new StudyMemberResponseDTO(memberDTOS);
+        return new StudyMemberResponseDTO.StudyMemberListDTO(memberDTOS);
     }
 
     @Override
-    public StudyMemberResDTO.StudyHostDTO getStudyHost(Long studyId) {
+    public StudyMemberResponseDTO.HostDTO getStudyHost(Long studyId) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -117,9 +108,9 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
 
         // 로그인한 회원이 호스트인지 확인
         if (studyHost.getMember().getId().equals(memberId)) {
-            return StudyMemberResDTO.StudyHostDTO.toDTO(true, member);
+            return StudyMemberResponseDTO.HostDTO.toDTO(true, member);
         } else {
-            return StudyMemberResDTO.StudyHostDTO.toDTO(false, studyHost.getMember());
+            return StudyMemberResponseDTO.HostDTO.toDTO(false, studyHost.getMember());
         }
     }
 
@@ -134,7 +125,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @throws GeneralException 스터디 장은 스터디에 신청할 수 없음
      */
     @Override
-    public StudyApplyMemberDTO findStudyApplication(Long studyId, Long memberId) {
+    public StudyMemberResponseDTO.ApplyingMemberDTO findStudyApplication(Long studyId, Long memberId) {
 
         // 로그인한 회원이 해당 스터디 장인지 확인
         if (!isOwner(SecurityUtils.getCurrentUserId(), studyId))
@@ -149,7 +140,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
             throw new GeneralException(ErrorStatus._STUDY_OWNER_CANNOT_APPLY);
 
         // DTO로 변환하여 반환
-        return StudyApplyMemberDTO.builder()
+        return StudyMemberResponseDTO.ApplyingMemberDTO.builder()
                 .memberId(studyMember.getMember().getId())
                 .studyId(studyMember.getStudy().getId())
                 .introduction(studyMember.getIntroduction())
@@ -166,7 +157,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @throws GeneralException 이미 스터디 멤버인 경우
      */
     @Override
-    public StudyApplicantDTO isApplied(Long studyId) {
+    public StudyMemberResponseDTO.AppliedStudyDTO isApplied(Long studyId) {
         // 로그인한 회원 ID 조회
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
@@ -175,7 +166,7 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
             throw new GeneralException(ErrorStatus._ALREADY_STUDY_MEMBER);
 
         // DTO로 변환하여 반환
-        return StudyApplicantDTO.builder()
+        return StudyMemberResponseDTO.AppliedStudyDTO.builder()
                 .isApplied(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(currentUserId, studyId, StudyApplicationStatus.APPLIED))
                 .studyId(studyId)
                 .build();

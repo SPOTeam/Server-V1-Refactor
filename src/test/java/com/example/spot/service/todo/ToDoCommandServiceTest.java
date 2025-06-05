@@ -12,8 +12,6 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.todo.application.ToDoCommandServiceImpl;
 import com.example.spot.todo.domain.ToDo;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Status;
 import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
@@ -26,8 +24,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
 
-import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

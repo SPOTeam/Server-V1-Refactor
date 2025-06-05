@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseSearchRequestStudyDTO {
+public class BaseStudySearchRequestDTO {
 
     @Schema(description = "성별을 입력 받습니다.", example = "MALE")
     private Gender gender;

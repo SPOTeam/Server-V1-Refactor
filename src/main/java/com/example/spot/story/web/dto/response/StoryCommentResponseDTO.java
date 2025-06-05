@@ -20,7 +20,7 @@ public class StoryCommentResponseDTO {
     public static class CommentDTO {
 
         private final Long commentId;
-        private final MemberInfoDTO member;
+        private final CommentingMemberDTO member;
         private final String content;
         private final Integer likeCount;
         private final Integer dislikeCount;
@@ -28,7 +28,7 @@ public class StoryCommentResponseDTO {
         public static CommentDTO toDTO(StoryComment comment, String name, String defaultImage) {
             return CommentDTO.builder()
                     .commentId(comment.getId())
-                    .member(MemberInfoDTO.toDTO(comment.getMember(), name, comment.getIsAnonymous(), defaultImage))
+                    .member(CommentingMemberDTO.toDTO(comment.getMember(), name, comment.getIsAnonymous(), defaultImage))
                     .content(comment.getContent())
                     .likeCount(comment.getLikeCount())
                     .dislikeCount(comment.getDislikeCount())
@@ -39,21 +39,21 @@ public class StoryCommentResponseDTO {
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class MemberInfoDTO {
+    public static class CommentingMemberDTO {
 
         private final Long memberId;
         private final String name;
         private final String profileImage;
 
-        public static MemberInfoDTO toDTO(Member member, String anonymity, Boolean isAnonymous, String defaultImage) {
+        public static CommentingMemberDTO toDTO(Member member, String anonymity, Boolean isAnonymous, String defaultImage) {
             if (isAnonymous) {
-                return MemberInfoDTO.builder()
+                return CommentingMemberDTO.builder()
                         .memberId(member.getId())
                         .name(anonymity)
                         .profileImage(defaultImage)
                         .build();
             } else {
-                return MemberInfoDTO.builder()
+                return CommentingMemberDTO.builder()
                         .memberId(member.getId())
                         .name(member.getName())
                         .profileImage(member.getProfileImage())
@@ -89,16 +89,16 @@ public class StoryCommentResponseDTO {
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class CommentReplyListDTO {
+    public static class ReplyListDTO {
 
         private final Long postId;
-        private final List<CommentReplyDTO> comments;
+        private final List<ReplyDTO> comments;
 
-        public static CommentReplyListDTO toDTO(Long postId, List<StoryComment> comments, Member member, String defaultImage) {
-            return CommentReplyListDTO.builder()
+        public static ReplyListDTO toDTO(Long postId, List<StoryComment> comments, Member member, String defaultImage) {
+            return ReplyListDTO.builder()
                     .postId(postId)
                     .comments(comments.stream()
-                            .map(comment -> CommentReplyDTO.toDTO(comment, member, defaultImage))
+                            .map(comment -> ReplyDTO.toDTO(comment, member, defaultImage))
                             .toList())
                     .build();
         }
@@ -107,23 +107,23 @@ public class StoryCommentResponseDTO {
     @Getter
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class CommentReplyDTO {
+    public static class ReplyDTO {
 
         private final Long commentId;
-        private final MemberInfoDTO member;
+        private final CommentingMemberDTO member;
         private final String content;
         private final Integer likeCount;
         private final Integer dislikeCount;
         private final Boolean isDeleted;
         private final String isLiked;
-        private final List<CommentReplyDTO> applies;
+        private final List<ReplyDTO> applies;
 
-        public static CommentReplyDTO toDTO(StoryComment comment, Member member, String defaultImage) {
+        public static ReplyDTO toDTO(StoryComment comment, Member member, String defaultImage) {
 
             String anonymity = "익명" + comment.getAnonymousNum();
-            return CommentReplyDTO.builder()
+            return ReplyDTO.builder()
                     .commentId(comment.getId())
-                    .member(MemberInfoDTO.toDTO(comment.getMember(), anonymity, comment.getIsAnonymous(), defaultImage))
+                    .member(CommentingMemberDTO.toDTO(comment.getMember(), anonymity, comment.getIsAnonymous(), defaultImage))
                     .content(comment.getContent())
                     .likeCount(comment.getLikeCount())
                     .dislikeCount(comment.getDislikeCount())
@@ -131,7 +131,7 @@ public class StoryCommentResponseDTO {
                     .isLiked(getIsLiked(comment, member))
                     .applies(comment.getChildrenComment().stream()
                             .sorted(Comparator.comparing(StoryComment::getCreatedAt))
-                            .map(child -> CommentReplyDTO.toDTO(child, member, defaultImage))
+                            .map(child -> ReplyDTO.toDTO(child, member, defaultImage))
                             .toList())
                     .build();
         }

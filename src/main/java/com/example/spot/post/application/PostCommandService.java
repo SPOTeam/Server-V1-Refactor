@@ -6,7 +6,6 @@ import com.example.spot.comment.presentation.dto.CommentLikeResponse;
 import com.example.spot.post.presentation.dto.PostCreateRequest;
 import com.example.spot.post.presentation.dto.PostCreateResponse;
 import com.example.spot.post.presentation.dto.PostLikeResponse;
-import com.example.spot.report.presentation.dto.PostReportResponse;
 import com.example.spot.post.presentation.dto.PostUpdateRequest;
 import com.example.spot.post.presentation.dto.ScrapAllDeleteRequest;
 import com.example.spot.post.presentation.dto.ScrapPostResponse;

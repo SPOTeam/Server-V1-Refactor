@@ -1,8 +1,7 @@
 package com.example.spot.schedule.application;
 
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -16,11 +15,11 @@ public interface ScheduleQueryService {
     ScheduleResponseDTO.MonthlyScheduleDTO getSchedule(Long studyId, Long scheduleId);
 
     // 다가오는 모임 일정 조회하기
-    StudyScheduleResponseDTO findStudySchedule(Long studyId, Pageable pageable);
+    ScheduleResponseDTO.SchedulePageDTO findStudySchedule(Long studyId, Pageable pageable);
 
     // 금일 회원 출석 여부 조회하기
-    StudyQuizResponseDTO.AttendanceListDTO getAllAttendances(Long studyId, Long scheduleId, LocalDate date);
+    QuizResponseDTO.AttendanceListDTO getAllAttendances(Long studyId, Long scheduleId, LocalDate date);
 
     // 스터디 출석퀴즈 조회하기
-    StudyQuizResponseDTO.QuizDTO getAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
+    QuizResponseDTO.QuestionDTO getAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
 }

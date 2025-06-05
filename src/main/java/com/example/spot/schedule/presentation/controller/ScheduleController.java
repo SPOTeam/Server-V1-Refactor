@@ -7,10 +7,9 @@ import com.example.spot.schedule.application.ScheduleCommandService;
 import com.example.spot.schedule.application.ScheduleQueryService;
 import com.example.spot.schedule.domain.validation.annotation.ExistSchedule;
 import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
-import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.QuizRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -105,11 +104,11 @@ public class ScheduleController {
         현재 시점 이후에 진행되는 모임 일정의 목록을 schedule에서 반환합니다.
         """)
     @GetMapping("/studies/{studyId}/upcoming-schedules")
-    public ApiResponse<StudyScheduleResponseDTO> getUpcomingSchedules(
+    public ApiResponse<ScheduleResponseDTO.SchedulePageDTO> getUpcomingSchedules(
             @PathVariable @ExistStudy Long studyId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "1") int size){
-        StudyScheduleResponseDTO studyScheduleResponseDTO = scheduleQueryService.findStudySchedule(studyId, PageRequest.of(page, size));
+        ScheduleResponseDTO.SchedulePageDTO studyScheduleResponseDTO = scheduleQueryService.findStudySchedule(studyId, PageRequest.of(page, size));
         return ApiResponse.onSuccess(SuccessStatus._STUDY_SCHEDULE_FOUND, studyScheduleResponseDTO);
     }
 
@@ -125,11 +124,11 @@ public class ScheduleController {
     @Parameter(name = "studyId", description = "출석 퀴즈를 생성할 스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "scheduleId", description = "출석 퀴즈를 생성할 일정의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> createAttendanceQuiz(
+    public ApiResponse<QuizResponseDTO.QuestionDTO> createAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
-            @RequestBody @Valid StudyQuizRequestDTO.QuizDTO quizRequestDTO) {
-        StudyQuizResponseDTO.QuizDTO quizResponseDTO = scheduleCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
+            @RequestBody @Valid QuizRequestDTO.QuizDTO quizRequestDTO) {
+        QuizResponseDTO.QuestionDTO quizResponseDTO = scheduleCommandService.createAttendanceQuiz(studyId, scheduleId, quizRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_CREATED, quizResponseDTO);
     }
 
@@ -142,12 +141,12 @@ public class ScheduleController {
     @Parameter(name = "studyId", description = "출석 퀴즈를 불러올 스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "scheduleId", description = "출석 퀴즈를 불러올 일정의 id를 입력합니다.", required = true)
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> getAttendanceQuiz(
+    public ApiResponse<QuizResponseDTO.QuestionDTO> getAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = scheduleQueryService.getAttendanceQuiz(studyId, scheduleId, date);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, quizDTO);
+        QuizResponseDTO.QuestionDTO questionDTO = scheduleQueryService.getAttendanceQuiz(studyId, scheduleId, date);
+        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_FOUND, questionDTO);
     }
 
 
@@ -160,11 +159,11 @@ public class ScheduleController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "scheduleId", description = "일정의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
-    public ApiResponse<StudyQuizResponseDTO.AttendanceDTO> attendantStudy(
+    public ApiResponse<QuizResponseDTO.AttendanceDTO> attendantStudy(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
-            @RequestBody @Valid StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
-        StudyQuizResponseDTO.AttendanceDTO attendanceResponseDTO = scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
+            @RequestBody @Valid QuizRequestDTO.AttendanceDTO attendanceRequestDTO) {
+        QuizResponseDTO.AttendanceDTO attendanceResponseDTO = scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO);
         if (attendanceResponseDTO.getIsCorrect()) {
             return ApiResponse.onSuccess(SuccessStatus._STUDY_ATTENDANCE_CREATED_CORRECT_ANSWER, attendanceResponseDTO);
         } else {
@@ -182,12 +181,12 @@ public class ScheduleController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "scheduleId", description = "일정의 id를 입력합니다.", required = true)
     @DeleteMapping("/studies/{studyId}/schedules/{scheduleId}/quiz")
-    public ApiResponse<StudyQuizResponseDTO.QuizDTO> deleteAttendanceQuiz(
+    public ApiResponse<QuizResponseDTO.QuestionDTO> deleteAttendanceQuiz(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.QuizDTO quizDTO = scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, quizDTO);
+        QuizResponseDTO.QuestionDTO questionDTO = scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
+        return ApiResponse.onSuccess(SuccessStatus._STUDY_QUIZ_DELETED, questionDTO);
     }
 
     @Tag(name = "스터디 출석체크")
@@ -199,11 +198,11 @@ public class ScheduleController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "scheduleId", description = "출석을 확인할 일정의 id를 입력합니다.", required = true)
     @GetMapping("/studies/{studyId}/schedules/{scheduleId}/attendance")
-    public ApiResponse<StudyQuizResponseDTO.AttendanceListDTO> getAllAttendances(
+    public ApiResponse<QuizResponseDTO.AttendanceListDTO> getAllAttendances(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistSchedule Long scheduleId,
             @RequestParam LocalDate date) {
-        StudyQuizResponseDTO.AttendanceListDTO attendanceListDTO = scheduleQueryService.getAllAttendances(studyId, scheduleId, date);
+        QuizResponseDTO.AttendanceListDTO attendanceListDTO = scheduleQueryService.getAllAttendances(studyId, scheduleId, date);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_ATTENDANCES_FOUND, attendanceListDTO);
     }
 }

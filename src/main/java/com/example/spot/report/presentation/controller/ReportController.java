@@ -6,9 +6,9 @@ import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.report.application.ReportCommandService;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
+import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,10 +50,10 @@ public class ReportController {
     @Parameter(name = "studyId", description = "스터디의 id를 입력합니다.", required = true)
     @Parameter(name = "postId", description = "신고할 스터디 게시글의 id를 입력합니다.", required = true)
     @PostMapping("/studies/{studyId}/posts/{postId}/reports")
-    public ApiResponse<StoryResDTO.PostPreviewDTO> reportStudyPost(
+    public ApiResponse<StoryResponseDTO.StoryPreviewDTO> reportStudyPost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StoryResDTO.PostPreviewDTO postPreviewDTO = reportCommandService.reportStudyPost(studyId, postId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_REPORTED, postPreviewDTO);
+        StoryResponseDTO.StoryPreviewDTO storyPreviewDTO = reportCommandService.reportStudyPost(studyId, postId);
+        return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_REPORTED, storyPreviewDTO);
     }
 }

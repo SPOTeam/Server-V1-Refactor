@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class SearchRequestStudyDTO extends BaseSearchRequestStudyDTO {
+public class StudySearchRequestDTO extends BaseStudySearchRequestDTO {
 
 }
 

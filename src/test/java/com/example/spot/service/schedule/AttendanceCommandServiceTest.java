@@ -16,8 +16,8 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.request.QuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,7 +120,7 @@ class AttendanceCommandServiceTest {
         Long studyId = 1L;
 
         // 사용자 인증 정보 생성
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
+        QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -130,7 +130,7 @@ class AttendanceCommandServiceTest {
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
+        QuizResponseDTO.QuestionDTO result = scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -144,7 +144,7 @@ class AttendanceCommandServiceTest {
 
         // given
         Long studyId = 2L;
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
+        QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -163,7 +163,7 @@ class AttendanceCommandServiceTest {
 
         // given
         Long studyId = 1L;
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member2);
+        QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member2);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -182,7 +182,7 @@ class AttendanceCommandServiceTest {
 
         // given
         Long studyId = 1L;
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
+        QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -204,7 +204,7 @@ class AttendanceCommandServiceTest {
         initQuiz();
 
         Long studyId = 1L;
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
+        QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -228,7 +228,7 @@ class AttendanceCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = schedule.getId();
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now);
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now);
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -242,7 +242,7 @@ class AttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance));
 
         // when
-        StudyQuizResponseDTO.AttendanceDTO result = scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO);
+        QuizResponseDTO.AttendanceDTO result = scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -264,7 +264,7 @@ class AttendanceCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = schedule.getId();
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -293,7 +293,7 @@ class AttendanceCommandServiceTest {
         // 사용자 인증 정보 생성
         getAuthentication(member1.getId());
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -324,7 +324,7 @@ class AttendanceCommandServiceTest {
         // 사용자 인증 정보 생성
         getAuthentication(member1.getId());
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = StudyQuizRequestDTO.AttendanceDTO.builder()
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = QuizRequestDTO.AttendanceDTO.builder()
                 .dateTime(now.plusMinutes(5).plusNanos(1))
                 .answer("SPOT")
                 .build();
@@ -356,7 +356,7 @@ class AttendanceCommandServiceTest {
         Long scheduleId = schedule.getId();
 
         // 사용자 인증 정보 생성
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now.plusMinutes(5).plusNanos(1));
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now.plusMinutes(5).plusNanos(1));
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -384,7 +384,7 @@ class AttendanceCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = schedule.getId();
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(owner, now.plusMinutes(5).plusNanos(1));
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(owner, now.plusMinutes(5).plusNanos(1));
 
         LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
@@ -426,7 +426,7 @@ class AttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
 
         // when
-        StudyQuizResponseDTO.QuizDTO result = scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
+        QuizResponseDTO.QuestionDTO result = scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date);
 
         // then
         assertThat(result).isNotNull();
@@ -625,12 +625,12 @@ class AttendanceCommandServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    private StudyQuizRequestDTO.QuizDTO getQuizDTO(Member member1) {
+    private QuizRequestDTO.QuizDTO getQuizDTO(Member member1) {
 
         // 사용자 인증 정보 생성
         getAuthentication(member1.getId());
 
-        StudyQuizRequestDTO.QuizDTO quizRequestDTO = StudyQuizRequestDTO.QuizDTO
+        QuizRequestDTO.QuizDTO quizRequestDTO = QuizRequestDTO.QuizDTO
                 .builder()
                 .createdAt(now)
                 .question("question")
@@ -647,20 +647,20 @@ class AttendanceCommandServiceTest {
         return quizRequestDTO;
     }
 
-    private static StudyQuizRequestDTO.AttendanceDTO getAttendanceDTO() {
+    private static QuizRequestDTO.AttendanceDTO getAttendanceDTO() {
         // 사용자 인증 정보 생성
         getAuthentication(member2.getId());
-        return StudyQuizRequestDTO.AttendanceDTO.builder()
+        return QuizRequestDTO.AttendanceDTO.builder()
                 .dateTime(now)
                 .answer("SPOT")
                 .build();
     }
 
-    private static StudyQuizRequestDTO.AttendanceDTO getAttendanceDTO(Member owner, LocalDateTime now) {
+    private static QuizRequestDTO.AttendanceDTO getAttendanceDTO(Member owner, LocalDateTime now) {
         // 사용자 인증 정보 생성
         getAuthentication(owner.getId());
 
-        StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO = StudyQuizRequestDTO.AttendanceDTO.builder()
+        QuizRequestDTO.AttendanceDTO attendanceRequestDTO = QuizRequestDTO.AttendanceDTO.builder()
                 .dateTime(now)
                 .answer("SPOT")
                 .build();

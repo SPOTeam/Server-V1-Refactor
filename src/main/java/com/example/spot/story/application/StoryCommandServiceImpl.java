@@ -29,7 +29,7 @@ import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +72,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
      * @return 작성된 스터디 게시글의 Preview(게시글 아이디, 제목)를 반환합니다.
      */
     @Override
-    public StoryResDTO.PostPreviewDTO createPost(Long studyId, StoryRequestDTO.PostDTO postRequestDTO) {
+    public StoryResponseDTO.StoryPreviewDTO createPost(Long studyId, StoryRequestDTO.StoryDTO postRequestDTO) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -157,11 +157,11 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         member.updateStudyPost(story);
         study.updateStudyPost(story);
 
-        return StoryResDTO.PostPreviewDTO.toDTO(story);
+        return StoryResponseDTO.StoryPreviewDTO.toDTO(story);
     }
 
     @Override
-    public StoryResDTO.PostPreviewDTO updatePost(Long studyId, Long postId, StoryRequestDTO.PostDTO postDTO) {
+    public StoryResponseDTO.StoryPreviewDTO updatePost(Long studyId, Long postId, StoryRequestDTO.StoryDTO storyDTO) {
 
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
@@ -182,26 +182,26 @@ public class StoryCommandServiceImpl implements StoryCommandService {
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_POST_UPDATE_INVALID));
 
         // 스터디장만 공지 가능
-        if (!studyMember.getIsOwned() && postDTO.getIsAnnouncement()) {
+        if (!studyMember.getIsOwned() && storyDTO.getIsAnnouncement()) {
             throw new StudyHandler(ErrorStatus._STUDY_POST_ANNOUNCEMENT_INVALID);
         }
 
         // 스터디 게시글 이미지 업데이트
-        updateStudyPostImage(postDTO, story);
+        updateStudyPostImage(storyDTO, story);
 
         // 스터디 게시글 업데이트
-        story.updatePost(postDTO);
+        story.updatePost(storyDTO);
 
-        return StoryResDTO.PostPreviewDTO.toDTO(story);
+        return StoryResponseDTO.StoryPreviewDTO.toDTO(story);
     }
 
-    private void updateStudyPostImage(StoryRequestDTO.PostDTO postDTO, Story story) {
+    private void updateStudyPostImage(StoryRequestDTO.StoryDTO storyDTO, Story story) {
         List<StoryImage> storyImages = story.getImages();
         // 기존 이미지가 존재하는 경우 이미지 유지
-        if (!StringUtils.hasText(postDTO.getExistingImage())) {
+        if (!StringUtils.hasText(storyDTO.getExistingImage())) {
             // 기존 이미지가 없고 새로운 이미지를 등록한 경우 이미지 url 변경
-            if (postDTO.getImage() != null) {
-                String imageUrl = s3ImageService.upload(postDTO.getImage());
+            if (storyDTO.getImage() != null) {
+                String imageUrl = s3ImageService.upload(storyDTO.getImage());
                 storyImages.forEach(studyPostImage -> {
                     studyPostImage.setUrl(imageUrl);
                     story.updateImage(studyPostImage);
@@ -217,7 +217,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
      * @return 삭제된 스터디 게시글의 Preview(게시글 아이디, 제목)를 반환합니다.
      */
     @Override
-    public StoryResDTO.PostPreviewDTO deletePost(Long studyId, Long postId) {
+    public StoryResponseDTO.StoryPreviewDTO deletePost(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -261,7 +261,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
             throw new StudyHandler(ErrorStatus._STUDY_POST_DELETION_INVALID);
         }
 
-        return StoryResDTO.PostPreviewDTO.toDTO(story);
+        return StoryResponseDTO.StoryPreviewDTO.toDTO(story);
     }
 
     /**
@@ -272,7 +272,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
      * @return 게시글의 Preview(게시글 아이디, 제목)와 함께 좋아요 개수가 반환됩니다.
      */
     @Override
-    public StoryResDTO.PostLikeNumDTO likePost(Long studyId, Long postId) {
+    public StoryResponseDTO.StoryLikeNumDTO likePost(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -311,7 +311,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         story.plusLikeNum();
         story = storyRepository.save(story);
 
-        return StoryResDTO.PostLikeNumDTO.toDTO(story);
+        return StoryResponseDTO.StoryLikeNumDTO.toDTO(story);
     }
 
     /**
@@ -322,7 +322,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
      * @return 게시글의 Preview(게시글 아이디, 제목)와 함께 좋아요 개수가 반환됩니다.
      */
     @Override
-    public StoryResDTO.PostLikeNumDTO cancelPostLike(Long studyId, Long postId) {
+    public StoryResponseDTO.StoryLikeNumDTO cancelPostLike(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -353,7 +353,7 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         likedStoryRepository.delete(likedStory);
         storyRepository.save(story);
 
-        return StoryResDTO.PostLikeNumDTO.toDTO(story);
+        return StoryResponseDTO.StoryLikeNumDTO.toDTO(story);
     }
 
 /* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
