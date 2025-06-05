@@ -31,8 +31,8 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.repository.StudyThemeRepository;
 import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyDTO;
-import com.example.spot.study.presentation.dto.request.SearchRequestStudyWithThemeDTO;
+import com.example.spot.study.presentation.dto.request.search.StudySearchRequestDTO;
+import com.example.spot.study.presentation.dto.request.search.StudySearchRequestWithThemeDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
@@ -214,7 +214,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      * @throws StudyHandler 조회된 스터디가 없을 경우 Exception을 발생시킵니다.
      */
     @Override
-    public StudyPreviewDTO findStudiesByConditions(Pageable pageable, SearchRequestStudyDTO request,
+    public StudyPreviewDTO findStudiesByConditions(Pageable pageable, StudySearchRequestDTO request,
         StudySortBy sortBy) {
         // 검색 조건 맵 생성
         Map<String, Object> conditions = getSearchConditions(request);
@@ -349,7 +349,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findInterestStudiesByConditionsAll(Pageable pageable, Long memberId,
-        SearchRequestStudyDTO request, StudySortBy sortBy) {
+        StudySearchRequestDTO request, StudySortBy sortBy) {
         // 회원이 참가하고 있는 스터디 ID 가져오기
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
 
@@ -409,7 +409,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findInterestStudiesByConditionsSpecific(Pageable pageable,
-                                                                   Long memberId, SearchRequestStudyDTO request, ThemeType themeType, StudySortBy sortBy) {
+                                                                   Long memberId, StudySearchRequestDTO request, ThemeType themeType, StudySortBy sortBy) {
 
         // 회원이 참가하고 있는 스터디 ID 가져오기
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
@@ -477,7 +477,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findInterestRegionStudiesByConditionsAll(
-            Pageable pageable, Long memberId, SearchRequestStudyWithThemeDTO request, StudySortBy sortBy) {
+            Pageable pageable, Long memberId, StudySearchRequestWithThemeDTO request, StudySortBy sortBy) {
 
         // 회원이 참가하고 있는 스터디 ID 가져오기
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
@@ -540,7 +540,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findInterestRegionStudiesByConditionsSpecific(
-            Pageable pageable, Long memberId, SearchRequestStudyWithThemeDTO request, String regionCode, StudySortBy sortBy) {
+            Pageable pageable, Long memberId, StudySearchRequestWithThemeDTO request, String regionCode, StudySortBy sortBy) {
 
         // 회원이 참가하고 있는 스터디 ID 가져오기
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
@@ -603,7 +603,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      */
     @Override
     public StudyPreviewDTO findRecruitingStudiesByConditions(
-            Pageable pageable, SearchRequestStudyWithThemeDTO request, StudySortBy sortBy) {
+            Pageable pageable, StudySearchRequestWithThemeDTO request, StudySortBy sortBy) {
 
         // 검색 조건 맵 생성
         Map<String, Object> conditions = getSearchConditionsWithTheme(request);
@@ -869,7 +869,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      * @return 검색 조건 맵을 반환합니다.
      *
      */
-    private Map<String, Object> getSearchConditions(SearchRequestStudyDTO request) {
+    private Map<String, Object> getSearchConditions(StudySearchRequestDTO request) {
         // 검색 조건 맵 생성
         return getBasicStudyFilteringConditions(request.getGender(), request.getMinAge(), request.getMaxAge(),
                 request.getIsOnline(), request.getHasFee(), request.getMaxFee(), request.getMinFee(), request.getRegionCodes());
@@ -883,7 +883,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      * @return 검색 조건 맵을 반환합니다.
      *
      */
-    private Map<String, Object> getSearchConditionsWithTheme(SearchRequestStudyWithThemeDTO request) {
+    private Map<String, Object> getSearchConditionsWithTheme(StudySearchRequestWithThemeDTO request) {
         Map<String, Object> search = getBasicStudyFilteringConditions(request.getGender(), request.getMinAge(),
                 request.getMaxAge(), request.getIsOnline(),
                 request.getHasFee(), request.getMaxFee(), request.getMinFee(), request.getRegionCodes());

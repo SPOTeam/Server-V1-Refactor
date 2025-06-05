@@ -24,12 +24,12 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.repository.StudyThemeRepository;
 import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.study.presentation.dto.request.StudyJoinRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyRegisterRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyRegisterRequestDTO.RegisterDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO.RegisterDTO;
 import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyLikeResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyRegisterResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +65,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
     // [스터디 생성/참여] 참여 신청하기
     @Transactional
-    public StudyJoinResponseDTO.JoinDTO applyToStudy(Long studyId, StudyJoinRequestDTO.StudyJoinDTO studyJoinRequestDTO) {
+    public StudyJoinResponseDTO.JoinDTO applyToStudy(Long studyId, StudyMemberRequestDTO.@Valid JoinDTO studyJoinRequestDTO) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -117,7 +117,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
     // [스터디 생성/참여] 스터디 생성하기
     @Transactional
-    public StudyRegisterResponseDTO.RegisterDTO registerStudy(StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO) {
+    public StudyRegisterResponseDTO.RegisterDTO registerStudy(StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -255,7 +255,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
     }
 
-    private void createRegionStudy(Study study, StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO) {
+    private void createRegionStudy(Study study, StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
 
         studyRegisterRequestDTO.getRegions()
                 .forEach(stringRegion -> {
@@ -277,7 +277,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
                 });
     }
 
-    private void createStudyTheme(Study study, StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO) {
+    private void createStudyTheme(Study study, StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
 
         studyRegisterRequestDTO.getThemes()
                 .forEach(stringTheme -> {

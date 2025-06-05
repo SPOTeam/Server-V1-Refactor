@@ -18,7 +18,7 @@ import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.common.security.utils.SecurityUtils;
@@ -87,7 +87,7 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
     }
 
     @Override
-    public WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyHostWithdrawRequestDTO requestDTO) {
+    public WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyMemberRequestDTO.HostWithdrawDTO hostWithdrawDTO) {
         // Authorization
         Long hostId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(hostId);
@@ -99,13 +99,13 @@ public class StudyMemberCommandServiceImpl implements StudyMemberCommandService 
             throw new StudyHandler(ErrorStatus._STUDY_OWNER_ONLY_CAN_WITHDRAW);
         }
 
-        StudyMember newHostStudy = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(requestDTO.getNewHostId(), studyId, StudyApplicationStatus.APPROVED)
+        StudyMember newHostStudy = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(hostWithdrawDTO.getNewHostId(), studyId, StudyApplicationStatus.APPROVED)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_MEMBER_NOT_EXIST));
 
         studyMemberRepository.delete(studyMember);
 
         newHostStudy.setIsOwned(true);
-        newHostStudy.setReason(requestDTO.getReason());
+        newHostStudy.setReason(hostWithdrawDTO.getReason());
 
         studyMemberRepository.save(newHostStudy);
 

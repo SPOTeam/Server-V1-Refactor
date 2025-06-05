@@ -8,7 +8,7 @@ import com.example.spot.report.application.ReportCommandService;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
+import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

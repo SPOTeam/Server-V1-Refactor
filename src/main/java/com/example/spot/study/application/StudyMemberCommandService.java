@@ -1,6 +1,6 @@
 package com.example.spot.study.application;
 
-import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
@@ -11,7 +11,7 @@ public interface StudyMemberCommandService {
     StudyWithdrawalResponseDTO.WithdrawalDTO withdrawFromStudy(Long studyId);
 
     // 스터디 호스트 탈퇴
-    StudyWithdrawalResponseDTO.WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyHostWithdrawRequestDTO requestDTO);
+    StudyWithdrawalResponseDTO.WithdrawalDTO withdrawHostFromStudy(Long studyId, StudyMemberRequestDTO.HostWithdrawDTO hostWithdrawDTO);
 
     // 스터디 종료
     StudyTerminationResponseDTO.TerminationDTO terminateStudy(Long studyId, String performance);

@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request;
+package com.example.spot.study.presentation.dto.request.search;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class SearchRequestStudyDTO extends BaseSearchRequestStudyDTO {
+public class StudySearchRequestDTO extends BaseStudySearchRequestDTO {
 
 }
 

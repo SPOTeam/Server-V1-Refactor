@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request;
+package com.example.spot.study.presentation.dto.request.search;
 
 import com.example.spot.study.domain.enums.ThemeType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class SearchRequestStudyWithThemeDTO extends BaseSearchRequestStudyDTO {
+public class StudySearchRequestWithThemeDTO extends BaseStudySearchRequestDTO {
 
     @Schema(description = "스터디 테마 리스트입니다. (예: HOBBY, PROJECT, EXAM)", example = "[\"HOBBY\", \"PROJECT\"]")
     private List<ThemeType> themeTypes;

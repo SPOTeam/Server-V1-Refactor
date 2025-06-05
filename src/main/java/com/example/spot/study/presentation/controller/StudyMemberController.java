@@ -7,13 +7,11 @@ import com.example.spot.study.application.StudyMemberQueryService;
 import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.common.presentation.validator.TextLength;
-import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
+import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/spot")
 @Validated
-public class MemberStudyController {
+public class StudyMemberController {
 
     private final StudyMemberQueryService studyMemberQueryService;
     private final StudyMemberCommandService studyMemberCommandService;
@@ -56,9 +54,9 @@ public class MemberStudyController {
     @DeleteMapping("/studies/{studyId}/hosts/withdrawal")
     public ApiResponse<StudyWithdrawalResponseDTO.WithdrawalDTO> withdrawHostFromStudy(
             @PathVariable Long studyId,
-            @RequestBody StudyHostWithdrawRequestDTO requestDTO) {
+            @RequestBody StudyMemberRequestDTO.HostWithdrawDTO hostWithdrawDTO) {
         StudyWithdrawalResponseDTO.WithdrawalDTO withdrawalDTO =
-                studyMemberCommandService.withdrawHostFromStudy(studyId, requestDTO);
+                studyMemberCommandService.withdrawHostFromStudy(studyId, hostWithdrawDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_DELETED, withdrawalDTO);
     }
 
@@ -90,7 +88,7 @@ public class MemberStudyController {
             """)
     @GetMapping("/studies/{studyId}/is-applied")
     @Parameter(name = "studyId", description = "모집중인 스터디의 ID를 입력 받습니다.", required = true)
-    public ApiResponse<StudyApplicantDTO> getIsApplied(@PathVariable @ExistStudy Long studyId) {
+    public ApiResponse<StudyMemberResponseDTO.AppliedStudyDTO> getIsApplied(@PathVariable @ExistStudy Long studyId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
                 studyMemberQueryService.isApplied(studyId));
     }
@@ -102,7 +100,7 @@ public class MemberStudyController {
             """)
     @GetMapping("/studies/{studyId}/applicants")
     @Parameter(name = "studyId", description = "모집중인 스터디의 ID를 입력 받습니다.", required = true)
-    public ApiResponse<StudyMemberResponseDTO> getAllApplicants(@PathVariable @ExistStudy Long studyId) {
+    public ApiResponse<StudyMemberResponseDTO.StudyMemberListDTO> getAllApplicants(@PathVariable @ExistStudy Long studyId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
                 studyMemberQueryService.findStudyApplicants(studyId));
     }
@@ -115,7 +113,7 @@ public class MemberStudyController {
     @GetMapping("/studies/{studyId}/applicants/{applicantId}")
     @Parameter(name = "studyId", description = "모집중인 스터디의 ID를 입력 받습니다.", required = true)
     @Parameter(name = "applicantId", description = "신청자의 ID를 입력 받습니다.", required = true)
-    public ApiResponse<StudyMemberResponseDTO.StudyApplyMemberDTO> getApplicantInfo(
+    public ApiResponse<StudyMemberResponseDTO.ApplyingMemberDTO> getApplicantInfo(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistMember Long applicantId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLICANT_FOUND,
@@ -172,10 +170,10 @@ public class MemberStudyController {
             member_study에서 application_status=APPROVED인 회원의 목록(이름, 프로필 사진 포함)이 반환됩니다.
             """)
     @GetMapping("/studies/{studyId}/members")
-    public ApiResponse<StudyMemberResponseDTO> getStudyMembers(
+    public ApiResponse<StudyMemberResponseDTO.StudyMemberListDTO> getStudyMembers(
             @PathVariable @ExistStudy Long studyId) {
-        StudyMemberResponseDTO studyMemberResponseDTO = studyMemberQueryService.findStudyMembers(studyId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_FOUND, studyMemberResponseDTO);
+        StudyMemberResponseDTO.StudyMemberListDTO studyMemberListDTO = studyMemberQueryService.findStudyMembers(studyId);
+        return ApiResponse.onSuccess(SuccessStatus._STUDY_MEMBER_FOUND, studyMemberListDTO);
     }
 
     @Tag(name = "스터디 상세 정보")
@@ -185,10 +183,10 @@ public class MemberStudyController {
             * host : 호스트의 id와 nickname 반환
             """)
     @GetMapping("/studies/{studyId}/host")
-    public ApiResponse<StudyMemberResDTO.StudyHostDTO> getStudyHost(
+    public ApiResponse<StudyMemberResponseDTO.HostDTO> getStudyHost(
             @PathVariable @ExistStudy Long studyId) {
-        StudyMemberResDTO.StudyHostDTO studyHostDTO = studyMemberQueryService.getStudyHost(studyId);
-        return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, studyHostDTO);
+        StudyMemberResponseDTO.HostDTO hostDTO = studyMemberQueryService.getStudyHost(studyId);
+        return ApiResponse.onSuccess(SuccessStatus._STUDY_HOST_FOUND, hostDTO);
     }
 
 }

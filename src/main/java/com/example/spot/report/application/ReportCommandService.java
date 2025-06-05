@@ -3,7 +3,7 @@ package com.example.spot.report.application;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.report.presentation.dto.PostReportResponse;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
+import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import jakarta.validation.Valid;
 
 public interface ReportCommandService {

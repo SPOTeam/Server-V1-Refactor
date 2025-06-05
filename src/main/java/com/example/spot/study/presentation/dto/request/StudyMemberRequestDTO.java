@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-public class StudyRegisterRequestDTO {
+public class StudyMemberRequestDTO {
 
     @Getter
     @Builder
@@ -53,6 +53,23 @@ public class StudyRegisterRequestDTO {
         private Integer fee;
 
         private boolean hasFee;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinDTO {
+        @TextLength(min = 1, max = 255)
+        private String introduction;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class HostWithdrawDTO {
+        private Long newHostId;
+        private String reason;
     }
 
 }

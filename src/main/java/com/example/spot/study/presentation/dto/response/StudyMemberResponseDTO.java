@@ -1,53 +1,79 @@
 package com.example.spot.study.presentation.dto.response;
 
+import com.example.spot.member.domain.Member;
+import lombok.*;
+
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-
-@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class StudyMemberResponseDTO {
-    private long totalElements;
-    private List<StudyMemberDTO> members;
 
-    public StudyMemberResponseDTO(List<StudyMemberDTO> members){
-        this.totalElements = members.size();
-        this.members = members;
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder(access = AccessLevel.PRIVATE)
+    public static class HostDTO {
+        private final Boolean isOwned;
+        private final HostInfoDTO host;
+        public static HostDTO toDTO(Boolean isOwned, Member host) {
+            return HostDTO.builder()
+                    .isOwned(isOwned)
+                    .host(HostInfoDTO.toDTO(host))
+                    .build();
+        }
     }
 
-    @Builder
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder(access = AccessLevel.PRIVATE)
+    private static class HostInfoDTO {
+        private final Long memberId;
+        private final String nickname;
+        public static HostInfoDTO toDTO(Member host) {
+            return HostInfoDTO.builder()
+                    .memberId(host.getId())
+                    .nickname(host.getNickname())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @RequiredArgsConstructor
+    public static class StudyMemberListDTO {
+        private final long totalElements;
+        private final List<StudyMemberDTO> members;
+
+        public StudyMemberListDTO(List<StudyMemberDTO> members){
+            this.totalElements = members.size();
+            this.members = members;
+        }
+    }
+
+    @Getter
+    @Builder
+    @RequiredArgsConstructor
     public static class StudyMemberDTO{
-        private Long memberId;
-        private String nickname;
-        private String profileImage;
+        private final Long memberId;
+        private final String nickname;
+        private final String profileImage;
     }
 
-    @Builder
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class StudyApplyMemberDTO{
-        private Long memberId;
-        private Long studyId;
-        private String nickname;
-        private String profileImage;
-        private String introduction;
+    @Builder
+    @RequiredArgsConstructor
+    public static class ApplyingMemberDTO {
+        private final Long memberId;
+        private final Long studyId;
+        private final String nickname;
+        private final String profileImage;
+        private final String introduction;
     }
 
-    @Builder
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class StudyApplicantDTO{
-        private boolean isApplied;
-        private Long studyId;
+    @Builder
+    @RequiredArgsConstructor
+    public static class AppliedStudyDTO {
+        private final boolean isApplied;
+        private final Long studyId;
     }
 }

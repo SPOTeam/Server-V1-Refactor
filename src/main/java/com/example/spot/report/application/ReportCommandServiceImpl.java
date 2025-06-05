@@ -20,7 +20,7 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
+import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

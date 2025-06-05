@@ -6,8 +6,7 @@ import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.study.application.StudyCommandService;
 import com.example.spot.study.application.StudyQueryService;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.study.presentation.dto.request.StudyJoinRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyRegisterRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyLikeResponseDTO;
@@ -52,8 +51,8 @@ public class StudyController {
     @PostMapping("/studies/{studyId}")
     public ApiResponse<StudyJoinResponseDTO.JoinDTO> applyToStudy(
             @PathVariable @ExistStudy Long studyId,
-            @RequestBody @Valid StudyJoinRequestDTO.StudyJoinDTO studyJoinRequestDTO) {
-        StudyJoinResponseDTO.JoinDTO studyJoinResponseDTO = studyCommandService.applyToStudy(studyId, studyJoinRequestDTO);
+            @RequestBody @Valid StudyMemberRequestDTO.JoinDTO joinDTO) {
+        StudyJoinResponseDTO.JoinDTO studyJoinResponseDTO = studyCommandService.applyToStudy(studyId, joinDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLY_COMPLETED, studyJoinResponseDTO);
     }
 
@@ -67,7 +66,7 @@ public class StudyController {
         """)
     @PostMapping("/studies")
     public ApiResponse<StudyRegisterResponseDTO.RegisterDTO> registerStudy(
-            @RequestBody @Valid StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO) {
+            @RequestBody @Valid StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
         StudyRegisterResponseDTO.RegisterDTO studyRegisterResponseDTO = studyCommandService.registerStudy(studyRegisterRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_CREATED, studyRegisterResponseDTO);
     }
@@ -78,7 +77,7 @@ public class StudyController {
         """)
     @PatchMapping("/studies/{studyId}")
     public ApiResponse<StudyRegisterResponseDTO.RegisterDTO>  updateStudy(@PathVariable @ExistStudy Long studyId,
-                            @RequestBody @Valid StudyRegisterRequestDTO.RegisterDTO studyRegisterRequestDTO)  {
+                            @RequestBody @Valid StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO)  {
         return ApiResponse.onSuccess(SuccessStatus._OK, studyCommandService.updateStudyInfo(studyId, studyRegisterRequestDTO));
 
     }
