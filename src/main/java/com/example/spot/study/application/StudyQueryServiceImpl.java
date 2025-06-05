@@ -38,7 +38,7 @@ import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKey
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.SearchStudyDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,6 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -135,7 +137,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
      * @throws StudyHandler 스터디가 존재하지 않을 경우 Exception을 발생시킵니다.
      */
     @Transactional
-    public StudyInfoResponseDTO.StudyInfoDTO getStudyInfo(Long studyId) {
+    public StudyResponseDTO.StudyInfoDTO getStudyInfo(Long studyId) {
 
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
@@ -150,7 +152,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
 
         Member owner = studyMemberList.get(0).getMember();
         study.increaseHit();
-        return StudyInfoResponseDTO.StudyInfoDTO.toDTO(study, owner);
+        return StudyResponseDTO.StudyInfoDTO.toDTO(study, owner);
     }
 
     /**

@@ -7,8 +7,8 @@ import com.example.spot.study.presentation.dto.request.StudySearchRequestWithThe
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO;
 
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import org.springframework.data.domain.Pageable;
 
 public interface StudyQueryService {
@@ -17,7 +17,7 @@ public interface StudyQueryService {
     HotKeywordDTO getHotKeyword();
 
     // 스터디 정보 조회
-    StudyInfoResponseDTO.StudyInfoDTO getStudyInfo(Long studyId);
+    StudyResponseDTO.StudyInfoDTO getStudyInfo(Long studyId);
 
     // 마이페이지 용 스터디 개수 조회
     MyPageDTO getMyPageStudyCount(Long memberId);

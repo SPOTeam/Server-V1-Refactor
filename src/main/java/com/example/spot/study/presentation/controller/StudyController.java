@@ -34,9 +34,9 @@ public class StudyController {
         """)
     @Parameter(name = "studyId", description = "정보를 가져올 스터디의 id를 입력 받습니다.", required = true)
     @GetMapping("/studies/{studyId}")
-    public ApiResponse<StudyInfoResponseDTO.StudyInfoDTO> getStudyInfo(
+    public ApiResponse<StudyResponseDTO.StudyInfoDTO> getStudyInfo(
             @PathVariable @ExistStudy Long studyId) {
-        StudyInfoResponseDTO.StudyInfoDTO studyInfoDTO = studyQueryService.getStudyInfo(studyId);
+        StudyResponseDTO.StudyInfoDTO studyInfoDTO = studyQueryService.getStudyInfo(studyId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_FOUND, studyInfoDTO);
     }
 

@@ -41,12 +41,13 @@ import com.example.spot.study.presentation.dto.request.StudySearchRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudySearchRequestWithThemeDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;
-import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO.StudyInfoDTO;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -194,7 +195,7 @@ class StudyQueryServiceTest {
         when(studyRepository.findById(studyId)).thenReturn(Optional.ofNullable(study1));
 
         // when
-        StudyInfoDTO result = studyQueryService.getStudyInfo(studyId);
+        StudyResponseDTO.StudyInfoDTO result = studyQueryService.getStudyInfo(studyId);
 
         // then
         assertNotNull(result);
