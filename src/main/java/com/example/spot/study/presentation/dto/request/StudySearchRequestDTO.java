@@ -1,4 +1,4 @@
-package com.example.spot.study.presentation.dto.request.search;
+package com.example.spot.study.presentation.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

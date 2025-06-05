@@ -2,9 +2,8 @@ package com.example.spot.study.application;
 
 import com.example.spot.study.domain.enums.StudySortBy;
 import com.example.spot.study.domain.enums.ThemeType;
-import com.example.spot.study.presentation.dto.request.search.StudySearchRequestDTO;
-import com.example.spot.study.presentation.dto.request.search.StudySearchRequestWithThemeDTO;
-import com.example.spot.study.presentation.dto.request.search.StudySearchRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestDTO;
+import com.example.spot.study.presentation.dto.request.StudySearchRequestWithThemeDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.HotKeywordDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.MyPageDTO;
 import com.example.spot.study.presentation.dto.response.SearchResponseDTO.StudyPreviewDTO;

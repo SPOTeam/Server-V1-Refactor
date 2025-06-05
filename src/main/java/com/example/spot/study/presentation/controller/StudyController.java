@@ -7,10 +7,7 @@ import com.example.spot.study.application.StudyCommandService;
 import com.example.spot.study.application.StudyQueryService;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyInfoResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyLikeResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyRegisterResponseDTO;
+import com.example.spot.study.presentation.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,10 +46,10 @@ public class StudyController {
         """)
     @Parameter(name = "studyId", description = "참여할 스터디의 id를 입력 받습니다.", required = true)
     @PostMapping("/studies/{studyId}")
-    public ApiResponse<StudyJoinResponseDTO.JoinDTO> applyToStudy(
+    public ApiResponse<StudyMemberResponseDTO.JoinDTO> applyToStudy(
             @PathVariable @ExistStudy Long studyId,
             @RequestBody @Valid StudyMemberRequestDTO.JoinDTO joinDTO) {
-        StudyJoinResponseDTO.JoinDTO studyJoinResponseDTO = studyCommandService.applyToStudy(studyId, joinDTO);
+        StudyMemberResponseDTO.JoinDTO studyJoinResponseDTO = studyCommandService.applyToStudy(studyId, joinDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_APPLY_COMPLETED, studyJoinResponseDTO);
     }
 
@@ -65,9 +62,9 @@ public class StudyController {
         regions에는 지역 코드를 입력해야 합니다.
         """)
     @PostMapping("/studies")
-    public ApiResponse<StudyRegisterResponseDTO.RegisterDTO> registerStudy(
+    public ApiResponse<StudyResponseDTO.RegisterDTO> registerStudy(
             @RequestBody @Valid StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
-        StudyRegisterResponseDTO.RegisterDTO studyRegisterResponseDTO = studyCommandService.registerStudy(studyRegisterRequestDTO);
+        StudyResponseDTO.RegisterDTO studyRegisterResponseDTO = studyCommandService.registerStudy(studyRegisterRequestDTO);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_CREATED, studyRegisterResponseDTO);
     }
 
@@ -76,8 +73,8 @@ public class StudyController {
         로그인한 회원이 운영하는 특정 스터디에 대해 study 정보를 수정합니다.
         """)
     @PatchMapping("/studies/{studyId}")
-    public ApiResponse<StudyRegisterResponseDTO.RegisterDTO>  updateStudy(@PathVariable @ExistStudy Long studyId,
-                            @RequestBody @Valid StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO)  {
+    public ApiResponse<StudyResponseDTO.RegisterDTO>  updateStudy(@PathVariable @ExistStudy Long studyId,
+                                                                  @RequestBody @Valid StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO)  {
         return ApiResponse.onSuccess(SuccessStatus._OK, studyCommandService.updateStudyInfo(studyId, studyRegisterRequestDTO));
 
     }
@@ -92,7 +89,7 @@ public class StudyController {
         찜한 스터디 제목과 찜 생성 시간, 찜 상태가 반환 됩니다.
         """)
     @Parameter(name = "studyId", description = "찜할 스터디의 ID를 입력 받습니다.", required = true)
-    public ApiResponse<StudyLikeResponseDTO> likeStudy(
+    public ApiResponse<StudyResponseDTO.LikeDTO> likeStudy(
         @PathVariable("studyId") @ExistStudy Long studyId) {
         return ApiResponse.onSuccess(SuccessStatus._STUDY_LIKED, studyCommandService.likeStudy(SecurityUtils.getCurrentUserId(), studyId));
     }

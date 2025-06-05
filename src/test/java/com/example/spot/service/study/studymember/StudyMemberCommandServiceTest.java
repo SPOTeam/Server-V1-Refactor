@@ -10,7 +10,7 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,7 +102,7 @@ public class StudyMemberCommandServiceTest {
                 .thenReturn(Optional.of(studyMember));
 
         // when
-        StudyTerminationResponseDTO.TerminationDTO result = studyMemberCommandService.terminateStudy(1L, "스터디 성과");
+        StudyResponseDTO.TerminationDTO result = studyMemberCommandService.terminateStudy(1L, "스터디 성과");
 
         // then
         assertNotNull(result);

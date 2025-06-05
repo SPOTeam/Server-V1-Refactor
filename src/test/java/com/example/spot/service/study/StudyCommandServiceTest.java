@@ -25,8 +25,8 @@ import com.example.spot.study.domain.repository.StudyThemeRepository;
 import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.study.application.StudyCommandServiceImpl;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyRegisterResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -135,7 +135,7 @@ class StudyCommandServiceTest {
                 .thenReturn(studyMember);
 
         // when
-        StudyJoinResponseDTO.JoinDTO result = studyCommandService.applyToStudy(studyId, joinDTO);
+        StudyMemberResponseDTO.JoinDTO result = studyCommandService.applyToStudy(studyId, joinDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -267,7 +267,7 @@ class StudyCommandServiceTest {
         when(studyThemeRepository.save(any(StudyTheme.class))).thenReturn(studyTheme);
 
         // when
-        StudyRegisterResponseDTO.RegisterDTO result = studyCommandService.registerStudy(registerDTO);
+        StudyResponseDTO.RegisterDTO result = studyCommandService.registerStudy(registerDTO);
 
         // then
         assertThat(result).isNotNull();

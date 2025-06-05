@@ -26,9 +26,8 @@ import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO.RegisterDTO;
-import com.example.spot.study.presentation.dto.response.StudyJoinResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyLikeResponseDTO;
-import com.example.spot.study.presentation.dto.response.StudyRegisterResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
+import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
     // [스터디 생성/참여] 참여 신청하기
     @Transactional
-    public StudyJoinResponseDTO.JoinDTO applyToStudy(Long studyId, StudyMemberRequestDTO.@Valid JoinDTO studyJoinRequestDTO) {
+    public StudyMemberResponseDTO.JoinDTO applyToStudy(Long studyId, StudyMemberRequestDTO.@Valid JoinDTO studyJoinRequestDTO) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -112,12 +111,12 @@ public class StudyCommandServiceImpl implements StudyCommandService {
         study.addMemberStudy(studyMember);
         studyMemberRepository.save(studyMember);
 
-        return StudyJoinResponseDTO.JoinDTO.toDTO(member, study);
+        return StudyMemberResponseDTO.JoinDTO.toDTO(member, study);
     }
 
     // [스터디 생성/참여] 스터디 생성하기
     @Transactional
-    public StudyRegisterResponseDTO.RegisterDTO registerStudy(StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
+    public StudyResponseDTO.RegisterDTO registerStudy(StudyMemberRequestDTO.RegisterDTO studyRegisterRequestDTO) {
 
         // Authorization
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -152,7 +151,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
         studyRepository.save(study);
 
-        return StudyRegisterResponseDTO.RegisterDTO.toDTO(study);
+        return StudyResponseDTO.RegisterDTO.toDTO(study);
     }
 
 
@@ -164,7 +163,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
      */
 
     @Override
-    public StudyRegisterResponseDTO.RegisterDTO updateStudyInfo(Long studyId, RegisterDTO studyInfoDTO) {
+    public StudyResponseDTO.RegisterDTO updateStudyInfo(Long studyId, RegisterDTO studyInfoDTO) {
 
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
@@ -193,7 +192,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
 
         studyRepository.save(study);
 
-        return StudyRegisterResponseDTO.RegisterDTO.toDTO(study);
+        return StudyResponseDTO.RegisterDTO.toDTO(study);
     }
 
     /**
@@ -203,10 +202,9 @@ public class StudyCommandServiceImpl implements StudyCommandService {
      * @return 스터디 제목과 좋아요 상태를 반환합니다.
      * @throws StudyHandler 스터디가 존재하지 않는 경우
      * @throws MemberHandler 회원이 존재하지 않는 경우
-     * @see StudyLikeResponseDTO
      */
     @Override
-    public StudyLikeResponseDTO likeStudy(Long memberId, Long studyId) {
+    public StudyResponseDTO.LikeDTO likeStudy(Long memberId, Long studyId) {
 
         // 회원과 스터디 조회
         Study study = studyRepository.findById(studyId)
@@ -233,7 +231,7 @@ public class StudyCommandServiceImpl implements StudyCommandService {
         }
         // 저장 및 응답 객체 생성
         preferredStudyRepository.save(preferredStudy);
-        return new StudyLikeResponseDTO(preferredStudy);
+        return new StudyResponseDTO.LikeDTO(preferredStudy);
     }
 
 

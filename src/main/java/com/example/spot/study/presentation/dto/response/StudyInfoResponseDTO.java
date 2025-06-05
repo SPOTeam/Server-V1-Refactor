@@ -8,6 +8,7 @@ import com.example.spot.study.domain.Study;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -15,11 +16,13 @@ import java.util.List;
 public class StudyInfoResponseDTO {
 
     @Getter
+    @Builder(access = AccessLevel.PRIVATE)
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class StudyInfoDTO {
 
         private final Long studyId;
         private final String studyName;
-        private final StudyOwnerDTO studyOwner;
+        private final StudyMemberResponseDTO.HostNameDTO studyOwner;
         private final Long hitNum;
         private final Integer heartCount;
         private final Integer memberCount;
@@ -35,35 +38,11 @@ public class StudyInfoResponseDTO {
         private final String goal;
         private final String introduction;
 
-        @Builder(access = AccessLevel.PRIVATE)
-        private StudyInfoDTO(Long studyId, String studyName, StudyOwnerDTO studyOwner,
-                             Long hitNum, Integer heartCount, Integer memberCount, Boolean isLiked, Long maxPeople, Gender gender,
-                             Integer minAge, Integer maxAge, Integer fee, Boolean isOnline, String profileImage,
-                             List<ThemeType> themes, List<String> regions, String goal, String introduction) {
-            this.studyId = studyId;
-            this.studyName = studyName;
-            this.studyOwner = studyOwner;
-            this.hitNum = hitNum;
-            this.heartCount = heartCount;
-            this.memberCount = memberCount;
-            this.maxPeople = maxPeople;
-            this.gender = gender;
-            this.minAge = minAge;
-            this.maxAge = maxAge;
-            this.fee = fee;
-            this.isOnline = isOnline;
-            this.profileImage = profileImage;
-            this.themes = themes;
-            this.regions = regions;
-            this.goal = goal;
-            this.introduction = introduction;
-        }
-
         public static StudyInfoDTO toDTO(Study study, Member owner) {
             return StudyInfoDTO.builder()
                     .studyId(study.getId())
                     .studyName(study.getTitle())
-                    .studyOwner(StudyOwnerDTO.toDTO(owner))
+                    .studyOwner(StudyMemberResponseDTO.HostNameDTO.toDTO(owner))
                     .hitNum(study.getHitNum())
                     .heartCount(study.getHeartCount())
                     .memberCount(
@@ -86,26 +65,6 @@ public class StudyInfoResponseDTO {
                             .toList())
                     .goal(study.getGoal())
                     .introduction(study.getIntroduction())
-                    .build();
-        }
-    }
-
-    @Getter
-    private static class StudyOwnerDTO {
-
-        private final Long ownerId;
-        private final String ownerName;
-
-        @Builder
-        private StudyOwnerDTO(Long ownerId, String ownerName) {
-            this.ownerId = ownerId;
-            this.ownerName = ownerName;
-        }
-
-        public static StudyOwnerDTO toDTO(Member member) {
-            return StudyOwnerDTO.builder()
-                    .ownerId(member.getId())
-                    .ownerName(member.getName())
                     .build();
         }
     }
