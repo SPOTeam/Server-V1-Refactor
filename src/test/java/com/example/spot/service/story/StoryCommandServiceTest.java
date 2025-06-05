@@ -3,6 +3,7 @@ package com.example.spot.service.story;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
+import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.LikedStory;
@@ -11,6 +12,7 @@ import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
+import com.example.spot.story.domain.repository.StoryImageRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
@@ -66,10 +68,14 @@ class StoryCommandServiceTest {
     @Mock
     private StoryRepository storyRepository;
     @Mock
-    private LikedStoryRepository likedStoryRepository;
-
+    private StoryImageRepository storyImageRepository;
     @Mock
     private StoryCommentRepository storyCommentRepository;
+    @Mock
+    private StoryReportRepository storyReportRepository;
+
+    @Mock
+    private LikedStoryRepository likedStoryRepository;
     @Mock
     private LikedStoryCommentRepository likedStoryCommentRepository;
 
