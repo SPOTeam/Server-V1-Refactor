@@ -4,17 +4,14 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.story.domain.Story;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
 
 import com.example.spot.common.security.utils.SecurityUtils;
 
@@ -23,11 +20,9 @@ import lombok.RequiredArgsConstructor;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplyMemberDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyMemberDTO;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 

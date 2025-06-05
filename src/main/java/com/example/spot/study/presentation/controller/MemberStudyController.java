@@ -6,32 +6,20 @@ import com.example.spot.study.application.StudyMemberCommandService;
 import com.example.spot.study.application.StudyMemberQueryService;
 import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.story.domain.validation.annotation.ExistStory;
-import com.example.spot.vote.domain.validation.annotation.ExistVote;
 import com.example.spot.common.presentation.validator.TextLength;
 import com.example.spot.study.presentation.dto.request.StudyHostWithdrawRequestDTO;
-import com.example.spot.study.presentation.dto.request.StudyMemberReportDTO;
-import com.example.spot.vote.presentation.dto.request.StudyVoteRequestDTO;
-import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
 import com.example.spot.study.presentation.dto.response.StudyTerminationResponseDTO;
-import com.example.spot.vote.presentation.dto.response.StudyVoteResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyWithdrawalResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyApplyResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
-import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO.StudyApplicantDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

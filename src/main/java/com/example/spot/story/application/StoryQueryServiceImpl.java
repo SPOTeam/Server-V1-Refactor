@@ -7,7 +7,6 @@ import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.study.domain.Study;
@@ -20,7 +19,7 @@ import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +58,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      *          2. themeQuery가 null인 경우 필터링 없이 게시글 목록을 반환합니다.
      */
     @Override
-    public StoryResDTO.PostListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery) {
+    public StoryResponseDTO.StoryListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery) {
 
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
@@ -92,14 +91,14 @@ public class StoryQueryServiceImpl implements StoryQueryService {
             totalPosts = storyRepository.countByStudyIdAndStoryCategory(studyId, storyCategory);
         }
 
-        return StoryResDTO.PostListDTO.builder()
+        return StoryResponseDTO.StoryListDTO.builder()
                 .studyId(studyId)
                 .posts(stories.stream()
                         .map(studyPost -> {
                             if (likedStoryRepository.existsByMemberIdAndStoryId(memberId, studyPost.getId())) {
-                                return StoryResDTO.PostDTO.toDTO(studyPost, true);
+                                return StoryResponseDTO.StoryDTO.toDTO(studyPost, true);
                             } else {
-                                return StoryResDTO.PostDTO.toDTO(studyPost, false);
+                                return StoryResponseDTO.StoryDTO.toDTO(studyPost, false);
                             }
                         })
                         .toList())
@@ -119,7 +118,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      */
     @Override
     @Transactional(readOnly = false)
-    public StoryResDTO.PostDetailDTO getPost(Long studyId, Long postId, Boolean likeOrScrap) {
+    public StoryResponseDTO.StoryDetailDTO getPost(Long studyId, Long postId, Boolean likeOrScrap) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -154,7 +153,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
         Integer commentNum = storyCommentRepository.findAllByStoryId(postId).size();
         boolean isLiked = likedStoryRepository.existsByMemberIdAndStoryId(memberId, story.getId());
         boolean isWriter = story.getMember().getId().equals(memberId);
-        return StoryResDTO.PostDetailDTO.toDTO(story, commentNum, isLiked, isWriter);
+        return StoryResponseDTO.StoryDetailDTO.toDTO(story, commentNum, isLiked, isWriter);
     }
 
     /**
@@ -166,7 +165,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      * @throws GeneralException 스터디 멤버가 아닌 경우
      */
     @Override
-    public StoryResponseDTO findStudyAnnouncementPost(Long studyId) {
+    public StoryResponseDTO.StoryContentDTO findStudyAnnouncementPost(Long studyId) {
 
         // 로그인한 회원이 해당 스터디 회원인지 확인
         if (!isMember(SecurityUtils.getCurrentUserId(), studyId))
@@ -177,7 +176,8 @@ public class StoryQueryServiceImpl implements StoryQueryService {
                 studyId, true).orElseThrow(() -> new GeneralException(ErrorStatus._STUDY_POST_NOT_FOUND));
 
         // DTO로 변환하여 반환
-        return StoryResponseDTO.builder()
+        return StoryResponseDTO.StoryContentDTO
+                .builder()
                 .title(story.getTitle())
                 .content(story.getContent()).build();
     }
@@ -202,7 +202,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      * @return 스터디 게시글에 작성된 댓글의 목록을 반환합니다. 하나의 댓글에는 해당 댓글에 대한 답글 목록이 포함되어 있습니다.
      */
     @Override
-    public StoryCommentResponseDTO.CommentReplyListDTO getAllComments(Long studyId, Long postId) {
+    public StoryCommentResponseDTO.ReplyListDTO getAllComments(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -229,7 +229,7 @@ public class StoryQueryServiceImpl implements StoryQueryService {
                 .sorted(Comparator.comparing(StoryComment::getCreatedAt))
                 .toList();
 
-        return StoryCommentResponseDTO.CommentReplyListDTO.toDTO(story.getId(), storyComments, member, defaultImage);
+        return StoryCommentResponseDTO.ReplyListDTO.toDTO(story.getId(), storyComments, member, defaultImage);
     }
 
 

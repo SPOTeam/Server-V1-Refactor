@@ -136,7 +136,7 @@ public class Story extends BaseEntity {
         storyReports.add(storyReport);
     }
 
-    public void updatePost(StoryRequestDTO.PostDTO requestDTO) {
+    public void updatePost(StoryRequestDTO.StoryDTO requestDTO) {
         isAnnouncement = requestDTO.getIsAnnouncement();
         storyCategory = requestDTO.getStoryCategory();
         title = requestDTO.getTitle();

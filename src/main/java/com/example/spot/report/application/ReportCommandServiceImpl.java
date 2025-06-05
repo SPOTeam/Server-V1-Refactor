@@ -15,7 +15,7 @@ import com.example.spot.report.domain.*;
 import com.example.spot.report.presentation.dto.PostReportResponse;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.story.web.dto.response.StoryResDTO;
+import com.example.spot.story.web.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
@@ -122,7 +122,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
      * @return 신고를 당한 스터디 게시글의 아이디와 제목을 반환합니다.
      */
     @Override
-    public StoryResDTO.PostPreviewDTO reportStudyPost(Long studyId, Long postId) {
+    public StoryResponseDTO.StoryPreviewDTO reportStudyPost(Long studyId, Long postId) {
 
         //=== Exception ===//
         Long reporterId = SecurityUtils.getCurrentUserId();
@@ -151,6 +151,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
         storyReport = storyReportRepository.save(storyReport);
         story.addStudyPostReport(storyReport);
 
-        return StoryResDTO.PostPreviewDTO.toDTO(story);
+        return StoryResponseDTO.StoryPreviewDTO.toDTO(story);
     }
 }
