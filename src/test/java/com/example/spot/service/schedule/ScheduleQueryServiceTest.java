@@ -2,12 +2,10 @@ package com.example.spot.service.schedule;
 
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
-import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
 import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.schedule.presentation.dto.response.StudyScheduleResponseDTO;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.study.domain.association.StudyMember;
@@ -37,7 +35,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -3,10 +3,8 @@ package com.example.spot.schedule.presentation.dto.response;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.study.domain.Study;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +20,6 @@ public class ScheduleResponseDTO {
         private final Long studyId;
         private final Long scheduleId;
         private final String title;
-
         private final LocalDateTime startedAt;
         private final LocalDateTime finishedAt;
 
@@ -91,5 +88,39 @@ public class ScheduleResponseDTO {
                     .schedulePeriod(schedule.getSchedulePeriod())
                     .build();
         }
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SchedulePageDTO {
+        private int totalPages;
+        private long totalElements;
+        private boolean first;
+        private boolean last;
+        private int size;
+        private List<SchedulePreviewDTO> schedules;
+
+
+        public SchedulePageDTO(Page<?> page, List<SchedulePreviewDTO> schedules, long totalElements){
+            this.totalPages = totalElements == 0 ? 1 : (int) Math.ceil((double) totalElements / page.getSize());
+            this.totalElements = totalElements;
+            this.first = page.isFirst();
+            this.last = page.isLast();
+            this.size = page.getSize();
+            this.schedules = schedules;
+        }
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SchedulePreviewDTO {
+        private LocalDateTime startedAt;
+        private LocalDateTime finishedAt;
+        private String title;
+        private String location;
     }
 }

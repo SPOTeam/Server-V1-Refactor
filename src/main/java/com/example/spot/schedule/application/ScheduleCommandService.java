@@ -1,9 +1,9 @@
 package com.example.spot.schedule.application;
 
 import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
-import com.example.spot.schedule.presentation.dto.request.StudyQuizRequestDTO;
+import com.example.spot.schedule.presentation.dto.request.QuizRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
-import com.example.spot.schedule.presentation.dto.response.StudyQuizResponseDTO;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
 
 import java.time.LocalDate;
 
@@ -16,11 +16,11 @@ public interface ScheduleCommandService {
     ScheduleResponseDTO.ScheduleDTO modSchedule(Long studyId, Long scheduleId, ScheduleRequestDTO.ScheduleDTO scheduleModDTO);
 
     // 스터디 퀴즈 생성
-    StudyQuizResponseDTO.QuizDTO createAttendanceQuiz(Long studyId, Long scheduleId, StudyQuizRequestDTO.QuizDTO quizRequestDTO);
+    QuizResponseDTO.QuestionDTO createAttendanceQuiz(Long studyId, Long scheduleId, QuizRequestDTO.QuizDTO quizRequestDTO);
 
     // 스터디 출석
-    StudyQuizResponseDTO.AttendanceDTO attendantStudy(Long studyId, Long scheduleId, StudyQuizRequestDTO.AttendanceDTO attendanceRequestDTO);
+    QuizResponseDTO.AttendanceDTO attendantStudy(Long studyId, Long scheduleId, QuizRequestDTO.AttendanceDTO attendanceRequestDTO);
 
     // 스터디 퀴즈 삭제
-    StudyQuizResponseDTO.QuizDTO deleteAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
+    QuizResponseDTO.QuestionDTO deleteAttendanceQuiz(Long studyId, Long scheduleId, LocalDate date);
 }
