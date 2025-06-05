@@ -12,7 +12,7 @@ import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.domain.enums.PostStatus;
 import com.example.spot.report.domain.*;
-import com.example.spot.report.presentation.dto.PostReportResponse;
+import com.example.spot.report.presentation.dto.PostReportDTO;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
@@ -41,7 +41,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
     private final PostReportRepository postReportRepository;
 
     @Override
-    public PostReportResponse reportPost(Long postId, Long memberId) {
+    public PostReportDTO reportPost(Long postId, Long memberId) {
 
         // 동일한 게시글에 대한 중복 신고 방지
         if (postReportRepository.existsByPostIdAndMemberId(postId, memberId)) {
@@ -65,7 +65,7 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
         postReportRepository.save(postReport);
 
-        return PostReportResponse.toDTO(postId, memberId);
+        return PostReportDTO.toDTO(postId, memberId);
     }
 
     /**

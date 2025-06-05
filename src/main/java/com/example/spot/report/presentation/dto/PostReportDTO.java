@@ -9,13 +9,13 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-public class PostReportResponse {
+public class PostReportDTO {
     private Long reportedPostId;
     private Long reporterId;
     private LocalDateTime reportedAt;
 
-    public static PostReportResponse toDTO(Long reportedPostId, Long reporterId) {
-        return PostReportResponse.builder()
+    public static PostReportDTO toDTO(Long reportedPostId, Long reporterId) {
+        return PostReportDTO.builder()
                 .reportedPostId(reportedPostId)
                 .reporterId(reporterId)
                 .reportedAt(LocalDateTime.now())

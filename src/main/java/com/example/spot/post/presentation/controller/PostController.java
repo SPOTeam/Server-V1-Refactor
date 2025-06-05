@@ -15,7 +15,6 @@ import com.example.spot.post.presentation.dto.PostCreateRequest;
 import com.example.spot.post.presentation.dto.PostCreateResponse;
 import com.example.spot.post.presentation.dto.PostLikeResponse;
 import com.example.spot.post.presentation.dto.PostPagingResponse;
-import com.example.spot.report.presentation.dto.PostReportResponse;
 import com.example.spot.post.presentation.dto.PostRepresentativeResponse;
 import com.example.spot.post.presentation.dto.PostSingleResponse;
 import com.example.spot.post.presentation.dto.PostUpdateRequest;
