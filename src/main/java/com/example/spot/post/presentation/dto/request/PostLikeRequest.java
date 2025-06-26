@@ -1,4 +1,4 @@
-package com.example.spot.post.presentation.dto;
+package com.example.spot.post.presentation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

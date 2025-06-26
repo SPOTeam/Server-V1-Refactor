@@ -20,11 +20,11 @@ import com.example.spot.post.application.LikedPostCommentQueryService;
 import com.example.spot.post.application.LikedPostQueryService;
 import com.example.spot.post.application.PostQueryServiceImpl;
 import com.example.spot.comment.presentation.dto.CommentResponse;
-import com.example.spot.post.presentation.controller.PostAnnouncementResponse;
-import com.example.spot.post.presentation.dto.PostBest5Response;
-import com.example.spot.post.presentation.dto.PostPagingResponse;
-import com.example.spot.post.presentation.dto.PostRepresentativeResponse;
-import com.example.spot.post.presentation.dto.PostSingleResponse;
+import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
+import com.example.spot.post.presentation.dto.response.PostBest5Response;
+import com.example.spot.post.presentation.dto.response.PostPagingResponse;
+import com.example.spot.post.presentation.dto.response.PostRepresentativeResponse;
+import com.example.spot.post.presentation.dto.response.PostSingleResponse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

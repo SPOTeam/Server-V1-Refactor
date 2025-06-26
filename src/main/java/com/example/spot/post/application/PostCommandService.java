@@ -3,13 +3,13 @@ package com.example.spot.post.application;
 import com.example.spot.comment.presentation.dto.CommentCreateRequest;
 import com.example.spot.comment.presentation.dto.CommentCreateResponse;
 import com.example.spot.comment.presentation.dto.CommentLikeResponse;
-import com.example.spot.post.presentation.dto.PostCreateRequest;
-import com.example.spot.post.presentation.dto.PostCreateResponse;
-import com.example.spot.post.presentation.dto.PostLikeResponse;
-import com.example.spot.post.presentation.dto.PostUpdateRequest;
-import com.example.spot.post.presentation.dto.ScrapAllDeleteRequest;
-import com.example.spot.post.presentation.dto.ScrapPostResponse;
-import com.example.spot.post.presentation.dto.ScrapsPostDeleteResponse;
+import com.example.spot.post.presentation.dto.request.PostCreateRequest;
+import com.example.spot.post.presentation.dto.response.PostCreateResponse;
+import com.example.spot.post.presentation.dto.response.PostLikeResponse;
+import com.example.spot.post.presentation.dto.request.PostUpdateRequest;
+import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
+import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
+import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
 
 
 public interface PostCommandService {

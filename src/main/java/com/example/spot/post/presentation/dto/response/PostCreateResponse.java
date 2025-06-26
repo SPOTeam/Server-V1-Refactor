@@ -1,4 +1,4 @@
-package com.example.spot.post.presentation.dto;
+package com.example.spot.post.presentation.dto.response;
 
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.enums.Board;

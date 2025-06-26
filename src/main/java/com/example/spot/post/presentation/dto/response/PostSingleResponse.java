@@ -1,4 +1,4 @@
-package com.example.spot.post.presentation.dto;
+package com.example.spot.post.presentation.dto.response;
 
 import com.example.spot.comment.presentation.dto.CommentResponse;
 import com.example.spot.post.domain.Post;

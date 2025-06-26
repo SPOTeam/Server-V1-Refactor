@@ -1,4 +1,4 @@
-package com.example.spot.post.presentation.dto;
+package com.example.spot.post.presentation.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
