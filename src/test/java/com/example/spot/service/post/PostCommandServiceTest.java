@@ -17,9 +17,9 @@ import com.example.spot.post.domain.association.MemberScrapRepository;
 import com.example.spot.comment.domain.PostCommentRepository;
 import com.example.spot.report.domain.PostReportRepository;
 import com.example.spot.post.domain.PostRepository;
-import com.example.spot.post.application.LikedPostCommentQueryService;
-import com.example.spot.post.application.LikedPostQueryService;
-import com.example.spot.post.application.PostCommandServiceImpl;
+import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
+import com.example.spot.post.application.query.GetLikedPostUseCase;
+import com.example.spot.post.application.command.impl.PostCommandServiceImpl;
 import com.example.spot.comment.presentation.dto.CommentCreateRequest;
 import com.example.spot.comment.presentation.dto.CommentCreateResponse;
 import com.example.spot.comment.presentation.dto.CommentLikeResponse;
@@ -84,10 +84,10 @@ class PostCommandServiceTest {
     private PostReportRepository postReportRepository;
 
     @Mock
-    private LikedPostQueryService likedPostQueryService;
+    private GetLikedPostUseCase getLikedPostUseCase;
 
     @Mock
-    private LikedPostCommentQueryService likedPostCommentQueryService;
+    private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
 
 
     @InjectMocks
@@ -140,8 +140,8 @@ class PostCommandServiceTest {
         when(likedPostRepository.existsByMemberIdAndPostId(1L, 2L)).thenReturn(true);
         when(likedPostRepository.existsByMemberIdAndPostId(2L, 1L)).thenReturn(true);
         when(likedPostRepository.existsByMemberIdAndPostId(2L, 2L)).thenReturn(false);
-        when(likedPostQueryService.countByPostId(1L)).thenReturn(1L);
-        when(likedPostQueryService.countByPostId(2L)).thenReturn(1L);
+        when(getLikedPostUseCase.countByPostId(1L)).thenReturn(1L);
+        when(getLikedPostUseCase.countByPostId(2L)).thenReturn(1L);
 
         // LikedPostComment
         when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L))
@@ -467,7 +467,7 @@ class PostCommandServiceTest {
 
         when(likedPostRepository.findByMemberIdAndPostId(memberId, postId))
                 .thenReturn(Optional.of(member1LikedPost2));
-        when(likedPostQueryService.countByPostId(postId)).thenReturn(0L);
+        when(getLikedPostUseCase.countByPostId(postId)).thenReturn(0L);
 
         // when
         PostLikeResponse result = postCommandService.cancelPostLike(postId, memberId);
@@ -616,7 +616,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
         when(likedPostCommentRepository.saveAndFlush(any(LikedPostComment.class)))
                 .thenReturn(member1LikedComment1);
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(commentId))
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
                 .thenReturn(1L);
 
         // when
@@ -671,7 +671,7 @@ class PostCommandServiceTest {
 
         when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId))
                 .thenReturn(Optional.of(member1LikedComment1));
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(commentId))
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
                 .thenReturn(0L);
 
         // when
@@ -728,7 +728,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
         when(likedPostCommentRepository.saveAndFlush(any(LikedPostComment.class)))
                 .thenReturn(member1LikedComment1);
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(commentId))
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
                 .thenReturn(1L);
         when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(commentId))
                 .thenReturn(1L);
@@ -786,7 +786,7 @@ class PostCommandServiceTest {
 
         when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId))
                 .thenReturn(Optional.of(member2LikedComment1));
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(commentId))
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
                 .thenReturn(1L);
         when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(commentId))
                 .thenReturn(0L);

@@ -1,7 +1,10 @@
-package com.example.spot.post.application;
+package com.example.spot.post.application.query.impl;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.PostHandler;
+import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
+import com.example.spot.post.application.query.GetLikedPostUseCase;
+import com.example.spot.post.application.query.GetPostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.comment.domain.PostComment;
 import com.example.spot.post.domain.enums.Board;
@@ -34,18 +37,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
 
-@Deprecated
 @Service
 @RequiredArgsConstructor
-public class PostQueryServiceImpl implements PostQueryService {
+public class GetPostUseCaseImpl implements GetPostUseCase {
 
     @Value("${image.post.anonymous.profile}")
     private String DEFAULT_PROFILE_IMAGE_URL;
 
     private final PostRepository postRepository;
-    private final LikedPostQueryService likedPostQueryService;
+    private final GetLikedPostUseCase getLikedPostUseCase;
     private final PostCommentRepository postCommentRepository;
-    private final LikedPostCommentQueryService likedPostCommentQueryService;
+    private final GetLikedPostCommentUseCase getLikedPostCommentUseCase;
     private final MemberScrapRepository memberScrapRepository;
     private final PostReportRepository postReportRepository;
 
@@ -73,10 +75,10 @@ public class PostQueryServiceImpl implements PostQueryService {
         }
 
         // 좋아요 수 조회
-        long likeCount = likedPostQueryService.countByPostId(postId);
+        long likeCount = getLikedPostUseCase.countByPostId(postId);
 
         // 현재 사용자 좋아요 여부
-        boolean likedByCurrentUser = likedPostQueryService.existsByMemberIdAndPostId(post.getId());
+        boolean likedByCurrentUser = getLikedPostUseCase.existsByMemberIdAndPostId(post.getId());
 
         // 스크랩 수 조회
         long scrapCount = memberScrapRepository.countByPostId(postId);
@@ -120,8 +122,8 @@ public class PostQueryServiceImpl implements PostQueryService {
         // PostPagingDetailResponse를 묶어서 응답 리스트 생성 (좋아요 수, 좋아요여부, 스크랩 수, 스크랩여부 포함)
         List<PostPagingDetailResponse> postResponses = postPage.getContent().stream()
                 .map(post -> {
-                    long likeCount = likedPostQueryService.countByPostId(post.getId());
-                    boolean likedByCurrentUser = likedPostQueryService.existsByMemberIdAndPostId(post.getId());
+                    long likeCount = getLikedPostUseCase.countByPostId(post.getId());
+                    boolean likedByCurrentUser = getLikedPostUseCase.existsByMemberIdAndPostId(post.getId());
                     long scrapCount = memberScrapRepository.countByPostId(post.getId());
                     Long currentUserId = getCurrentUserId();
                     boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId, post.getId());
@@ -269,9 +271,9 @@ public class PostQueryServiceImpl implements PostQueryService {
         // CommentDetailResponse를 묶어서 응답 리스트 생성 (댓글 좋아요수, 댓글 좋아요/싫어요 여부 포함)
         List<CommentDetailResponse> commentResponses = comments.stream()
                 .map(comment -> {
-                    long likeCount = likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(comment.getId());
-                    boolean likedByCurrentUser = likedPostCommentQueryService.existsByMemberIdAndPostCommentIdAndIsLikedTrue(comment.getId());
-                    boolean dislikedByCurrentUser = likedPostCommentQueryService.existsByMemberIdAndPostCommentIdAndIsLikedFalse(comment.getId());
+                    long likeCount = getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(comment.getId());
+                    boolean likedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedTrue(comment.getId());
+                    boolean dislikedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedFalse(comment.getId());
                     return CommentDetailResponse.toDTO(comment, likeCount, likedByCurrentUser, dislikedByCurrentUser, DEFAULT_PROFILE_IMAGE_URL);
                 })
                 .toList();
@@ -312,9 +314,9 @@ public class PostQueryServiceImpl implements PostQueryService {
         // PostPagingDetailResponse를 묶어서 응답 리스트 생성 (댓글 좋아요수, 댓글 좋아요/싫어요 여부 포함)
         List<PostPagingDetailResponse> postResponses = scrapPosts.stream()
                 .map(post -> {
-                    long likeCount = likedPostQueryService.countByPostId(post.getId());
+                    long likeCount = getLikedPostUseCase.countByPostId(post.getId());
                     //현재 사용자 좋아요 여부
-                    boolean likedByCurrentUser = likedPostQueryService.existsByMemberIdAndPostId(post.getId());
+                    boolean likedByCurrentUser = getLikedPostUseCase.existsByMemberIdAndPostId(post.getId());
                     long scrapCount = memberScrapRepository.countByPostId(post.getId());
                     boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId, post.getId());
                     return PostPagingDetailResponse.toDTO(post, likeCount, scrapCount, likedByCurrentUser, scrapedByCurrentUser);

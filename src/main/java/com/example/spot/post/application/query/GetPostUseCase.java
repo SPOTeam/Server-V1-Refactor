@@ -1,4 +1,4 @@
-package com.example.spot.post.application;
+package com.example.spot.post.application.query;
 
 import com.example.spot.comment.presentation.dto.CommentResponse;
 import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
@@ -8,8 +8,7 @@ import com.example.spot.post.presentation.dto.response.PostRepresentativeRespons
 import com.example.spot.post.presentation.dto.response.PostSingleResponse;
 import org.springframework.data.domain.Pageable;
 
-@Deprecated
-public interface PostQueryService {
+public interface GetPostUseCase {
     PostSingleResponse getPostById(Long postId, boolean likeOrScrap);
 
     PostPagingResponse getPagingPosts(String type, Pageable pageable);

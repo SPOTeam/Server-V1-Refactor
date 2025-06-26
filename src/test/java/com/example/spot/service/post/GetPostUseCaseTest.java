@@ -16,9 +16,9 @@ import com.example.spot.post.domain.association.MemberScrapRepository;
 import com.example.spot.comment.domain.PostCommentRepository;
 import com.example.spot.report.domain.PostReportRepository;
 import com.example.spot.post.domain.PostRepository;
-import com.example.spot.post.application.LikedPostCommentQueryService;
-import com.example.spot.post.application.LikedPostQueryService;
-import com.example.spot.post.application.PostQueryServiceImpl;
+import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
+import com.example.spot.post.application.query.GetLikedPostUseCase;
+import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;
 import com.example.spot.comment.presentation.dto.CommentResponse;
 import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
 import com.example.spot.post.presentation.dto.response.PostBest5Response;
@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class PostQueryServiceTest {
+class GetPostUseCaseTest {
 
     @Mock
     private MemberRepository memberRepository;
@@ -81,14 +81,14 @@ class PostQueryServiceTest {
     private PostReportRepository postReportRepository;
 
     @Mock
-    private LikedPostQueryService likedPostQueryService;
+    private GetLikedPostUseCase getLikedPostUseCase;
 
     @Mock
-    private LikedPostCommentQueryService likedPostCommentQueryService;
+    private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
 
 
     @InjectMocks
-    private PostQueryServiceImpl postQueryService;
+    private GetPostUseCaseImpl postQueryService;
 
 
     private static Member member1;
@@ -140,8 +140,8 @@ class PostQueryServiceTest {
         when(likedPostRepository.existsByMemberIdAndPostId(1L, 2L)).thenReturn(true);
         when(likedPostRepository.existsByMemberIdAndPostId(2L, 1L)).thenReturn(true);
         when(likedPostRepository.existsByMemberIdAndPostId(2L, 2L)).thenReturn(false);
-        when(likedPostQueryService.countByPostId(1L)).thenReturn(1L);
-        when(likedPostQueryService.countByPostId(2L)).thenReturn(1L);
+        when(getLikedPostUseCase.countByPostId(1L)).thenReturn(1L);
+        when(getLikedPostUseCase.countByPostId(2L)).thenReturn(1L);
 
         // LikedPostComment
         when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L))
@@ -160,8 +160,8 @@ class PostQueryServiceTest {
         when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L)).thenReturn(false);
         when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L)).thenReturn(false);
         when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L)).thenReturn(true);
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(likedPostCommentQueryService.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
+        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
 
 
         // MemberScrap
@@ -187,7 +187,7 @@ class PostQueryServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedPostQueryService.existsByMemberIdAndPostId(postId)).thenReturn(false);
+        when(getLikedPostUseCase.existsByMemberIdAndPostId(postId)).thenReturn(false);
 
         // when
         PostSingleResponse result = postQueryService.getPostById(postId, false);
@@ -217,7 +217,7 @@ class PostQueryServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedPostQueryService.existsByMemberIdAndPostId(postId)).thenReturn(true);
+        when(getLikedPostUseCase.existsByMemberIdAndPostId(postId)).thenReturn(true);
 
         // when
         PostSingleResponse result = postQueryService.getPostById(postId, true);
@@ -247,7 +247,7 @@ class PostQueryServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedPostQueryService.existsByMemberIdAndPostId(postId)).thenReturn(false);
+        when(getLikedPostUseCase.existsByMemberIdAndPostId(postId)).thenReturn(false);
 
         // when & then
         assertThrows(PostHandler.class, () -> postQueryService.getPostById(postId, false));
@@ -264,7 +264,7 @@ class PostQueryServiceTest {
         getAuthentication(memberId);
 
         when(postReportRepository.existsByPostIdAndPostStatus(postId, PostStatus.삭제)).thenReturn(true);
-        when(likedPostQueryService.existsByMemberIdAndPostId(postId)).thenReturn(true);
+        when(getLikedPostUseCase.existsByMemberIdAndPostId(postId)).thenReturn(true);
 
         // when & then
         assertThrows(PostHandler.class, () -> postQueryService.getPostById(postId, false));

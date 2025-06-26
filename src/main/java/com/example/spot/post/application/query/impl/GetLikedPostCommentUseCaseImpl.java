@@ -1,17 +1,17 @@
-package com.example.spot.post.application;
+package com.example.spot.post.application.query.impl;
 
 import com.example.spot.comment.domain.association.LikedPostCommentRepository;
+import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
-@Deprecated
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikedPostCommentQueryServiceImpl implements LikedPostCommentQueryService {
+public class GetLikedPostCommentUseCaseImpl implements GetLikedPostCommentUseCase {
     private final LikedPostCommentRepository likedPostCommentRepository;
 
 

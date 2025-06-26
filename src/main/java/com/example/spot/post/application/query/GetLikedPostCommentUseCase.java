@@ -1,7 +1,6 @@
-package com.example.spot.post.application;
+package com.example.spot.post.application.query;
 
-@Deprecated
-public interface LikedPostCommentQueryService {
+public interface GetLikedPostCommentUseCase {
     long countByPostCommentIdAndIsLikedTrue(Long postCommentId);
 
     boolean existsByMemberIdAndPostCommentIdAndIsLikedTrue(Long postCommentId);

@@ -4,7 +4,7 @@ import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.post.application.PostCommandService;
-import com.example.spot.post.application.PostQueryService;
+import com.example.spot.post.application.query.GetPostUseCase;
 import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
 import com.example.spot.post.presentation.validator.ExistPost;
 import com.example.spot.comment.presentation.dto.CommentCreateRequest;
@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostCommandService postCommandService;
-    private final PostQueryService postQueryService;
+    private final GetPostUseCase getPostUseCase;
 
     @Tag(name = "게시판", description = "게시판 관련 API")
     @Operation(
@@ -85,7 +85,7 @@ public class PostController {
             @PathVariable @ExistPost Long postId,
             @RequestParam(required = false, defaultValue = "false") boolean likeOrScrap
     ) {
-        PostSingleResponse response = postQueryService.getPostById(postId, likeOrScrap);
+        PostSingleResponse response = getPostUseCase.getPostById(postId, likeOrScrap);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -112,7 +112,7 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "10") int pageSize
     ) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        PostPagingResponse response = postQueryService.getPagingPosts(type, pageable);
+        PostPagingResponse response = getPostUseCase.getPagingPosts(type, pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -125,7 +125,7 @@ public class PostController {
             @Parameter(description = "인기글 종류. REAL_TIME, RECOMMEND, COMMENT 중 하나입니다. 요청하지 않으면 기본 값인 REAL_TIME로 조회됩니다.", example = "REAL_TIME")
             @RequestParam(required = false, defaultValue = "REAL_TIME") String sortType
     ) {
-        PostBest5Response response = postQueryService.getPostBest(sortType);
+        PostBest5Response response = getPostUseCase.getPostBest(sortType);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -135,7 +135,7 @@ public class PostController {
             description = "게시판 홈에 게시글 종류별로 대표1개씩 게시글을 조회합니다.")
     @GetMapping("/representative")
     public ApiResponse<PostRepresentativeResponse> getPostRepresentative() {
-        PostRepresentativeResponse response = postQueryService.getRepresentativePosts();
+        PostRepresentativeResponse response = getPostUseCase.getRepresentativePosts();
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -145,7 +145,7 @@ public class PostController {
             description = "공지를 조회합니다.")
     @GetMapping("/announcement")
     public ApiResponse<PostAnnouncementResponse> getPostAnnouncement() {
-        PostAnnouncementResponse response = postQueryService.getPostAnnouncements();
+        PostAnnouncementResponse response = getPostUseCase.getPostAnnouncements();
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -239,7 +239,7 @@ public class PostController {
             )
             @PathVariable @ExistPost Long postId
     ) {
-        CommentResponse response = postQueryService.getCommentsByPostId(postId);
+        CommentResponse response = getPostUseCase.getCommentsByPostId(postId);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 
@@ -331,7 +331,7 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "10") int pageSize
     ) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        PostPagingResponse response = postQueryService.getScrapPagingPost(type, pageable);
+        PostPagingResponse response = getPostUseCase.getScrapPagingPost(type, pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 

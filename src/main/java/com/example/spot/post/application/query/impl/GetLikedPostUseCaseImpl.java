@@ -1,5 +1,6 @@
-package com.example.spot.post.application;
+package com.example.spot.post.application.query.impl;
 
+import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.domain.association.LikedPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,11 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
-@Deprecated
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikedPostQueryServiceImpl implements LikedPostQueryService {
+public class GetLikedPostUseCaseImpl implements GetLikedPostUseCase {
 
     private final LikedPostRepository likedPostRepository;
 
