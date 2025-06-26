@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

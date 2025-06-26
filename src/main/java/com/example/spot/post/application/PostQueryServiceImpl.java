@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 public class PostQueryServiceImpl implements PostQueryService {

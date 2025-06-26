@@ -11,7 +11,7 @@ import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
 import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
 import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
 
-
+@Deprecated
 public interface PostCommandService {
 
     //게시글 생성

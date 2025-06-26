@@ -40,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 public class PostCommandServiceImpl implements PostCommandService {

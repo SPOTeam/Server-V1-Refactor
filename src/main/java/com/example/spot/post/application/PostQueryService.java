@@ -8,6 +8,7 @@ import com.example.spot.post.presentation.dto.response.PostRepresentativeRespons
 import com.example.spot.post.presentation.dto.response.PostSingleResponse;
 import org.springframework.data.domain.Pageable;
 
+@Deprecated
 public interface PostQueryService {
     PostSingleResponse getPostById(Long postId, boolean likeOrScrap);
 
