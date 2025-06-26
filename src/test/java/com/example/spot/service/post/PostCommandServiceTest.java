@@ -1,6 +1,11 @@
 package com.example.spot.service.post;
 
 import com.example.spot.common.api.exception.handler.PostHandler;
+import com.example.spot.post.application.command.LikePostCommentUseCase;
+import com.example.spot.post.application.command.LikePostUseCase;
+import com.example.spot.post.application.command.ManagePostCommentUseCase;
+import com.example.spot.post.application.command.ManagePostUseCase;
+import com.example.spot.post.application.command.ScrapPostUseCase;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.comment.domain.association.LikedPostComment;
 import com.example.spot.member.domain.Member;
@@ -19,7 +24,6 @@ import com.example.spot.report.domain.PostReportRepository;
 import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
-import com.example.spot.post.application.command.impl.PostCommandServiceImpl;
 import com.example.spot.comment.presentation.dto.CommentCreateRequest;
 import com.example.spot.comment.presentation.dto.CommentCreateResponse;
 import com.example.spot.comment.presentation.dto.CommentLikeResponse;
@@ -89,12 +93,17 @@ class PostCommandServiceTest {
     @Mock
     private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
 
+    @InjectMocks private LikePostCommentUseCase likePostCommentUseCase;
 
-    @InjectMocks
-    private PostCommandServiceImpl postCommandService;
+    @InjectMocks private LikePostUseCase likePostUseCase;
 
-    @InjectMocks
-    private ReportCommandServiceImpl reportCommandService;
+    @InjectMocks private ManagePostCommentUseCase managePostCommentUseCase;
+
+    @InjectMocks private ManagePostUseCase managePostUseCase;
+
+    @InjectMocks private ScrapPostUseCase scrapPostUseCase;
+
+    @InjectMocks private ReportCommandServiceImpl reportCommandService;
 
     private static Member member1;
     private static Member member2;
@@ -193,7 +202,7 @@ class PostCommandServiceTest {
         when(postRepository.save(any(Post.class))).thenReturn(post2);
 
         // when
-        PostCreateResponse result = postCommandService.createPost(memberId, postCreateRequest);
+        PostCreateResponse result = managePostUseCase.createPost(memberId, postCreateRequest);
 
         // then
         assertNotNull(result);
@@ -220,7 +229,7 @@ class PostCommandServiceTest {
         when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         // when
-        PostCreateResponse result = postCommandService.createPost(memberId, postCreateRequest);
+        PostCreateResponse result = managePostUseCase.createPost(memberId, postCreateRequest);
 
         // then
         assertNotNull(result);
@@ -244,7 +253,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.createPost(memberId, postCreateRequest));
+        assertThrows(PostHandler.class, () -> managePostUseCase.createPost(memberId, postCreateRequest));
     }
 
 /*-------------------------------------------------------- 게시글 수정 ------------------------------------------------------------------------*/
@@ -266,7 +275,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when
-        PostCreateResponse result = postCommandService.updatePost(memberId, postId, postUpdateRequest);
+        PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
 
         // then
         assertNotNull(result);
@@ -291,7 +300,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when
-        PostCreateResponse result = postCommandService.updatePost(memberId, postId, postUpdateRequest);
+        PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
 
         // then
         assertNotNull(result);
@@ -316,7 +325,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.updatePost(memberId, postId, postUpdateRequest));
+        assertThrows(PostHandler.class, () -> managePostUseCase.updatePost(memberId, postId, postUpdateRequest));
     }
 
     @Test
@@ -336,7 +345,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.updatePost(memberId, postId, postUpdateRequest));
+        assertThrows(PostHandler.class, () -> managePostUseCase.updatePost(memberId, postId, postUpdateRequest));
     }
 
     @Test
@@ -356,7 +365,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.updatePost(memberId, postId, postUpdateRequest));
+        assertThrows(PostHandler.class, () -> managePostUseCase.updatePost(memberId, postId, postUpdateRequest));
     }
 
 /*-------------------------------------------------------- 게시글 삭제 ------------------------------------------------------------------------*/
@@ -371,7 +380,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        postCommandService.deletePost(memberId, postId);
+        managePostUseCase.deletePost(memberId, postId);
     }
 
     @Test
@@ -384,7 +393,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.deletePost(memberId, postId));
+        assertThrows(PostHandler.class, () -> managePostUseCase.deletePost(memberId, postId));
     }
 
     @Test
@@ -397,7 +406,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.deletePost(memberId, postId));
+        assertThrows(PostHandler.class, () -> managePostUseCase.deletePost(memberId, postId));
     }
 
 /*-------------------------------------------------------- 게시글 좋아요 ------------------------------------------------------------------------*/
@@ -417,7 +426,7 @@ class PostCommandServiceTest {
                 .thenReturn(member1LikedPost2);
 
         // when
-        PostLikeResponse result = postCommandService.likePost(postId, memberId);
+        PostLikeResponse result = likePostUseCase.likePost(postId, memberId);
 
         // then
         assertNotNull(result);
@@ -435,7 +444,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.likePost(postId, memberId));
+        assertThrows(PostHandler.class, () -> likePostUseCase.likePost(postId, memberId));
     }
 
     @Test
@@ -451,7 +460,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.of(member1LikedPost2));
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.likePost(postId, memberId));
+        assertThrows(PostHandler.class, () -> likePostUseCase.likePost(postId, memberId));
     }
 
 /*-------------------------------------------------------- 게시글 좋아요 취소 ------------------------------------------------------------------------*/
@@ -470,7 +479,7 @@ class PostCommandServiceTest {
         when(getLikedPostUseCase.countByPostId(postId)).thenReturn(0L);
 
         // when
-        PostLikeResponse result = postCommandService.cancelPostLike(postId, memberId);
+        PostLikeResponse result = likePostUseCase.cancelPostLike(postId, memberId);
 
         // then
         assertNotNull(result);
@@ -488,7 +497,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostLike(postId, memberId));
+        assertThrows(PostHandler.class, () -> likePostUseCase.cancelPostLike(postId, memberId));
     }
 
     @Test
@@ -504,7 +513,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostLike(postId, memberId));
+        assertThrows(PostHandler.class, () -> likePostUseCase.cancelPostLike(postId, memberId));
     }
 
 /*-------------------------------------------------------- 댓글 작성 ------------------------------------------------------------------------*/
@@ -527,7 +536,7 @@ class PostCommandServiceTest {
         when(postCommentRepository.saveAndFlush(any(PostComment.class))).thenReturn(post1Comment1);
 
         // when
-        CommentCreateResponse result = postCommandService.createComment(postId, memberId, commentCreateRequest);
+        CommentCreateResponse result = managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest);
 
         // then
         assertNotNull(result);
@@ -554,7 +563,7 @@ class PostCommandServiceTest {
         when(postCommentRepository.saveAndFlush(any(PostComment.class))).thenReturn(post1Comment2);
 
         // when
-        CommentCreateResponse result = postCommandService.createComment(postId, memberId, commentCreateRequest);
+        CommentCreateResponse result = managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest);
 
         // then
         assertNotNull(result);
@@ -579,7 +588,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.createComment(postId, memberId, commentCreateRequest));
+        assertThrows(PostHandler.class, () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
     }
 
     @Test
@@ -598,7 +607,7 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.createComment(postId, memberId, commentCreateRequest));
+        assertThrows(PostHandler.class, () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
     }
 
 /*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
@@ -620,7 +629,7 @@ class PostCommandServiceTest {
                 .thenReturn(1L);
 
         // when
-        CommentLikeResponse result = postCommandService.likeComment(commentId, memberId);
+        CommentLikeResponse result = likePostCommentUseCase.likeComment(commentId, memberId);
 
         // then
         assertNotNull(result);
@@ -639,7 +648,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.likeComment(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.likeComment(commentId, memberId));
     }
 
     @Test
@@ -655,7 +664,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.of(member1LikedComment1));
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.likeComment(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.likeComment(commentId, memberId));
     }
 
 /*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
@@ -675,7 +684,7 @@ class PostCommandServiceTest {
                 .thenReturn(0L);
 
         // when
-        CommentLikeResponse result = postCommandService.cancelCommentLike(commentId, memberId);
+        CommentLikeResponse result = likePostCommentUseCase.cancelCommentLike(commentId, memberId);
 
         // then
         assertNotNull(result);
@@ -694,7 +703,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () ->postCommandService.cancelCommentLike(commentId, memberId));
+        assertThrows(PostHandler.class, () ->likePostCommentUseCase.cancelCommentLike(commentId, memberId));
     }
 
     @Test
@@ -710,7 +719,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () ->postCommandService.cancelCommentLike(commentId, memberId));
+        assertThrows(PostHandler.class, () ->likePostCommentUseCase.cancelCommentLike(commentId, memberId));
     }
 
 /*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
@@ -734,7 +743,7 @@ class PostCommandServiceTest {
                 .thenReturn(1L);
 
         // when
-        CommentLikeResponse result = postCommandService.dislikeComment(commentId, memberId);
+        CommentLikeResponse result = likePostCommentUseCase.dislikeComment(commentId, memberId);
 
         // then
         assertNotNull(result);
@@ -753,7 +762,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.dislikeComment(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.dislikeComment(commentId, memberId));
 
     }
 
@@ -770,7 +779,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.of(member2LikedComment1));
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.dislikeComment(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.dislikeComment(commentId, memberId));
     }
 
 /*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
@@ -792,7 +801,7 @@ class PostCommandServiceTest {
                 .thenReturn(0L);
 
         // when
-        CommentLikeResponse result = postCommandService.cancelCommentDislike(commentId, memberId);
+        CommentLikeResponse result = likePostCommentUseCase.cancelCommentDislike(commentId, memberId);
 
         // then
         assertNotNull(result);
@@ -811,7 +820,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelCommentDislike(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentDislike(commentId, memberId));
     }
 
     @Test
@@ -827,7 +836,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelCommentDislike(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentDislike(commentId, memberId));
     }
 
 /*-------------------------------------------------------- 게시글 스크랩 ------------------------------------------------------------------------*/
@@ -847,7 +856,7 @@ class PostCommandServiceTest {
                 .thenReturn(member1Scrap2);
 
         // when
-        ScrapPostResponse result = postCommandService.scrapPost(postId, memberId);
+        ScrapPostResponse result = scrapPostUseCase.scrapPost(postId, memberId);
 
         // then
         assertNotNull(result);
@@ -865,7 +874,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.scrapPost(postId, memberId));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.scrapPost(postId, memberId));
     }
 
     @Test
@@ -881,7 +890,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.of(member1Scrap2));
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.scrapPost(postId, memberId));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.scrapPost(postId, memberId));
     }
 
 /*-------------------------------------------------------- 게시글 스크랩 취소 ------------------------------------------------------------------------*/
@@ -899,7 +908,7 @@ class PostCommandServiceTest {
         when(memberScrapRepository.countByPostId(postId)).thenReturn(1L);
 
         // when
-        ScrapPostResponse result = postCommandService.cancelPostScrap(postId, memberId);
+        ScrapPostResponse result = scrapPostUseCase.cancelPostScrap(postId, memberId);
 
         // then
         assertNotNull(result);
@@ -916,7 +925,7 @@ class PostCommandServiceTest {
         Long postId = 3L;
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostScrap(postId, memberId));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScrap(postId, memberId));
     }
 
     @Test
@@ -931,7 +940,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostScrap(postId, memberId));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScrap(postId, memberId));
     }
 
 /*-------------------------------------------------------- 게시글 스크랩 다중 취소 ------------------------------------------------------------------------*/
@@ -954,7 +963,7 @@ class PostCommandServiceTest {
         when(memberScrapRepository.countByPostId(2L)).thenReturn(1L);
 
         // when
-        ScrapsPostDeleteResponse result = postCommandService.cancelPostScraps(scrapAllDeleteRequest);
+        ScrapsPostDeleteResponse result = scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest);
 
         // then
         assertNotNull(result);
@@ -978,7 +987,7 @@ class PostCommandServiceTest {
         when(memberScrapRepository.countByPostId(1L)).thenReturn(0L);
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostScraps(scrapAllDeleteRequest));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest));
     }
 
     @Test
@@ -995,7 +1004,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () -> postCommandService.cancelPostScraps(scrapAllDeleteRequest));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest));
     }
 
 /*-------------------------------------------------------- 게시글 신고 ------------------------------------------------------------------------*/
