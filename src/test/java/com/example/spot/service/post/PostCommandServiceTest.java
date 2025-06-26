@@ -6,6 +6,11 @@ import com.example.spot.post.application.command.LikePostUseCase;
 import com.example.spot.post.application.command.ManagePostCommentUseCase;
 import com.example.spot.post.application.command.ManagePostUseCase;
 import com.example.spot.post.application.command.ScrapPostUseCase;
+import com.example.spot.post.application.command.impl.LikePostCommentUseCaseImpl;
+import com.example.spot.post.application.command.impl.LikePostUseCaseImpl;
+import com.example.spot.post.application.command.impl.ManagePostCommentUseCaseImpl;
+import com.example.spot.post.application.command.impl.ManagePostUseCaseImpl;
+import com.example.spot.post.application.command.impl.ScrapPostUseCaseImpl;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.comment.domain.association.LikedPostComment;
 import com.example.spot.member.domain.Member;
@@ -93,15 +98,15 @@ class PostCommandServiceTest {
     @Mock
     private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
 
-    @InjectMocks private LikePostCommentUseCase likePostCommentUseCase;
+    @InjectMocks private LikePostCommentUseCaseImpl likePostCommentUseCase;
 
-    @InjectMocks private LikePostUseCase likePostUseCase;
+    @InjectMocks private LikePostUseCaseImpl likePostUseCase;
 
-    @InjectMocks private ManagePostCommentUseCase managePostCommentUseCase;
+    @InjectMocks private ManagePostCommentUseCaseImpl managePostCommentUseCase;
 
-    @InjectMocks private ManagePostUseCase managePostUseCase;
+    @InjectMocks private ManagePostUseCaseImpl managePostUseCase;
 
-    @InjectMocks private ScrapPostUseCase scrapPostUseCase;
+    @InjectMocks private ScrapPostUseCaseImpl scrapPostUseCase;
 
     @InjectMocks private ReportCommandServiceImpl reportCommandService;
 
