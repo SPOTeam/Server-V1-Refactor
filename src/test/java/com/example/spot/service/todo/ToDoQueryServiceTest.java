@@ -1,31 +1,31 @@
 package com.example.spot.service.todo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.todo.application.legacy.ToDoQueryServiceImpl;
-import com.example.spot.todo.domain.ToDo;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.todo.application.impl.GetToDoUseCaseImpl;
+import com.example.spot.todo.domain.ToDo;
 import com.example.spot.todo.domain.ToDoRepository;
-import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
+import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -40,7 +40,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class ToDoQueryServiceTest {
 
     @InjectMocks
-    private ToDoQueryServiceImpl toDoQueryService;
+    private GetToDoUseCaseImpl getToDoUseCase;
 
     @Mock
     private StudyMemberRepository studyMemberRepository;
@@ -54,9 +54,9 @@ public class ToDoQueryServiceTest {
     private static StudyMember studyMember2;
     private static StudyMember apply;
     private static ToDo toDo;
-    
+
     @BeforeEach
-    void setup(){
+    void setup() {
         member = Member.builder()
                 .id(1L)
                 .build();
@@ -64,24 +64,27 @@ public class ToDoQueryServiceTest {
                 .id(2L)
                 .build();
 
-
         study = Study.builder()
                 .build();
 
         studyMember = StudyMember.builder()
-                .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED)
+                .build();
 
         apply = StudyMember.builder()
-                .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED).build();
+                .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED)
+                .build();
         studyMember2 = StudyMember.builder()
-                .introduction("title").study(study).member(member2).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction("title").study(study).member(member2).isOwned(true)
+                .status(StudyApplicationStatus.APPROVED).build();
         toDo = ToDo.builder()
                 .id(1L)
                 .build();
 
         Long studyId = 1L;
 
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId,
+                StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
         Authentication authentication = new UsernamePasswordAuthenticationToken("1", null, Collections.emptyList());
         // SecurityContext 생성 및 설정
@@ -90,7 +93,7 @@ public class ToDoQueryServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-/* ------------------------------------------------ To-Do 조회  --------------------------------------------------- */
+    /* ------------------------------------------------ To-Do 조회  --------------------------------------------------- */
 
     @Test
     @DisplayName("To-Do 조회 - 성공")
@@ -104,7 +107,7 @@ public class ToDoQueryServiceTest {
                 .thenReturn(1L);
 
         // when
-        ToDoListSearchResponseDTO responseDTO = toDoQueryService.getToDoList(1L, LocalDate.MAX, PageRequest.of(0, 10));
+        ToDoListSearchResponseDTO responseDTO = getToDoUseCase.getToDoList(1L, LocalDate.MAX, PageRequest.of(0, 10));
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -119,7 +122,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> toDoQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
+        assertThrows(GeneralException.class,
+                () -> getToDoUseCase.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
     }
 
     @Test
@@ -132,7 +136,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(GeneralException.class, () -> toDoQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
+        assertThrows(GeneralException.class,
+                () -> getToDoUseCase.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
     }
 
     /* ------------------------------------------------ 다른 스터디원의 To-Do 조회  --------------------------------------------------- */
@@ -151,7 +156,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(1L);
 
         // when
-        ToDoListSearchResponseDTO responseDTO = toDoQueryService.getMemberToDoList(1L, 2L, LocalDate.MAX, PageRequest.of(0, 10));
+        ToDoListSearchResponseDTO responseDTO = getToDoUseCase.getMemberToDoList(1L, 2L, LocalDate.MAX,
+                PageRequest.of(0, 10));
 
         // then
         assertEquals(1, responseDTO.getTotalElements());
@@ -166,7 +172,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> toDoQueryService.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
+        assertThrows(GeneralException.class,
+                () -> getToDoUseCase.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
     }
 
     @Test
@@ -179,7 +186,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(GeneralException.class, () -> toDoQueryService.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
+        assertThrows(GeneralException.class,
+                () -> getToDoUseCase.getMemberToDoList(100L, 2L, LocalDate.MAX, PageRequest.of(0, 10)));
     }
 
     @Test
@@ -192,7 +200,8 @@ public class ToDoQueryServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(GeneralException.class, () -> toDoQueryService.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
+        assertThrows(GeneralException.class,
+                () -> getToDoUseCase.getToDoList(100L, LocalDate.MAX, PageRequest.of(0, 10)));
     }
 
 }

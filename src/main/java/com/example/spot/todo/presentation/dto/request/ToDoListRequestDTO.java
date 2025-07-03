@@ -1,4 +1,4 @@
-package com.example.spot.todo.presentation.legacy.dto.request;
+package com.example.spot.todo.presentation.dto.request;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,10 @@ public class ToDoListRequestDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ToDoListCreateDTO{
+    public static class ToDoListCreateDTO {
         private String content;
         private LocalDate date;
     }
-
 
 
 }
