@@ -1,4 +1,4 @@
-package com.example.spot.notification.application.notification;
+package com.example.spot.notification.application.legacy;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
@@ -7,7 +7,7 @@ import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

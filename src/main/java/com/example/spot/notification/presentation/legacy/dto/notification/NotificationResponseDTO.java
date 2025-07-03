@@ -1,4 +1,4 @@
-package com.example.spot.notification.presentation.dto.notification;
+package com.example.spot.notification.presentation.legacy.dto.notification;
 
 import com.example.spot.notification.domain.enums.NotifyType;
 import java.util.List;

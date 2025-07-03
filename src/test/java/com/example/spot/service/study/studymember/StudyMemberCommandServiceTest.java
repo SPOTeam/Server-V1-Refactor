@@ -11,7 +11,7 @@ import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
-import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
+import com.example.spot.todo.presentation.legacy.dto.request.ToDoListRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
-package com.example.spot.todo.application;
+package com.example.spot.todo.application.legacy;
 
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;

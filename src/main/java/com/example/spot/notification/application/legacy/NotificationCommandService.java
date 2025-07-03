@@ -1,6 +1,6 @@
-package com.example.spot.notification.application.notification;
+package com.example.spot.notification.application.legacy;
 
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 
 public interface NotificationCommandService {
 

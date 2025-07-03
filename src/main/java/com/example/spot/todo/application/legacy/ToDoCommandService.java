@@ -1,8 +1,8 @@
-package com.example.spot.todo.application;
+package com.example.spot.todo.application.legacy;
 
-import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.request.ToDoListRequestDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
 
 public interface ToDoCommandService {
 

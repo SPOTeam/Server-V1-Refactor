@@ -15,8 +15,8 @@ import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
-import com.example.spot.notification.application.notification.NotificationCommandServiceImpl;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.notification.application.legacy.NotificationCommandServiceImpl;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
 
 import java.util.Optional;
 

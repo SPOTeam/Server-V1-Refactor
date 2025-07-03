@@ -1,15 +1,15 @@
-package com.example.spot.todo.presentation.controller;
+package com.example.spot.todo.presentation.legacy.controller;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
-import com.example.spot.todo.application.ToDoCommandService;
-import com.example.spot.todo.application.ToDoQueryService;
-import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import com.example.spot.todo.application.legacy.ToDoCommandService;
+import com.example.spot.todo.application.legacy.ToDoQueryService;
+import com.example.spot.todo.presentation.legacy.dto.request.ToDoListRequestDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListSearchResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import com.example.spot.todo.domain.validation.annotation.ExistToDo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

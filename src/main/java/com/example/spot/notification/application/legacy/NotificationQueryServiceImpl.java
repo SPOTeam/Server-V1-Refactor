@@ -1,13 +1,13 @@
-package com.example.spot.notification.application.notification;
+package com.example.spot.notification.application.legacy;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.notification.domain.Notification;
 import com.example.spot.notification.domain.enums.NotifyType;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO.NotificationDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.StudyNotificationListDTO.StudyNotificationDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationListDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationListDTO.NotificationDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.StudyNotificationListDTO.StudyNotificationDTO;
 import java.util.ArrayList;
 import java.util.List;
 

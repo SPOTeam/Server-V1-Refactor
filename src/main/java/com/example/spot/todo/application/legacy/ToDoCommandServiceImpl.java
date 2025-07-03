@@ -1,4 +1,4 @@
-package com.example.spot.todo.application;
+package com.example.spot.todo.application.legacy;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -16,9 +16,9 @@ import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.todo.domain.ToDo;
 import com.example.spot.todo.domain.ToDoRepository;
-import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
-import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
+import com.example.spot.todo.presentation.legacy.dto.response.ToDoListResponseDTO.ToDoListUpdateResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

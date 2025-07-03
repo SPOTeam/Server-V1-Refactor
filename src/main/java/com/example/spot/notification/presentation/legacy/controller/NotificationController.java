@@ -1,15 +1,15 @@
-package com.example.spot.notification.presentation.controller;
+package com.example.spot.notification.presentation.legacy.controller;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO;
-import com.example.spot.notification.application.notification.NotificationCommandService;
-import com.example.spot.notification.application.notification.NotificationQueryService;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO;
+import com.example.spot.notification.application.legacy.NotificationCommandService;
+import com.example.spot.notification.application.legacy.NotificationQueryService;
 
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationListDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
