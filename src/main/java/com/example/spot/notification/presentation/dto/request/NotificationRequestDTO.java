@@ -1,4 +1,4 @@
-package com.example.spot.notification.presentation.legacy.dto.notification;
+package com.example.spot.notification.presentation.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

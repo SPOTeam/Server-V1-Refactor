@@ -1,25 +1,27 @@
 package com.example.spot.service.notification;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.anyBoolean;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
+import com.example.spot.notification.application.impl.HandleAppliedStudyParticipationUseCaseImpl;
+import com.example.spot.notification.application.impl.ReadNotificationUseCaseImpl;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.notification.domain.enums.NotifyType;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.Study;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.notification.domain.NotificationRepository;
-import com.example.spot.notification.application.legacy.NotificationCommandServiceImpl;
-import com.example.spot.notification.presentation.legacy.dto.notification.NotificationResponseDTO.NotificationProcessDTO;
-
+import com.example.spot.notification.domain.enums.NotifyType;
+import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationProcessDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,10 @@ import org.mockito.quality.Strictness;
 public class NotificationCommandServiceTest {
 
     @InjectMocks
-    private NotificationCommandServiceImpl notificationCommandService;
+    private ReadNotificationUseCaseImpl readNotificationUseCase;
+
+    @InjectMocks
+    private HandleAppliedStudyParticipationUseCaseImpl handleAppliedStudyParticipationUseCase;
 
     @Mock
     private NotificationRepository notificationRepository;
@@ -82,7 +87,7 @@ public class NotificationCommandServiceTest {
                 .thenReturn(Optional.ofNullable(notification1));
 
         // when
-        NotificationProcessDTO response = notificationCommandService.readNotification(1L, 1L);
+        NotificationProcessDTO response = readNotificationUseCase.readNotification(1L, 1L);
 
         // then
         assertEquals(true, response.isAccept());
@@ -97,7 +102,7 @@ public class NotificationCommandServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationCommandService.readNotification(1L, 1L);
+            readNotificationUseCase.readNotification(1L, 1L);
         });
     }
 
@@ -112,7 +117,7 @@ public class NotificationCommandServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationCommandService.readNotification(2L, 1L);
+            readNotificationUseCase.readNotification(2L, 1L);
         });
     }
 
@@ -127,7 +132,7 @@ public class NotificationCommandServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationCommandService.readNotification(1L, 1L);
+            readNotificationUseCase.readNotification(1L, 1L);
         });
     }
 
@@ -147,7 +152,7 @@ public class NotificationCommandServiceTest {
 
         // when
         NotificationProcessDTO response =
-                notificationCommandService.joinAppliedStudy(1L, 1L, true);
+                handleAppliedStudyParticipationUseCase.joinAppliedStudy(1L, 1L, true);
 
         // then
         assertEquals(true, response.isAccept());
@@ -163,7 +168,7 @@ public class NotificationCommandServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationCommandService.joinAppliedStudy(1L, 1L, true);
+            handleAppliedStudyParticipationUseCase.joinAppliedStudy(1L, 1L, true);
         });
     }
 
@@ -181,7 +186,7 @@ public class NotificationCommandServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationCommandService.joinAppliedStudy(1L, 1L, true);
+            handleAppliedStudyParticipationUseCase.joinAppliedStudy(1L, 1L, true);
         });
     }
 }

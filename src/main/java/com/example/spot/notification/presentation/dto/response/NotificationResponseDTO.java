@@ -1,13 +1,12 @@
-package com.example.spot.notification.presentation.legacy.dto.notification;
+package com.example.spot.notification.presentation.dto.response;
 
 import com.example.spot.notification.domain.enums.NotifyType;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 public class NotificationResponseDTO {
     @Builder
@@ -24,7 +23,7 @@ public class NotificationResponseDTO {
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class NotificationDTO{
+        public static class NotificationDTO {
             Long notificationId;
             Long studyId;
             Long studyPostId;
@@ -36,6 +35,7 @@ public class NotificationResponseDTO {
             LocalDateTime createdAt;
         }
     }
+
     @Builder
     @Getter
     @NoArgsConstructor
@@ -50,7 +50,7 @@ public class NotificationResponseDTO {
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class StudyNotificationDTO{
+        public static class StudyNotificationDTO {
             Long notificationId;
             Long studyId;
             String studyTitle;
