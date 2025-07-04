@@ -1,5 +1,10 @@
 package com.example.spot.service.study.studymember;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.MemberRepository;
@@ -12,6 +17,9 @@ import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
 import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,15 +33,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -64,7 +63,7 @@ public class StudyMemberCommandServiceTest {
 
     @BeforeEach
     void init() {
-        requestDTO  = ToDoListRequestDTO.ToDoListCreateDTO.builder()
+        requestDTO = ToDoListRequestDTO.ToDoListCreateDTO.builder()
                 .content("test")
                 .date(LocalDate.EPOCH)
                 .build();

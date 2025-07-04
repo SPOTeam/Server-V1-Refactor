@@ -15,11 +15,10 @@ public class ToDoListRequestDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ToDoListCreateDTO{
+    public static class ToDoListCreateDTO {
         private String content;
         private LocalDate date;
     }
-
 
 
 }

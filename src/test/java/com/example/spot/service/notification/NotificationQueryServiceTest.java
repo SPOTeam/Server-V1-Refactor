@@ -1,6 +1,7 @@
 package com.example.spot.service.notification;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -9,13 +10,13 @@ import static org.mockito.Mockito.when;
 
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
+import com.example.spot.notification.application.impl.GetNotificationUseCaseImpl;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.notification.domain.enums.NotifyType;
-import com.example.spot.study.domain.Study;
 import com.example.spot.notification.domain.NotificationRepository;
-import com.example.spot.notification.application.notification.NotificationQueryServiceImpl;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.NotificationListDTO;
-import com.example.spot.notification.presentation.dto.notification.NotificationResponseDTO.StudyNotificationListDTO;
+import com.example.spot.notification.domain.enums.NotifyType;
+import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationListDTO;
+import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.StudyNotificationListDTO;
+import com.example.spot.study.domain.Study;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ import org.springframework.data.domain.Pageable;
 class NotificationQueryServiceTest {
 
     @InjectMocks
-    private NotificationQueryServiceImpl notificationQueryService;
+    private GetNotificationUseCaseImpl getNotificationUseCase;
 
     @Mock
     private NotificationRepository notificationRepository;
@@ -79,9 +80,8 @@ class NotificationQueryServiceTest {
                 anyLong(), any(), any(), anyBoolean()
         )).thenReturn(List.of(notification1));
 
-
         // when
-        StudyNotificationListDTO response = notificationQueryService.getAllAppliedStudyNotification(1L, pageable);
+        StudyNotificationListDTO response = getNotificationUseCase.getAllAppliedStudyNotification(1L, pageable);
 
         // then
         assertEquals(1L, response.getTotalNotificationCount());
@@ -98,8 +98,8 @@ class NotificationQueryServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationQueryService.getAllAppliedStudyNotification(
-                        1L, pageable);
+            getNotificationUseCase.getAllAppliedStudyNotification(
+                    1L, pageable);
         });
     }
 
@@ -115,9 +115,8 @@ class NotificationQueryServiceTest {
                 anyLong(), any(), any()
         )).thenReturn(List.of(notification1, notification2));
 
-
         // when
-        NotificationListDTO response = notificationQueryService.getAllNotifications(1L, pageable);
+        NotificationListDTO response = getNotificationUseCase.getAllNotifications(1L, pageable);
 
         // then
         assertEquals(2L, response.getTotalNotificationCount());
@@ -135,7 +134,7 @@ class NotificationQueryServiceTest {
 
         // when & then
         assertThrows(GeneralException.class, () -> {
-            notificationQueryService.getAllNotifications(
+            getNotificationUseCase.getAllNotifications(
                     1L, pageable);
         });
     }

@@ -1,21 +1,23 @@
 package com.example.spot.service.todo;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.todo.application.ToDoCommandServiceImpl;
-import com.example.spot.todo.domain.ToDo;
-import com.example.spot.study.domain.Study;
 import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.todo.application.impl.ManageToDoUseCaseImpl;
+import com.example.spot.todo.domain.ToDo;
 import com.example.spot.todo.domain.ToDoRepository;
 import com.example.spot.todo.presentation.dto.request.ToDoListRequestDTO.ToDoListCreateDTO;
 import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoListCreateResponseDTO;
@@ -23,7 +25,6 @@ import com.example.spot.todo.presentation.dto.response.ToDoListResponseDTO.ToDoL
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class ToDoCommandServiceTest {
 
     @InjectMocks
-    private ToDoCommandServiceImpl toDoCommandService;
+    private ManageToDoUseCaseImpl manageToDoUseCase;
 
     @Mock
     private StudyRepository studyRepository;
@@ -74,7 +75,7 @@ public class ToDoCommandServiceTest {
 
     @BeforeEach
     void init() {
-        requestDTO  = ToDoListCreateDTO.builder()
+        requestDTO = ToDoListCreateDTO.builder()
                 .content("test")
                 .date(LocalDate.EPOCH)
                 .build();
@@ -105,7 +106,7 @@ public class ToDoCommandServiceTest {
         when(toDoRepository.save(any())).thenReturn(toDo);
 
         // when
-        ToDoListCreateResponseDTO responseDTO = toDoCommandService.createToDoList(1L, requestDTO);
+        ToDoListCreateResponseDTO responseDTO = manageToDoUseCase.createToDoList(1L, requestDTO);
 
         // then
         assertEquals(responseDTO.getContent(), requestDTO.getContent());
@@ -119,10 +120,9 @@ public class ToDoCommandServiceTest {
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(anyLong(), anyLong(), any())).thenReturn(
                 Optional.empty());
 
-
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.createToDoList(1L, requestDTO);
+            manageToDoUseCase.createToDoList(1L, requestDTO);
         });
     }
 
@@ -135,7 +135,7 @@ public class ToDoCommandServiceTest {
         when(toDoRepository.findById(anyLong())).thenReturn(Optional.ofNullable(toDo));
 
         // when
-        ToDoListUpdateResponseDTO responseDTO = toDoCommandService.updateToDoList(1L,1L,  requestDTO);
+        ToDoListUpdateResponseDTO responseDTO = manageToDoUseCase.updateToDoList(1L, 1L, requestDTO);
 
         // then
         assertEquals(false, responseDTO.isDone());
@@ -150,7 +150,7 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+            manageToDoUseCase.updateToDoList(1L, 1L, requestDTO);
         });
     }
 
@@ -164,7 +164,7 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+            manageToDoUseCase.updateToDoList(1L, 1L, requestDTO);
         });
     }
 
@@ -178,7 +178,7 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.updateToDoList(1L,1L, requestDTO);
+            manageToDoUseCase.updateToDoList(1L, 1L, requestDTO);
         });
     }
 
@@ -193,7 +193,7 @@ public class ToDoCommandServiceTest {
                 Optional.ofNullable(studyMember));
 
         // when
-        ToDoListUpdateResponseDTO responseDTO = toDoCommandService.deleteToDoList(1L, 1L);
+        ToDoListUpdateResponseDTO responseDTO = manageToDoUseCase.deleteToDoList(1L, 1L);
 
         // then
         verify(toDoRepository, times(1)).deleteById(1L);
@@ -207,7 +207,7 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.deleteToDoList(1L, 1L);
+            manageToDoUseCase.deleteToDoList(1L, 1L);
         });
     }
 
@@ -221,7 +221,7 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.deleteToDoList(1L, 1L);
+            manageToDoUseCase.deleteToDoList(1L, 1L);
         });
     }
 
@@ -235,10 +235,9 @@ public class ToDoCommandServiceTest {
 
         // when & then
         assertThrows(StudyHandler.class, () -> {
-            toDoCommandService.deleteToDoList(1L, 1L);
+            manageToDoUseCase.deleteToDoList(1L, 1L);
         });
     }
-
 
 
 }

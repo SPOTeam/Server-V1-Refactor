@@ -45,7 +45,7 @@ public class ToDoListResponseDTO {
         private List<ToDoListDTO> content;
         private int number;
 
-        public ToDoListSearchResponseDTO(Page<?> page, List<ToDoListDTO> content , long totalElements) {
+        public ToDoListSearchResponseDTO(Page<?> page, List<ToDoListDTO> content, long totalElements) {
             this.totalPages = totalElements == 0 ? 1 : (int) Math.ceil((double) totalElements / page.getSize());
             this.totalElements = totalElements;
             this.first = page.isFirst();
@@ -59,7 +59,7 @@ public class ToDoListResponseDTO {
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class ToDoListDTO{
+        public static class ToDoListDTO {
             private Long id;
             private String content;
             private boolean isDone;
