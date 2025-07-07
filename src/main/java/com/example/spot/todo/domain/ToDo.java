@@ -1,7 +1,7 @@
 package com.example.spot.todo.domain;
 
-import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
+import com.example.spot.member.domain.Member;
 import com.example.spot.study.domain.Study;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -30,7 +29,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ToDo extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -50,17 +50,21 @@ public class ToDo extends BaseEntity {
     @JoinColumn(name = "study_id")
     private Study study;
 
-    public void setToDoList(){
+    public void setToDoList() {
         this.study.addToDoList(this);
-        this.member.addToDoList(this);
     }
-    public void check(){
+
+    public void check() {
         this.isDone = !this.isDone;
     }
 
-    public void update(String content, LocalDate date){
-        if (content != null) this.content = content;
-        if (date != null) this.date = date;
+    public void update(String content, LocalDate date) {
+        if (content != null) {
+            this.content = content;
+        }
+        if (date != null) {
+            this.date = date;
+        }
     }
 
 }

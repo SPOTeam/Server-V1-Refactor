@@ -1,46 +1,50 @@
 package com.example.spot.service.post;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import com.example.spot.comment.domain.PostComment;
+import com.example.spot.comment.domain.PostCommentRepository;
+import com.example.spot.comment.domain.association.LikedPostComment;
+import com.example.spot.comment.domain.association.LikedPostCommentRepository;
+import com.example.spot.comment.presentation.dto.CommentCreateRequest;
+import com.example.spot.comment.presentation.dto.CommentCreateResponse;
+import com.example.spot.comment.presentation.dto.CommentLikeResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
-import com.example.spot.post.application.command.LikePostCommentUseCase;
-import com.example.spot.post.application.command.LikePostUseCase;
-import com.example.spot.post.application.command.ManagePostCommentUseCase;
-import com.example.spot.post.application.command.ManagePostUseCase;
-import com.example.spot.post.application.command.ScrapPostUseCase;
+import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.post.application.command.impl.LikePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.LikePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ScrapPostUseCaseImpl;
-import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.comment.domain.association.LikedPostComment;
-import com.example.spot.member.domain.Member;
-import com.example.spot.post.domain.Post;
-import com.example.spot.comment.domain.PostComment;
-import com.example.spot.report.application.ReportCommandServiceImpl;
-import com.example.spot.report.domain.PostReport;
-import com.example.spot.post.domain.enums.Board;
-import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.comment.domain.association.LikedPostCommentRepository;
-import com.example.spot.post.domain.association.LikedPostRepository;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.post.domain.association.MemberScrapRepository;
-import com.example.spot.comment.domain.PostCommentRepository;
-import com.example.spot.report.domain.PostReportRepository;
-import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
-import com.example.spot.comment.presentation.dto.CommentCreateRequest;
-import com.example.spot.comment.presentation.dto.CommentCreateResponse;
-import com.example.spot.comment.presentation.dto.CommentLikeResponse;
+import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostRepository;
+import com.example.spot.post.domain.association.LikedPost;
+import com.example.spot.post.domain.association.LikedPostRepository;
+import com.example.spot.post.domain.association.MemberScrap;
+import com.example.spot.post.domain.association.MemberScrapRepository;
+import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.presentation.dto.request.PostCreateRequest;
-import com.example.spot.post.presentation.dto.response.PostCreateResponse;
-import com.example.spot.post.presentation.dto.response.PostLikeResponse;
-import com.example.spot.report.presentation.dto.PostReportDTO;
 import com.example.spot.post.presentation.dto.request.PostUpdateRequest;
 import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
+import com.example.spot.post.presentation.dto.response.PostCreateResponse;
+import com.example.spot.post.presentation.dto.response.PostLikeResponse;
 import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
 import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
-
+import com.example.spot.report.application.ReportCommandServiceImpl;
+import com.example.spot.report.domain.PostReport;
+import com.example.spot.report.domain.PostReportRepository;
+import com.example.spot.report.presentation.dto.PostReportDTO;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,18 +58,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -98,17 +90,23 @@ class PostCommandServiceTest {
     @Mock
     private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
 
-    @InjectMocks private LikePostCommentUseCaseImpl likePostCommentUseCase;
+    @InjectMocks
+    private LikePostCommentUseCaseImpl likePostCommentUseCase;
 
-    @InjectMocks private LikePostUseCaseImpl likePostUseCase;
+    @InjectMocks
+    private LikePostUseCaseImpl likePostUseCase;
 
-    @InjectMocks private ManagePostCommentUseCaseImpl managePostCommentUseCase;
+    @InjectMocks
+    private ManagePostCommentUseCaseImpl managePostCommentUseCase;
 
-    @InjectMocks private ManagePostUseCaseImpl managePostUseCase;
+    @InjectMocks
+    private ManagePostUseCaseImpl managePostUseCase;
 
-    @InjectMocks private ScrapPostUseCaseImpl scrapPostUseCase;
+    @InjectMocks
+    private ScrapPostUseCaseImpl scrapPostUseCase;
 
-    @InjectMocks private ReportCommandServiceImpl reportCommandService;
+    @InjectMocks
+    private ReportCommandServiceImpl reportCommandService;
 
     private static Member member1;
     private static Member member2;
@@ -186,7 +184,7 @@ class PostCommandServiceTest {
         when(memberScrapRepository.existsByMemberIdAndPostId(2L, 1L)).thenReturn(true);
     }
 
-/*-------------------------------------------------------- 게시글 작성 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 작성 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 작성 - 일반 게시글 (성공)")
@@ -261,7 +259,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> managePostUseCase.createPost(memberId, postCreateRequest));
     }
 
-/*-------------------------------------------------------- 게시글 수정 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 수정 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 수정 - 공지 게시글 (성공)")
@@ -373,7 +371,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> managePostUseCase.updatePost(memberId, postId, postUpdateRequest));
     }
 
-/*-------------------------------------------------------- 게시글 삭제 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 삭제 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 삭제 - (성공)")
@@ -414,7 +412,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> managePostUseCase.deletePost(memberId, postId));
     }
 
-/*-------------------------------------------------------- 게시글 좋아요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 좋아요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 좋아요 - (성공)")
@@ -468,7 +466,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> likePostUseCase.likePost(postId, memberId));
     }
 
-/*-------------------------------------------------------- 게시글 좋아요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 좋아요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 좋아요 취소 - (성공)")
@@ -521,7 +519,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> likePostUseCase.cancelPostLike(postId, memberId));
     }
 
-/*-------------------------------------------------------- 댓글 작성 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 작성 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 작성 - 상위 댓글 (성공)")
@@ -593,7 +591,8 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
+        assertThrows(PostHandler.class,
+                () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
     }
 
     @Test
@@ -612,10 +611,11 @@ class PostCommandServiceTest {
                 .build();
 
         // when & then
-        assertThrows(PostHandler.class, () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
+        assertThrows(PostHandler.class,
+                () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
     }
 
-/*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 좋아요 - (성공)")
@@ -672,7 +672,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> likePostCommentUseCase.likeComment(commentId, memberId));
     }
 
-/*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 좋아요 취소 - (성공)")
@@ -708,7 +708,7 @@ class PostCommandServiceTest {
         getAuthentication(memberId);
 
         // when & then
-        assertThrows(PostHandler.class, () ->likePostCommentUseCase.cancelCommentLike(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentLike(commentId, memberId));
     }
 
     @Test
@@ -724,10 +724,10 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () ->likePostCommentUseCase.cancelCommentLike(commentId, memberId));
+        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentLike(commentId, memberId));
     }
 
-/*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 싫어요 - (성공)")
@@ -787,7 +787,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> likePostCommentUseCase.dislikeComment(commentId, memberId));
     }
 
-/*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 싫어요 취소 - (성공)")
@@ -844,7 +844,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentDislike(commentId, memberId));
     }
 
-/*-------------------------------------------------------- 게시글 스크랩 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 스크랩 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 스크랩 - (성공)")
@@ -898,7 +898,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> scrapPostUseCase.scrapPost(postId, memberId));
     }
 
-/*-------------------------------------------------------- 게시글 스크랩 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 스크랩 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 스크랩 취소 - (성공)")
@@ -948,7 +948,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScrap(postId, memberId));
     }
 
-/*-------------------------------------------------------- 게시글 스크랩 다중 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 스크랩 다중 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 스크랩 다중 취소 - (성공)")
@@ -1012,7 +1012,7 @@ class PostCommandServiceTest {
         assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest));
     }
 
-/*-------------------------------------------------------- 게시글 신고 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 신고 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 신고 - (성공)")
@@ -1073,11 +1073,12 @@ class PostCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -1088,21 +1089,11 @@ class PostCommandServiceTest {
                 .id(1L)
                 .nickname("회원1")
                 .isAdmin(true)
-                .postList(new ArrayList<>())
-                .likedPostList(new ArrayList<>())
-                .memberScrapList(new ArrayList<>())
-                .postCommentList(new ArrayList<>())
-                .likedCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
                 .nickname("회원2")
                 .isAdmin(false)
-                .postList(new ArrayList<>())
-                .likedPostList(new ArrayList<>())
-                .memberScrapList(new ArrayList<>())
-                .postCommentList(new ArrayList<>())
-                .likedCommentList(new ArrayList<>())
                 .build();
     }
 

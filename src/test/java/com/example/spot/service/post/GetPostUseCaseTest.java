@@ -1,31 +1,39 @@
 package com.example.spot.service.post;
 
-import com.example.spot.common.api.exception.handler.PostHandler;
-import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.comment.domain.association.LikedPostComment;
-import com.example.spot.member.domain.Member;
-import com.example.spot.post.domain.Post;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.comment.domain.PostComment;
-import com.example.spot.post.domain.enums.Board;
-import com.example.spot.post.domain.enums.PostStatus;
-import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.comment.domain.association.LikedPostCommentRepository;
-import com.example.spot.post.domain.association.LikedPostRepository;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.post.domain.association.MemberScrapRepository;
 import com.example.spot.comment.domain.PostCommentRepository;
-import com.example.spot.report.domain.PostReportRepository;
-import com.example.spot.post.domain.PostRepository;
+import com.example.spot.comment.domain.association.LikedPostComment;
+import com.example.spot.comment.domain.association.LikedPostCommentRepository;
+import com.example.spot.comment.presentation.dto.CommentResponse;
+import com.example.spot.common.api.exception.handler.PostHandler;
+import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;
-import com.example.spot.comment.presentation.dto.CommentResponse;
+import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostRepository;
+import com.example.spot.post.domain.association.LikedPost;
+import com.example.spot.post.domain.association.LikedPostRepository;
+import com.example.spot.post.domain.association.MemberScrap;
+import com.example.spot.post.domain.association.MemberScrapRepository;
+import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.domain.enums.PostStatus;
 import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
 import com.example.spot.post.presentation.dto.response.PostBest5Response;
 import com.example.spot.post.presentation.dto.response.PostPagingResponse;
 import com.example.spot.post.presentation.dto.response.PostRepresentativeResponse;
 import com.example.spot.post.presentation.dto.response.PostSingleResponse;
-
+import com.example.spot.report.domain.PostReportRepository;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,17 +51,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -163,7 +160,6 @@ class GetPostUseCaseTest {
         when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
         when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
 
-
         // MemberScrap
         when(memberScrapRepository.countByPostId(1L)).thenReturn(1L);
         when(memberScrapRepository.countByPostId(2L)).thenReturn(1L);
@@ -175,7 +171,7 @@ class GetPostUseCaseTest {
         when(memberScrapRepository.existsByMemberIdAndPostId(2L, 1L)).thenReturn(true);
     }
 
-/*-------------------------------------------------------- 게시글 단건 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 단건 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 단건 조회 - 일반 조회 (성공)")
@@ -270,7 +266,7 @@ class GetPostUseCaseTest {
         assertThrows(PostHandler.class, () -> postQueryService.getPostById(postId, false));
     }
 
-/*-------------------------------------------------------- 게시글 페이징 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 페이징 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("게시글 페이징 조회 - 전체 게시글 조회 (성공)")
@@ -311,7 +307,8 @@ class GetPostUseCaseTest {
         List<Post> posts = List.of(post2);
         postPage = new PageImpl<>(posts, pageable, 1);
 
-        when(postRepository.findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board.INFORMATION_SHARING, pageable)).thenReturn(postPage);
+        when(postRepository.findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board.INFORMATION_SHARING,
+                pageable)).thenReturn(postPage);
 
         // when
         PostPagingResponse result = postQueryService.getPagingPosts("INFORMATION_SHARING", pageable);
@@ -342,7 +339,7 @@ class GetPostUseCaseTest {
 
     }
 
-/*-------------------------------------------------------- 인기 게시글 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 인기 게시글 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("인기 게시글 조회 - 실시간 인기 게시글 조회 (성공)")
@@ -426,7 +423,7 @@ class GetPostUseCaseTest {
 
     }
 
-/*-------------------------------------------------------- 대표 게시글 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 대표 게시글 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("대표 게시글 조회 - (성공)")
@@ -449,7 +446,7 @@ class GetPostUseCaseTest {
         assertThat(result.getResponses().get(1).getPostType()).isEqualTo("INFORMATION_SHARING");
     }
 
-/*-------------------------------------------------------- 최신 공지 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 최신 공지 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("최신 공지 조회 - (성공)")
@@ -471,7 +468,7 @@ class GetPostUseCaseTest {
         assertThat(result.getResponses().get(0).getPostId()).isEqualTo(post1.getId());
     }
 
-/*-------------------------------------------------------- 댓글 목록 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 목록 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("댓글 목록 조회 - (성공)")
@@ -508,7 +505,7 @@ class GetPostUseCaseTest {
         assertThrows(PostHandler.class, () -> postQueryService.getCommentsByPostId(postId));
     }
 
-/*-------------------------------------------------------- 스크랩 게시글 페이징 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 스크랩 게시글 페이징 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스크랩 게시글 페이징 조회 - 전체 게시글 조회 (성공)")
@@ -580,11 +577,12 @@ class GetPostUseCaseTest {
 
 
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -594,20 +592,10 @@ class GetPostUseCaseTest {
         member1 = Member.builder()
                 .id(1L)
                 .nickname("회원1")
-                .postList(new ArrayList<>())
-                .likedPostList(new ArrayList<>())
-                .memberScrapList(new ArrayList<>())
-                .postCommentList(new ArrayList<>())
-                .likedCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
                 .nickname("회원2")
-                .postList(new ArrayList<>())
-                .likedPostList(new ArrayList<>())
-                .memberScrapList(new ArrayList<>())
-                .postCommentList(new ArrayList<>())
-                .likedCommentList(new ArrayList<>())
                 .build();
     }
 

@@ -1,27 +1,37 @@
 package com.example.spot.service.story;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.story.application.StoryQueryServiceImpl;
 import com.example.spot.story.domain.Story;
+import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.LikedStory;
 import com.example.spot.story.domain.association.LikedStoryComment;
 import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.enums.StoryCategory;
+import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
-import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.application.StoryQueryServiceImpl;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,15 +46,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -129,7 +130,7 @@ class StoryQueryServiceTest {
 
     }
 
-/*-------------------------------------------------------- 게시글 목록 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 목록 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 목록 조회 - 전체 게시글 조회 (성공)")
@@ -179,7 +180,8 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when
-        StoryResponseDTO.StoryListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.FREE_TALK);
+        StoryResponseDTO.StoryListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId,
+                StoryCategoryQuery.FREE_TALK);
 
         // then
         assertNotNull(result);
@@ -208,7 +210,8 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when
-        StoryResponseDTO.StoryListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.ANNOUNCEMENT);
+        StoryResponseDTO.StoryListDTO result = studyPostQueryService.getAllPosts(pageRequest, studyId,
+                StoryCategoryQuery.ANNOUNCEMENT);
 
         // then
         assertNotNull(result);
@@ -259,11 +262,12 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of(story1, story3));
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.valueOf("Nothing")));
+        assertThrows(IllegalArgumentException.class,
+                () -> studyPostQueryService.getAllPosts(pageRequest, studyId, StoryCategoryQuery.valueOf("Nothing")));
     }
 
 
-/*-------------------------------------------------------- 게시글 조회 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 조회 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 단건 조회 - 일반 조회 (성공)")
@@ -353,7 +357,7 @@ class StoryQueryServiceTest {
                 .thenReturn(false);
 
         // when & then
-        assertThrows(StudyHandler.class, () ->studyPostQueryService.getPost(studyId, postId, false));
+        assertThrows(StudyHandler.class, () -> studyPostQueryService.getPost(studyId, postId, false));
     }
 
     @Test
@@ -373,14 +377,14 @@ class StoryQueryServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(StudyHandler.class, () ->studyPostQueryService.getPost(studyId, postId, false));
+        assertThrows(StudyHandler.class, () -> studyPostQueryService.getPost(studyId, postId, false));
     }
 
-/* ------------------------------------------------ 스터디 공지사항 조회  --------------------------------------------------- */
+    /* ------------------------------------------------ 스터디 공지사항 조회  --------------------------------------------------- */
 
     @Test
     @DisplayName("스터디 공지사항 조회 - 성공")
-    void 스터디_공지사항_조회_성공(){
+    void 스터디_공지사항_조회_성공() {
 
         // given
         long studyId = 1L;
@@ -394,27 +398,30 @@ class StoryQueryServiceTest {
                 .build();
 
         StudyMember studyMember = StudyMember.builder()
-                .introduction(title).study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction(title).study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED)
+                .build();
 
         when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.of(story));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId,
+                StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
 
         // when
         StoryResponseDTO.StoryContentDTO result = studyPostQueryService.findStudyAnnouncementPost(studyId);
 
         // then
-        assertEquals(title,result.getTitle());
+        assertEquals(title, result.getTitle());
         assertEquals(content, result.getContent());
     }
 
     @Test
     @DisplayName("스터디 공지사항 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
-    void 스터디_공지사항_조회_실패_1(){
+    void 스터디_공지사항_조회_실패_1() {
 
         // given
         long studyId = 1L;
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId,
+                StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.empty());
 
         // when & then
@@ -423,15 +430,16 @@ class StoryQueryServiceTest {
 
     @Test
     @DisplayName("스터디 공지사항 조회 - 스터디 공지 글이 없는 경우")
-    void 스터디_공지사항_조회_실패_2(){
+    void 스터디_공지사항_조회_실패_2() {
 
         // given
         long studyId = 1L;
         StudyMember studyMember = StudyMember.builder()
-                .introduction("title").study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction("title").study(study).member(owner).isOwned(true).status(StudyApplicationStatus.APPROVED)
+                .build();
 
-
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId,
+                StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
         when(storyRepository.findByStudyIdAndIsAnnouncement(studyId, true)).thenReturn(Optional.empty());
 
@@ -513,11 +521,12 @@ class StoryQueryServiceTest {
     }
 
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -634,7 +643,7 @@ class StoryQueryServiceTest {
         owner.addStudyPost(story3);
         study.addStudyPost(story3);
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             story1.plusHitNum();
         }
     }

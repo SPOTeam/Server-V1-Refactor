@@ -1,43 +1,44 @@
 package com.example.spot.member.domain;
 
-import com.example.spot.comment.domain.PostComment;
 import com.example.spot.comment.domain.association.LikedPostComment;
-import com.example.spot.notification.domain.Notification;
-import com.example.spot.post.domain.Post;
-import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.report.domain.MemberReport;
-import com.example.spot.report.domain.PostReport;
-import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.association.Quiz;
-import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.association.LikedStoryComment;
-import com.example.spot.story.domain.association.LikedStory;
-import com.example.spot.member.domain.association.StudyJoinReason;
 import com.example.spot.common.entity.BaseEntity;
+import com.example.spot.member.domain.association.MemberTheme;
+import com.example.spot.member.domain.association.PreferredRegion;
+import com.example.spot.member.domain.association.StudyJoinReason;
 import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
+import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
+import com.example.spot.schedule.domain.Schedule;
+import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.schedule.domain.association.QuizSubmission;
-import com.example.spot.post.domain.association.MemberScrap;
+import com.example.spot.story.domain.Story;
+import com.example.spot.story.domain.association.LikedStory;
+import com.example.spot.story.domain.association.LikedStoryComment;
+import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.member.domain.association.MemberTheme;
-import com.example.spot.todo.domain.ToDo;
 import com.example.spot.vote.domain.Vote;
 import com.example.spot.vote.domain.association.VoteParticipant;
-import com.example.spot.member.domain.association.PreferredRegion;
-import com.example.spot.member.domain.association.PreferredStudy;
-import com.example.spot.story.domain.association.StoryComment;
-import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
-import jakarta.persistence.*;
-import java.util.ArrayList;
-
-import lombok.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -116,15 +117,15 @@ public class Member extends BaseEntity {
     @Builder.Default
     private List<StudyJoinReason> studyJoinReasonList = new ArrayList<>();
 
-    //== 알림 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Notification> notificationList = new ArrayList<>();
+//    //== 알림 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<Notification> notificationList = new ArrayList<>();
 
-    //== 해당 회원에 대한 신고 내역 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<MemberReport> memberReportList = new ArrayList<>();
+//    //== 해당 회원에 대한 신고 내역 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    @Builder.Default
+//    private List<MemberReport> memberReportList = new ArrayList<>();
 
     //== 회원이 선호하는 테마 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -141,45 +142,45 @@ public class Member extends BaseEntity {
     @Builder.Default
     private List<StudyMember> studyMemberList = new ArrayList<>();
 
-    //== 회원이 찜한 스터디 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PreferredStudy> preferredStudyList = new ArrayList<>();
+//    //== 회원이 찜한 스터디 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<PreferredStudy> preferredStudyList = new ArrayList<>();
 
     //== 회원이 선호하는 지역 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PreferredRegion> preferredRegionList = new ArrayList<>();
 
-   ////== 회원이 작성한 게시글 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<Post> postList = new ArrayList<>();
+//    /// /== 회원이 작성한 게시글 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<Post> postList = new ArrayList<>();
 
-   ////== 회원이 좋아요한 게시글 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<LikedPost> likedPostList = new ArrayList<>();
+//    /// /== 회원이 좋아요한 게시글 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<LikedPost> likedPostList = new ArrayList<>();
 
-   ////== 회원이 선호하는 지역 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<PostReport> postReportList = new ArrayList<>();
+//    /// /== 회원이 선호하는 지역 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<PostReport> postReportList = new ArrayList<>();
 
-   ////== 회원이 스크랩한 게시글 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<MemberScrap> memberScrapList = new ArrayList<>();
+//    /// /== 회원이 스크랩한 게시글 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<MemberScrap> memberScrapList = new ArrayList<>();
+//
+//    /// /== 회원이 작성한 게시글 댓글 목록 ==//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<PostComment> postCommentList = new ArrayList<>();
 
-   ////== 회원이 작성한 게시글 댓글 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<PostComment> postCommentList = new ArrayList<>();
-
-   ////== 회원이 좋아요한 게시글 댓글 목록 ==//
-   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   @Builder.Default
-   private List<LikedPostComment> likedCommentList = new ArrayList<>();
+    /// /== 회원이 좋아요한 게시글 댓글 목록 ==//
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<LikedPostComment> likedCommentList = new ArrayList<>();
 
     //== 회원이 작성한 스터디 게시글 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -226,31 +227,15 @@ public class Member extends BaseEntity {
     @Builder.Default
     private List<Schedule> scheduleList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<ToDo> toDos = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<ToDo> toDos = new ArrayList<>();
 
-/* ----------------------------- 연관관계 메소드 ------------------------------------- */
+    /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
     public void addMemberStudy(StudyMember studyMember) {
         studyMemberList.add(studyMember);
         studyMember.setMember(this);
-    }
-
-    public void addPreferredRegion(PreferredRegion preferredRegion) {
-        if (this.regions == null) {
-            this.regions = new ArrayList<>(); // 재초기화 (안정성 추가)
-        }
-        this.regions.add(preferredRegion);
-        preferredRegion.setMember(this); // 양방향 관계 설정
-    }
-
-    public void addMemberTheme(MemberTheme memberTheme) {
-        if (this.memberThemeList == null) {
-            this.memberThemeList = new ArrayList<>(); // 재초기화 (안정성 추가)
-        }
-        this.memberThemeList.add(memberTheme);
-        memberTheme.setMember(this); // 양방향 관계 설정
     }
 
     public void addMemberAttendance(QuizSubmission quizSubmission) {
@@ -273,6 +258,7 @@ public class Member extends BaseEntity {
         this.memberThemeList.clear();
         this.memberThemeList.addAll(memberThemes);
     }
+
     public void updateRegions(List<PreferredRegion> preferredRegions) {
         this.preferredRegionList.clear();
         this.preferredRegionList.addAll(preferredRegions);
@@ -385,12 +371,5 @@ public class Member extends BaseEntity {
         this.isAdmin = true;
     }
 
-    public void addMemberReport(MemberReport memberReport) {
-        this.memberReportList.add(memberReport);
-    }
-
-    public void addToDoList(ToDo toDo) {
-        this.toDos.add(toDo);
-    }
 
 }

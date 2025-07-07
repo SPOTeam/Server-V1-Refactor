@@ -1,22 +1,31 @@
 package com.example.spot.service.schedule;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
+import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.schedule.domain.association.QuizSubmission;
 import com.example.spot.schedule.domain.repository.QuizRepository;
 import com.example.spot.schedule.domain.repository.QuizSubmissionRepository;
-import com.example.spot.schedule.domain.ScheduleRepository;
+import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,16 +39,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -91,15 +90,18 @@ class AttendanceQueryServiceTest {
 
         when(studyRepository.findById(1L)).thenReturn(Optional.of(study));
 
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
         when(studyMemberRepository.findAllByStudyIdAndStatus(1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
 
         when(scheduleRepository.findById(schedule.getId())).thenReturn(Optional.of(schedule));
-        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), date.atStartOfDay(), date.atStartOfDay().plusDays(1)))
+        when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), date.atStartOfDay(),
+                date.atStartOfDay().plusDays(1)))
                 .thenReturn(List.of(quiz));
         when(quizSubmissionRepository.findByQuizIdAndMemberId(quiz.getId(), member1.getId()))
                 .thenReturn(List.of(member1Attendance));
@@ -118,7 +120,8 @@ class AttendanceQueryServiceTest {
         getAuthentication(member1.getId());
 
         // when
-        QuizResponseDTO.AttendanceListDTO result = scheduleQueryService.getAllAttendances(studyId, schedule.getId(), date);
+        QuizResponseDTO.AttendanceListDTO result = scheduleQueryService.getAllAttendances(studyId, schedule.getId(),
+                date);
 
         // then
         assertThat(result).isNotNull();
@@ -234,7 +237,7 @@ class AttendanceQueryServiceTest {
     }
 
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void initMember() {
         member1 = Member.builder()
@@ -321,7 +324,8 @@ class AttendanceQueryServiceTest {
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

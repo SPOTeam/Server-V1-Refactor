@@ -1,32 +1,31 @@
 package com.example.spot.common.security.oauth;
 
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
-import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.common.security.oauth.adpter.CustomOAuth2User;
 import com.example.spot.common.security.oauth.adpter.google.GoogleUserInfo;
-import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
+import com.example.spot.common.security.utils.JwtTokenProvider;
+import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.presentation.dto.MemberResponseDTO;
+import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Optional;
-
 /**
- * Spring Security가 CustomOAuth2UserService.loadUser()에서 성공한 사용자 정보를 자동으로 SecurityContext Principle에 등록합니다.
- * 따라서, OAuth로 로그인 성공 후 브라우저 재 진입시 Principle이 살아있는한 다시 로그인할 필요가 없습니다. (JwtToken과는 별개)
+ * Spring Security가 CustomOAuth2UserService.loadUser()에서 성공한 사용자 정보를 자동으로 SecurityContext Principle에 등록합니다. 따라서, OAuth로
+ * 로그인 성공 후 브라우저 재 진입시 Principle이 살아있는한 다시 로그인할 필요가 없습니다. (JwtToken과는 별개)
  */
 
 @Component
@@ -37,7 +36,8 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final ObjectMapper objectMapper;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
 
         // CustomOAuth2UserService.loadUser()에서 저장한 Security Context에서 Principle 추출
         // 추후에 Spring Security에서 제공하는 OAuth 방식을 사용할까봐, OAuth2UserInfo로 추상화했습니다.
@@ -63,7 +63,7 @@ public class CustomOAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         // OAuth 로그인 성공한 후 응답 방식으로 포멧팅
         ApiResponse<MemberResponseDTO.SocialLoginSignInDTO> apiResponse = ApiResponse.onSuccess(
                 SuccessStatus._OK, SocialLoginSignInDTO.toDTO(
-                        customOAuth2User.getIsSpotMember(),memberSignInDTO));
+                        customOAuth2User.getIsSpotMember(), memberSignInDTO));
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

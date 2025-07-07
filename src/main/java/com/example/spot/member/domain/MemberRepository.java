@@ -1,10 +1,9 @@
 package com.example.spot.member.domain;
 
+import com.example.spot.member.domain.enums.LoginType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import com.example.spot.member.domain.enums.LoginType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
