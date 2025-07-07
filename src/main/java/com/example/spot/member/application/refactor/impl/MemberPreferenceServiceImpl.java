@@ -1,7 +1,6 @@
 package com.example.spot.member.application.refactor.impl;
 
 import static com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.RegionDTO;
-import static com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.builder;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
@@ -18,6 +17,7 @@ import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
+import com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO;
 import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.study.domain.repository.RegionRepository;
@@ -177,7 +177,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .toList();
 
         // 회원의 지역 정보 반환
-        return builder()
+        return MemberRegionDTO.builder()
                 .memberId(member.getId())
                 .regions(codes)
                 .build();
