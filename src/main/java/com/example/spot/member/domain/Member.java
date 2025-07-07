@@ -2,8 +2,8 @@ package com.example.spot.member.domain;
 
 import com.example.spot.comment.domain.association.LikedPostComment;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.member.domain.association.MemberTheme;
 import com.example.spot.member.domain.association.PreferredRegion;
+import com.example.spot.member.domain.association.PreferredTheme;
 import com.example.spot.member.domain.association.StudyJoinReason;
 import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
@@ -130,7 +130,7 @@ public class Member extends BaseEntity {
     //== 회원이 선호하는 테마 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<MemberTheme> memberThemeList = new ArrayList<>();
+    private List<PreferredTheme> preferredThemeList = new ArrayList<>();
 
     //== 회원의 출석 목록 ==//
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -254,9 +254,9 @@ public class Member extends BaseEntity {
         vote.setMember(this);
     }
 
-    public void updateThemes(List<MemberTheme> memberThemes) {
-        this.memberThemeList.clear();
-        this.memberThemeList.addAll(memberThemes);
+    public void updateThemes(List<PreferredTheme> preferredThemes) {
+        this.preferredThemeList.clear();
+        this.preferredThemeList.addAll(preferredThemes);
     }
 
     public void updateRegions(List<PreferredRegion> preferredRegions) {

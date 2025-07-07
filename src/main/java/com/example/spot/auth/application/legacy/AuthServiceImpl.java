@@ -27,8 +27,8 @@ import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.MemberThemeRepository;
 import com.example.spot.member.infrastructure.PreferredRegionRepository;
+import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO;
@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationCodeRepository verificationCodeRepository;
 
-    private final MemberThemeRepository memberThemeRepository;
+    private final PreferredThemeRepository preferredThemeRepository;
     private final PreferredRegionRepository preferredRegionRepository;
     private final StudyJoinReasonRepository studyJoinReasonRepository;
 
@@ -242,7 +242,7 @@ public class AuthServiceImpl implements AuthService {
 
     public boolean isMemberExistsByCheckList(Member member) {
         Long memberId = member.getId();
-        return memberThemeRepository.existsByMemberId(memberId) &&
+        return preferredThemeRepository.existsByMemberId(memberId) &&
                 preferredRegionRepository.existsByMemberId(memberId) &&
                 studyJoinReasonRepository.existsByMemberId(memberId);
     }

@@ -5,13 +5,13 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.application.refactor.MemberPreferenceService;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.association.MemberTheme;
 import com.example.spot.member.domain.association.PreferredRegion;
+import com.example.spot.member.domain.association.PreferredTheme;
 import com.example.spot.member.domain.association.StudyJoinReason;
 import com.example.spot.member.domain.enums.Reason;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.MemberThemeRepository;
 import com.example.spot.member.infrastructure.PreferredRegionRepository;
+import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
@@ -37,7 +37,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     private final RegionRepository regionRepository;
     private final ThemeRepository themeRepository;
 
-    private final MemberThemeRepository memberThemeRepository;
+    private final PreferredThemeRepository preferredThemeRepository;
     private final PreferredRegionRepository preferredRegionRepository;
     private final StudyJoinReasonRepository studyJoinReasonRepository;
 
@@ -63,20 +63,20 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .toList();
 
         // MemberTheme 객체 생성
-        List<MemberTheme> memberThemes = themes.stream()
-                .map(theme -> MemberTheme.builder().member(member).theme(theme).build())
+        List<PreferredTheme> preferredThemes = themes.stream()
+                .map(theme -> PreferredTheme.builder().member(member).theme(theme).build())
                 .toList();
 
         // 기존의 MemberTheme 삭제
-		if (memberThemeRepository.existsByMemberId(member.getId())) {
-			memberThemeRepository.deleteByMemberId(member.getId());
-		}
+        if (preferredThemeRepository.existsByMemberId(member.getId())) {
+            preferredThemeRepository.deleteByMemberId(member.getId());
+        }
 
         // 새로운 MemberTheme과 PreferredRegion을 저장
-        memberThemeRepository.saveAll(memberThemes);
+        preferredThemeRepository.saveAll(preferredThemes);
 
         // 회원 정보 업데이트
-        member.updateThemes(memberThemes);
+        member.updateThemes(preferredThemes);
 
         // 회원 정보 저장
         memberRepository.save(member);
@@ -115,9 +115,9 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .toList();
 
         // 기존의 MemberTheme과 PreferredRegion 삭제
-		if (preferredRegionRepository.existsByMemberId(member.getId())) {
-			preferredRegionRepository.deleteByMemberId(member.getId());
-		}
+        if (preferredRegionRepository.existsByMemberId(member.getId())) {
+            preferredRegionRepository.deleteByMemberId(member.getId());
+        }
 
         // 새로운 PreferredRegion을 저장
         preferredRegionRepository.saveAll(preferredRegions);
@@ -161,9 +161,9 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .toList();
 
         // 기존의 StudyReason 삭제
-		if (studyJoinReasonRepository.existsByMemberId(member.getId())) {
-			studyJoinReasonRepository.deleteByMemberId(member.getId());
-		}
+        if (studyJoinReasonRepository.existsByMemberId(member.getId())) {
+            studyJoinReasonRepository.deleteByMemberId(member.getId());
+        }
 
         // 새로운 StudyReason 저장
         studyJoinReasonRepository.saveAll(studyJoinReasons);
@@ -194,12 +194,12 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-		if (member.getMemberThemeList().isEmpty()) {
-			throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
-		}
+        if (member.getPreferredThemeList().isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
+        }
 
-        List<Theme> themes = member.getMemberThemeList().stream()
-                .map(MemberTheme::getTheme)
+        List<Theme> themes = member.getPreferredThemeList().stream()
+                .map(PreferredTheme::getTheme)
                 .toList();
 
         List<ThemeType> themeTypes = themes.stream()
@@ -228,9 +228,9 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 회원의 지역 정보가 없을 경우
-		if (member.getRegions().isEmpty()) {
-			throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
-		}
+        if (member.getRegions().isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
+        }
 
         // 회원의 지역 정보 조회
         List<Region> regions = member.getPreferredRegionList().stream()
@@ -269,9 +269,9 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 회원의 스터디 참여 이유가 없을 경우
-		if (member.getStudyJoinReasonList().isEmpty()) {
-			throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
-		}
+        if (member.getStudyJoinReasonList().isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
+        }
 
         // 회원의 스터디 참여 이유 ID 조회
         List<Long> reasonNums = member.getStudyJoinReasonList().stream()

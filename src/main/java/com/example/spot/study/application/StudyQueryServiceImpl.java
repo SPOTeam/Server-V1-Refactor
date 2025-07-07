@@ -6,15 +6,15 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.association.MemberTheme;
 import com.example.spot.member.domain.association.PreferredRegion;
 import com.example.spot.member.domain.association.PreferredStudy;
+import com.example.spot.member.domain.association.PreferredTheme;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.MemberThemeRepository;
 import com.example.spot.member.infrastructure.PreferredRegionRepository;
 import com.example.spot.member.infrastructure.PreferredStudyRepository;
+import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.Region;
@@ -83,7 +83,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
     // 관심사 관련 조회
     private final ThemeRepository themeRepository;
     private final StudyThemeRepository studyThemeRepository;
-    private final MemberThemeRepository memberThemeRepository;
+    private final PreferredThemeRepository preferredThemeRepository;
 
     // 지역 관련 조회
     private final PreferredRegionRepository preferredRegionRepository;
@@ -253,11 +253,11 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
 
         // 회원 관심사 조회
-        List<MemberTheme> memberThemes = memberThemeRepository.findAllByMemberId(memberId);
+        List<PreferredTheme> preferredThemes = preferredThemeRepository.findAllByMemberId(memberId);
         List<PreferredRegion> preferredRegions = preferredRegionRepository.findAllByMemberId(memberId);
 
         // 회원 관심사가 없을 경우
-        if (memberThemes.isEmpty()) {
+        if (preferredThemes.isEmpty()) {
             throw new MemberHandler(ErrorStatus._STUDY_THEME_IS_INVALID);
         }
 
@@ -266,8 +266,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         }
 
         // MemberId로 회원 관심사 및 관심 지역 전체 조회
-        List<Theme> themes = memberThemes.stream()
-                .map(MemberTheme::getTheme)
+        List<Theme> themes = preferredThemes.stream()
+                .map(PreferredTheme::getTheme)
                 .toList();
 
         List<Region> regions = preferredRegions.stream()
@@ -365,8 +365,8 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
 
         // 회원 관심사 조회
-        List<Theme> themes = memberThemeRepository.findAllByMemberId(memberId).stream()
-                .map(MemberTheme::getTheme)
+        List<Theme> themes = preferredThemeRepository.findAllByMemberId(memberId).stream()
+                .map(PreferredTheme::getTheme)
                 .toList();
 
         // 회원의 관심사가 없을 경우
@@ -427,9 +427,9 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         List<Long> memberOngoingStudyIds = getOngoingStudyIds(memberId);
 
         // 회원 관심사 조회
-        List<Theme> themes = memberThemeRepository.findAllByMemberId(memberId)
+        List<Theme> themes = preferredThemeRepository.findAllByMemberId(memberId)
                 .stream()
-                .map(MemberTheme::getTheme)
+                .map(PreferredTheme::getTheme)
                 .collect(Collectors.toList());
 
         // 회원의 관심사가 없을 경우

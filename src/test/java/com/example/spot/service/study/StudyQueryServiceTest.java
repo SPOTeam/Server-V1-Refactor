@@ -13,15 +13,15 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.association.MemberTheme;
 import com.example.spot.member.domain.association.PreferredRegion;
 import com.example.spot.member.domain.association.PreferredStudy;
+import com.example.spot.member.domain.association.PreferredTheme;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.MemberThemeRepository;
 import com.example.spot.member.infrastructure.PreferredRegionRepository;
 import com.example.spot.member.infrastructure.PreferredStudyRepository;
+import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.study.application.StudyQueryServiceImpl;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
@@ -86,7 +86,7 @@ class StudyQueryServiceTest {
     @Mock
     private StudyThemeRepository studyThemeRepository;
     @Mock
-    private MemberThemeRepository memberThemeRepository;
+    private PreferredThemeRepository preferredThemeRepository;
 
     // 지역 관련 조회
     @Mock
@@ -104,8 +104,8 @@ class StudyQueryServiceTest {
     private static Pageable pageable;
     private static Theme theme1;
     private static Theme theme2;
-    private static MemberTheme memberTheme1;
-    private static MemberTheme memberTheme2;
+    private static PreferredTheme preferredTheme1;
+    private static PreferredTheme preferredTheme2;
     private static StudyTheme studyTheme1;
     private static StudyTheme studyTheme2;
     private static StudySearchRequestDTO request;
@@ -130,8 +130,8 @@ class StudyQueryServiceTest {
         theme1 = getTheme(1L, ThemeType.어학);
         theme2 = getTheme(2L, ThemeType.공모전);
 
-        memberTheme1 = MemberTheme.builder().member(member).theme(theme1).build();
-        memberTheme2 = MemberTheme.builder().member(member).theme(theme2).build();
+        preferredTheme1 = PreferredTheme.builder().member(member).theme(theme1).build();
+        preferredTheme2 = PreferredTheme.builder().member(member).theme(theme2).build();
 
         studyTheme1 = new StudyTheme(theme1, study1);
         studyTheme2 = new StudyTheme(theme2, study2);
@@ -164,7 +164,8 @@ class StudyQueryServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(2L);
@@ -395,8 +396,9 @@ class StudyQueryServiceTest {
     void findRecommendStudies() {
         // given
 
-        // Mock the memberThemeRepository to return a list of MemberTheme
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        // Mock the preferredThemeRepository to return a list of MemberTheme
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(
                 List.of(preferredRegion1, preferredRegion2));
 
@@ -418,7 +420,7 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.getSize());  // Assuming StudyPreviewDTO has a getStudies method
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
         verify(studyRepository).findByStudyThemeAndNotInIds(anyList(), anyList());
@@ -430,7 +432,8 @@ class StudyQueryServiceTest {
     void findRecommendStudiesOnFail() {
         // given
 
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(
                 List.of(preferredRegion1, preferredRegion2));
 
@@ -450,7 +453,7 @@ class StudyQueryServiceTest {
         assertThrows(StudyHandler.class, () -> {
             studyQueryService.findRecommendStudies(member.getId());
         });
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
         verify(studyRepository).findByStudyThemeAndNotInIds(anyList(), anyList());
@@ -460,7 +463,8 @@ class StudyQueryServiceTest {
     @DisplayName("추천 스터디 조회 - 회원의 관심 테마에 해당하는 스터디가 없는 경우")
     void 추천_스터디_조회_시_회원의_관심_테마에_해당하는_스터디가_없는_경우() {
         // given
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(
                 List.of(preferredRegion1, preferredRegion2));
 
@@ -475,7 +479,7 @@ class StudyQueryServiceTest {
             studyQueryService.findRecommendStudies(member.getId());
         });
 
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
     }
@@ -484,7 +488,8 @@ class StudyQueryServiceTest {
     @DisplayName("추천 스터디 조회 - 회원의 관심 지역에 해당하는 스터디가 없는 경우")
     void 추천_스터디_조회_시_회원의_관심_지역에_해당하는_스터디가_없는_경우() {
         // given
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(preferredRegionRepository.findAllByMemberId(member.getId())).thenReturn(
                 List.of(preferredRegion1, preferredRegion2));
 
@@ -499,7 +504,7 @@ class StudyQueryServiceTest {
             studyQueryService.findRecommendStudies(member.getId());
         });
 
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
     }
@@ -527,8 +532,8 @@ class StudyQueryServiceTest {
         Member member = getMember();
         Long memberId = member.getId();
 
-        // Mock the memberThemeRepository to return an empty list
-        when(memberThemeRepository.findAllByMemberId(memberId)).thenReturn(List.of());
+        // Mock the preferredThemeRepository to return an empty list
+        when(preferredThemeRepository.findAllByMemberId(memberId)).thenReturn(List.of());
 
         // when & then
         assertThrows(MemberHandler.class, () -> {
@@ -593,8 +598,8 @@ class StudyQueryServiceTest {
 
         Map<String, Object> searchConditions = getStringObjectMap();
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1, preferredTheme2));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of(studyTheme1));
         when(studyThemeRepository.findAllByTheme(theme2))
@@ -615,7 +620,7 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
     }
@@ -626,8 +631,8 @@ class StudyQueryServiceTest {
         // given
         StudySortBy sortBy = StudySortBy.ALL;
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1, preferredTheme2));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of());
         when(studyThemeRepository.findAllByTheme(theme2))
@@ -639,7 +644,7 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
     }
@@ -656,8 +661,8 @@ class StudyQueryServiceTest {
         // Mock conditions
         Map<String, Object> searchConditions = getStringObjectMap();
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1, preferredTheme2));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of(studyTheme1));
         when(studyThemeRepository.findAllByTheme(theme2))
@@ -680,7 +685,7 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());  // Assuming StudyPreviewDTO has a getSize method
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(1)).findAllByTheme(theme1);
         verify(studyThemeRepository, times(1)).findAllByTheme(theme2);
         verify(studyRepository).countStudyByConditionsAndThemeTypesAndNotInIds(searchConditions,
@@ -696,7 +701,7 @@ class StudyQueryServiceTest {
         //given
         List<Study> studies = List.of(study1, study2);
 
-        when(memberThemeRepository.findAllByMemberId(any())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(any())).thenReturn(List.of(preferredTheme1, preferredTheme2));
         when(studyRepository.findStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any(), any()))
                 .thenReturn(studies);
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
@@ -720,7 +725,8 @@ class StudyQueryServiceTest {
         // given
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(1L);
@@ -746,7 +752,8 @@ class StudyQueryServiceTest {
         StudySortBy sortBy = StudySortBy.HIT;
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(2L);
@@ -771,7 +778,8 @@ class StudyQueryServiceTest {
         StudySortBy sortBy = StudySortBy.LIKED;
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(2L);
@@ -797,7 +805,7 @@ class StudyQueryServiceTest {
         StudySortBy sortBy = StudySortBy.ALL;
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of());
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of());
 
         // when & then
         assertThrows(MemberHandler.class, () -> {
@@ -820,8 +828,8 @@ class StudyQueryServiceTest {
         // Mock conditions
         Map<String, Object> searchConditions = getStringObjectMap();
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of(studyTheme1));
 
@@ -843,7 +851,7 @@ class StudyQueryServiceTest {
         // then
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());  // Verify the count matches expected result
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository).findAllByTheme(theme1);  // Ensure the correct theme is queried
         verify(studyRepository).countStudyByConditionsAndThemeTypesAndNotInIds(searchConditions, List.of(studyTheme1),
                 sortBy, studyIds);
@@ -857,8 +865,8 @@ class StudyQueryServiceTest {
         // given
         StudySortBy sortBy = StudySortBy.ALL;
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1, preferredTheme2));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of());
         when(studyThemeRepository.findAllByTheme(theme2))
@@ -871,7 +879,7 @@ class StudyQueryServiceTest {
         });
 
         // then
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository, times(2)).findAllByTheme(any());
     }
 
@@ -888,8 +896,8 @@ class StudyQueryServiceTest {
         // Mock conditions
         Map<String, Object> searchConditions = getStringObjectMap();
 
-        when(memberThemeRepository.findAllByMemberId(member.getId()))
-                .thenReturn(List.of(memberTheme1));
+        when(preferredThemeRepository.findAllByMemberId(member.getId()))
+                .thenReturn(List.of(preferredTheme1));
         when(studyThemeRepository.findAllByTheme(theme1))
                 .thenReturn(List.of(studyTheme1));
 
@@ -910,7 +918,7 @@ class StudyQueryServiceTest {
             studyQueryService.findInterestStudiesByConditionsSpecific(pageable, member.getId(), request, themeType,
                     sortBy);
         });
-        verify(memberThemeRepository).findAllByMemberId(member.getId());
+        verify(preferredThemeRepository).findAllByMemberId(member.getId());
         verify(studyThemeRepository).findAllByTheme(theme1);  // Ensure the correct theme is queried
         verify(studyRepository).countStudyByConditionsAndThemeTypesAndNotInIds(searchConditions, List.of(studyTheme1),
                 sortBy, studyIds);
@@ -924,7 +932,7 @@ class StudyQueryServiceTest {
         //given
         List<Study> studies = List.of(study1, study3);
 
-        when(memberThemeRepository.findAllByMemberId(any())).thenReturn(List.of(memberTheme1));
+        when(preferredThemeRepository.findAllByMemberId(any())).thenReturn(List.of(preferredTheme1));
         when(studyRepository.findStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any(), any()))
                 .thenReturn(studies);
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
@@ -948,7 +956,7 @@ class StudyQueryServiceTest {
         // given
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(2L);
@@ -974,7 +982,8 @@ class StudyQueryServiceTest {
         StudySortBy sortBy = StudySortBy.HIT;
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(3L);
@@ -1000,7 +1009,8 @@ class StudyQueryServiceTest {
         StudySortBy sortBy = StudySortBy.LIKED;
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(memberTheme1, memberTheme2));
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of(preferredTheme1,
+                preferredTheme2));
         when(studyThemeRepository.findAllByTheme(any())).thenReturn(List.of(studyTheme1, studyTheme2));
         when(studyRepository.countStudyByConditionsAndThemeTypesAndNotInIds(any(), any(), any(), any()))
                 .thenReturn(3L);
@@ -1028,7 +1038,7 @@ class StudyQueryServiceTest {
         StudySearchRequestDTO request = getStudySearchRequestDTO();
 
         when(memberRepository.existsById(member.getId())).thenReturn(true);
-        when(memberThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of());
+        when(preferredThemeRepository.findAllByMemberId(member.getId())).thenReturn(List.of());
 
         // when & then
         assertThrows(MemberHandler.class, () -> {
