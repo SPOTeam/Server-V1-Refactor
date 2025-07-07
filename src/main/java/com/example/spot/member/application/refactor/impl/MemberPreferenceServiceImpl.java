@@ -18,7 +18,6 @@ import com.example.spot.member.infrastructure.PreferredThemeRepository;
 import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import com.example.spot.study.domain.association.Region;
 import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.ThemeType;
 import com.example.spot.study.domain.repository.RegionRepository;
@@ -56,31 +55,18 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberUpdateDTO updateTheme(Long memberId, MemberRequestDTO.MemberThemeDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         // 테마 정보 조회
-        List<Theme> themes = requestDTO.getThemes().stream()
+        List<PreferredTheme> preferredThemes = requestDTO.getThemes().stream()
                 .map(themeRepository::getByThemeType)
-                .toList();
-
-        // MemberTheme 객체 생성
-        List<PreferredTheme> preferredThemes = themes.stream()
                 .map(theme -> PreferredTheme.of(member, theme))
                 .toList();
 
-        // 기존의 MemberTheme 삭제
-        if (preferredThemeRepository.existsByMemberId(member.getId())) {
-            preferredThemeRepository.deleteByMemberId(member.getId());
-        }
-
-        // 새로운 테마 정보 업데이트
-        preferredThemeRepository.saveAll(preferredThemes);
+        persistPreferredThemes(member, preferredThemes);
 
         // 업데이트된 회원 정보 반환
-        return MemberResponseDTO.MemberUpdateDTO.builder()
-                .memberId(member.getId())
-                .updatedAt(member.getUpdatedAt())
-                .build();
+        return toUpdateDTO(member);
     }
 
     /**
@@ -95,31 +81,18 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberUpdateDTO updateRegion(Long memberId, MemberRequestDTO.MemberRegionDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         // 지역 정보 조회
-        List<Region> regions = requestDTO.getRegions().stream()
+        List<PreferredRegion> preferredRegions = requestDTO.getRegions().stream()
                 .map(regionRepository::getByCode)
-                .toList();
-
-        // PreferredRegion 객체 생성
-        List<PreferredRegion> preferredRegions = regions.stream()
                 .map(region -> PreferredRegion.of(member, region))
                 .toList();
 
-        // 기존의 MemberTheme과 PreferredRegion 삭제
-        if (preferredRegionRepository.existsByMemberId(member.getId())) {
-            preferredRegionRepository.deleteByMemberId(member.getId());
-        }
-
-        // 새로운 PreferredRegion을 저장
-        preferredRegionRepository.saveAll(preferredRegions);
+        persistPreferredRegions(member, preferredRegions);
 
         // 업데이트된 회원 정보 반환
-        return MemberResponseDTO.MemberUpdateDTO.builder()
-                .memberId(member.getId())
-                .updatedAt(member.getUpdatedAt())
-                .build();
+        return toUpdateDTO(member);
     }
 
     /**
@@ -134,31 +107,18 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     public MemberResponseDTO.MemberUpdateDTO updateStudyReason(Long memberId,
                                                                MemberRequestDTO.MemberReasonDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         // 이유 정보 조회
-        List<Reason> reasons = requestDTO.getReasons().stream()
+        List<StudyJoinReason> studyJoinReasons = requestDTO.getReasons().stream()
                 .map(Reason::fromCode)
-                .toList();
-
-        // StudyReason 객체 생성
-        List<StudyJoinReason> studyJoinReasons = reasons.stream()
                 .map(reason -> StudyJoinReason.of(member, reason.getCode()))
                 .toList();
 
-        // 기존의 StudyReason 삭제
-        if (studyJoinReasonRepository.existsByMemberId(member.getId())) {
-            studyJoinReasonRepository.deleteByMemberId(member.getId());
-        }
-
-        // 새로운 StudyReason 저장
-        studyJoinReasonRepository.saveAll(studyJoinReasons);
+        persistStudyJoinReasons(member, studyJoinReasons);
 
         // 업데이트된 회원 정보 반환
-        return MemberResponseDTO.MemberUpdateDTO.builder()
-                .memberId(member.getId())
-                .updatedAt(member.getUpdatedAt())
-                .build();
+        return toUpdateDTO(member);
     }
 
     /**
@@ -171,13 +131,10 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
      */
     @Override
     public MemberResponseDTO.MemberThemeDTO getThemes(Long memberId) {
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         List<PreferredTheme> preferredThemes = preferredThemeRepository.findAllByMemberId(member.getId());
-
-        if (preferredThemes.isEmpty()) {
-            throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
-        }
+        validatePreferredThemeIsEmpty(preferredThemes);
 
         List<ThemeType> themeTypes = preferredThemes.stream()
                 .map(PreferredTheme::getTheme)
@@ -202,24 +159,21 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberRegionDTO getRegions(Long memberId) {
         // 회원 조회
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         List<PreferredRegion> preferredRegions = preferredRegionRepository.findAllByMemberId(member.getId());
-
-        // 회원의 지역 정보가 없을 경우
-        if (preferredRegions.isEmpty()) {
-            throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
-        }
+        validatePreferredRegionIsEmpty(preferredRegions);
 
         // 회원의 지역 정보 조회
         List<RegionDTO> codes = preferredRegions.stream()
                 .map(PreferredRegion::getRegion)
-                .map(region -> RegionDTO.builder()
-                        .province(region.getProvince())
-                        .district(region.getDistrict())
-                        .neighborhood(region.getNeighborhood())
-                        .code(region.getCode())
-                        .build())
+                .map(region ->
+                        RegionDTO.builder()
+                                .province(region.getProvince())
+                                .district(region.getDistrict())
+                                .neighborhood(region.getNeighborhood())
+                                .code(region.getCode())
+                                .build())
                 .toList();
 
         // 회원의 지역 정보 반환
@@ -240,14 +194,10 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberStudyReasonDTO getStudyReasons(Long memberId) {
         // 회원 조회
-        Member member = memberRepository.getById(memberId);
+        Member member = findMember(memberId);
 
         List<StudyJoinReason> studyJoinReasons = studyJoinReasonRepository.findAllByMemberId(member.getId());
-
-        // 회원의 스터디 참여 이유가 없을 경우
-        if (studyJoinReasons.isEmpty()) {
-            throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
-        }
+        validateStudyJoinReasonIsEmpty(studyJoinReasons);
 
         // 회원의 스터디 참여 이유 ID 조회
         List<Reason> reasons = studyJoinReasons.stream()
@@ -261,4 +211,57 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .reasons(reasons)
                 .build();
     }
+
+    private Member findMember(Long memberId) {
+        return memberRepository.getById(memberId);
+    }
+
+    private MemberResponseDTO.MemberUpdateDTO toUpdateDTO(Member member) {
+        return MemberResponseDTO.MemberUpdateDTO.builder()
+                .memberId(member.getId())
+                .updatedAt(member.getUpdatedAt())
+                .build();
+    }
+
+    private void persistPreferredThemes(Member member, List<PreferredTheme> preferredThemes) {
+        if (preferredThemeRepository.existsByMemberId(member.getId())) {
+            preferredThemeRepository.deleteByMemberId(member.getId());
+        }
+        preferredThemeRepository.saveAll(preferredThemes);
+    }
+
+    private void persistPreferredRegions(Member member, List<PreferredRegion> preferredRegions) {
+        if (preferredRegionRepository.existsByMemberId(member.getId())) {
+            preferredRegionRepository.deleteByMemberId(member.getId());
+        }
+        preferredRegionRepository.saveAll(preferredRegions);
+    }
+
+    private void persistStudyJoinReasons(Member member, List<StudyJoinReason> studyJoinReasons) {
+        if (studyJoinReasonRepository.existsByMemberId(member.getId())) {
+            studyJoinReasonRepository.deleteByMemberId(member.getId());
+        }
+        studyJoinReasonRepository.saveAll(studyJoinReasons);
+    }
+
+    private void validatePreferredThemeIsEmpty(List<PreferredTheme> preferredThemes) {
+        if (preferredThemes.isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
+        }
+    }
+
+    private void validatePreferredRegionIsEmpty(List<PreferredRegion> preferredRegions) {
+        // 회원의 지역 정보가 없을 경우
+        if (preferredRegions.isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
+        }
+    }
+
+    private void validateStudyJoinReasonIsEmpty(List<StudyJoinReason> studyJoinReasons) {
+        // 회원의 스터디 참여 이유가 없을 경우
+        if (studyJoinReasons.isEmpty()) {
+            throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
+        }
+    }
+
 }
