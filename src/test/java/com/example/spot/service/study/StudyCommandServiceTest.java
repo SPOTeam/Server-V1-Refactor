@@ -30,7 +30,6 @@ import com.example.spot.study.domain.repository.ThemeRepository;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -289,15 +288,12 @@ class StudyCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 

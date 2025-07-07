@@ -75,9 +75,6 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         // 새로운 MemberTheme과 PreferredRegion을 저장
         preferredThemeRepository.saveAll(preferredThemes);
 
-        // 회원 정보 업데이트
-        member.updateThemes(preferredThemes);
-
         // 회원 정보 저장
         memberRepository.save(member);
 
@@ -122,9 +119,6 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         // 새로운 PreferredRegion을 저장
         preferredRegionRepository.saveAll(preferredRegions);
 
-        // 회원 정보 업데이트
-        member.updateRegions(preferredRegions);
-
         // 회원 정보 저장
         memberRepository.save(member);
 
@@ -168,9 +162,6 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         // 새로운 StudyReason 저장
         studyJoinReasonRepository.saveAll(studyJoinReasons);
 
-        // 회원 정보 업데이트
-        member.updateReasons(studyJoinReasons);
-
         // 회원 정보 저장
         memberRepository.save(member);
 
@@ -194,11 +185,13 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        if (member.getPreferredThemeList().isEmpty()) {
+        List<PreferredTheme> preferredThemes = preferredThemeRepository.findAllByMemberId(member.getId());
+
+        if (preferredThemes.isEmpty()) {
             throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
         }
 
-        List<Theme> themes = member.getPreferredThemeList().stream()
+        List<Theme> themes = preferredThemes.stream()
                 .map(PreferredTheme::getTheme)
                 .toList();
 
@@ -227,13 +220,15 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
+        List<PreferredRegion> preferredRegions = preferredRegionRepository.findAllByMemberId(member.getId());
+
         // 회원의 지역 정보가 없을 경우
-        if (member.getRegions().isEmpty()) {
+        if (preferredRegions.isEmpty()) {
             throw new MemberHandler(ErrorStatus._MEMBER_REGION_NOT_FOUND);
         }
 
         // 회원의 지역 정보 조회
-        List<Region> regions = member.getPreferredRegionList().stream()
+        List<Region> regions = preferredRegions.stream()
                 .map(PreferredRegion::getRegion)
                 .toList();
 
@@ -268,13 +263,15 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
+        List<StudyJoinReason> studyJoinReasons = studyJoinReasonRepository.findAllByMemberId(member.getId());
+
         // 회원의 스터디 참여 이유가 없을 경우
-        if (member.getStudyJoinReasonList().isEmpty()) {
+        if (studyJoinReasons.isEmpty()) {
             throw new MemberHandler(ErrorStatus._MEMBER_STUDY_REASON_NOT_FOUND);
         }
 
         // 회원의 스터디 참여 이유 ID 조회
-        List<Long> reasonNums = member.getStudyJoinReasonList().stream()
+        List<Long> reasonNums = studyJoinReasons.stream()
                 .map(StudyJoinReason::getReason)
                 .toList();
 

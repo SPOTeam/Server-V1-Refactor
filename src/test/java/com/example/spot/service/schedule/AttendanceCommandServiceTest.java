@@ -27,7 +27,6 @@ import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -561,15 +560,12 @@ class AttendanceCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -615,7 +611,6 @@ class AttendanceCommandServiceTest {
                 .member(owner)
                 .build();
         study.addSchedule(schedule);
-        owner.addSchedule(schedule);
     }
 
     private static void initQuiz() {

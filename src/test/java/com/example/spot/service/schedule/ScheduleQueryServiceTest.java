@@ -22,7 +22,6 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -220,15 +219,12 @@ class ScheduleQueryServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -294,7 +290,6 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.NONE)
                 .build();
         study1.addSchedule(schedule1);
-        owner.addSchedule(schedule1);
 
         schedule2 = Schedule.builder()
                 .id(2L)
@@ -306,7 +301,6 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.MONTHLY)
                 .build();
         study1.addSchedule(schedule2);
-        member1.addSchedule(schedule2);
 
         schedule3 = Schedule.builder()
                 .id(3L)
@@ -318,7 +312,6 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.WEEKLY)
                 .build();
         study2.addSchedule(schedule3);
-        member2.addSchedule(schedule3);
     }
 
     private static void getAuthentication(Long memberId) {

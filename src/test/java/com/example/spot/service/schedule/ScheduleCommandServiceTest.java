@@ -27,7 +27,6 @@ import com.example.spot.study.domain.repository.StudyMemberRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -148,7 +147,6 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
@@ -241,7 +239,6 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
@@ -285,7 +282,6 @@ class ScheduleCommandServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("수정된 일정");
         assertThat(study1.getSchedules()).isNotEmpty();
-        assertThat(member1.getScheduleList()).isNotEmpty();
         verify(scheduleRepository, times(1)).save(any(Schedule.class));
     }
 
@@ -365,7 +361,6 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study.addSchedule(schedule);
-        member.addSchedule(schedule);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study));
@@ -378,15 +373,12 @@ class ScheduleCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 

@@ -109,7 +109,6 @@ public class StudyCommandServiceImpl implements StudyCommandService {
                 .status(StudyApplicationStatus.APPLIED)
                 .build();
 
-        member.addMemberStudy(studyMember);
         study.addMemberStudy(studyMember);
         studyMemberRepository.save(studyMember);
 
@@ -250,7 +249,6 @@ public class StudyCommandServiceImpl implements StudyCommandService {
                 .status(StudyApplicationStatus.APPROVED)
                 .build();
 
-        member.addMemberStudy(studyMember);
         study.addMemberStudy(studyMember);
         studyMemberRepository.save(studyMember);
 

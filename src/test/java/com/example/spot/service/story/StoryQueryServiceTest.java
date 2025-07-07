@@ -28,7 +28,6 @@ import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -535,24 +534,12 @@ class StoryQueryServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
     }
 
@@ -582,7 +569,6 @@ class StoryQueryServiceTest {
                 .member(owner)
                 .study(study)
                 .build();
-        owner.addMemberStudy(ownerStudy);
         study.addMemberStudy(ownerStudy);
 
         member1Study = StudyMember.builder()
@@ -593,7 +579,6 @@ class StoryQueryServiceTest {
                 .member(member1)
                 .study(study)
                 .build();
-        member1.addMemberStudy(member1Study);
         study.addMemberStudy(member1Study);
     }
 
@@ -610,7 +595,6 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        member1.addStudyPost(story1);
         study.addStudyPost(story1);
 
         story2 = Story.builder()
@@ -625,7 +609,6 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(story2);
         study.addStudyPost(story2);
 
         story3 = Story.builder()
@@ -640,7 +623,6 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(story3);
         study.addStudyPost(story3);
 
         for (int i = 0; i < 10; i++) {
@@ -656,7 +638,6 @@ class StoryQueryServiceTest {
                 .build();
         story1.addLikedPost(likedStory);
         story1.plusLikeNum();
-        owner.addStudyLikedPost(likedStory);
     }
 
     private static void initStudyPostComment() {
@@ -697,7 +678,6 @@ class StoryQueryServiceTest {
                 .build();
         studyPost1Comment2.addLikedComment(likedStoryComment);
         studyPost1Comment2.plusLikeCount();
-        member1.addStudyLikedComment(likedStoryComment);
 
         studyDislikedComment = LikedStoryComment.builder()
                 .id(2L)
@@ -707,6 +687,5 @@ class StoryQueryServiceTest {
                 .build();
         studyPost1Comment2.addLikedComment(studyDislikedComment);
         studyPost1Comment2.plusDislikeCount();
-        owner.addStudyLikedComment(studyDislikedComment);
     }
 }

@@ -74,7 +74,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
         // Option 저장
         vote = createOption(vote, voteDTO);
         // 연관관계 매핑
-        loginMember.addVote(vote);
         study.addVote(vote);
 
         return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
@@ -157,7 +156,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
                             .build();
 
                     voteParticipant = voteParticipantRepository.save(voteParticipant);
-                    loginMember.addMemberVote(voteParticipant);
                     votedVoteOption.addMemberVote(voteParticipant);
 
                     return voteParticipant;
@@ -218,7 +216,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
         vote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
         vote = voteRepository.save(vote);
-        loginMember.updateVote(vote);
         study.updateVote(vote);
 
         return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
@@ -258,7 +255,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
         //=== Feature ===//
         deleteOptions(voteId);
-        loginMember.deleteVote(vote);
         study.deleteVote(vote);
         voteRepository.delete(vote);
 

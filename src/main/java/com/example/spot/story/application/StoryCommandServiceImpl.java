@@ -117,7 +117,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         }
 
         story = storyRepository.save(story);
-        member.addStudyPost(story);
         study.addStudyPost(story);
 
         // 이미지가 있는 경우 이미지 저장
@@ -157,7 +156,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
             }
         }
 
-        member.updateStudyPost(story);
         study.updateStudyPost(story);
 
         return StoryResponseDTO.StoryPreviewDTO.toDTO(story);
@@ -259,7 +257,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
             likedStoryRepository.deleteAllByStoryId(postId);
             storyReportRepository.deleteAllByStoryId(postId);
 
-            member.deleteStudyPost(story);
             study.deleteStudyPost(story);
             storyRepository.delete(story);
 
@@ -312,7 +309,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
                 .build();
 
         likedStory = likedStoryRepository.save(likedStory);
-        member.addStudyLikedPost(likedStory);
         story.addLikedPost(likedStory);
 
         story.plusLikeNum();
@@ -355,7 +351,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         LikedStory likedStory = likedStoryRepository.findByMemberIdAndStoryId(memberId, postId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_LIKED_POST_NOT_FOUND));
 
-        member.deleteStudyLikedPost(likedStory);
         story.deleteLikedPost(likedStory);
         story.minusLikeNum();
         likedStoryRepository.delete(likedStory);
@@ -419,7 +414,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         storyRepository.save(story);
 
         story.addComment(storyComment);
-        member.addComment(storyComment);
 
         return StoryCommentResponseDTO.CommentDTO.toDTO(storyComment, "익명" + anonymousNum, defaultImage);
     }
@@ -481,7 +475,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         storyRepository.save(story);
 
         story.addComment(storyComment);
-        member.addComment(storyComment);
         parentComment.addChildrenComment(storyComment);
 
         return StoryCommentResponseDTO.CommentDTO.toDTO(storyComment, "익명" + anonymousNum, defaultImage);
@@ -569,7 +562,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         }
         storyComment.deleteComment();
         story.updateComment(storyComment);
-        member.updateComment(storyComment);
 
         storyCommentRepository.save(storyComment);
         return new StoryCommentResponseDTO.CommentIdDTO(commentId);
@@ -655,7 +647,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
                 .build();
 
         likedStoryComment = likedStoryCommentRepository.save(likedStoryComment);
-        member.addStudyLikedComment(likedStoryComment);
         storyComment.addLikedComment(likedStoryComment);
 
         if (likedStoryComment.getIsLiked()) {
@@ -748,7 +739,6 @@ public class StoryCommandServiceImpl implements StoryCommandService {
         }
 
         //=== Feature ===//
-        member.deleteStudyLikedComment(likedStoryComment);
         storyComment.deleteLikedComment(likedStoryComment);
 
         if (likedStoryComment.getIsLiked()) {

@@ -111,7 +111,6 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
 
         scheduleRepository.save(schedule);
         study.addSchedule(schedule);
-        member.addSchedule(schedule);
 
         return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
@@ -160,7 +159,6 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
         schedule = scheduleRepository.save(schedule);
 
         study.updateSchedule(schedule);
-        member.updateSchedule(schedule);
 
         return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
@@ -254,7 +252,6 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
 
         quiz = quizRepository.save(quiz);
         schedule.addQuiz(quiz);
-        member.addQuiz(quiz);
 
         return QuizResponseDTO.QuestionDTO.toDTO(quiz);
     }
@@ -325,7 +322,6 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
         }
 
         QuizSubmission quizSubmission = new QuizSubmission(isCorrect);
-        member.addMemberAttendance(quizSubmission);
         quiz.addMemberAttendance(quizSubmission);
         quizSubmission = quizSubmissionRepository.save(quizSubmission);
 

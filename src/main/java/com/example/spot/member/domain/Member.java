@@ -1,26 +1,11 @@
 package com.example.spot.member.domain;
 
-import com.example.spot.comment.domain.association.LikedPostComment;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.member.domain.association.PreferredRegion;
-import com.example.spot.member.domain.association.PreferredTheme;
-import com.example.spot.member.domain.association.StudyJoinReason;
 import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
-import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.association.Quiz;
-import com.example.spot.schedule.domain.association.QuizSubmission;
-import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.association.LikedStory;
-import com.example.spot.story.domain.association.LikedStoryComment;
-import com.example.spot.story.domain.association.StoryComment;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.vote.domain.Vote;
-import com.example.spot.vote.domain.association.VoteParticipant;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,11 +13,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -112,162 +94,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    //== 스터디 희망사유 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<StudyJoinReason> studyJoinReasonList = new ArrayList<>();
-
-//    //== 알림 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<Notification> notificationList = new ArrayList<>();
-
-//    //== 해당 회원에 대한 신고 내역 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    @Builder.Default
-//    private List<MemberReport> memberReportList = new ArrayList<>();
-
-    //== 회원이 선호하는 테마 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PreferredTheme> preferredThemeList = new ArrayList<>();
-
-    //== 회원의 출석 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<QuizSubmission> quizSubmissionList = new ArrayList<>();
-
-    //== 회원이 참여하는 스터디 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<StudyMember> studyMemberList = new ArrayList<>();
-
-//    //== 회원이 찜한 스터디 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<PreferredStudy> preferredStudyList = new ArrayList<>();
-
-    //== 회원이 선호하는 지역 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PreferredRegion> preferredRegionList = new ArrayList<>();
-
-//    /// /== 회원이 작성한 게시글 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<Post> postList = new ArrayList<>();
-
-//    /// /== 회원이 좋아요한 게시글 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<LikedPost> likedPostList = new ArrayList<>();
-
-//    /// /== 회원이 선호하는 지역 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<PostReport> postReportList = new ArrayList<>();
-
-//    /// /== 회원이 스크랩한 게시글 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<MemberScrap> memberScrapList = new ArrayList<>();
-//
-//    /// /== 회원이 작성한 게시글 댓글 목록 ==//
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<PostComment> postCommentList = new ArrayList<>();
-
-    /// /== 회원이 좋아요한 게시글 댓글 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<LikedPostComment> likedCommentList = new ArrayList<>();
-
-    //== 회원이 작성한 스터디 게시글 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Story> storyList = new ArrayList<>();
-
-    //== 회원이 좋아요한 스터디 게시글 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<LikedStory> likedStoryList = new ArrayList<>();
-
-    //== 회원이 작성한 스터디 게시글 댓글 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<StoryComment> storyCommentList = new ArrayList<>();
-
-    //== 회원이 좋아요한 게시글 댓글 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<LikedStoryComment> likedStoryCommentList = new ArrayList<>();
-
-    //== 회원이 생성한 투표 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Vote> voteList = new ArrayList<>();
-
-    //== 회원이 투표한 항목 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<VoteParticipant> voteParticipantList = new ArrayList<>();
-
-    //== 회원이 선호하는 지역 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PreferredRegion> regions = new ArrayList<>();
-
-    //== 회원이 생성한 스터디 퀴즈 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Quiz> quizList = new ArrayList<>();
-
-    //== 회원이 생성한 스터디 일정 목록 ==//
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Schedule> scheduleList = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Builder.Default
-//    private List<ToDo> toDos = new ArrayList<>();
-
-    /* ----------------------------- 연관관계 메소드 ------------------------------------- */
-
-    public void addMemberStudy(StudyMember studyMember) {
-        studyMemberList.add(studyMember);
-        studyMember.setMember(this);
-    }
-
-    public void addMemberAttendance(QuizSubmission quizSubmission) {
-        if (this.quizSubmissionList == null) {
-            this.quizSubmissionList = new ArrayList<>();
-        }
-        this.quizSubmissionList.add(quizSubmission);
-        quizSubmission.setMember(this);
-    }
-
-    public void addVote(Vote vote) {
-        if (this.voteList == null) {
-            this.voteList = new ArrayList<>();
-        }
-        this.voteList.add(vote);
-        vote.setMember(this);
-    }
-
-    public void updateThemes(List<PreferredTheme> preferredThemes) {
-        this.preferredThemeList.clear();
-        this.preferredThemeList.addAll(preferredThemes);
-    }
-
-    public void updateRegions(List<PreferredRegion> preferredRegions) {
-        this.preferredRegionList.clear();
-        this.preferredRegionList.addAll(preferredRegions);
-    }
-
-    public void updateReasons(List<StudyJoinReason> studyJoinReasons) {
-        this.studyJoinReasonList.clear();
-        this.studyJoinReasonList.addAll(studyJoinReasons);
-    }
 
     public void updateTerm(Boolean personalInfo, Boolean idInfo) {
         this.personalInfo = personalInfo;
@@ -286,85 +112,6 @@ public class Member extends BaseEntity {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public void addStudyPost(Story story) {
-        if (this.storyList == null) {
-            this.storyList = new ArrayList<>();
-        }
-        this.storyList.add(story);
-        story.setMember(this);
-    }
-
-    public void addStudyLikedComment(LikedStoryComment likedStoryComment) {
-        if (this.likedCommentList == null) {
-            this.likedCommentList = new ArrayList<>();
-        }
-        this.likedStoryCommentList.add(likedStoryComment);
-        likedStoryComment.setMember(this);
-    }
-
-    public void addMemberVote(VoteParticipant voteParticipant) {
-        if (this.voteParticipantList == null) {
-            this.voteParticipantList = new ArrayList<>();
-        }
-        this.voteParticipantList.add(voteParticipant);
-        voteParticipant.setMember(this);
-    }
-
-    public void updateVote(Vote vote) {
-        voteList.set(voteList.indexOf(vote), vote);
-    }
-
-    public void deleteStudyPost(Story story) {
-        this.storyList.remove(story);
-    }
-
-    public void updateStudyPost(Story story) {
-        storyList.set(storyList.indexOf(story), story);
-    }
-
-    public void updateComment(StoryComment storyComment) {
-        storyCommentList.set(storyCommentList.indexOf(storyComment), storyComment);
-    }
-
-    public void addStudyLikedPost(LikedStory likedStory) {
-        if (this.likedStoryList == null) {
-            this.likedStoryList = new ArrayList<>();
-        }
-        this.likedStoryList.add(likedStory);
-        likedStory.setMember(this);
-    }
-
-    public void deleteStudyLikedPost(LikedStory likedStory) {
-        this.likedStoryList.remove(likedStory);
-    }
-
-    public void deleteStudyLikedComment(LikedStoryComment likedStoryComment) {
-        this.likedStoryCommentList.remove(likedStoryComment);
-    }
-
-    public void addComment(StoryComment storyComment) {
-        this.storyCommentList.add(storyComment);
-    }
-
-    public void deleteVote(Vote vote) {
-        this.voteList.remove(vote);
-    }
-
-    public void addQuiz(Quiz quiz) {
-        this.quizList.add(quiz);
-        quiz.setMember(this);
-    }
-
-    public void addSchedule(Schedule schedule) {
-        this.scheduleList.add(schedule);
-        schedule.setMember(this);
-
-    }
-
-    public void updateSchedule(Schedule schedule) {
-        scheduleList.set(scheduleList.indexOf(schedule), schedule);
     }
 
     public void toAdmin() {
