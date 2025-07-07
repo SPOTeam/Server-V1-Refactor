@@ -12,11 +12,11 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.member.domain.association.MemberThemeRepository;
-import com.example.spot.member.domain.association.PreferredRegionRepository;
-import com.example.spot.member.domain.association.StudyJoinReasonRepository;
 import com.example.spot.member.domain.enums.LoginType;
+import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.MemberThemeRepository;
+import com.example.spot.member.infrastructure.PreferredRegionRepository;
+import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityManager;
@@ -234,9 +234,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
      */
     private void saveRefreshToken(Member member, TokenResponseDTO.TokenDTO token) {
         // 기존 리프레시 토큰 삭제
-		if (refreshTokenRepository.existsByMemberId(member.getId())) {
-			refreshTokenRepository.deleteAllByMemberId(member.getId());
-		}
+        if (refreshTokenRepository.existsByMemberId(member.getId())) {
+            refreshTokenRepository.deleteAllByMemberId(member.getId());
+        }
 
         // DB에 저장하기 위한 새로운 리프레시 토큰 객체 생성
         RefreshToken refreshToken = RefreshToken.builder()

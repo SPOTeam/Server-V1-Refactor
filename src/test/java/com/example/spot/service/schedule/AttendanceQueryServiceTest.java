@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.ScheduleRepository;

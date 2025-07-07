@@ -12,7 +12,7 @@ import com.example.spot.comment.domain.association.LikedPostCommentRepository;
 import com.example.spot.comment.presentation.dto.CommentResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;

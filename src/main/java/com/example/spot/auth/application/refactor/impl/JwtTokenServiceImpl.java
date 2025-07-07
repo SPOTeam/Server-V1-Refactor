@@ -8,7 +8,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,9 +51,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 회원의 리프레시 토큰과 요청된 리프레시 토큰 비교
-		if (!Objects.equals(member.getId(), memberIdByToken)) {
-			throw new GeneralException(ErrorStatus._INVALID_JWT);
-		}
+        if (!Objects.equals(member.getId(), memberIdByToken)) {
+            throw new GeneralException(ErrorStatus._INVALID_JWT);
+        }
 
         // 토큰 재발급
         TokenResponseDTO.TokenDTO tokenDTO = jwtTokenProvider.reissueToken(refreshToken);
@@ -65,9 +65,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .build();
 
         // 기존 리프레시 토큰 삭제
-		if (refreshTokenRepository.existsByMemberId(member.getId())) {
-			refreshTokenRepository.deleteByMemberId(member.getId());
-		}
+        if (refreshTokenRepository.existsByMemberId(member.getId())) {
+            refreshTokenRepository.deleteByMemberId(member.getId());
+        }
 
         // 새로운 리프레시 토큰 저장
         refreshTokenRepository.save(token);

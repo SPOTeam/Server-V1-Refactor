@@ -1,5 +1,6 @@
-package com.example.spot.member.domain;
+package com.example.spot.member.infrastructure;
 
+import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 import java.time.LocalDateTime;
 import java.util.List;

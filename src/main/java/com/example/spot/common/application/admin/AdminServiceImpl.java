@@ -6,7 +6,7 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.presentation.dto.admin.AdminResponseDTO;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

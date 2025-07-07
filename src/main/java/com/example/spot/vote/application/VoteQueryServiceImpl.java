@@ -4,7 +4,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;

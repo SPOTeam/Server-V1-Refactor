@@ -1,5 +1,6 @@
-package com.example.spot.member.domain.association;
+package com.example.spot.member.infrastructure;
 
+import com.example.spot.member.domain.association.PreferredRegion;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

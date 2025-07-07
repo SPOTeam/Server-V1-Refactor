@@ -15,7 +15,7 @@ import com.example.spot.comment.presentation.dto.CommentCreateResponse;
 import com.example.spot.comment.presentation.dto.CommentLikeResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.impl.LikePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.LikePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostCommentUseCaseImpl;

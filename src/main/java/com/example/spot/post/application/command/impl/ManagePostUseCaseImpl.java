@@ -7,7 +7,7 @@ import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.common.presentation.dto.util.response.ImageResponse.ImageUploadResponse;
 import com.example.spot.common.presentation.dto.util.response.ImageResponse.Images;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.ManagePostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;

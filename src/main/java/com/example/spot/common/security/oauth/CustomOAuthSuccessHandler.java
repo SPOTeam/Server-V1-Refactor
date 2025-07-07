@@ -9,7 +9,7 @@ import com.example.spot.common.security.oauth.adpter.CustomOAuth2User;
 import com.example.spot.common.security.oauth.adpter.google.GoogleUserInfo;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
