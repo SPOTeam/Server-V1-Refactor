@@ -26,7 +26,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PreferredTheme extends BaseEntity {
 
     @Id
@@ -46,4 +46,10 @@ public class PreferredTheme extends BaseEntity {
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
 
+    public static PreferredTheme of(Member member, Theme theme) {
+        return PreferredTheme.builder()
+                .member(member)
+                .theme(theme)
+                .build();
+    }
 }

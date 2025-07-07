@@ -1,5 +1,8 @@
 package com.example.spot.member.application.refactor.impl;
 
+import static com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.RegionDTO;
+import static com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.builder;
+
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -53,18 +56,16 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberUpdateDTO updateTheme(Long memberId, MemberRequestDTO.MemberThemeDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         // 테마 정보 조회
         List<Theme> themes = requestDTO.getThemes().stream()
-                .map(themeType -> themeRepository.findByThemeType(themeType)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus._THEME_NOT_FOUND)))
+                .map(themeRepository::getByThemeType)
                 .toList();
 
         // MemberTheme 객체 생성
         List<PreferredTheme> preferredThemes = themes.stream()
-                .map(theme -> PreferredTheme.builder().member(member).theme(theme).build())
+                .map(theme -> PreferredTheme.of(member, theme))
                 .toList();
 
         // 기존의 MemberTheme 삭제
@@ -72,11 +73,8 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
             preferredThemeRepository.deleteByMemberId(member.getId());
         }
 
-        // 새로운 MemberTheme과 PreferredRegion을 저장
+        // 새로운 테마 정보 업데이트
         preferredThemeRepository.saveAll(preferredThemes);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
 
         // 업데이트된 회원 정보 반환
         return MemberResponseDTO.MemberUpdateDTO.builder()
@@ -97,18 +95,16 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberUpdateDTO updateRegion(Long memberId, MemberRequestDTO.MemberRegionDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         // 지역 정보 조회
         List<Region> regions = requestDTO.getRegions().stream()
-                .map(regionCode -> regionRepository.findByCode(regionCode)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus._REGION_NOT_FOUND)))
+                .map(regionRepository::getByCode)
                 .toList();
 
         // PreferredRegion 객체 생성
         List<PreferredRegion> preferredRegions = regions.stream()
-                .map(region -> PreferredRegion.builder().member(member).region(region).build())
+                .map(region -> PreferredRegion.of(member, region))
                 .toList();
 
         // 기존의 MemberTheme과 PreferredRegion 삭제
@@ -118,9 +114,6 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
 
         // 새로운 PreferredRegion을 저장
         preferredRegionRepository.saveAll(preferredRegions);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
 
         // 업데이트된 회원 정보 반환
         return MemberResponseDTO.MemberUpdateDTO.builder()
@@ -141,8 +134,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     public MemberResponseDTO.MemberUpdateDTO updateStudyReason(Long memberId,
                                                                MemberRequestDTO.MemberReasonDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         // 이유 정보 조회
         List<Reason> reasons = requestDTO.getReasons().stream()
@@ -151,7 +143,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
 
         // StudyReason 객체 생성
         List<StudyJoinReason> studyJoinReasons = reasons.stream()
-                .map(reason -> StudyJoinReason.builder().member(member).reason(reason.getCode()).build())
+                .map(reason -> StudyJoinReason.of(member, reason.getCode()))
                 .toList();
 
         // 기존의 StudyReason 삭제
@@ -161,9 +153,6 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
 
         // 새로운 StudyReason 저장
         studyJoinReasonRepository.saveAll(studyJoinReasons);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
 
         // 업데이트된 회원 정보 반환
         return MemberResponseDTO.MemberUpdateDTO.builder()
@@ -182,8 +171,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
      */
     @Override
     public MemberResponseDTO.MemberThemeDTO getThemes(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         List<PreferredTheme> preferredThemes = preferredThemeRepository.findAllByMemberId(member.getId());
 
@@ -191,11 +179,8 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
             throw new MemberHandler(ErrorStatus._MEMBER_THEME_NOT_FOUND);
         }
 
-        List<Theme> themes = preferredThemes.stream()
+        List<ThemeType> themeTypes = preferredThemes.stream()
                 .map(PreferredTheme::getTheme)
-                .toList();
-
-        List<ThemeType> themeTypes = themes.stream()
                 .map(Theme::getThemeType)
                 .toList();
 
@@ -217,8 +202,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberRegionDTO getRegions(Long memberId) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         List<PreferredRegion> preferredRegions = preferredRegionRepository.findAllByMemberId(member.getId());
 
@@ -228,13 +212,9 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         }
 
         // 회원의 지역 정보 조회
-        List<Region> regions = preferredRegions.stream()
+        List<RegionDTO> codes = preferredRegions.stream()
                 .map(PreferredRegion::getRegion)
-                .toList();
-
-        // 지역 정보 DTO로 변환
-        List<MemberResponseDTO.MemberRegionDTO.RegionDTO> codes = regions.stream()
-                .map(region -> MemberResponseDTO.MemberRegionDTO.RegionDTO.builder()
+                .map(region -> RegionDTO.builder()
                         .province(region.getProvince())
                         .district(region.getDistrict())
                         .neighborhood(region.getNeighborhood())
@@ -243,7 +223,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
                 .toList();
 
         // 회원의 지역 정보 반환
-        return MemberResponseDTO.MemberRegionDTO.builder()
+        return builder()
                 .memberId(member.getId())
                 .regions(codes)
                 .build();
@@ -260,8 +240,7 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
     @Override
     public MemberResponseDTO.MemberStudyReasonDTO getStudyReasons(Long memberId) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         List<StudyJoinReason> studyJoinReasons = studyJoinReasonRepository.findAllByMemberId(member.getId());
 
@@ -271,12 +250,8 @@ public class MemberPreferenceServiceImpl implements MemberPreferenceService {
         }
 
         // 회원의 스터디 참여 이유 ID 조회
-        List<Long> reasonNums = studyJoinReasons.stream()
+        List<Reason> reasons = studyJoinReasons.stream()
                 .map(StudyJoinReason::getReason)
-                .toList();
-
-        // 이유 ID를 이유 객체로 변환
-        List<Reason> reasons = reasonNums.stream()
                 .map(Reason::fromCode)
                 .toList();
 

@@ -1,6 +1,5 @@
 package com.example.spot.member.application.refactor.impl;
 
-import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.application.refactor.MemberInfoService;
 import com.example.spot.member.domain.Member;
@@ -31,14 +30,10 @@ public class MemberInfoServiceImpl implements MemberInfoService {
     @Override
     public MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberRequestDTO.MemberUpdateDTO requestDTO) {
         // 회원 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Member member = memberRepository.getById(memberId);
 
         // 회원 정보 업데이트
         member.updateInfo(requestDTO);
-
-        // 회원 정보 저장
-        memberRepository.save(member);
 
         // 업데이트된 회원 정보 반환
         return MemberResponseDTO.MemberUpdateDTO.builder()
