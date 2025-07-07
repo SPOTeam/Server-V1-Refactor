@@ -4,7 +4,7 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.application.refactor.MemberInfoService;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.presentation.dto.MemberRequestDTO;
+import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +28,25 @@ public class MemberInfoServiceImpl implements MemberInfoService {
      * @throws MemberHandler 회원을 찾을 수 없을 경우
      */
     @Override
-    public MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberRequestDTO.MemberUpdateDTO requestDTO) {
+    public MemberResponseDTO.MemberUpdateDTO updateProfile(Long memberId, MemberUpdateDTO requestDTO) {
         // 회원 조회
         Member member = memberRepository.getById(memberId);
 
         // 회원 정보 업데이트
-        member.updateInfo(requestDTO);
+        member.updateInfo(
+                requestDTO.getName(),
+                requestDTO.getPhone(),
+                requestDTO.getBirth(),
+                requestDTO.getCarrier(),
+                requestDTO.isIdInfo(),
+                requestDTO.isPersonalInfo(),
+                requestDTO.getProfileImage());
 
         // 업데이트된 회원 정보 반환
+        return toUpdateDTO(member);
+    }
+
+    private MemberResponseDTO.MemberUpdateDTO toUpdateDTO(Member member) {
         return MemberResponseDTO.MemberUpdateDTO.builder()
                 .memberId(member.getId())
                 .updatedAt(member.getUpdatedAt())

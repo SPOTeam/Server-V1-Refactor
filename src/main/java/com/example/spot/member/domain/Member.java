@@ -5,7 +5,6 @@ import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
-import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -100,14 +99,16 @@ public class Member extends BaseEntity {
         this.idInfo = idInfo;
     }
 
-    public void updateInfo(MemberUpdateDTO req) {
-        this.name = req.getName();
-        this.phone = req.getPhone();
-        this.birth = req.getBirth();
-        this.carrier = req.getCarrier();
-        this.idInfo = req.isIdInfo();
-        this.personalInfo = req.isPersonalInfo();
-        this.profileImage = req.getProfileImage();
+    public void updateInfo(
+            String name, String phone, LocalDate birth,
+            Carrier carrier, Boolean idInfo, Boolean personalInfo, String profileImage) {
+        this.name = name;
+        this.phone = phone;
+        this.birth = birth;
+        this.carrier = carrier;
+        this.idInfo = idInfo;
+        this.personalInfo = personalInfo;
+        this.profileImage = profileImage;
     }
 
     public void updateProfileImage(String profileImage) {
