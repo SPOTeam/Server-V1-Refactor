@@ -5,7 +5,7 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
@@ -18,11 +18,10 @@ import com.example.spot.vote.domain.repository.VoteOptionRepository;
 import com.example.spot.vote.domain.repository.VoteParticipantRepository;
 import com.example.spot.vote.presentation.dto.request.StudyVoteRequestDTO;
 import com.example.spot.vote.presentation.dto.response.StudyVoteResponseDTO;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -40,6 +39,7 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
     /**
      * 스터디 투표를 생성하는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
      * @param voteDTO 생성할 투표의 제목, 항목 목록, 중복 선택 가능 여부, 종료 일시를 입력 받습니다.
      * @return 생성된 투표의 아이디와 제목을 반환합니다.
@@ -74,16 +74,15 @@ public class VoteCommandServiceImpl implements VoteCommandService {
         // Option 저장
         vote = createOption(vote, voteDTO);
         // 연관관계 매핑
-        loginMember.addVote(vote);
         study.addVote(vote);
 
         return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }
 
     /**
-     * 스터디 투표의 항목을 생성하는 메서드입니다.
-     * createVote 메서드 내부에서 사용되는 메서드입니다.
-     * @param vote 항목을 생성할 타겟 투표를 입력 받습니다.
+     * 스터디 투표의 항목을 생성하는 메서드입니다. createVote 메서드 내부에서 사용되는 메서드입니다.
+     *
+     * @param vote    항목을 생성할 타겟 투표를 입력 받습니다.
      * @param voteDTO 생성할 투표의 제목, 항목 목록, 중복 선택 가능 여부, 종료 일시를 입력 받습니다.
      * @return 투표 객체를 반환합니다.
      */
@@ -102,13 +101,15 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
     /**
      * 특정 항목에 투표하기 위한 메서드입니다.
-     * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 타겟 투표의 아이디를 입력 받습니다.
+     *
+     * @param studyId        타겟 스터디의 아이디를 입력 받습니다.
+     * @param voteId         타겟 투표의 아이디를 입력 받습니다.
      * @param votedOptionDTO 회원이 투표한 항목의 아이디 목록을 입력 받습니다.
      * @return 투표 아이디, 회원 아이디, 투표한 항목 목록을 반환합니다.
      */
     @Override
-    public StudyVoteResponseDTO.VotedOptionDTO vote(Long studyId, Long voteId, StudyVoteRequestDTO.VotedOptionDTO votedOptionDTO) {
+    public StudyVoteResponseDTO.VotedOptionDTO vote(Long studyId, Long voteId,
+                                                    StudyVoteRequestDTO.VotedOptionDTO votedOptionDTO) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -135,8 +136,9 @@ public class VoteCommandServiceImpl implements VoteCommandService {
         // 한 번 참여한 투표는 다시 참여할 수 없음
         voteOptionRepository.findAllByVoteId(voteId)
                 .forEach(option -> {
-                    if (voteParticipantRepository.existsByMemberIdAndVoteOptionId(loginMember.getId(), option.getId())) {
-                            throw new StudyHandler(ErrorStatus._STUDY_VOTE_RE_PARTICIPATION_INVALID);
+                    if (voteParticipantRepository.existsByMemberIdAndVoteOptionId(loginMember.getId(),
+                            option.getId())) {
+                        throw new StudyHandler(ErrorStatus._STUDY_VOTE_RE_PARTICIPATION_INVALID);
                     }
                 });
 
@@ -154,7 +156,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
                             .build();
 
                     voteParticipant = voteParticipantRepository.save(voteParticipant);
-                    loginMember.addMemberVote(voteParticipant);
                     votedVoteOption.addMemberVote(voteParticipant);
 
                     return voteParticipant;
@@ -166,13 +167,15 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
     /**
      * 투표를 편집하는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 편집할 투표의 아이디를 입력 받습니다.
+     * @param voteId  편집할 투표의 아이디를 입력 받습니다.
      * @param voteDTO 편집된 투표의 제목, 항목 목록, 복수 선택 가능 여부, 종료 일시를 입력 받습니다.
      * @return 편집된 투표의 아이디와 제목을 반환합니다.
      */
     @Override
-    public StudyVoteResponseDTO.VotePreviewDTO updateVote(Long studyId, Long voteId, StudyVoteRequestDTO.VoteUpdateDTO voteDTO) {
+    public StudyVoteResponseDTO.VotePreviewDTO updateVote(Long studyId, Long voteId,
+                                                          StudyVoteRequestDTO.VoteUpdateDTO voteDTO) {
 
         //=== Exception ===//
         Long memberId = SecurityUtils.getCurrentUserId();
@@ -213,7 +216,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
         vote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
         vote = voteRepository.save(vote);
-        loginMember.updateVote(vote);
         study.updateVote(vote);
 
         return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
@@ -221,8 +223,9 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
     /**
      * 투표를 삭제하는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 삭제할 투표의 아이디를 입력 받습니다.
+     * @param voteId  삭제할 투표의 아이디를 입력 받습니다.
      * @return 삭제된 투표의 아이디와 제목을 반환합니다.
      */
     @Override
@@ -252,7 +255,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
         //=== Feature ===//
         deleteOptions(voteId);
-        loginMember.deleteVote(vote);
         study.deleteVote(vote);
         voteRepository.delete(vote);
 
@@ -260,8 +262,8 @@ public class VoteCommandServiceImpl implements VoteCommandService {
     }
 
     /**
-     * 모든 투표 항목을 삭제하는 메서드입니다.
-     * deleteVote 메서드 내부에서 호출되는 메서드입니다.
+     * 모든 투표 항목을 삭제하는 메서드입니다. deleteVote 메서드 내부에서 호출되는 메서드입니다.
+     *
      * @param voteId 항목을 삭제할 타겟 투표의 아이디를 입력 받습니다.
      */
     private void deleteOptions(Long voteId) {

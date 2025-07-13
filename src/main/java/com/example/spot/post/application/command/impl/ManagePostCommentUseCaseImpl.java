@@ -8,7 +8,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.ManagePostCommentUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
@@ -27,11 +27,12 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
 
     /**
      * 게시글에 댓글을 생성합니다.
-     * @param postId 댓글을 작성할 게시글 ID
+     *
+     * @param postId   댓글을 작성할 게시글 ID
      * @param memberId 회원 ID
-     * @param request 작성할 댓글 정보
+     * @param request  작성할 댓글 정보
      * @return 작성된 댓글 정보와 익명여부 반환
-     * @throws PostHandler 게시글을 찾을 수 없는 경우
+     * @throws PostHandler   게시글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
      */
     @Transactional

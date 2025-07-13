@@ -6,13 +6,19 @@ import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.domain.enums.PostStatus;
-import com.example.spot.report.domain.*;
+import com.example.spot.report.domain.MemberReport;
+import com.example.spot.report.domain.MemberReportRepository;
+import com.example.spot.report.domain.PostReport;
+import com.example.spot.report.domain.PostReportRepository;
+import com.example.spot.report.domain.StoryReport;
+import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.report.presentation.dto.PostReportDTO;
+import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
@@ -20,7 +26,6 @@ import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,13 +75,15 @@ public class ReportCommandServiceImpl implements ReportCommandService {
 
     /**
      * 스터디원을 신고하고 신고 내역을 저장하는 메서드입니다.
-     * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param memberId 신고할 회원의 아이디를 입력 받습니다.
+     *
+     * @param studyId              타겟 스터디의 아이디를 입력 받습니다.
+     * @param memberId             신고할 회원의 아이디를 입력 받습니다.
      * @param studyMemberReportDTO 신고 사유를 입력 받습니다.
      * @return 신고를 당한 회원의 아이디와 이름을 반환합니다.
      */
     @Override
-    public MemberResponseDTO.ReportedMemberDTO reportStudyMember(Long studyId, Long memberId, StudyMemberReportDTO studyMemberReportDTO) {
+    public MemberResponseDTO.ReportedMemberDTO reportStudyMember(Long studyId, Long memberId,
+                                                                 StudyMemberReportDTO studyMemberReportDTO) {
 
         //=== Exception ===//
         Long reporterId = SecurityUtils.getCurrentUserId();
@@ -102,7 +109,6 @@ public class ReportCommandServiceImpl implements ReportCommandService {
             throw new StudyHandler(ErrorStatus._STUDY_MEMBER_REPORT_INVALID);
         }
 
-
         //=== Feature ===//
         MemberReport memberReport = MemberReport.builder()
                 .content(studyMemberReportDTO.getContent())
@@ -110,15 +116,15 @@ public class ReportCommandServiceImpl implements ReportCommandService {
                 .build();
 
         memberReport = memberReportRepository.save(memberReport);
-        member.addMemberReport(memberReport);
 
         return MemberResponseDTO.ReportedMemberDTO.toDTO(member);
     }
 
     /**
      * 스터디 게시글을 신고하고 신고 내역을 저장하는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력합니다.
-     * @param postId 신고할 게시글의 아이디를 입력합니다.
+     * @param postId  신고할 게시글의 아이디를 입력합니다.
      * @return 신고를 당한 스터디 게시글의 아이디와 제목을 반환합니다.
      */
     @Override

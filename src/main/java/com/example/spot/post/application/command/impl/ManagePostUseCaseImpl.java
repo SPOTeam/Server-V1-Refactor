@@ -7,7 +7,7 @@ import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.common.presentation.dto.util.response.ImageResponse.ImageUploadResponse;
 import com.example.spot.common.presentation.dto.util.response.ImageResponse.Images;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.ManagePostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
@@ -33,11 +33,12 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
     /**
      * 게시글을 생성합니다.
-     * @param memberId 게시글을 작성하는 회원 ID
+     *
+     * @param memberId          게시글을 작성하는 회원 ID
      * @param postCreateRequest 생성할 게시글 정보
      * @return 생성된 게시글 정보
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 관리자 권한이 없는 경우 (관리자만 공지글 작성 가능)
+     * @throws PostHandler   관리자 권한이 없는 경우 (관리자만 공지글 작성 가능)
      */
     @Transactional
     @Override
@@ -77,8 +78,9 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
     /**
      * 게시글 객체를 생성합니다.
+     *
      * @param postCreateRequest 생성할 게시글 정보
-     * @param currentMember 게시글을 작성하는 회원 정보
+     * @param currentMember     게시글을 작성하는 회원 정보
      * @return 생성된 게시글 객체
      */
     private Post createPostEntity(PostCreateRequest postCreateRequest, Member currentMember, List<String> images) {
@@ -101,14 +103,15 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
     /**
      * 게시글을 수정합니다.
-     * @param memberId 게시글을 수정하는 회원 ID
-     * @param postId 변경할 게시글 ID
+     *
+     * @param memberId          게시글을 수정하는 회원 ID
+     * @param postId            변경할 게시글 ID
      * @param postUpdateRequest 수정할 게시글 정보
      * @return 수정된 게시글 정보
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 게시글을 찾을 수 없는 경우
-     * @throws PostHandler 현재 수정하는 회원과 게시글 작성자가 일치하지 않을 경우
-     * @throws PostHandler 관리자 권한이 없는 경우 (관리자만 공지글 수정 가능)
+     * @throws PostHandler   게시글을 찾을 수 없는 경우
+     * @throws PostHandler   현재 수정하는 회원과 게시글 작성자가 일치하지 않을 경우
+     * @throws PostHandler   관리자 권한이 없는 경우 (관리자만 공지글 수정 가능)
      */
     @Transactional
     @Override
@@ -141,11 +144,12 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
     /**
      * 게시글을 삭제합니다.
+     *
      * @param memberId 게시글을 수정하는 회원 ID
-     * @param postId 변경할 게시글 ID
+     * @param postId   변경할 게시글 ID
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 게시글을 찾을 수 없는 경우
-     * @throws PostHandler 현재 삭제하는 회원과 게시글 작성자가 일치하지 않을 경우
+     * @throws PostHandler   게시글을 찾을 수 없는 경우
+     * @throws PostHandler   현재 삭제하는 회원과 게시글 작성자가 일치하지 않을 경우
      */
     @Transactional
     @Override

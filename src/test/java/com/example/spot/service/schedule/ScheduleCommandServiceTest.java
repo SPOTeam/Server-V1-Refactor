@@ -1,22 +1,35 @@
 package com.example.spot.service.schedule;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.notification.domain.Notification;
+import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.schedule.application.ScheduleCommandServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
-import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.schedule.presentation.dto.request.ScheduleRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,18 +43,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -146,14 +147,14 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member1));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study1));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(studyMember2));
         when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(studyMember1, studyMember2));
@@ -238,7 +239,6 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study1.addSchedule(schedule);
-        owner.addSchedule(schedule);
 
         // 사용자 인증 정보 생성
         getAuthentication(memberId);
@@ -262,9 +262,11 @@ class ScheduleCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = 1L;
 
-        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
+        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1,
+                study1);
 
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(studyMember2));
         when(scheduleRepository.findByIdAndMemberId(scheduleId, memberId))
                 .thenReturn(Optional.of(schedule));
@@ -273,13 +275,13 @@ class ScheduleCommandServiceTest {
         when(scheduleRepository.save(schedule)).thenReturn(schedule);
 
         // when
-        ScheduleResponseDTO.ScheduleDTO result = scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO);
+        ScheduleResponseDTO.ScheduleDTO result = scheduleCommandService.modSchedule(studyId, scheduleId,
+                scheduleModDTO);
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("수정된 일정");
         assertThat(study1.getSchedules()).isNotEmpty();
-        assertThat(member1.getScheduleList()).isNotEmpty();
         verify(scheduleRepository, times(1)).save(any(Schedule.class));
     }
 
@@ -292,7 +294,8 @@ class ScheduleCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = 1L;
 
-        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member2, study1);
+        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member2,
+                study1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
@@ -307,7 +310,8 @@ class ScheduleCommandServiceTest {
         Long studyId = 1L;
         Long scheduleId = 1L;
 
-        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
+        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1,
+                study1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
@@ -322,7 +326,8 @@ class ScheduleCommandServiceTest {
         Long studyId = 2L;
         Long scheduleId = 1L;
 
-        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1, study1);
+        ScheduleRequestDTO.ScheduleDTO scheduleModDTO = getScheduleModDTO(memberId, scheduleId, studyId, member1,
+                study1);
 
         // when & then
         assertThrows(StudyHandler.class, () -> scheduleCommandService.modSchedule(studyId, scheduleId, scheduleModDTO));
@@ -356,7 +361,6 @@ class ScheduleCommandServiceTest {
                 .build();
 
         study.addSchedule(schedule);
-        member.addSchedule(schedule);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(studyRepository.findById(studyId)).thenReturn(Optional.of(study));
@@ -369,15 +373,12 @@ class ScheduleCommandServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -418,7 +419,8 @@ class ScheduleCommandServiceTest {
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

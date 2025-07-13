@@ -4,7 +4,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
@@ -14,12 +14,11 @@ import com.example.spot.vote.domain.VoteRepository;
 import com.example.spot.vote.domain.association.VoteOption;
 import com.example.spot.vote.domain.repository.VoteParticipantRepository;
 import com.example.spot.vote.presentation.dto.response.StudyVoteResponseDTO;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Service
@@ -36,6 +35,7 @@ public class VoteQueryServiceImpl implements VoteQueryService {
 
     /**
      * 스터디에 생성된 모든 투표 목록을 불러옵니다.
+     *
      * @param studyId 투표 목록을 불러올 타겟 스터디의 아이디를 입력 받습니다.
      * @return 스터디 아이디와 해당 스터디에서 진행중인 투표 목록, 마감된 투표 목록을 반환합니다.
      */
@@ -58,7 +58,8 @@ public class VoteQueryServiceImpl implements VoteQueryService {
         //=== Feature ===//
 
         // 진행중인 투표 목록
-        List<StudyVoteResponseDTO.VoteInfoDTO> votesInProgress = voteRepository.findAllByStudyIdAndFinishedAtAfter(studyId, LocalDateTime.now()).stream()
+        List<StudyVoteResponseDTO.VoteInfoDTO> votesInProgress = voteRepository.findAllByStudyIdAndFinishedAtAfter(
+                        studyId, LocalDateTime.now()).stream()
                 .map(vote -> {
                     boolean isParticipated = isParticipated(vote, member);
                     return StudyVoteResponseDTO.VoteInfoDTO.toDTO(vote, isParticipated);
@@ -66,7 +67,8 @@ public class VoteQueryServiceImpl implements VoteQueryService {
                 .toList();
 
         // 마감된 투표 목록
-        List<StudyVoteResponseDTO.VoteInfoDTO> votesInCompletion = voteRepository.findAllByStudyIdAndFinishedAtBefore(studyId, LocalDateTime.now()).stream()
+        List<StudyVoteResponseDTO.VoteInfoDTO> votesInCompletion = voteRepository.findAllByStudyIdAndFinishedAtBefore(
+                        studyId, LocalDateTime.now()).stream()
                 .map(vote -> {
                     boolean isParticipated = isParticipated(vote, member);
                     return StudyVoteResponseDTO.VoteInfoDTO.toDTO(vote, isParticipated);
@@ -77,9 +79,9 @@ public class VoteQueryServiceImpl implements VoteQueryService {
     }
 
     /**
-     * 스터디 회원의 투표 참여 여부를 확인하는 메서드입니다.
-     * getAllVotes에서 사용되는 내부 메서드입니다.
-     * @param vote 스터디에서 생성한 투표의 아이디를 입력 받습니다.
+     * 스터디 회원의 투표 참여 여부를 확인하는 메서드입니다. getAllVotes에서 사용되는 내부 메서드입니다.
+     *
+     * @param vote        스터디에서 생성한 투표의 아이디를 입력 받습니다.
      * @param loginMember 로그인한 회원의 정보를 입력 받습니다.
      * @return 투표 참여 여부를 true or false로 반환합니다.
      */
@@ -95,8 +97,9 @@ public class VoteQueryServiceImpl implements VoteQueryService {
     }
 
     /**
-     * 입력 받은 스터디 투표가 종료되었는지 확인하는 메서드입니다.
-     * (클라이언트에서 투표 불러오기 API를 호출할 때 스터디 종료 여부에 따라 Response DTO가 바뀌어야 하기 때문에 필요한 메서드입니다)
+     * 입력 받은 스터디 투표가 종료되었는지 확인하는 메서드입니다. (클라이언트에서 투표 불러오기 API를 호출할 때 스터디 종료 여부에 따라 Response DTO가 바뀌어야 하기 때문에 필요한
+     * 메서드입니다)
+     *
      * @param voteId 스터디에서 생성한 투표의 아이디를 입력 받습니다.
      * @return 투표 종료 여부를 true or false로 반환합니다.
      */
@@ -107,8 +110,9 @@ public class VoteQueryServiceImpl implements VoteQueryService {
 
     /**
      * 종료된 투표의 정보를 불러오는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 스터디에서 생성한 투표의 아이디를 입력 받습니다.
+     * @param voteId  스터디에서 생성한 투표의 아이디를 입력 받습니다.
      * @return 종료된 투표의 아이디, 생성자, 제목, 항목별 투표 인원수, 전체 참여자 수, 종료 일시를 반환합니다.
      */
     @Override
@@ -140,8 +144,9 @@ public class VoteQueryServiceImpl implements VoteQueryService {
 
     /**
      * 진행중인 투표의 정보를 불러오는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 스터디에서 생성한 투표의 아이디를 입력 받습니다.
+     * @param voteId  스터디에서 생성한 투표의 아이디를 입력 받습니다.
      * @return 진행중인 투표의 아이디, 생성자, 제목, 항목 리스트, 복수 선택 가능 여부, 종료 일시, 로그인한 회원의 참여 여부를 반환합니다.
      */
     @Override
@@ -172,8 +177,9 @@ public class VoteQueryServiceImpl implements VoteQueryService {
 
     /**
      * 마감된 투표에 대해 항목별 투표 현황을 불러오는 메서드입니다.
+     *
      * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
-     * @param voteId 마감된 스터디 투표의 아이디를 입력 받습니다.
+     * @param voteId  마감된 스터디 투표의 아이디를 입력 받습니다.
      * @return 마감된 투표의 아이디와 제목, 항목별 투표 회원 목록을 반환합니다.
      */
     @Override

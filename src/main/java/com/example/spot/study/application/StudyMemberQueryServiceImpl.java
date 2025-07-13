@@ -1,25 +1,22 @@
 package com.example.spot.study.application;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
+import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
+import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
-
-import com.example.spot.common.security.utils.SecurityUtils;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import com.example.spot.common.api.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -44,18 +41,21 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
     public StudyMemberResponseDTO.StudyMemberListDTO findStudyMembers(Long studyId) {
 
         // 스터디 멤버 조회
-        List<StudyMember> memberStudies = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByStudyIdAndStatus(studyId,
+                StudyApplicationStatus.APPROVED);
 
         // 스터디 멤버가 존재하지 않는 경우
-        if (memberStudies.isEmpty())
+        if (memberStudies.isEmpty()) {
             throw new GeneralException(ErrorStatus._STUDY_MEMBER_NOT_FOUND);
+        }
 
         // DTO로 변환하여 반환
-        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
-                .memberId(memberStudy.getMember().getId())
-                .nickname(memberStudy.getMember().getName())
-                .profileImage(memberStudy.getMember().getProfileImage())
-                .build()).toList();
+        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream()
+                .map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
+                        .memberId(memberStudy.getMember().getId())
+                        .nickname(memberStudy.getMember().getName())
+                        .profileImage(memberStudy.getMember().getProfileImage())
+                        .build()).toList();
         // DTO로 변환하여 반환
         return new StudyMemberResponseDTO.StudyMemberListDTO(memberDTOS);
     }
@@ -73,22 +73,26 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
     public StudyMemberResponseDTO.StudyMemberListDTO findStudyApplicants(Long studyId) {
 
         // 로그인한 회원이 해당 스터디 장인지 확인
-        if (!isOwner(SecurityUtils.getCurrentUserId(), studyId))
+        if (!isOwner(SecurityUtils.getCurrentUserId(), studyId)) {
             throw new GeneralException(ErrorStatus._ONLY_STUDY_OWNER_CAN_ACCESS_APPLICANTS);
+        }
 
         // 스터디 신청자 조회
-        List<StudyMember> memberStudies = studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPLIED);
+        List<StudyMember> memberStudies = studyMemberRepository.findAllByStudyIdAndStatus(studyId,
+                StudyApplicationStatus.APPLIED);
 
         // 스터디 신청자가 존재하지 않는 경우
-        if (memberStudies.isEmpty())
+        if (memberStudies.isEmpty()) {
             throw new GeneralException(ErrorStatus._STUDY_APPLICANT_NOT_FOUND);
+        }
 
         // DTO로 변환하여 반환
-        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream().map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
-                .memberId(memberStudy.getMember().getId())
-                .nickname(memberStudy.getMember().getName())
-                .profileImage(memberStudy.getMember().getProfileImage())
-                .build()).toList();
+        List<StudyMemberResponseDTO.StudyMemberDTO> memberDTOS = memberStudies.stream()
+                .map(memberStudy -> StudyMemberResponseDTO.StudyMemberDTO.builder()
+                        .memberId(memberStudy.getMember().getId())
+                        .nickname(memberStudy.getMember().getName())
+                        .profileImage(memberStudy.getMember().getProfileImage())
+                        .build()).toList();
 
         // DTO로 변환하여 반환
         return new StudyMemberResponseDTO.StudyMemberListDTO(memberDTOS);
@@ -128,16 +132,19 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
     public StudyMemberResponseDTO.ApplyingMemberDTO findStudyApplication(Long studyId, Long memberId) {
 
         // 로그인한 회원이 해당 스터디 장인지 확인
-        if (!isOwner(SecurityUtils.getCurrentUserId(), studyId))
+        if (!isOwner(SecurityUtils.getCurrentUserId(), studyId)) {
             throw new GeneralException(ErrorStatus._ONLY_STUDY_OWNER_CAN_ACCESS_APPLICANTS);
+        }
 
         // 스터디 신청자 조회
-        StudyMember studyMember = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPLIED)
+        StudyMember studyMember = studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId,
+                        StudyApplicationStatus.APPLIED)
                 .orElseThrow(() -> new GeneralException(ErrorStatus._STUDY_APPLICANT_NOT_FOUND));
 
         // 스터디 장은 스터디에 신청할 수 없음
-        if (studyMember.getIsOwned())
+        if (studyMember.getIsOwned()) {
             throw new GeneralException(ErrorStatus._STUDY_OWNER_CANNOT_APPLY);
+        }
 
         // DTO로 변환하여 반환
         return StudyMemberResponseDTO.ApplyingMemberDTO.builder()
@@ -162,12 +169,14 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
         Long currentUserId = SecurityUtils.getCurrentUserId();
 
         // 이미 스터디 멤버인 경우
-        if (isMember(currentUserId, studyId))
+        if (isMember(currentUserId, studyId)) {
             throw new GeneralException(ErrorStatus._ALREADY_STUDY_MEMBER);
+        }
 
         // DTO로 변환하여 반환
         return StudyMemberResponseDTO.AppliedStudyDTO.builder()
-                .isApplied(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(currentUserId, studyId, StudyApplicationStatus.APPLIED))
+                .isApplied(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(currentUserId, studyId,
+                        StudyApplicationStatus.APPLIED))
                 .studyId(studyId)
                 .build();
 
@@ -192,7 +201,8 @@ public class StudyMemberQueryServiceImpl implements StudyMemberQueryService {
      * @return 스터디 참여 여부를 반환합니다.
      */
     private boolean isMember(Long memberId, Long studyId) {
-        return studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED).isPresent();
+        return studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId,
+                StudyApplicationStatus.APPROVED).isPresent();
     }
 
 }

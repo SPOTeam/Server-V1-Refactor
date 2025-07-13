@@ -1,15 +1,22 @@
 package com.example.spot.member.domain.association;
 
-import com.example.spot.study.domain.association.Region;
-import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import com.example.spot.member.domain.Member;
+import com.example.spot.study.domain.association.Region;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -19,7 +26,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PreferredRegion extends BaseEntity {
 
     @Id
@@ -37,5 +44,11 @@ public class PreferredRegion extends BaseEntity {
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
+    public static PreferredRegion of(Member member, Region region) {
+        return PreferredRegion.builder()
+                .member(member)
+                .region(region)
+                .build();
+    }
 
 }

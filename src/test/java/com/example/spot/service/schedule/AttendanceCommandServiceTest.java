@@ -1,23 +1,35 @@
 package com.example.spot.service.schedule;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.schedule.application.ScheduleCommandServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
+import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.schedule.domain.association.Quiz;
 import com.example.spot.schedule.domain.association.QuizSubmission;
 import com.example.spot.schedule.domain.repository.QuizRepository;
 import com.example.spot.schedule.domain.repository.QuizSubmissionRepository;
-import com.example.spot.schedule.domain.ScheduleRepository;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.schedule.presentation.dto.request.QuizRequestDTO;
 import com.example.spot.schedule.presentation.dto.response.QuizResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,17 +43,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -102,9 +103,11 @@ class AttendanceCommandServiceTest {
 
         when(studyMemberRepository.findByMemberIdAndStudyIdAndIsOwned(owner.getId(), 1L, Boolean.TRUE))
                 .thenReturn(Optional.of(ownerStudy));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), 1L,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), 1L,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
         when(studyMemberRepository.findAllByStudyIdAndStatus(1L, StudyApplicationStatus.APPROVED))
                 .thenReturn(List.of(member1Study, ownerStudy));
@@ -123,14 +126,16 @@ class AttendanceCommandServiceTest {
         QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when
-        QuizResponseDTO.QuestionDTO result = scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO);
+        QuizResponseDTO.QuestionDTO result = scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(),
+                quizRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -147,14 +152,16 @@ class AttendanceCommandServiceTest {
         QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(owner);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -166,14 +173,16 @@ class AttendanceCommandServiceTest {
         QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member2);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -185,14 +194,16 @@ class AttendanceCommandServiceTest {
         QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of());
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -207,14 +218,16 @@ class AttendanceCommandServiceTest {
         QuizRequestDTO.QuizDTO quizRequestDTO = getQuizDTO(member1);
 
         LocalDateTime startOfDay = quizRequestDTO.getCreatedAt().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime endOfDay = quizRequestDTO.getCreatedAt().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
         when(quizRepository.save(any(Quiz.class))).thenReturn(quiz2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.createAttendanceQuiz(studyId, schedule.getId(), quizRequestDTO));
     }
 
     @Test
@@ -230,19 +243,23 @@ class AttendanceCommandServiceTest {
 
         QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now);
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
         when(quizSubmissionRepository.save(any(QuizSubmission.class))).thenReturn(mockAttendance);
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
         when(quizSubmissionRepository.findByQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of(member1Attendance));
 
         // when
-        QuizResponseDTO.AttendanceDTO result = scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO);
+        QuizResponseDTO.AttendanceDTO result = scheduleCommandService.attendantStudy(studyId, scheduleId,
+                attendanceRequestDTO);
 
         // then
         assertThat(result).isNotNull();
@@ -266,8 +283,10 @@ class AttendanceCommandServiceTest {
 
         QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
@@ -276,7 +295,8 @@ class AttendanceCommandServiceTest {
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO));
     }
 
     @Test
@@ -295,8 +315,10 @@ class AttendanceCommandServiceTest {
 
         QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO();
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
@@ -307,7 +329,8 @@ class AttendanceCommandServiceTest {
                 .thenReturn(List.of(member1Attendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO));
     }
 
     @Test
@@ -329,19 +352,23 @@ class AttendanceCommandServiceTest {
                 .answer("SPOT")
                 .build();
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
         when(quizSubmissionRepository.save(any(QuizSubmission.class))).thenReturn(mockAttendance);
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
         when(quizSubmissionRepository.findByQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of());
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO));
     }
 
     @Test
@@ -358,19 +385,23 @@ class AttendanceCommandServiceTest {
         // 사용자 인증 정보 생성
         QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(member1, now.plusMinutes(5).plusNanos(1));
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
         when(quizSubmissionRepository.save(any(QuizSubmission.class))).thenReturn(mockAttendance);
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(member1.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
         when(quizSubmissionRepository.findByQuizIdAndMemberId(null, member1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO));
     }
 
     @Test
@@ -386,19 +417,23 @@ class AttendanceCommandServiceTest {
 
         QuizRequestDTO.AttendanceDTO attendanceRequestDTO = getAttendanceDTO(owner, now.plusMinutes(5).plusNanos(1));
 
-        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59).withNano(999_999_000);
+        LocalDateTime startOfDay = attendanceRequestDTO.getDateTime().withHour(0).withMinute(0).withSecond(0)
+                .withNano(0);
+        LocalDateTime endOfDay = attendanceRequestDTO.getDateTime().withHour(23).withMinute(59).withSecond(59)
+                .withNano(999_999_000);
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
         when(quizSubmissionRepository.save(any(QuizSubmission.class))).thenReturn(mockAttendance);
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
         when(quizSubmissionRepository.findByQuizIdAndMemberId(null, owner.getId()))
                 .thenReturn(List.of(ownerAttendance));
 
         // when & then
-        assertThrows(StudyHandler.class, () -> scheduleCommandService.attendantStudy(studyId, scheduleId,  attendanceRequestDTO));
+        assertThrows(StudyHandler.class,
+                () -> scheduleCommandService.attendantStudy(studyId, scheduleId, attendanceRequestDTO));
     }
 
     @Test
@@ -420,7 +455,8 @@ class AttendanceCommandServiceTest {
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(schedule.getId(), startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
         when(quizSubmissionRepository.findByQuizId(quiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
@@ -454,7 +490,8 @@ class AttendanceCommandServiceTest {
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(2L, startOfDay, endOfDay))
                 .thenReturn(List.of());
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(ownerStudy));
         when(quizSubmissionRepository.findByQuizId(quiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
@@ -508,7 +545,8 @@ class AttendanceCommandServiceTest {
 
         when(quizRepository.findAllByScheduleIdAndCreatedAtBetween(scheduleId, startOfDay, endOfDay))
                 .thenReturn(List.of(quiz1));
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null, StudyApplicationStatus.APPROVED))
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(owner.getId(), null,
+                StudyApplicationStatus.APPROVED))
                 .thenReturn(Optional.of(member1Study));
         when(quizSubmissionRepository.findByQuizId(quiz1.getId()))
                 .thenReturn(List.of(member1Attendance, member1Attendance2, member1Attendance3, ownerAttendance));
@@ -517,20 +555,17 @@ class AttendanceCommandServiceTest {
         assertThrows(StudyHandler.class, () -> scheduleCommandService.deleteAttendanceQuiz(studyId, scheduleId, date));
     }
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -576,7 +611,6 @@ class AttendanceCommandServiceTest {
                 .member(owner)
                 .build();
         study.addSchedule(schedule);
-        owner.addSchedule(schedule);
     }
 
     private static void initQuiz() {
@@ -619,7 +653,8 @@ class AttendanceCommandServiceTest {
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

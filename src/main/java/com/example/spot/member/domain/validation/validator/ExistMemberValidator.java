@@ -1,9 +1,8 @@
 package com.example.spot.member.domain.validation.validator;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
-import com.example.spot.member.domain.MemberRepository;
 import com.example.spot.member.domain.validation.annotation.ExistMember;
-
+import com.example.spot.member.infrastructure.MemberRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ public class ExistMemberValidator implements ConstraintValidator<ExistMember, Lo
     public void initialize(ExistMember constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
+
     @Override
     public boolean isValid(Long userId, ConstraintValidatorContext context) {
         boolean isValid;

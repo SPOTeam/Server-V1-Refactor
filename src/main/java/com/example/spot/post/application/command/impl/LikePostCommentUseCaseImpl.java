@@ -9,10 +9,9 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.LikePostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
-import com.example.spot.post.application.query.GetLikedPostUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +29,13 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
 
     /**
      * 게시글 댓글에 좋아요를 합니다.
+     *
      * @param commentId 좋아요할 댓글 ID
-     * @param memberId 회원 ID
+     * @param memberId  회원 ID
      * @return 좋아요한 댓글 ID와 게시글의 현재 좋아요와 싫어요 수
-     * @throws PostHandler 댓글을 찾을 수 없는 경우
+     * @throws PostHandler   댓글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 이미 해당 댓글에 좋아요를 한 경우
+     * @throws PostHandler   이미 해당 댓글에 좋아요를 한 경우
      */
     @Transactional
     @Override
@@ -74,12 +74,13 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
 
     /**
      * 게시글 댓글에 좋아요를 취소합니다.
+     *
      * @param commentId 좋아요 취소할 댓글 ID
-     * @param memberId 회원 ID
+     * @param memberId  회원 ID
      * @return 좋아요 취소한 댓글 ID와 게시글의 현재 좋아요와 싫어요 수
-     * @throws PostHandler 댓글을 찾을 수 없는 경우
+     * @throws PostHandler   댓글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 좋아요를 하지 않은 댓글일 경우
+     * @throws PostHandler   좋아요를 하지 않은 댓글일 경우
      */
     @Transactional
     @Override
@@ -93,7 +94,8 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 댓글 좋아요 여부 확인
-        LikedPostComment likedPostComment = likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId)
+        LikedPostComment likedPostComment = likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(
+                        memberId, commentId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus._POST_COMMENT_NOT_LIKED));
 
         // 댓글 좋아요 객체 삭제 및 즉시 반영
@@ -112,12 +114,13 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
 
     /**
      * 게시글 댓글에 싫어요를 합니다.
+     *
      * @param commentId 싫어요할 댓글 ID
-     * @param memberId 회원 ID
+     * @param memberId  회원 ID
      * @return 싫어요한 댓글 ID와 게시글의 현재 좋아요와 싫어요 수
-     * @throws PostHandler 댓글을 찾을 수 없는 경우
+     * @throws PostHandler   댓글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 이미 해당 댓글에 싫어요를 한 경우
+     * @throws PostHandler   이미 해당 댓글에 싫어요를 한 경우
      */
     @Transactional
     @Override
@@ -156,12 +159,13 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
 
     /**
      * 게시글 댓글에 싫어요를 취소합니다.
+     *
      * @param commentId 싫어요 취소할 댓글 ID
-     * @param memberId 회원 ID
+     * @param memberId  회원 ID
      * @return 싫어요 취소한 댓글 ID와 게시글의 현재 좋아요와 싫어요 수
-     * @throws PostHandler 댓글을 찾을 수 없는 경우
+     * @throws PostHandler   댓글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 싫어요를 하지 않은 댓글일 경우
+     * @throws PostHandler   싫어요를 하지 않은 댓글일 경우
      */
     @Transactional
     @Override
@@ -175,7 +179,8 @@ public class LikePostCommentUseCaseImpl implements LikePostCommentUseCase {
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
         // 싫어요 여부 확인
-        LikedPostComment dislikedPostComment = likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId)
+        LikedPostComment dislikedPostComment = likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(
+                        memberId, commentId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus._POST_COMMENT_NOT_DISLIKED));
 
         // 싫어요 객체 삭제 및 즉시 반영

@@ -6,7 +6,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.MemberRepository;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.post.application.command.ScrapPostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
@@ -31,12 +31,13 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
 
     /**
      * 게시글을 스크랩 합니다.
-     * @param postId 스크랩할 게시글 ID
+     *
+     * @param postId   스크랩할 게시글 ID
      * @param memberId 회원 ID
      * @return 스크랩한 게시글 ID와 스크랩 수
-     * @throws PostHandler 게시글을 찾을 수 없는 경우
+     * @throws PostHandler   게시글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 이미 해당 게시글을 스크랩 한 경우
+     * @throws PostHandler   이미 해당 게시글을 스크랩 한 경우
      */
     @Override
     public ScrapPostResponse scrapPost(Long postId, Long memberId) {
@@ -73,12 +74,13 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
 
     /**
      * 게시글 스크랩을 취소합니다.
-     * @param postId 스크랩 취소할 게시글 ID
+     *
+     * @param postId   스크랩 취소할 게시글 ID
      * @param memberId 회원 ID
      * @return 스크랩 취소한 게시글 ID와 스크랩 수
-     * @throws PostHandler 게시글을 찾을 수 없는 경우
+     * @throws PostHandler   게시글을 찾을 수 없는 경우
      * @throws MemberHandler 회원을 찾을 수 없는 경우
-     * @throws PostHandler 스크랩하지 않은 게시글인 경우
+     * @throws PostHandler   스크랩하지 않은 게시글인 경우
      */
     @Override
     public ScrapPostResponse cancelPostScrap(Long postId, Long memberId) {
@@ -110,6 +112,7 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
 
     /**
      * 게시글 스크랩 여러개를 한번에 취소합니다.
+     *
      * @param request 취소할 스크랩 ID 리스트
      * @return 스크랩 취소 결과 반환
      */

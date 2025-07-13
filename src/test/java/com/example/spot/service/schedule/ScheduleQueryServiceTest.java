@@ -1,20 +1,29 @@
 package com.example.spot.service.schedule;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.schedule.application.ScheduleQueryServiceImpl;
 import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.schedule.domain.enums.SchedulePeriod;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.schedule.domain.ScheduleRepository;
-import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.schedule.domain.enums.SchedulePeriod;
 import com.example.spot.schedule.presentation.dto.response.ScheduleResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,18 +38,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -85,11 +82,14 @@ class ScheduleQueryServiceTest {
 
         when(studyMemberRepository.findById(member1Study1.getId())).thenReturn(Optional.of(member1Study1));
         when(studyMemberRepository.findById(ownerStudy1.getId())).thenReturn(Optional.of(ownerStudy1));
-        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member1.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(true);
-        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member2.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(false);
-        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(owner.getId(), study1.getId(), StudyApplicationStatus.APPROVED)).thenReturn(true);
+        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member1.getId(), study1.getId(),
+                StudyApplicationStatus.APPROVED)).thenReturn(true);
+        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(member2.getId(), study1.getId(),
+                StudyApplicationStatus.APPROVED)).thenReturn(false);
+        when(studyMemberRepository.existsByMemberIdAndStudyIdAndStatus(owner.getId(), study1.getId(),
+                StudyApplicationStatus.APPROVED)).thenReturn(true);
         when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(
-                member1.getId(), study1.getId(),StudyApplicationStatus.APPROVED)
+                member1.getId(), study1.getId(), StudyApplicationStatus.APPROVED)
         ).thenReturn(Optional.of(member1Study1));
 
         when(scheduleRepository.findById(schedule1.getId())).thenReturn(Optional.of(schedule1));
@@ -180,11 +180,11 @@ class ScheduleQueryServiceTest {
         assertThrows(StudyHandler.class, () -> scheduleQueryService.getSchedule(scheduleId, studyId));
     }
 
-/* ------------------------------------------------ 스터디 모임 목록 조회  --------------------------------------------------- */
+    /* ------------------------------------------------ 스터디 모임 목록 조회  --------------------------------------------------- */
 
     @Test
     @DisplayName("스터디 모임 목록 조회 - 로그인 한 회원이 해당 스터디 회원이 아닌 경우")
-    void 스터디_모임_목록_조회_실패_1(){
+    void 스터디_모임_목록_조회_실패_1() {
 
         // given
         Long memberId = 1L;
@@ -199,7 +199,7 @@ class ScheduleQueryServiceTest {
 
     @Test
     @DisplayName("스터디 모임 목록 조회 - 스터디 모임 일정이 존재하지 않는 경우")
-    void 스터디_모임_목록_조회_실패_2(){
+    void 스터디_모임_목록_조회_실패_2() {
 
         // given
         Long memberId = 1L;
@@ -219,15 +219,12 @@ class ScheduleQueryServiceTest {
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -293,7 +290,6 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.NONE)
                 .build();
         study1.addSchedule(schedule1);
-        owner.addSchedule(schedule1);
 
         schedule2 = Schedule.builder()
                 .id(2L)
@@ -305,7 +301,6 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.MONTHLY)
                 .build();
         study1.addSchedule(schedule2);
-        member1.addSchedule(schedule2);
 
         schedule3 = Schedule.builder()
                 .id(3L)
@@ -317,12 +312,12 @@ class ScheduleQueryServiceTest {
                 .schedulePeriod(SchedulePeriod.WEEKLY)
                 .build();
         study2.addSchedule(schedule3);
-        member2.addSchedule(schedule3);
     }
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

@@ -1,32 +1,38 @@
 package com.example.spot.service.study;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.example.spot.study.domain.association.StudyRegion;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.study.application.StudyCommandServiceImpl;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.Region;
 import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.association.StudyRegion;
+import com.example.spot.study.domain.association.StudyTheme;
 import com.example.spot.study.domain.association.Theme;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.study.domain.enums.StudyState;
 import com.example.spot.study.domain.enums.ThemeType;
-import com.example.spot.study.domain.association.StudyTheme;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.repository.RegionRepository;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.domain.repository.StudyRegionRepository;
-import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.repository.StudyThemeRepository;
 import com.example.spot.study.domain.repository.ThemeRepository;
-import com.example.spot.study.application.StudyCommandServiceImpl;
 import com.example.spot.study.presentation.dto.request.StudyMemberRequestDTO;
 import com.example.spot.study.presentation.dto.response.StudyMemberResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyResponseDTO;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,11 +46,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -282,20 +283,17 @@ class StudyCommandServiceTest {
     void likeStudy() {
     }
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void initMember() {
         member1 = Member.builder()
                 .id(1L)
-                .scheduleList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
-                .scheduleList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
-                .scheduleList(new ArrayList<>())
                 .build();
     }
 
@@ -349,7 +347,8 @@ class StudyCommandServiceTest {
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);

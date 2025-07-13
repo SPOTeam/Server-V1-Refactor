@@ -1,33 +1,44 @@
 package com.example.spot.service.story;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.example.spot.common.api.exception.handler.StudyHandler;
+import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.domain.enums.Gender;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.notification.domain.Notification;
+import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.report.domain.StoryReportRepository;
+import com.example.spot.story.application.StoryCommandServiceImpl;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.LikedStory;
 import com.example.spot.story.domain.association.LikedStoryComment;
 import com.example.spot.story.domain.association.StoryComment;
+import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.story.domain.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
 import com.example.spot.story.domain.repository.StoryImageRepository;
-import com.example.spot.study.domain.association.StudyMember;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.study.domain.Study;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
-import com.example.spot.notification.domain.NotificationRepository;
-import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.story.application.StoryCommandServiceImpl;
-import com.example.spot.common.application.s3.S3ImageService;
 import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.association.StudyMember;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,16 +53,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -140,7 +141,7 @@ class StoryCommandServiceTest {
         when(likedStoryRepository.existsByMemberIdAndStoryId(3L, 1L))
                 .thenReturn(true);
 
-         // Comment
+        // Comment
         when(storyCommentRepository.findAllByStoryId(1L))
                 .thenReturn(List.of(studyPost1Comment1, studyPost1Comment2));
         when(storyCommentRepository.findById(1L)).thenReturn(Optional.of(studyPost1Comment1));
@@ -151,7 +152,7 @@ class StoryCommandServiceTest {
 
     }
 
-/*-------------------------------------------------------- 게시글 작성 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 작성 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 작성 - 공지 게시글 (성공)")
@@ -308,7 +309,7 @@ class StoryCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- 게시글 삭제 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 삭제 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 삭제 - (성공)")
@@ -377,7 +378,7 @@ class StoryCommandServiceTest {
         assertThrows(StudyHandler.class, () -> studyPostCommandService.deletePost(studyId, postId));
     }
 
-/*-------------------------------------------------------- 게시글 좋아요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 좋아요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 좋아요 - (성공)")
@@ -429,6 +430,7 @@ class StoryCommandServiceTest {
         // when & then
         assertThrows(StudyHandler.class, () -> studyPostCommandService.likePost(studyId, postId));
     }
+
     @Test
     @DisplayName("스터디 게시글 좋아요 - 이미 좋아요를 누른 경우 (실패)")
     void likePost_AlreadyLiked_Fail() {
@@ -452,7 +454,7 @@ class StoryCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- 게시글 좋아요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 게시글 좋아요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 좋아요 취소 - (성공)")
@@ -524,7 +526,7 @@ class StoryCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- 댓글 작성 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 작성 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 작성 - 익명 댓글 (성공)")
@@ -621,7 +623,7 @@ class StoryCommandServiceTest {
 
 
 
-/*-------------------------------------------------------- 답글 작성 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 답글 작성 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 답글 작성 - 익명 댓글 (성공)")
@@ -724,7 +726,8 @@ class StoryCommandServiceTest {
                 .thenReturn(List.of());
 
         // when
-        assertThrows(StudyHandler.class, () -> studyPostCommandService.createReply(studyId, postId, commentId, commentDTO));
+        assertThrows(StudyHandler.class,
+                () -> studyPostCommandService.createReply(studyId, postId, commentId, commentDTO));
     }
 
     @Test
@@ -757,14 +760,14 @@ class StoryCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- 댓글 삭제 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 삭제 ------------------------------------------------------------------------*/
 
     // @Test
     // @DisplayName("스터디 게시글 댓글 삭제")
     // void deleteComment() {
     // }
 
-/*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 좋아요 - (성공)")
@@ -785,7 +788,8 @@ class StoryCommandServiceTest {
         when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
-        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.likeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.likeComment(studyId, postId,
+                commentId);
 
         // then
         assertNotNull(result);
@@ -839,7 +843,7 @@ class StoryCommandServiceTest {
     }
 
 
-/*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 싫어요 - (성공)")
@@ -860,7 +864,8 @@ class StoryCommandServiceTest {
         when(likedStoryCommentRepository.save(any(LikedStoryComment.class))).thenReturn(likedStoryComment);
 
         // when
-        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.dislikeComment(studyId, postId, commentId);
+        StoryCommentResponseDTO.CommentPreviewDTO result = studyPostCommandService.dislikeComment(studyId, postId,
+                commentId);
 
         // then
         assertNotNull(result);
@@ -914,7 +919,7 @@ class StoryCommandServiceTest {
         assertThrows(StudyHandler.class, () -> studyPostCommandService.dislikeComment(studyId, postId, commentId));
     }
 
-/*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 좋아요 취소 - (성공)")
@@ -928,7 +933,8 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                true))
                 .thenReturn(Optional.of(likedStoryComment));
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
@@ -955,7 +961,8 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                true))
                 .thenReturn(Optional.of(likedStoryComment));
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
@@ -975,7 +982,8 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), true))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                true))
                 .thenReturn(Optional.empty());
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
@@ -983,7 +991,7 @@ class StoryCommandServiceTest {
         assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentLike(studyId, postId, commentId));
     }
 
-/*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
 
     @Test
     @DisplayName("스터디 게시글 댓글 싫어요 취소 - (성공)")
@@ -997,7 +1005,8 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                false))
                 .thenReturn(Optional.of(studyDislikedComment));
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
@@ -1024,12 +1033,14 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                false))
                 .thenReturn(Optional.of(studyDislikedComment));
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
+        assertThrows(StudyHandler.class,
+                () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
     }
 
     @Test
@@ -1044,20 +1055,23 @@ class StoryCommandServiceTest {
 
         getAuthentication(memberId);
 
-        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(), false))
+        when(likedStoryCommentRepository.findByMemberIdAndStoryCommentIdAndIsLiked(memberId, studyPost1Comment2.getId(),
+                false))
                 .thenReturn(Optional.empty());
         when(storyCommentRepository.save(any(StoryComment.class))).thenReturn(studyPost1Comment2);
 
         // when & then
-        assertThrows(StudyHandler.class, () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
+        assertThrows(StudyHandler.class,
+                () -> studyPostCommandService.cancelCommentDislike(studyId, postId, commentId));
     }
 
 
-/*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
+    /*-------------------------------------------------------- Utils ------------------------------------------------------------------------*/
 
     private static void getAuthentication(Long memberId) {
         String idString = String.valueOf(memberId);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null, Collections.emptyList());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(idString, null,
+                Collections.emptyList());
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -1067,26 +1081,14 @@ class StoryCommandServiceTest {
         member1 = Member.builder()
                 .id(1L)
                 .name("회원1")
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
         member2 = Member.builder()
                 .id(2L)
                 .name("회원2")
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
         owner = Member.builder()
                 .id(3L)
                 .name("회원3")
-                .storyList(new ArrayList<>())
-                .likedStoryList(new ArrayList<>())
-                .storyCommentList(new ArrayList<>())
-                .likedStoryCommentList(new ArrayList<>())
                 .build();
     }
 
@@ -1116,7 +1118,6 @@ class StoryCommandServiceTest {
                 .member(owner)
                 .study(study)
                 .build();
-        owner.addMemberStudy(ownerStudy);
         study.addMemberStudy(ownerStudy);
 
         member1Study = StudyMember.builder()
@@ -1127,7 +1128,6 @@ class StoryCommandServiceTest {
                 .member(member1)
                 .study(study)
                 .build();
-        member1.addMemberStudy(member1Study);
         study.addMemberStudy(member1Study);
     }
 
@@ -1144,7 +1144,6 @@ class StoryCommandServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        member1.addStudyPost(story1);
         study.addStudyPost(story1);
 
         story2 = Story.builder()
@@ -1159,7 +1158,6 @@ class StoryCommandServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(story2);
         study.addStudyPost(story2);
 
         story3 = Story.builder()
@@ -1174,10 +1172,9 @@ class StoryCommandServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        owner.addStudyPost(story3);
         study.addStudyPost(story3);
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             story1.plusHitNum();
         }
     }
@@ -1190,7 +1187,6 @@ class StoryCommandServiceTest {
                 .build();
         story1.addLikedPost(likedStory);
         story1.plusLikeNum();
-        owner.addStudyLikedPost(likedStory);
     }
 
     private static void initStudyPostComment() {
@@ -1232,7 +1228,6 @@ class StoryCommandServiceTest {
                 .build();
         studyPost1Comment2.addLikedComment(likedStoryComment);
         studyPost1Comment2.plusLikeCount();
-        member1.addStudyLikedComment(likedStoryComment);
 
         studyDislikedComment = LikedStoryComment.builder()
                 .id(2L)
@@ -1242,6 +1237,5 @@ class StoryCommandServiceTest {
                 .build();
         studyPost1Comment2.addLikedComment(studyDislikedComment);
         studyPost1Comment2.plusDislikeCount();
-        owner.addStudyLikedComment(studyDislikedComment);
     }
 }

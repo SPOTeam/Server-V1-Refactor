@@ -1,21 +1,35 @@
 package com.example.spot.story.domain;
 
-import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
+import com.example.spot.member.domain.Member;
+import com.example.spot.report.domain.StoryReport;
 import com.example.spot.story.domain.association.LikedStory;
 import com.example.spot.story.domain.association.StoryComment;
 import com.example.spot.story.domain.association.StoryImage;
-import com.example.spot.report.domain.StoryReport;
 import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.study.domain.Study;
 import com.example.spot.story.web.dto.request.StoryRequestDTO;
-import jakarta.persistence.*;
-
+import com.example.spot.study.domain.Study;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -81,7 +95,7 @@ public class Story extends BaseEntity {
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
     private List<StoryReport> storyReports = new ArrayList<>();
 
-/* ----------------------------- 연관관계 메소드 ------------------------------------- */
+    /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
     public void addImage(StoryImage image) {
         images.add(image);
@@ -116,19 +130,16 @@ public class Story extends BaseEntity {
 
     public void plusHitNum() {
         hitNum++;
-        member.updateStudyPost(this);
         study.updateStudyPost(this);
     }
 
     public void plusLikeNum() {
         likeNum++;
-        member.updateStudyPost(this);
         study.updateStudyPost(this);
     }
 
     public void minusLikeNum() {
         likeNum--;
-        member.updateStudyPost(this);
         study.updateStudyPost(this);
     }
 
@@ -148,7 +159,6 @@ public class Story extends BaseEntity {
             announcedAt = null;
         }
 
-        member.updateStudyPost(this);
         study.updateStudyPost(this);
     }
 

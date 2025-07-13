@@ -4,31 +4,30 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
+import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
+import com.example.spot.member.infrastructure.MemberRepository;
 import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.study.domain.enums.StudyApplicationStatus;
-import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.study.domain.Study;
+import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.StoryComment;
-import com.example.spot.member.domain.MemberRepository;
-import com.example.spot.study.domain.repository.StudyMemberRepository;
+import com.example.spot.story.domain.enums.StoryCategory;
+import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.story.domain.repository.LikedStoryRepository;
 import com.example.spot.story.domain.repository.StoryCommentRepository;
-import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.study.domain.StudyRepository;
-import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
 import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.study.domain.Study;
+import com.example.spot.study.domain.StudyRepository;
+import com.example.spot.study.domain.enums.StudyApplicationStatus;
+import com.example.spot.study.domain.repository.StudyMemberRepository;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
+import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,20 +44,20 @@ public class StoryQueryServiceImpl implements StoryQueryService {
     private final StoryRepository storyRepository;
     private final StudyMemberRepository studyMemberRepository;
 
-/* ----------------------------- 스터디 게시글 관련 API ------------------------------------- */
+    /* ----------------------------- 스터디 게시글 관련 API ------------------------------------- */
 
     /**
-     * 특정 테마(카테고리)에 속한 스터디 게시글 목록을 조회하는 메서드입니다.
-     * 오프셋 기반 페이징이 적용되어 있습니다.
-     * @param pageRequest 페이징에 필요한 페이지 번호와 페이지 사이즈 정보를 입력 받습니다.
-     * @param studyId 게시글 목록을 조회할 타겟 스터디의 아이디를 입력 받습니다.
+     * 특정 테마(카테고리)에 속한 스터디 게시글 목록을 조회하는 메서드입니다. 오프셋 기반 페이징이 적용되어 있습니다.
+     *
+     * @param pageRequest        페이징에 필요한 페이지 번호와 페이지 사이즈 정보를 입력 받습니다.
+     * @param studyId            게시글 목록을 조회할 타겟 스터디의 아이디를 입력 받습니다.
      * @param storyCategoryQuery 게시글 테마를 입력 받습니다. themeQuery는 null일 수 있습니다.
-     * @return 조건에 맞는 스터디 게시글 목록을 반환합니다.
-     *          1. themeQuery가 있는 경우 해당 테마의 게시글 목록을 반환합니다.
-     *          2. themeQuery가 null인 경우 필터링 없이 게시글 목록을 반환합니다.
+     * @return 조건에 맞는 스터디 게시글 목록을 반환합니다. 1. themeQuery가 있는 경우 해당 테마의 게시글 목록을 반환합니다. 2. themeQuery가 null인 경우 필터링 없이 게시글
+     * 목록을 반환합니다.
      */
     @Override
-    public StoryResponseDTO.StoryListDTO getAllPosts(PageRequest pageRequest, Long studyId, StoryCategoryQuery storyCategoryQuery) {
+    public StoryResponseDTO.StoryListDTO getAllPosts(PageRequest pageRequest, Long studyId,
+                                                     StoryCategoryQuery storyCategoryQuery) {
 
         Long memberId = SecurityUtils.getCurrentUserId();
         SecurityUtils.verifyUserId(memberId);
@@ -168,8 +167,9 @@ public class StoryQueryServiceImpl implements StoryQueryService {
     public StoryResponseDTO.StoryContentDTO findStudyAnnouncementPost(Long studyId) {
 
         // 로그인한 회원이 해당 스터디 회원인지 확인
-        if (!isMember(SecurityUtils.getCurrentUserId(), studyId))
+        if (!isMember(SecurityUtils.getCurrentUserId(), studyId)) {
             throw new GeneralException(ErrorStatus._ONLY_STUDY_MEMBER_CAN_ACCESS_ANNOUNCEMENT_POST);
+        }
 
         // 스터디 공지사항 조회
         Story story = storyRepository.findByStudyIdAndIsAnnouncement(
@@ -190,15 +190,17 @@ public class StoryQueryServiceImpl implements StoryQueryService {
      * @return 스터디 참여 여부를 반환합니다.
      */
     private boolean isMember(Long memberId, Long studyId) {
-        return studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId, StudyApplicationStatus.APPROVED).isPresent();
+        return studyMemberRepository.findByMemberIdAndStudyIdAndStatus(memberId, studyId,
+                StudyApplicationStatus.APPROVED).isPresent();
     }
 
     /* ----------------------------- 스터디 게시글 댓글 관련 API ------------------------------------- */
 
     /**
      * 특정 스터디 게시글의 모든 댓글을 조회하는 메서드입니다.
+     *
      * @param studyId 게시글이 작성된 타겟 스터디의 아이디를 입력 받습니다.
-     * @param postId 댓글이 작성된 게시글의 아이디를 입력 받습니다.
+     * @param postId  댓글이 작성된 게시글의 아이디를 입력 받습니다.
      * @return 스터디 게시글에 작성된 댓글의 목록을 반환합니다. 하나의 댓글에는 해당 댓글에 대한 답글 목록이 포함되어 있습니다.
      */
     @Override
@@ -233,11 +235,12 @@ public class StoryQueryServiceImpl implements StoryQueryService {
     }
 
 
-/* ----------------------------- 스터디 갤러리 관련 API ------------------------------------- */
+    /* ----------------------------- 스터디 갤러리 관련 API ------------------------------------- */
 
     /**
      * 스터디 게시판에 업로드한 이미지 목록을 불러오는 메서드입니다.
-     * @param studyId 타겟 스터디의 아이디를 입력 받습니다.
+     *
+     * @param studyId     타겟 스터디의 아이디를 입력 받습니다.
      * @param pageRequest 페이징에 필요한 페이지 번호와 크기를 입력 받습니다.
      * @return 스터디 아이디와 해당 스터디에 업로드된 이미지 목록을 반환합니다.
      */
