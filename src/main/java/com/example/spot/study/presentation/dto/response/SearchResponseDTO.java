@@ -99,7 +99,7 @@ public class SearchResponseDTO {
             this.title = study.getTitle();
             this.introduction = study.getIntroduction();
             this.goal = study.getGoal();
-            this.memberCount = (long) study.getMemberStudies().stream()
+            this.memberCount = (long) study.getStudyMembers().stream()
                     .filter(memberStudy -> memberStudy.getStatus().equals(StudyApplicationStatus.APPROVED))
                     .toList()
                     .size();

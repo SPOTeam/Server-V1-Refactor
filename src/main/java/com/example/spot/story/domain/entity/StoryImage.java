@@ -15,10 +15,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Builder
 @DynamicUpdate
 @DynamicInsert
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoryImage extends BaseEntity {
 
@@ -33,4 +31,19 @@ public class StoryImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "story_id", nullable = false)
     private Story story;
+
+    //TODO Builder도 private으로 변경
+    @Builder
+    private StoryImage(Long id, String url, Story story) {
+        this.id = id;
+        this.url = url;
+        this.story = story;
+    }
+
+    public static StoryImage of(String url, Story story) {
+        return StoryImage.builder()
+                .url(url)
+                .story(story)
+                .build();
+    }
 }

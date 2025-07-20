@@ -1,4 +1,4 @@
-package com.example.spot.story.application.port.in;
+package com.example.spot.story.application.service;
 
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
 import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;

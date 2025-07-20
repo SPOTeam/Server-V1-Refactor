@@ -258,7 +258,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     public List<Study> findByMemberStudy(List<StudyMember> studyMember, Pageable pageable) {
         QStudy study = QStudy.study;
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(studyMember))
+            .where(study.studyMembers.any().in(studyMember))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
@@ -269,7 +269,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
         Pageable pageable) {
         QStudy study = QStudy.study;
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(studyMember))
+            .where(study.studyMembers.any().in(studyMember))
             .where(study.studyState.eq(StudyState.RECRUITING))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -334,7 +334,7 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     @Override
     public long countByMemberStudiesAndStatus(List<StudyMember> memberStudies, Status status) {
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(memberStudies))
+            .where(study.studyMembers.any().in(memberStudies))
             .where(study.status.eq(status))
             .fetchCount();
     }
@@ -343,9 +343,9 @@ SELECT id FROM study WHERE MATCH(title) AGAINST (:keyword IN NATURAL LANGUAGE MO
     public long countByMemberStudiesAndStatusAndIsOwned(List<StudyMember> memberStudies, Status status,
                                                         boolean isOwned) {
         return queryFactory.selectFrom(study)
-            .where(study.memberStudies.any().in(memberStudies))
+            .where(study.studyMembers.any().in(memberStudies))
             .where(study.status.eq(status))
-            .where(study.memberStudies.any().isOwned.eq(isOwned))
+            .where(study.studyMembers.any().isOwned.eq(isOwned))
             .fetchCount();
     }
 

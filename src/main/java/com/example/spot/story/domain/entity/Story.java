@@ -30,7 +30,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Story extends BaseEntity {
@@ -76,37 +75,77 @@ public class Story extends BaseEntity {
     @Column(columnDefinition = "INTEGER DEFAULT 0")
     private Integer commentNum;
 
-    @Builder.Default
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
     private List<StoryImage> images = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
     private List<StoryComment> comments = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
     private List<LikedStory> likedStories = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL)
     private List<StoryReport> storyReports = new ArrayList<>();
+
+
+    @Builder
+    private Story(Long id, Member member, Study study, Boolean isAnnouncement, LocalDateTime announcedAt,
+                  StoryCategory storyCategory, String title, String content, Integer likeNum,
+                  Integer hitNum, Integer commentNum
+    ) {
+        this.id = id;
+        this.member = member;
+        this.study = study;
+        this.isAnnouncement = isAnnouncement;
+        this.announcedAt = announcedAt;
+        this.storyCategory = storyCategory;
+        this.title = title;
+        this.content = content;
+        this.likeNum = likeNum;
+        this.hitNum = hitNum;
+        this.commentNum = commentNum;
+        this.images = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.likedStories = new ArrayList<>();
+        this.storyReports = new ArrayList<>();
+    }
+
+    public static Story of(Member member, Study study, Boolean isAnnouncement,
+                    StoryCategory storyCategory, String title, String content
+    ) {
+        Story story = Story.builder()
+                .member(member)
+                .study(study)
+                .isAnnouncement(isAnnouncement)
+                .announcedAt(null)
+                .storyCategory(storyCategory)
+                .title(title)
+                .content(content)
+                .likeNum(0)
+                .hitNum(0)
+                .commentNum(0)
+                .build();
+
+        if (isAnnouncement) {
+            story.setAnnouncedAt(LocalDateTime.now());
+        }
+
+        return story;
+    }
+
 
     /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
     public void addImage(StoryImage image) {
         images.add(image);
-        image.setStory(this);
     }
 
     public void addComment(StoryComment comment) {
         comments.add(comment);
-        comment.setStory(this);
     }
 
     public void addLikedPost(LikedStory likedPost) {
         likedStories.add(likedPost);
-        likedPost.setStory(this);
     }
 
     public void deleteImage(StoryImage image) {
@@ -121,23 +160,16 @@ public class Story extends BaseEntity {
         likedStories.remove(likedPost);
     }
 
-    public void updateComment(StoryComment storyComment) {
-        comments.set(comments.indexOf(storyComment), storyComment);
-    }
-
     public void plusHitNum() {
         hitNum++;
-        study.updateStudyPost(this);
     }
 
     public void plusLikeNum() {
         likeNum++;
-        study.updateStudyPost(this);
     }
 
     public void minusLikeNum() {
         likeNum--;
-        study.updateStudyPost(this);
     }
 
     public void addStudyPostReport(StoryReport storyReport) {
@@ -155,11 +187,5 @@ public class Story extends BaseEntity {
         } else {
             announcedAt = null;
         }
-
-        study.updateStudyPost(this);
-    }
-
-    public void updateImage(StoryImage storyImage) {
-        images.set(images.indexOf(storyImage), storyImage);
     }
 }

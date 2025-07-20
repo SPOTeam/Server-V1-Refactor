@@ -142,7 +142,7 @@ public class StudyQueryServiceImpl implements StudyQueryService {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyHandler(ErrorStatus._STUDY_NOT_FOUND));
 
-        List<StudyMember> studyMemberList = study.getMemberStudies().stream()
+        List<StudyMember> studyMemberList = study.getStudyMembers().stream()
                 .filter(StudyMember::getIsOwned)
                 .toList();
 

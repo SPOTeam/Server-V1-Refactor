@@ -47,7 +47,7 @@ public class StudyResponseDTO {
                     .hitNum(study.getHitNum())
                     .heartCount(study.getHeartCount())
                     .memberCount(
-                            study.getMemberStudies().stream()
+                            study.getStudyMembers().stream()
                                     .filter(memberStudy -> memberStudy.getStatus().equals(StudyApplicationStatus.APPROVED))
                                     .toList()
                                     .size())

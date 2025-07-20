@@ -48,7 +48,7 @@ public class Study extends BaseEntity {
     private Integer maxAge;
 
     @Column(nullable = false)
-    private boolean hasFee;
+    private Boolean hasFee;
 
     @Column(nullable = false)
     private Integer fee;
@@ -106,7 +106,7 @@ public class Study extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
-    private List<StudyMember> memberStudies = new ArrayList<>();
+    private List<StudyMember> studyMembers = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
@@ -131,7 +131,7 @@ public class Study extends BaseEntity {
 /* ----------------------------- 연관관계 메소드 ------------------------------------- */
 
     public void addMemberStudy(StudyMember studyMember) {
-        memberStudies.add(studyMember);
+        studyMembers.add(studyMember);
         studyMember.setStudy(this);
     }
 
@@ -161,20 +161,12 @@ public class Study extends BaseEntity {
         vote.setStudy(this);
     }
 
-    public void updateSchedule(Schedule schedule) {
-        schedules.set(schedules.indexOf(schedule), schedule);
-    }
-
-    public void addStudyPost(Story story) {
+    public void addStory(Story story) {
         if (this.stories == null) {
             this.stories = new ArrayList<>();
         }
         this.stories.add(story);
         story.setStudy(this);
-    }
-
-    public void updateStudyPost(Story story) {
-        stories.set(stories.indexOf(story), story);
     }
 
     public void deleteStudyPost(Story story) {
@@ -189,10 +181,6 @@ public class Study extends BaseEntity {
     // hit 증가
     public void increaseHit() {
         this.hitNum++;
-    }
-
-    public void updateVote(Vote vote) {
-        votes.set(votes.indexOf(vote), vote);
     }
 
     public void deleteVote(Vote vote) {

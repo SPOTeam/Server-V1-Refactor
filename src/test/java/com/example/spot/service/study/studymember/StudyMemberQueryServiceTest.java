@@ -3,7 +3,7 @@ package com.example.spot.service.study.studymember;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
 import com.example.spot.schedule.domain.ScheduleRepository;
-import com.example.spot.story.infrastructure.out.StoryRepository;
+import com.example.spot.story.infrastructure.repository.StoryRepository;
 import com.example.spot.study.application.StudyMemberQueryServiceImpl;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.association.StudyMember;

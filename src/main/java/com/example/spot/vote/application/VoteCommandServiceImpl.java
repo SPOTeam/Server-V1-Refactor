@@ -216,7 +216,6 @@ public class VoteCommandServiceImpl implements VoteCommandService {
 
         vote.updateVote(voteDTO.getTitle(), voteDTO.getIsMultipleChoice(), voteDTO.getFinishedAt());
         vote = voteRepository.save(vote);
-        study.updateVote(vote);
 
         return StudyVoteResponseDTO.VotePreviewDTO.toDTO(vote);
     }

@@ -158,8 +158,6 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService {
         schedule.modSchedule(scheduleModDTO);
         schedule = scheduleRepository.save(schedule);
 
-        study.updateSchedule(schedule);
-
         return ScheduleResponseDTO.ScheduleDTO.toDTO(schedule);
     }
 

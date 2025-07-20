@@ -1,10 +1,10 @@
-package com.example.spot.story.infrastructure.in;
+package com.example.spot.story.infrastructure.web;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.story.application.port.in.StoryCommandService;
-import com.example.spot.story.application.port.in.StoryQueryService;
+import com.example.spot.story.application.service.StoryCommandService;
+import com.example.spot.story.application.service.StoryQueryService;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
 import com.example.spot.story.domain.validation.annotation.ExistStoryComment;
@@ -141,7 +141,7 @@ public class StoryController {
     public ApiResponse<StoryResponseDTO.StoryLikeNumDTO> likePost(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StoryResponseDTO.StoryLikeNumDTO storyLikeNumDTO = storyCommandService.likePost(studyId, postId);
+        StoryResponseDTO.StoryLikeNumDTO storyLikeNumDTO = storyCommandService.likeStory(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_LIKED, storyLikeNumDTO);
     }
 
@@ -156,7 +156,7 @@ public class StoryController {
     public ApiResponse<StoryResponseDTO.StoryLikeNumDTO> cancelPostLike(
             @PathVariable @ExistStudy Long studyId,
             @PathVariable @ExistStory Long postId) {
-        StoryResponseDTO.StoryLikeNumDTO storyLikeNumDTO = storyCommandService.cancelPostLike(studyId, postId);
+        StoryResponseDTO.StoryLikeNumDTO storyLikeNumDTO = storyCommandService.cancelStoryLike(studyId, postId);
         return ApiResponse.onSuccess(SuccessStatus._STUDY_POST_DISLIKED, storyLikeNumDTO);
     }
 

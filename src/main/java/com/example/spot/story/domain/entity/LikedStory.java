@@ -15,10 +15,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Builder
 @DynamicUpdate
 @DynamicInsert
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikedStory extends BaseEntity {
 
@@ -35,5 +33,19 @@ public class LikedStory extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @Builder
+    private LikedStory(Long id, Story story, Member member) {
+        this.id = id;
+        this.story = story;
+        this.member = member;
+    }
+
+    public static LikedStory of(Story story, Member member) {
+        return LikedStory.builder()
+                .story(story)
+                .member(member)
+                .build();
+    }
 
 }

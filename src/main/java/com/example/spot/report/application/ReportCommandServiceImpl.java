@@ -20,7 +20,7 @@ import com.example.spot.report.domain.StoryReportRepository;
 import com.example.spot.report.presentation.dto.PostReportDTO;
 import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import com.example.spot.story.domain.entity.Story;
-import com.example.spot.story.infrastructure.out.StoryRepository;
+import com.example.spot.story.infrastructure.repository.StoryRepository;
 import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;

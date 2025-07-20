@@ -1,4 +1,4 @@
-package com.example.spot.story.infrastructure.out;
+package com.example.spot.story.infrastructure.repository;
 
 import com.example.spot.story.domain.entity.Story;
 import com.example.spot.story.domain.enums.StoryCategory;

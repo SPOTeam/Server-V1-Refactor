@@ -1,4 +1,4 @@
-package com.example.spot.story.infrastructure.out;
+package com.example.spot.story.infrastructure.repository;
 
 import com.example.spot.story.domain.entity.StoryImage;
 import org.springframework.data.jpa.repository.JpaRepository;

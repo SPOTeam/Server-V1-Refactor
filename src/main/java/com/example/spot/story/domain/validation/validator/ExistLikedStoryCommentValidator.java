@@ -1,7 +1,7 @@
 package com.example.spot.story.domain.validation.validator;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
-import com.example.spot.story.infrastructure.out.LikedStoryCommentRepository;
+import com.example.spot.story.infrastructure.repository.LikedStoryCommentRepository;
 import com.example.spot.story.domain.validation.annotation.ExistLikedStoryComment;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

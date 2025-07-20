@@ -11,16 +11,16 @@ import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.story.application.port.in.StoryQueryServiceImpl;
+import com.example.spot.story.application.service.impl.StoryQueryServiceImpl;
 import com.example.spot.story.domain.entity.Story;
-import com.example.spot.story.infrastructure.out.StoryRepository;
+import com.example.spot.story.infrastructure.repository.StoryRepository;
 import com.example.spot.story.domain.entity.LikedStory;
 import com.example.spot.story.domain.entity.LikedStoryComment;
 import com.example.spot.story.domain.entity.StoryComment;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.story.infrastructure.out.LikedStoryRepository;
-import com.example.spot.story.infrastructure.out.StoryCommentRepository;
+import com.example.spot.story.infrastructure.repository.LikedStoryRepository;
+import com.example.spot.story.infrastructure.repository.StoryCommentRepository;
 import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;
 import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.Study;
@@ -595,7 +595,7 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        study.addStudyPost(story1);
+        study.addStory(story1);
 
         story2 = Story.builder()
                 .id(2L)
@@ -609,7 +609,7 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        study.addStudyPost(story2);
+        study.addStory(story2);
 
         story3 = Story.builder()
                 .id(3L)
@@ -623,7 +623,7 @@ class StoryQueryServiceTest {
                 .likeNum(0)
                 .commentNum(0)
                 .build();
-        study.addStudyPost(story3);
+        study.addStory(story3);
 
         for (int i = 0; i < 10; i++) {
             story1.plusHitNum();
