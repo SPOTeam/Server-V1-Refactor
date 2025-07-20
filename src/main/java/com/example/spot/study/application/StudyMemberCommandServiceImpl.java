@@ -14,7 +14,7 @@ import com.example.spot.notification.domain.NotificationRepository;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.report.domain.MemberReportRepository;
 import com.example.spot.report.domain.StoryReportRepository;
-import com.example.spot.story.domain.StoryRepository;
+import com.example.spot.story.infrastructure.out.StoryRepository;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.association.StudyMember;

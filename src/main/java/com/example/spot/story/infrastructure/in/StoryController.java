@@ -1,17 +1,17 @@
-package com.example.spot.story.web.controller;
+package com.example.spot.story.infrastructure.in;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.story.application.StoryCommandService;
-import com.example.spot.story.application.StoryQueryService;
+import com.example.spot.story.application.port.in.StoryCommandService;
+import com.example.spot.story.application.port.in.StoryQueryService;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
 import com.example.spot.story.domain.validation.annotation.ExistStoryComment;
-import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
-import com.example.spot.story.web.dto.request.StoryRequestDTO;
-import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.domain.dto.request.StoryCommentRequestDTO;
+import com.example.spot.story.domain.dto.request.StoryRequestDTO;
+import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

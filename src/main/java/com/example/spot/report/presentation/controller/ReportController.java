@@ -6,7 +6,7 @@ import com.example.spot.member.domain.validation.annotation.ExistMember;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.report.application.ReportCommandService;
 import com.example.spot.story.domain.validation.annotation.ExistStory;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.validation.annotation.ExistStudy;
 import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import io.swagger.v3.oas.annotations.Operation;

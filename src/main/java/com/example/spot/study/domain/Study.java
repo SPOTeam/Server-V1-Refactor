@@ -5,7 +5,7 @@ import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.Status;
 import com.example.spot.schedule.domain.Schedule;
-import com.example.spot.story.domain.Story;
+import com.example.spot.story.domain.entity.Story;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.association.StudyRegion;
 import com.example.spot.study.domain.association.StudyTheme;

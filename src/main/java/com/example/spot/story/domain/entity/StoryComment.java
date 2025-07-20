@@ -1,8 +1,7 @@
-package com.example.spot.story.domain.association;
+package com.example.spot.story.domain.entity;
 
 import com.example.spot.member.domain.Member;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.story.domain.Story;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

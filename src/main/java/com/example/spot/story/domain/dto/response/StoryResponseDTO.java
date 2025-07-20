@@ -1,9 +1,9 @@
-package com.example.spot.story.web.dto.response;
+package com.example.spot.story.domain.dto.response;
 
 import com.example.spot.member.domain.Member;
-import com.example.spot.story.domain.Story;
+import com.example.spot.story.domain.entity.Story;
 import com.example.spot.story.domain.enums.StoryCategory;
-import com.example.spot.story.domain.association.StoryImage;
+import com.example.spot.story.domain.entity.StoryImage;
 import lombok.*;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.example.spot.story.web.dto.request;
+package com.example.spot.story.domain.dto.request;
 
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.common.presentation.validator.TextLength;

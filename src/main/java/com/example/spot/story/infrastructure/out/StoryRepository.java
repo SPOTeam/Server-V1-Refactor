@@ -1,5 +1,6 @@
-package com.example.spot.story.domain;
+package com.example.spot.story.infrastructure.out;
 
+import com.example.spot.story.domain.entity.Story;
 import com.example.spot.story.domain.enums.StoryCategory;
 
 import java.util.Optional;

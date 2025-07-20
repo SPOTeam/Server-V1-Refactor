@@ -1,4 +1,4 @@
-package com.example.spot.story.application;
+package com.example.spot.story.application.port.in;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
@@ -7,15 +7,15 @@ import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.story.domain.Story;
-import com.example.spot.story.domain.StoryRepository;
-import com.example.spot.story.domain.association.StoryComment;
+import com.example.spot.story.domain.entity.Story;
+import com.example.spot.story.infrastructure.out.StoryRepository;
+import com.example.spot.story.domain.entity.StoryComment;
 import com.example.spot.story.domain.enums.StoryCategory;
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.story.domain.repository.LikedStoryRepository;
-import com.example.spot.story.domain.repository.StoryCommentRepository;
-import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.infrastructure.out.LikedStoryRepository;
+import com.example.spot.story.infrastructure.out.StoryCommentRepository;
+import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.study.domain.Study;
 import com.example.spot.study.domain.StudyRepository;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;

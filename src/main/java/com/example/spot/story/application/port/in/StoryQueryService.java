@@ -1,8 +1,8 @@
-package com.example.spot.story.application;
+package com.example.spot.story.application.port.in;
 
 import com.example.spot.story.domain.enums.StoryCategoryQuery;
-import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.study.presentation.dto.response.StudyImageResponseDTO;
 import org.springframework.data.domain.PageRequest;
 

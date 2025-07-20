@@ -1,6 +1,6 @@
 package com.example.spot.report.domain;
 
-import com.example.spot.story.domain.Story;
+import com.example.spot.story.domain.entity.Story;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

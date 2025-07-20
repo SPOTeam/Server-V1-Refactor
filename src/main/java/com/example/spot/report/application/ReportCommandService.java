@@ -2,7 +2,7 @@ package com.example.spot.report.application;
 
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.report.presentation.dto.PostReportDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 import com.example.spot.report.presentation.dto.StudyMemberReportDTO;
 import jakarta.validation.Valid;
 

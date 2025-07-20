@@ -1,6 +1,6 @@
 package com.example.spot.study.presentation.dto.response;
 
-import com.example.spot.story.domain.association.StoryImage;
+import com.example.spot.story.domain.entity.StoryImage;
 
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -1,9 +1,9 @@
-package com.example.spot.story.application;
+package com.example.spot.story.application.port.in;
 
-import com.example.spot.story.web.dto.request.StoryCommentRequestDTO;
-import com.example.spot.story.web.dto.request.StoryRequestDTO;
-import com.example.spot.story.web.dto.response.StoryCommentResponseDTO;
-import com.example.spot.story.web.dto.response.StoryResponseDTO;
+import com.example.spot.story.domain.dto.request.StoryCommentRequestDTO;
+import com.example.spot.story.domain.dto.request.StoryRequestDTO;
+import com.example.spot.story.domain.dto.response.StoryCommentResponseDTO;
+import com.example.spot.story.domain.dto.response.StoryResponseDTO;
 
 public interface StoryCommandService {
 
