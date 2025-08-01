@@ -11,6 +11,7 @@ import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPO
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPONSE_TYPE_CODE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.SCOPE;
 import static com.example.spot.auth.infrastructure.constants.JwtConstants.BEARER_PREFIX;
+import static com.example.spot.common.infrastructure.feign.SafeFeignExecutor.run;
 
 import com.example.spot.auth.infrastructure.client.google.GoogleApiClient;
 import com.example.spot.auth.infrastructure.client.google.GoogleAuthClient;
@@ -58,12 +59,12 @@ public class GoogleOauth {
 
     public GoogleOAuthToken requestAccessToken(String code) {
 
-        return googleAuthClient.getGoogleAccessToken(CONTENT_TYPE, code,
-                GOOGLE_SNS_CLIENT_ID, GOOGLE_SNS_CLIENT_SECRET,
-                GOOGLE_SNS_CALLBACK_LOGIN_URL, GRANT_TYPE_AUTHORIZATION_CODE);
+        return run(() -> googleAuthClient.getGoogleAccessToken(
+                CONTENT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE, GOOGLE_SNS_CALLBACK_LOGIN_URL,
+                GOOGLE_SNS_CLIENT_ID, GOOGLE_SNS_CLIENT_SECRET, code));
     }
 
     public GoogleUser requestUserInfo(GoogleOAuthToken oAuthToken) {
-        return googleApiClient.getGoogleUserInfo(BEARER_PREFIX + oAuthToken.access_token());
+        return run(() -> googleApiClient.getGoogleUserInfo(BEARER_PREFIX + oAuthToken.access_token()));
     }
 }

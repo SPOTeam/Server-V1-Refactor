@@ -9,6 +9,7 @@ import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.REDIRECT_URI;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPONSE_TYPE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPONSE_TYPE_CODE;
+import static com.example.spot.common.infrastructure.feign.SafeFeignExecutor.run;
 
 import com.example.spot.auth.infrastructure.client.kakao.KaKaoApiClient;
 import com.example.spot.auth.infrastructure.client.kakao.KaKaoAuthClient;
@@ -52,14 +53,14 @@ public class KaKaoOauth {
     }
 
     public KaKaoOAuthTokenDTO requestAccessToken(String code) {
-        return kaKaoAuthClient.getKaKaoAccessToken(
-                CONTENT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE, KAKAO_SNS_CALLBACK_LOGIN_URL, KAKAO_SNS_CLIENT_ID, code);
+        return run(() -> kaKaoAuthClient.getKaKaoAccessToken(
+                CONTENT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE, KAKAO_SNS_CALLBACK_LOGIN_URL, KAKAO_SNS_CLIENT_ID, code));
     }
 
 
     public KaKaoUser requestUserInfo(KaKaoOAuthTokenDTO kaKaoOAuthTokenDTO) {
-        return kaKaoApiClient.getKaKaoUserInfo(
-                getAccessToken(kaKaoOAuthTokenDTO), CONTENT_TYPE);
+        return run(() -> kaKaoApiClient.getKaKaoUserInfo(
+                getAccessToken(kaKaoOAuthTokenDTO), CONTENT_TYPE));
     }
 
     private static String getAccessToken(KaKaoOAuthTokenDTO kaKaoOAuthTokenDTO) {

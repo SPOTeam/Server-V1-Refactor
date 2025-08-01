@@ -11,6 +11,7 @@ import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPO
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.STATE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.STATE_STRING;
 import static com.example.spot.auth.infrastructure.constants.JwtConstants.BEARER_PREFIX;
+import static com.example.spot.common.infrastructure.feign.SafeFeignExecutor.run;
 
 import com.example.spot.auth.infrastructure.client.naver.NaverApiClient;
 import com.example.spot.auth.infrastructure.client.naver.NaverAuthClient;
@@ -57,14 +58,14 @@ public class NaverOauth {
     }
 
     public NaverOAuthTokenDTO requestAccessToken(String code) {
-        return naverAuthClient.getNaverAccessToken(
-                GRANT_TYPE_AUTHORIZATION_CODE, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, code, STATE);
+        return run(() -> naverAuthClient.getNaverAccessToken(
+                GRANT_TYPE_AUTHORIZATION_CODE, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, NAVER_CALLBACK_LOGIN_URL, code));
     }
 
 
     public NaverUser requestUserInfo(NaverOAuthTokenDTO naverOAuthTokenDTO) {
-        return naverApiClient.getNaverUserInfo(
-                getAccessToken(naverOAuthTokenDTO));
+        return run(() -> naverApiClient.getNaverUserInfo(
+                getAccessToken(naverOAuthTokenDTO)));
     }
 
     private static String getAccessToken(NaverOAuthTokenDTO naverOAuthTokenDTO) {
