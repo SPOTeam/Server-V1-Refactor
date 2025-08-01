@@ -1,6 +1,6 @@
 package com.example.spot.auth.application.refactor.impl;
 
-import com.example.spot.auth.application.refactor.JwtTokenService;
+import com.example.spot.auth.application.refactor.TokenService;
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.domain.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class JwtTokenServiceImpl implements JwtTokenService {
+public class JwtTokenService implements TokenService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
