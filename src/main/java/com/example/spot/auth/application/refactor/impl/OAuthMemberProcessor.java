@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class OAuthMemberProcessor {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     public MemberResponseDTO.SocialLoginSignInDTO processOAuthMember(LoginType loginType,
                                                                      Member providerMember) {
         // 다른 로그인 타입으로 가입된 경우
