@@ -1,14 +1,14 @@
 package com.example.spot.common.security.filters;
 
-import com.example.spot.common.api.exception.GeneralException;
-import com.example.spot.auth.domain.TempUserDetails;
-import com.example.spot.member.application.legacy.MemberService;
-import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.auth.application.refactor.UserDetailsServiceCustom;
+import com.example.spot.auth.domain.TempUserDetails;
+import com.example.spot.common.api.exception.GeneralException;
+import com.example.spot.common.security.utils.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -17,28 +17,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final JwtTokenProvider jwtTokenProvider; // JwtTokenProvider 주입 추가
-    private final MemberService memberService; // MemberService 주입 추가
     private final UserDetailsServiceCustom userDetailsService; // UserDetailsServiceCustom 주입 추가
 
     /**
      * JWT 토큰을 검증하는 필터를 생성합니다.
-     * @param request HTTP 요청
-     * @param response HTTP 응답
+     *
+     * @param request     HTTP 요청
+     * @param response    HTTP 응답
      * @param filterChain 필터 체인
      * @throws ServletException
      * @throws IOException
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-        FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
             // 임시 토큰 인증 요청 별도 처리
             if (isTempRequest(request)) {
@@ -62,8 +60,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = jwtTokenProvider.resolveToken(request);
 
             // 토큰이 유효한 경우 사용자 인증
-            if (isValidToken(token))
+            if (isValidToken(token)) {
                 authenticateUser(token);
+            }
 
             filterChain.doFilter(request, response);
         } catch (GeneralException e) {

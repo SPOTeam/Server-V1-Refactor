@@ -1,11 +1,11 @@
-package com.example.spot.member.application.refactor.impl;
+package com.example.spot.member.application.impl;
 
 import static com.example.spot.member.presentation.dto.MemberResponseDTO.MemberRegionDTO.RegionDTO;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
-import com.example.spot.member.application.refactor.MemberPreferenceService;
+import com.example.spot.member.application.MemberPreferenceService;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.association.PreferredRegion;
 import com.example.spot.member.domain.association.PreferredTheme;

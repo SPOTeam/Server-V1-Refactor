@@ -1,4 +1,4 @@
-package com.example.spot.member.application.refactor.impl;
+package com.example.spot.member.application.impl;
 
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.domain.RefreshTokenRepository;
@@ -6,7 +6,7 @@ import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.member.application.refactor.MemberTestSupportService;
+import com.example.spot.member.application.MemberTestSupportService;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
@@ -116,9 +116,9 @@ public class MemberTestSupportServiceImpl implements MemberTestSupportService {
      */
     private void saveRefreshToken(Member member, TokenResponseDTO.TokenDTO token) {
         // 기존 리프레시 토큰 삭제
-		if (refreshTokenRepository.existsByMemberId(member.getId())) {
-			refreshTokenRepository.deleteAllByMemberId(member.getId());
-		}
+        if (refreshTokenRepository.existsByMemberId(member.getId())) {
+            refreshTokenRepository.deleteAllByMemberId(member.getId());
+        }
 
         // DB에 저장하기 위한 새로운 리프레시 토큰 객체 생성
         RefreshToken refreshToken = RefreshToken.builder()
