@@ -2,7 +2,7 @@ package com.example.spot.auth.infrastructure.oauth;
 
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CLIENT_ID;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CONTENT_TYPE;
-import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE;
+import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.KEY_VALUE_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_PREFIX;
@@ -53,7 +53,7 @@ public class KaKaoOauth {
 
     public KaKaoOAuthTokenDTO requestAccessToken(String code) {
         return kaKaoAuthClient.getKaKaoAccessToken(
-                CONTENT_TYPE, GRANT_TYPE, KAKAO_SNS_CALLBACK_LOGIN_URL, KAKAO_SNS_CLIENT_ID, code);
+                CONTENT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE, KAKAO_SNS_CALLBACK_LOGIN_URL, KAKAO_SNS_CLIENT_ID, code);
     }
 
 

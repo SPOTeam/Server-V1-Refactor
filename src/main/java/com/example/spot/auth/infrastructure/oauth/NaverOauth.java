@@ -1,7 +1,7 @@
 package com.example.spot.auth.infrastructure.oauth;
 
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CLIENT_ID;
-import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE;
+import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.KEY_VALUE_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_PREFIX;
@@ -58,7 +58,7 @@ public class NaverOauth {
 
     public NaverOAuthTokenDTO requestAccessToken(String code) {
         return naverAuthClient.getNaverAccessToken(
-                GRANT_TYPE, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, code, STATE);
+                GRANT_TYPE_AUTHORIZATION_CODE, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, code, STATE);
     }
 
 

@@ -2,7 +2,7 @@ package com.example.spot.auth.infrastructure.oauth;
 
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CLIENT_ID;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CONTENT_TYPE;
-import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE;
+import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.KEY_VALUE_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_DELIMITER;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.QUERY_PREFIX;
@@ -60,7 +60,7 @@ public class GoogleOauth {
 
         return googleAuthClient.getGoogleAccessToken(CONTENT_TYPE, code,
                 GOOGLE_SNS_CLIENT_ID, GOOGLE_SNS_CLIENT_SECRET,
-                GOOGLE_SNS_CALLBACK_LOGIN_URL, GRANT_TYPE);
+                GOOGLE_SNS_CALLBACK_LOGIN_URL, GRANT_TYPE_AUTHORIZATION_CODE);
     }
 
     public GoogleUser requestUserInfo(GoogleOAuthToken oAuthToken) {

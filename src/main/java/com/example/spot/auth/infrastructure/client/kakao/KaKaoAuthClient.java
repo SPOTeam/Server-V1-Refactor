@@ -1,5 +1,6 @@
 package com.example.spot.auth.infrastructure.client.kakao;
 
+import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.HEADER_CONTENT_TYPE;
 
 import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoOAuthTokenDTO;
@@ -17,5 +18,5 @@ public interface KaKaoAuthClient {
             @RequestParam String grant_type,
             @RequestParam String redirectUri,
             @RequestParam String client_id,
-            @RequestParam(defaultValue = "authorization_code") String code);
+            @RequestParam(defaultValue = GRANT_TYPE_AUTHORIZATION_CODE) String code);
 }
