@@ -26,13 +26,13 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KakaoOAuthClient {
 
-    @Value("${spring.OAuth2.kakao.url}")
+    @Value("${spring.oauth2.kakao.url}")
     private String KAKAO_SNS_URL;
 
-    @Value("${spring.OAuth2.kakao.client-id}")
+    @Value("${spring.oauth2.kakao.client-id}")
     private String KAKAO_SNS_CLIENT_ID;
 
-    @Value("${spring.OAuth2.kakao.callback-login-url}")
+    @Value("${spring.oauth2.kakao.callback-login-url}")
     private String KAKAO_SNS_CALLBACK_LOGIN_URL;
 
 
@@ -41,6 +41,7 @@ public class KakaoOAuthClient {
 
     /**
      * 카카오 로그인 요청 URL을 생성합니다.
+     *
      * @return 카카오 로그인 요청 URL
      */
     public String getOauthRedirectURL() {
@@ -52,8 +53,8 @@ public class KakaoOAuthClient {
 
         // URL 파라미터 생성
         String parameterString = params.entrySet().stream()
-            .map(x -> x.getKey() + "=" + x.getValue())
-            .collect(Collectors.joining("&"));
+                .map(x -> x.getKey() + "=" + x.getValue())
+                .collect(Collectors.joining("&"));
 
         // 카카오 로그인 요청 URL
         return KAKAO_SNS_URL + "?" + parameterString;
@@ -61,6 +62,7 @@ public class KakaoOAuthClient {
 
     /**
      * 카카오 로그인 요청을 합니다.
+     *
      * @param code 카카오 로그인 요청 시 발급받은 코드
      * @return 카카오 로그인 요청 결과
      */
@@ -81,7 +83,8 @@ public class KakaoOAuthClient {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(params, headers);
 
         // 카카오 로그인 요청
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(KAKAO_TOKEN_REQUEST_URL, request, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(KAKAO_TOKEN_REQUEST_URL, request,
+                String.class);
 
         // 요청 결과 반환
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -94,22 +97,24 @@ public class KakaoOAuthClient {
 
     /**
      * 카카오 로그인 요청 결과에서 AccessToken을 추출합니다.
+     *
      * @param response 카카오 로그인 요청 결과
      * @return 카카오 로그인 성공 시 반환되는 AccessToken
      * @throws JsonProcessingException JSON 파싱 예외
      */
     public KaKaoOAuthTokenDTO getAccessToken(ResponseEntity<String> response)
-        throws JsonProcessingException {
+            throws JsonProcessingException {
 
         // 카카오 로그인 요청 결과에서 AccessToken 추출
-        KaKaoOAuthToken.KaKaoOAuthTokenDTO kaKaoOAuthTokenDTO= objectMapper.readValue(response.getBody(),
-            KaKaoOAuthTokenDTO.class);
+        KaKaoOAuthToken.KaKaoOAuthTokenDTO kaKaoOAuthTokenDTO = objectMapper.readValue(response.getBody(),
+                KaKaoOAuthTokenDTO.class);
         return kaKaoOAuthTokenDTO;
     }
 
 
     /**
      * 카카오 로그인 시 발급된 accessToken을 이용하여 사용자 정보를 요청합니다.
+     *
      * @param accessToken 카카오 로그인 시 발급된 accessToken
      * @return 사용자 정보 요청 결과
      */
@@ -126,19 +131,21 @@ public class KakaoOAuthClient {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity(headers);
 
         // 사용자 정보 요청
-        ResponseEntity<String> responseEntity = restTemplate.exchange(KAKAO_USER_INFO_REQUEST_URL, HttpMethod.GET, request, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(KAKAO_USER_INFO_REQUEST_URL, HttpMethod.GET,
+                request, String.class);
 
         return responseEntity;
     }
 
     /**
      * 카카오 로그인 요청 결과에서 사용자 정보를 추출합니다.
+     *
      * @param userInfoRes 카카오 로그인 요청 결과
      * @return 카카오 로그인 성공 시 반환되는 사용자 정보
      * @throws JsonProcessingException JSON 파싱 예외
      */
     public KaKaoUser getUserInfo(ResponseEntity<String> userInfoRes)
-        throws JsonProcessingException {
+            throws JsonProcessingException {
         // 사용자 정보 파싱
         KaKaoUser kaKaoUser = objectMapper.readValue(userInfoRes.getBody(), KaKaoUser.class);
         return kaKaoUser;
