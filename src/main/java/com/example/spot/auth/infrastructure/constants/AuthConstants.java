@@ -1,6 +1,6 @@
 package com.example.spot.auth.infrastructure.constants;
 
-public class AuthConstants {
+public abstract class AuthConstants {
 
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded;charset=utf-8";
     public static final String APPLICATION_JSON = "application/json";
