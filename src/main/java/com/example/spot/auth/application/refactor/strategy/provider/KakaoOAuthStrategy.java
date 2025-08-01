@@ -29,7 +29,7 @@ public class KakaoOAuthStrategy implements OAuthStrategy {
     public Member toMember(String code) {
         KaKaoOAuthTokenDTO token = kaKaoOauth.requestAccessToken(code);
         KaKaoUser user = kaKaoOauth.requestUserInfo(token);
-        return Member.toMember(getType(), user.properties().nickname(), user.properties().nickname(),
+        return Member.toMemberByOAuth(getType(), user.properties().nickname(), user.properties().nickname(),
                 user.properties().profile_image());
     }
 }

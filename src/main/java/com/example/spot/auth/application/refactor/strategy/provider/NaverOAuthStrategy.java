@@ -29,7 +29,7 @@ public class NaverOAuthStrategy implements OAuthStrategy {
     public Member toMember(String code) {
         NaverOAuthTokenDTO token = naverOauth.requestAccessToken(code);
         NaverUser user = naverOauth.requestUserInfo(token);
-        return Member.toMember(
+        return Member.toMemberByOAuth(
                 getType(), user.response().name(), user.response().email(),
                 user.response().thumbnail_image());
     }

@@ -96,7 +96,7 @@ public class Member extends BaseEntity {
     private Status status;
 
 
-    public static Member toMember(LoginType loginType, String name, String email, String profileImage) {
+    public static Member toMemberByOAuth(LoginType loginType, String name, String email, String profileImage) {
         return Member.builder()
                 .name(name)
                 .nickname(name)

@@ -29,6 +29,6 @@ public class GoogleOAuthStrategy implements OAuthStrategy {
     public Member toMember(String code) {
         GoogleOAuthToken token = googleOauth.requestAccessToken(code);
         GoogleUser user = googleOauth.requestUserInfo(token);
-        return Member.toMember(getType(), user.name(), user.email(), user.picture());
+        return Member.toMemberByOAuth(getType(), user.name(), user.email(), user.picture());
     }
 }
