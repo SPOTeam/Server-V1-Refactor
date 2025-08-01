@@ -14,8 +14,8 @@ import static com.example.spot.auth.infrastructure.constants.JwtConstants.BEARER
 
 import com.example.spot.auth.infrastructure.client.google.GoogleApiClient;
 import com.example.spot.auth.infrastructure.client.google.GoogleAuthClient;
-import com.example.spot.auth.presentation.dto.GoogleOAuthToken;
-import com.example.spot.auth.presentation.dto.GoogleUser;
+import com.example.spot.auth.presentation.dto.oauth.google.GoogleOAuthToken;
+import com.example.spot.auth.presentation.dto.oauth.google.GoogleUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

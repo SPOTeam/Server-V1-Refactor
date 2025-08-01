@@ -2,8 +2,8 @@ package com.example.spot.auth.application.refactor.impl.straegy;
 
 import com.example.spot.auth.application.refactor.OAuthStrategy;
 import com.example.spot.auth.application.refactor.impl.oauth.KaKaoOauth;
-import com.example.spot.auth.presentation.dto.KaKaoOAuthTokenDTO;
-import com.example.spot.auth.presentation.dto.KaKaoUser;
+import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoOAuthTokenDTO;
+import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoUser;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 import lombok.RequiredArgsConstructor;

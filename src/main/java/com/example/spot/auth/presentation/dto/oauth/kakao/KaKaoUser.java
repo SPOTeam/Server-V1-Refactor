@@ -1,4 +1,4 @@
-package com.example.spot.auth.presentation.dto;
+package com.example.spot.auth.presentation.dto.oauth.kakao;
 
 public record KaKaoUser(
         Long id,

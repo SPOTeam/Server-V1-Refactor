@@ -1,4 +1,4 @@
-package com.example.spot.auth.presentation.dto;
+package com.example.spot.auth.presentation.dto.oauth.google;
 
 public record GoogleUser(
         String id,

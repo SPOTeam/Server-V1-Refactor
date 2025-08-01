@@ -2,8 +2,8 @@ package com.example.spot.auth.application.refactor.impl.straegy;
 
 import com.example.spot.auth.application.refactor.OAuthStrategy;
 import com.example.spot.auth.application.refactor.impl.oauth.GoogleOauth;
-import com.example.spot.auth.presentation.dto.GoogleOAuthToken;
-import com.example.spot.auth.presentation.dto.GoogleUser;
+import com.example.spot.auth.presentation.dto.oauth.google.GoogleOAuthToken;
+import com.example.spot.auth.presentation.dto.oauth.google.GoogleUser;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.example.spot.auth.infrastructure.client.google;
 
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.HEADER_CONTENT_TYPE;
 
-import com.example.spot.auth.presentation.dto.GoogleOAuthToken;
+import com.example.spot.auth.presentation.dto.oauth.google.GoogleOAuthToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

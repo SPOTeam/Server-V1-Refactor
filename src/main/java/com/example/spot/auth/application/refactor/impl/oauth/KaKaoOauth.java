@@ -13,8 +13,8 @@ import static com.example.spot.auth.infrastructure.constants.AuthConstants.RESPO
 import com.example.spot.auth.infrastructure.client.kakao.KaKaoApiClient;
 import com.example.spot.auth.infrastructure.client.kakao.KaKaoAuthClient;
 import com.example.spot.auth.infrastructure.constants.JwtConstants;
-import com.example.spot.auth.presentation.dto.KaKaoOAuthTokenDTO;
-import com.example.spot.auth.presentation.dto.KaKaoUser;
+import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoOAuthTokenDTO;
+import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
