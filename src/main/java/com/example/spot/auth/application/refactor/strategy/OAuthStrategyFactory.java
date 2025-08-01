@@ -1,4 +1,4 @@
-package com.example.spot.auth.application.refactor;
+package com.example.spot.auth.application.refactor.strategy;
 
 import com.example.spot.auth.exception.UnsupportedSocialLoginTypeException;
 import com.example.spot.common.api.code.status.ErrorStatus;

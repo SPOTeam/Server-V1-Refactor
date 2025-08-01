@@ -1,7 +1,7 @@
-package com.example.spot.auth.application.refactor.impl.straegy;
+package com.example.spot.auth.application.refactor.strategy.provider;
 
-import com.example.spot.auth.application.refactor.OAuthStrategy;
-import com.example.spot.auth.application.refactor.impl.oauth.KaKaoOauth;
+import com.example.spot.auth.application.refactor.strategy.OAuthStrategy;
+import com.example.spot.auth.infrastructure.oauth.KaKaoOauth;
 import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoOAuthTokenDTO;
 import com.example.spot.auth.presentation.dto.oauth.kakao.KaKaoUser;
 import com.example.spot.member.domain.Member;

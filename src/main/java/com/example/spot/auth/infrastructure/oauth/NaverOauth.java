@@ -1,4 +1,4 @@
-package com.example.spot.auth.application.refactor.impl.oauth;
+package com.example.spot.auth.infrastructure.oauth;
 
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.CLIENT_ID;
 import static com.example.spot.auth.infrastructure.constants.AuthConstants.GRANT_TYPE;
