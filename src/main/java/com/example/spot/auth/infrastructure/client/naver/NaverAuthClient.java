@@ -1,6 +1,6 @@
 package com.example.spot.auth.infrastructure.client.naver;
 
-import com.example.spot.auth.presentation.dto.oauth.naver.NaverOAuthToken.NaverOAuthTokenDTO;
+import com.example.spot.auth.presentation.dto.oauth.naver.NaverOAuthTokenDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
