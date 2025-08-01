@@ -1,5 +1,6 @@
 package com.example.spot.auth.application.refactor;
 
+import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 
 public interface OAuthStrategy {
@@ -7,5 +8,5 @@ public interface OAuthStrategy {
 
     String getOauthRedirectURL();
 
-    String extractEmail(String code);
+    Member toMember(String code); // 전략별 구현에서 Member 객체 생성
 }

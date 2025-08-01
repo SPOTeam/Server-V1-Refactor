@@ -4,6 +4,7 @@ import com.example.spot.auth.application.refactor.OAuthStrategy;
 import com.example.spot.auth.application.refactor.impl.oauth.GoogleOauth;
 import com.example.spot.auth.presentation.dto.GoogleOAuthToken;
 import com.example.spot.auth.presentation.dto.GoogleUser;
+import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,9 @@ public class GoogleOAuthStrategy implements OAuthStrategy {
     }
 
     @Override
-    public String extractEmail(String code) {
+    public Member toMember(String code) {
         GoogleOAuthToken token = googleOauth.requestAccessToken(code);
         GoogleUser user = googleOauth.requestUserInfo(token);
-        return user.email();
+        return Member.toMember(getType(), user.name(), user.email(), user.picture());
     }
 }

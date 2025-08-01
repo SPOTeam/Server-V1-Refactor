@@ -4,6 +4,7 @@ import com.example.spot.auth.application.refactor.OAuthStrategy;
 import com.example.spot.auth.application.refactor.impl.oauth.KaKaoOauth;
 import com.example.spot.auth.presentation.dto.KaKaoOAuthTokenDTO;
 import com.example.spot.auth.presentation.dto.KaKaoUser;
+import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,10 @@ public class KakaoOAuthStrategy implements OAuthStrategy {
     }
 
     @Override
-    public String extractEmail(String code) {
+    public Member toMember(String code) {
         KaKaoOAuthTokenDTO token = kaKaoOauth.requestAccessToken(code);
         KaKaoUser user = kaKaoOauth.requestUserInfo(token);
-        return user.kakao_account().email();
+        return Member.toMember(getType(), user.properties().nickname(), user.properties().nickname(),
+                user.properties().profile_image());
     }
 }
