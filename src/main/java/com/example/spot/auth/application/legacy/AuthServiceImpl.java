@@ -7,9 +7,6 @@ import com.example.spot.auth.domain.RsaKey;
 import com.example.spot.auth.domain.VerificationCode;
 import com.example.spot.auth.domain.rsa.RSAKeyRepository;
 import com.example.spot.auth.domain.verification.VerificationCodeRepository;
-import com.example.spot.auth.presentation.dto.naver.NaverCallback;
-import com.example.spot.auth.presentation.dto.naver.NaverMember;
-import com.example.spot.auth.presentation.dto.naver.NaverOAuthToken;
 import com.example.spot.auth.presentation.dto.rsa.Rsa;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
@@ -18,7 +15,6 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.application.message.MailService;
 import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.common.security.utils.MemberUtils;
 import com.example.spot.common.security.utils.RSAUtils;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
@@ -35,7 +31,6 @@ import com.example.spot.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.CheckMemberDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO.NicknameDuplicateDTO;
-import com.example.spot.member.presentation.dto.MemberResponseDTO.SocialLoginSignInDTO;
 import com.example.spot.study.domain.repository.StudyMemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -76,7 +71,6 @@ public class AuthServiceImpl implements AuthService {
     private final StudyJoinReasonRepository studyJoinReasonRepository;
 
     private final MailService mailService;
-    private final NaverOAuthService naverOAuthService;
 
     private final RSAUtils rsaUtils;
     private final RSAKeyRepository rsaKeyRepository;
@@ -125,171 +119,6 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteAllByMemberId(memberId);
 
         return MemberResponseDTO.InactiveMemberDTO.toDTO(member);
-    }
-
-    /* ----------------------------- 네이버 소셜로그인 API ------------------------------------- */
-
-    /**
-     * 네이버 로그인 인증 요청 URL로 실제 요청을 전송하고 로그인 페이지로 리디렉션하는 메서드입니다.
-     *
-     * @param request  : HTTPServletRequest
-     * @param response : HttpServletResponse
-     */
-    @Override
-    public void authorizeWithNaver(HttpServletRequest request, HttpServletResponse response) {
-        String url = naverOAuthService.getNaverAuthorizeUrl();
-        try {
-            response.sendRedirect(url);
-        } catch (Exception e) {
-            throw new MemberHandler(ErrorStatus._NAVER_SIGN_IN_INTEGRATION_FAILED);
-        }
-    }
-
-    /**
-     * SPOT 서비스에 네이버를 통해 로그인과 회원가입을 수행하는 함수입니다. 로그인 Callback 성공시 반환되는 naverCallback을 바탕으로 액세스 토큰을 발급받고 프로필에 접근합니다. 현재
-     * SPOT에 가입되지 않은 회원이라면, 반환된 프로필 정보를 기반으로 회원 정보를 생성하여 DB에 저장합니다. 현재 SPOT에 가입되어 있는 회원이라면, 소셜로그인 후 토큰 정보를 반환합니다.
-     *
-     * @param request       : HttpServletRequest
-     * @param response      : HttpServletResponse
-     * @param naverCallback : Callback 함수 성공시 반환되는 요소(code, state, error, error_description)
-     * @return SocialLoginSignInDTO(isSpotMember, signInDTO - 토큰정보)
-     */
-    @Override
-    public SocialLoginSignInDTO signInWithNaver(HttpServletRequest request, HttpServletResponse response,
-                                                NaverCallback naverCallback) throws Exception {
-        NaverMember.ResponseDTO responseDTO = naverOAuthService.getNaverMember(request, response, naverCallback);
-        return getSocialLoginSignInDTO(responseDTO);
-    }
-
-    /**
-     * SPOT 서비스에 네이버를 통해 로그인과 회원가입을 수행하는 함수입니다. 클라이언트로부터 전달받은 액세스 토큰을 통해 프로필에 접근합니다. 현재 SPOT에 가입되지 않은 회원이라면, 반환된 프로필 정보를
-     * 기반으로 회원 정보를 생성하여 DB에 저장합니다. 현재 SPOT에 가입되어 있는 회원이라면, 소셜로그인 후 토큰 정보를 반환합니다.
-     *
-     * @param request  : HttpServletRequest
-     * @param response : HttpServletResponse
-     * @return SocialLoginSignInDTO(isSpotMember, signInDTO - 토큰정보)
-     */
-    @Override
-    public SocialLoginSignInDTO signInWithNaver(HttpServletRequest request, HttpServletResponse response,
-                                                NaverOAuthToken.NaverTokenIssuanceDTO naverTokenDTO) throws Exception {
-        NaverMember.ResponseDTO responseDTO = naverOAuthService.getNaverMember(request, response, naverTokenDTO);
-        return getSocialLoginSignInDTO(responseDTO);
-    }
-
-    /**
-     * 네이버 회원 프로필을 통해 SocialLoginSignInDTO를 생성하는 함수입니다.
-     *
-     * @param responseDTO : 네이버 회원 프로필 DTO
-     * @return SocialLoginSignInDTO (SPOT 회원 정보 및 토큰 정보)
-     */
-    private SocialLoginSignInDTO getSocialLoginSignInDTO(NaverMember.ResponseDTO responseDTO) {
-        String email = responseDTO.getResponse().getEmail();
-
-        // 다른 로그인 방식을 사용한 계정이 있는지 확인
-        if (memberRepository.existsByEmailAndLoginTypeNot(email, LoginType.NAVER)) {
-            Member member = memberRepository.findByEmail(email)
-                    .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-            // 탈퇴한(inactive) 회원이면 기존 정보 삭제
-            if (member.getInactive() != null) {
-                refreshTokenRepository.deleteByMemberId(member.getId());
-                memberRepository.deleteById(member.getId());
-                entityManager.flush();
-            } else {
-                throw new MemberHandler(ErrorStatus._MEMBER_EMAIL_ALREADY_EXISTS);
-            }
-        }
-
-        // 네이버 로그인 계정이 있는지 확인
-        Boolean isSpotMember = Boolean.TRUE;
-        if (memberRepository.existsByEmailAndLoginType(email, LoginType.NAVER)) {
-            Member member = memberRepository.findByEmail(email)
-                    .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-            // 탈퇴한(inactive) 회원이면 기존 정보 삭제 후 회원 정보 저장
-            if (member.getInactive() != null) {
-                refreshTokenRepository.deleteByMemberId(member.getId());
-                memberRepository.deleteById(member.getId());
-                entityManager.flush();
-                isSpotMember = Boolean.FALSE;
-                signUpWithNaver(responseDTO);
-            }
-        } else {
-            isSpotMember = Boolean.FALSE;
-            signUpWithNaver(responseDTO);
-        }
-
-        Member member = memberRepository.findByEmailAndLoginType(email, LoginType.NAVER)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-
-        if (!isMemberExistsByCheckList(member)) {
-            isSpotMember = Boolean.FALSE;
-        }
-
-        // 로그인을 위한 토큰 발급
-        TokenDTO token = jwtTokenProvider.createToken(member.getId());
-        saveRefreshToken(member, token);
-
-        MemberResponseDTO.MemberSignInDTO signInDTO = MemberResponseDTO.MemberSignInDTO.builder()
-                .tokens(token)
-                .memberId(member.getId())
-                .loginType(member.getLoginType())
-                .email(member.getEmail())
-                .build();
-
-        return SocialLoginSignInDTO.toDTO(isSpotMember, signInDTO);
-    }
-
-    public boolean isMemberExistsByCheckList(Member member) {
-        Long memberId = member.getId();
-        return preferredThemeRepository.existsByMemberId(memberId) &&
-                preferredRegionRepository.existsByMemberId(memberId) &&
-                studyJoinReasonRepository.existsByMemberId(memberId);
-    }
-
-    /**
-     * 현재 SPOT에 가입되어 있지 않은 회원에 한해 회원 정보를 생성하여 DB에 저장합니다.
-     *
-     * @param memberDTO : naverCallback을 바탕으로 생성된 프로필 객체
-     */
-    private void signUpWithNaver(NaverMember.ResponseDTO memberDTO) {
-        String birthYear = memberDTO.getResponse().getBirthYear();
-        String birthDay = memberDTO.getResponse().getBirthDay();
-
-        LocalDate birth = null;
-        if (birthYear != null && birthDay != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            birth = LocalDate.parse(birthYear + "-" + birthDay, formatter);
-        }
-
-        Gender gender;
-        if (memberDTO.getResponse().getGender().equals("F")) {
-            gender = Gender.FEMALE;
-        } else if (memberDTO.getResponse().getGender().equals("M")) {
-            gender = Gender.MALE;
-        } else {
-            gender = Gender.UNKNOWN;
-        }
-
-        Member member = Member.builder()
-                .name(memberDTO.getResponse().getName())
-                .nickname(memberDTO.getResponse().getNickname())
-                .birth(birth)
-                .gender(gender)
-                .email(memberDTO.getResponse().getEmail())
-                .carrier(Carrier.NONE)
-                .phone(MemberUtils.generatePhoneNumber())
-                .loginId(memberDTO.getResponse().getEmail())
-                .password("")
-                .profileImage(memberDTO.getResponse().getProfileImage())
-                .personalInfo(false)
-                .idInfo(false)
-                .isAdmin(Boolean.FALSE)
-                .loginType(LoginType.NAVER)
-                .status(Status.ON)
-                .build();
-
-        memberRepository.save(member);
     }
 
     /* ----------------------------- 일반 로그인/회원가입 API ------------------------------------- */
@@ -636,6 +465,13 @@ public class AuthServiceImpl implements AuthService {
     public NicknameDuplicateDTO checkNicknameAvailability(String nickname) {
         boolean isDuplicate = memberRepository.existsByNickname(nickname);
         return new NicknameDuplicateDTO(nickname, isDuplicate);
+    }
+
+    public boolean isMemberExistsByCheckList(Member member) {
+        Long memberId = member.getId();
+        return preferredThemeRepository.existsByMemberId(memberId) &&
+                preferredRegionRepository.existsByMemberId(memberId) &&
+                studyJoinReasonRepository.existsByMemberId(memberId);
     }
 
     /**
