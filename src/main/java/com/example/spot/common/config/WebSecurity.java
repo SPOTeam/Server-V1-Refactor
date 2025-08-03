@@ -1,14 +1,10 @@
 package com.example.spot.common.config;
 
 
-import com.example.spot.common.security.filters.JwtAuthenticationFilter;
-import com.example.spot.common.security.oauth.CustomOAuth2UserService;
-import com.example.spot.common.security.oauth.CustomOAuthSuccessHandler;
-import com.example.spot.common.security.utils.JwtTokenProvider;
-import com.example.spot.member.application.legacy.MemberService;
 import com.example.spot.auth.application.refactor.UserDetailsServiceCustom;
+import com.example.spot.common.security.filters.JwtAuthenticationFilter;
+import com.example.spot.common.security.utils.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,16 +22,11 @@ public class WebSecurity {
 
     // JWT 토큰을 생성하고 유효성을 검사하는 JwtTokenProvider
     private final JwtTokenProvider jwtTokenProvider;
-    // 회원 정보를 처리하는 MemberService
-    private final MemberService memberService;
     // 사용자 정보를 처리하는 UserDetailsServiceCustom
     private final UserDetailsServiceCustom userDetailsService;
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomOAuthSuccessHandler customOAuthSuccessHandler;
 
     /**
-     *
      * @param http
      * @return
      * @throws Exception
@@ -43,7 +35,7 @@ public class WebSecurity {
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
         // CSRF 보안 설정을 비활성화합니다.
-        http.csrf( (csrf) -> csrf.disable());
+        http.csrf((csrf) -> csrf.disable());
 
         // HttpSecurity 설정을 구성합니다. JWT 토큰을 통한 검증을 거치지 않는 요청은 permitAll()로 설정합니다.
         http.authorizeHttpRequests((authz) -> authz
@@ -58,7 +50,8 @@ public class WebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/spot/login/rsa", "POST")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/naver", "POST")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/naver/redirect", "GET")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/naver/authorize/test", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/naver/authorize/test", "GET"))
+                        .permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/spot/login/kakao", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/kakao", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/spot/members/sign-in/kakao/redirect", "GET")).permitAll()
@@ -68,11 +61,6 @@ public class WebSecurity {
                         .requestMatchers(new AntPathRequestMatcher("/v3/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**", "GET")).permitAll()
                         .anyRequest().authenticated()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth/authorize"))
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/spot/members/sign-in/google/redirect"))
-                        .successHandler(customOAuthSuccessHandler)
                 )
                 // JWT 토큰을 검증하는 필터를 UsernamePasswordAuthenticationFilter 앞에 추가합니다.
                 .addFilterBefore(getJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -87,10 +75,11 @@ public class WebSecurity {
 
     /**
      * JWT 토큰을 검증하는 필터를 생성합니다.
+     *
      * @return JwtAuthenticationFilter
      */
     private JwtAuthenticationFilter getJwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, memberService, userDetailsService);
+        return new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService);
     }
 
     @Bean

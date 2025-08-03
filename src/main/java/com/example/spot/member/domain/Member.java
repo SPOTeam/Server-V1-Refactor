@@ -1,6 +1,7 @@
 package com.example.spot.member.domain;
 
 import com.example.spot.common.entity.BaseEntity;
+import com.example.spot.common.security.utils.MemberUtils;
 import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
@@ -29,9 +30,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Member extends BaseEntity {
 
+    public static final String DEFAULT_PASSWORD = "default";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
@@ -93,6 +95,23 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+
+    public static Member toMemberByOAuth(LoginType loginType, String name, String email, String profileImage) {
+        return Member.builder()
+                .name(name)
+                .nickname(name)
+                .email(email)
+                .profileImage(profileImage)
+                .carrier(Carrier.NONE)
+                .password(DEFAULT_PASSWORD)
+                .phone(MemberUtils.generatePhoneNumber())
+                .birth(LocalDate.now())
+                .personalInfo(false)
+                .idInfo(false)
+                .isAdmin(false)
+                .loginType(loginType)
+                .build();
+    }
 
     public void updateTerm(Boolean personalInfo, Boolean idInfo) {
         this.personalInfo = personalInfo;
