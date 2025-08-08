@@ -20,7 +20,7 @@ public final class SafeFeignExecutor {
 
     private static String extractMessage(FeignException e) {
         return e.responseBody()
-                .map(body -> new String(body.array()))  // byte[] → String
+                .map(body -> new String(body.array()))
                 .orElse(e.getMessage());
     }
 }
