@@ -1,5 +1,6 @@
-package com.example.spot.post.domain.association;
+package com.example.spot.post.infrastructure.jpa;
 
+import com.example.spot.post.domain.association.LikedPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

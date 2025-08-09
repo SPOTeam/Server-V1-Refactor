@@ -1,17 +1,17 @@
 package com.example.spot.auth.application.refactor.impl;
 
 import com.example.spot.auth.domain.RefreshToken;
-import com.example.spot.auth.domain.RefreshTokenRepository;
+import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.LoginType;
-import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.PreferredRegionRepository;
-import com.example.spot.member.infrastructure.PreferredThemeRepository;
-import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.PreferredRegionRepository;
+import com.example.spot.member.infrastructure.jpa.PreferredThemeRepository;
+import com.example.spot.member.infrastructure.jpa.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

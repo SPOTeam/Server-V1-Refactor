@@ -1,11 +1,11 @@
-package com.example.spot.post.infrastructure;
+package com.example.spot.post.infrastructure.querydsl.impl;
 
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.domain.PostRepositoryCustom;
 import com.example.spot.post.domain.QPost;
 import com.example.spot.post.domain.QPostComment;
 import com.example.spot.post.domain.association.QLikedPost;
 import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.infrastructure.querydsl.PostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

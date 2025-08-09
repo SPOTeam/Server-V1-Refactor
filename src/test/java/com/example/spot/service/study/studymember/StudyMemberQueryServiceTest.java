@@ -55,9 +55,9 @@ public class StudyMemberQueryServiceTest {
     private static StudyMember studyMember2;
     private static StudyMember apply;
     private static ToDo toDo;
-    
+
     @BeforeEach
-    void setup(){
+    void setup() {
         member = Member.builder()
                 .id(1L)
                 .build();
@@ -67,18 +67,22 @@ public class StudyMemberQueryServiceTest {
         study = Study.builder()
                 .build();
         studyMember = StudyMember.builder()
-                .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction("title").study(study).member(member).isOwned(true).status(StudyApplicationStatus.APPROVED)
+                .build();
         apply = StudyMember.builder()
-                .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED).build();
+                .introduction("title").study(study).member(member).isOwned(false).status(StudyApplicationStatus.APPLIED)
+                .build();
         studyMember2 = StudyMember.builder()
-                .introduction("title").study(study).member(member2).isOwned(true).status(StudyApplicationStatus.APPROVED).build();
+                .introduction("title").study(study).member(member2).isOwned(true)
+                .status(StudyApplicationStatus.APPROVED).build();
         toDo = ToDo.builder()
                 .id(1L)
                 .build();
 
         Long studyId = 1L;
 
-        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+        when(studyMemberRepository.findByMemberIdAndStudyIdAndStatus(1L, studyId,
+                StudyApplicationStatus.APPROVED)).thenReturn(
                 Optional.ofNullable(studyMember));
         Authentication authentication = new UsernamePasswordAuthenticationToken("1", null, Collections.emptyList());
         // SecurityContext 생성 및 설정
@@ -95,7 +99,8 @@ public class StudyMemberQueryServiceTest {
 
         // given
         Long studyId = 1L;
-        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(List.of(studyMember));
+        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+                List.of(studyMember));
 
         // when
         StudyMemberResponseDTO.StudyMemberListDTO responseDTO = studyMemberQueryService.findStudyMembers(studyId);
@@ -112,7 +117,8 @@ public class StudyMemberQueryServiceTest {
 
         // given
         Long studyId = 1L;
-        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(List.of());
+        when(studyMemberRepository.findAllByStudyIdAndStatus(studyId, StudyApplicationStatus.APPROVED)).thenReturn(
+                List.of());
 
         // when & then
         assertThrows(GeneralException.class, () -> studyMemberQueryService.findStudyMembers(studyId));

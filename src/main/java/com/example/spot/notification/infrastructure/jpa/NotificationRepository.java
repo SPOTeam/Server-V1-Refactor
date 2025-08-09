@@ -1,5 +1,6 @@
-package com.example.spot.notification.domain;
+package com.example.spot.notification.infrastructure.jpa;
 
+import com.example.spot.notification.domain.Notification;
 import com.example.spot.notification.domain.enums.NotifyType;
 import java.util.Optional;
 
@@ -11,9 +12,13 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    Optional<Notification> findByMemberIdAndStudyIdAndTypeAndIsChecked(Long memberId, Long studyId, NotifyType type, boolean isChecked);
+    Optional<Notification> findByMemberIdAndStudyIdAndTypeAndIsChecked(Long memberId, Long studyId, NotifyType type,
+                                                                       boolean isChecked);
+
     List<Notification> findByMemberIdAndTypeNot(Long memberId, Pageable pageable, NotifyType type);
-    List<Notification> findByMemberIdAndTypeAndIsChecked(Long memberId, Pageable pageable, NotifyType type, boolean isChecked);
+
+    List<Notification> findByMemberIdAndTypeAndIsChecked(Long memberId, Pageable pageable, NotifyType type,
+                                                         boolean isChecked);
 
     List<Notification> findByType(NotifyType type);
 }

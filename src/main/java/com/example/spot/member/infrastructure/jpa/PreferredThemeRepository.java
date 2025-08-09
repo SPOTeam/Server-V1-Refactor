@@ -1,4 +1,4 @@
-package com.example.spot.member.infrastructure;
+package com.example.spot.member.infrastructure.jpa;
 
 import com.example.spot.member.domain.association.PreferredTheme;
 import java.util.List;

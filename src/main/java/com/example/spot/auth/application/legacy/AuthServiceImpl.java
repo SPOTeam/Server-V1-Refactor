@@ -2,7 +2,7 @@ package com.example.spot.auth.application.legacy;
 
 
 import com.example.spot.auth.domain.RefreshToken;
-import com.example.spot.auth.domain.RefreshTokenRepository;
+import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.domain.RsaKey;
 import com.example.spot.auth.domain.VerificationCode;
 import com.example.spot.auth.domain.rsa.RSAKeyRepository;
@@ -22,10 +22,10 @@ import com.example.spot.member.domain.enums.Carrier;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
-import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.member.infrastructure.PreferredRegionRepository;
-import com.example.spot.member.infrastructure.PreferredThemeRepository;
-import com.example.spot.member.infrastructure.StudyJoinReasonRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.PreferredRegionRepository;
+import com.example.spot.member.infrastructure.jpa.PreferredThemeRepository;
+import com.example.spot.member.infrastructure.jpa.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberRequestDTO.SignUpDetailDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;

@@ -1,5 +1,6 @@
-package com.example.spot.post.domain.association;
+package com.example.spot.post.infrastructure.jpa;
 
+import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.domain.enums.Board;
 
 import org.springframework.data.domain.Page;
@@ -21,5 +22,6 @@ public interface MemberScrapRepository extends JpaRepository<MemberScrap, Long> 
     Page<MemberScrap> findByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
     @Query("SELECT ms FROM MemberScrap ms LEFT JOIN FETCH ms.post p WHERE ms.member.id = :memberId AND p.board = :board ORDER BY ms.createdAt DESC")
-    Page<MemberScrap> findByMemberIdAndPost_Board(@Param("memberId") Long memberId, @Param("board") Board board, Pageable pageable);
+    Page<MemberScrap> findByMemberIdAndPost_Board(@Param("memberId") Long memberId, @Param("board") Board board,
+                                                  Pageable pageable);
 }

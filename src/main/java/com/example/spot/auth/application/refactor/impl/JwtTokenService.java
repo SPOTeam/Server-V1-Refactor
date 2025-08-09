@@ -2,13 +2,13 @@ package com.example.spot.auth.application.refactor.impl;
 
 import com.example.spot.auth.application.refactor.TokenService;
 import com.example.spot.auth.domain.RefreshToken;
-import com.example.spot.auth.domain.RefreshTokenRepository;
+import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

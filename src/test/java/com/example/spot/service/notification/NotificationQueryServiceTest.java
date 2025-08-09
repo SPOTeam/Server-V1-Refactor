@@ -12,7 +12,7 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.member.domain.Member;
 import com.example.spot.notification.application.impl.GetNotificationUseCaseImpl;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.notification.domain.NotificationRepository;
+import com.example.spot.notification.infrastructure.jpa.NotificationRepository;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationListDTO;
 import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.StudyNotificationListDTO;

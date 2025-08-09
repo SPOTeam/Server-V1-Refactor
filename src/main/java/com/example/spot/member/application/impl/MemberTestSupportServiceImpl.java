@@ -1,7 +1,7 @@
 package com.example.spot.member.application.impl;
 
 import com.example.spot.auth.domain.RefreshToken;
-import com.example.spot.auth.domain.RefreshTokenRepository;
+import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
@@ -11,7 +11,7 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.Gender;
 import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.domain.enums.Status;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import java.util.UUID;

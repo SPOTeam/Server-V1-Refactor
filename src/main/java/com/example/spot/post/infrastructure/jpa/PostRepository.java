@@ -1,5 +1,7 @@
-package com.example.spot.post.domain;
+package com.example.spot.post.infrastructure.jpa;
 
+import com.example.spot.post.domain.Post;
+import com.example.spot.post.infrastructure.querydsl.PostRepositoryCustom;
 import com.example.spot.post.domain.enums.Board;
 
 import org.springframework.data.domain.Page;
@@ -8,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     // 정렬
-     Page<Post> findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board board, Pageable pageable);
+    Page<Post> findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board board, Pageable pageable);
 
     // 정렬 조건 필요
     Page<Post> findByPostReportListIsEmptyOrderByCreatedAtDesc(Pageable pageable);

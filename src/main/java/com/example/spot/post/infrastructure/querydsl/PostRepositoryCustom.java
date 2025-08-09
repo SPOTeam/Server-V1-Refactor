@@ -1,5 +1,6 @@
-package com.example.spot.post.domain;
+package com.example.spot.post.infrastructure.querydsl;
 
+import com.example.spot.post.domain.Post;
 import java.util.List;
 
 public interface PostRepositoryCustom {

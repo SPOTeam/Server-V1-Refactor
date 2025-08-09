@@ -1,7 +1,7 @@
-package com.example.spot.post.infrastructure;
+package com.example.spot.post.infrastructure.validator;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
-import com.example.spot.post.domain.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.presentation.validator.ExistPost;
 
 import jakarta.validation.ConstraintValidator;
@@ -16,7 +16,8 @@ public class ExistPostValidator implements ConstraintValidator<ExistPost, Long> 
     private final PostRepository postRepository;
 
     @Override
-    public void initialize(ExistPost constraintAnnotation) {}
+    public void initialize(ExistPost constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long postId, ConstraintValidatorContext context) {
@@ -36,7 +37,7 @@ public class ExistPostValidator implements ConstraintValidator<ExistPost, Long> 
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(errorStatus.getMessage())
-                .addConstraintViolation();
+                    .addConstraintViolation();
         }
 
         return isValid;

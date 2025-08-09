@@ -1,4 +1,4 @@
-package com.example.spot.member.infrastructure;
+package com.example.spot.member.infrastructure.jpa;
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;

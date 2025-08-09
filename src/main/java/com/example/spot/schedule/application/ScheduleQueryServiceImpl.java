@@ -5,7 +5,7 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.schedule.domain.Schedule;
 import com.example.spot.schedule.domain.ScheduleRepository;
 import com.example.spot.schedule.domain.association.Quiz;

@@ -1,6 +1,6 @@
 package com.example.spot.post.application.query.impl;
 
-import com.example.spot.post.domain.association.LikedPostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
