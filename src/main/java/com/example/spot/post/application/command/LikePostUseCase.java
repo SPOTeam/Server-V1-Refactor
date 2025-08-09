@@ -1,6 +1,6 @@
 package com.example.spot.post.application.command;
 
-import com.example.spot.post.presentation.dto.response.PostLikeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostLikeResponse;
 
 public interface LikePostUseCase {
 

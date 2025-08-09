@@ -1,14 +1,14 @@
 package com.example.spot.post.presentation.controller.query;
 
-import com.example.spot.comment.presentation.dto.CommentResponse;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.post.application.query.GetPostUseCase;
-import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
-import com.example.spot.post.presentation.dto.response.PostBest5Response;
-import com.example.spot.post.presentation.dto.response.PostPagingResponse;
-import com.example.spot.post.presentation.dto.response.PostRepresentativeResponse;
-import com.example.spot.post.presentation.dto.response.PostSingleResponse;
+import com.example.spot.post.presentation.dto.response.post.PostAnnouncementResponse;
+import com.example.spot.post.presentation.dto.response.post.PostBest5Response;
+import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
+import com.example.spot.post.presentation.dto.response.post.PostRepresentativeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostSingleResponse;
 import com.example.spot.post.presentation.validator.ExistPost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,12 +37,12 @@ public class GetPostController {
     @Operation(
             summary = "[게시판] 게시글 단건 조회 API",
             description = """
-        게시글 ID를 받아 게시글을 조회합니다. 
-        
-        해당 게시글에 대한 상세 정보를 반환합니다. 
-        
-        좋아요나 스크랩으로 인한 조회 시 그 여부를 받습니다.
-        """,
+                    게시글 ID를 받아 게시글을 조회합니다. 
+                    
+                    해당 게시글에 대한 상세 정보를 반환합니다. 
+                    
+                    좋아요나 스크랩으로 인한 조회 시 그 여부를 받습니다.
+                    """,
             security = @SecurityRequirement(name = "accessToken")
     )
     @GetMapping("/{postId}")
@@ -59,14 +59,14 @@ public class GetPostController {
     @Operation(
             summary = "[게시판] 게시글 페이지 조회 API",
             description = """
-        게시글 종류를 받아 페이지 번호와 페이지 크기에 해당하는 게시글을 조회합니다.
-        
-        게시글 종류는 ALL, PASS_EXPERIENCE, INFORMATION_SHARING, COUNSELING, JOB_TALK, FREE_TALK, SPOT_ANNOUNCEMENT 중 하나입니다.
-        
-        페이지 번호는 0부터 시작하며 기본값은 0입니다.
-        
-        페이지 크기는 1부터 시작하며 기본값은 10입니다.
-        """
+                    게시글 종류를 받아 페이지 번호와 페이지 크기에 해당하는 게시글을 조회합니다.
+                    
+                    게시글 종류는 ALL, PASS_EXPERIENCE, INFORMATION_SHARING, COUNSELING, JOB_TALK, FREE_TALK, SPOT_ANNOUNCEMENT 중 하나입니다.
+                    
+                    페이지 번호는 0부터 시작하며 기본값은 0입니다.
+                    
+                    페이지 크기는 1부터 시작하며 기본값은 10입니다.
+                    """
     )
     @GetMapping
     public ApiResponse<PostPagingResponse> getPagingPost(
@@ -119,14 +119,14 @@ public class GetPostController {
     @Operation(
             summary = "[마이페이지] 게시글 스크랩 페이지 조회 API",
             description = """
-        로그인한 회원이 스크랩한 게시글을 게시글 종류와 페이지 번호, 페이지 크기를 받아 조회합니다.
-        
-        게시글 종류는 ALL, PASS_EXPERIENCE, INFORMATION_SHARING, COUNSELING, JOB_TALK, FREE_TALK, SPOT_ANNOUNCEMENT 중 하나입니다.
-        
-        페이지 번호는 0부터 시작하며 기본값은 0입니다.
-        
-        페이지 크기는 1부터 시작하며 기본값은 10입니다.
-        """
+                    로그인한 회원이 스크랩한 게시글을 게시글 종류와 페이지 번호, 페이지 크기를 받아 조회합니다.
+                    
+                    게시글 종류는 ALL, PASS_EXPERIENCE, INFORMATION_SHARING, COUNSELING, JOB_TALK, FREE_TALK, SPOT_ANNOUNCEMENT 중 하나입니다.
+                    
+                    페이지 번호는 0부터 시작하며 기본값은 0입니다.
+                    
+                    페이지 크기는 1부터 시작하며 기본값은 10입니다.
+                    """
     )
     @GetMapping("/scraps")
     public ApiResponse<PostPagingResponse> getScrapPagingPost(

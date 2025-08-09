@@ -10,7 +10,7 @@ import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.domain.enums.Gender;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.story.application.StoryQueryServiceImpl;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;

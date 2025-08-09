@@ -6,7 +6,7 @@ import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.story.domain.Story;
 import com.example.spot.story.domain.StoryRepository;
 import com.example.spot.story.domain.association.StoryComment;

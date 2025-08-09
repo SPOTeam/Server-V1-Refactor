@@ -14,7 +14,7 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.notification.application.impl.HandleAppliedStudyParticipationUseCaseImpl;
 import com.example.spot.notification.application.impl.ReadNotificationUseCaseImpl;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.notification.domain.NotificationRepository;
+import com.example.spot.notification.infrastructure.jpa.NotificationRepository;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationProcessDTO;
 import com.example.spot.study.domain.Study;

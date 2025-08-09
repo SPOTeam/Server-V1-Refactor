@@ -1,7 +1,7 @@
 package com.example.spot.post.application.command;
 
-import com.example.spot.comment.presentation.dto.CommentCreateRequest;
-import com.example.spot.comment.presentation.dto.CommentCreateResponse;
+import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
+import com.example.spot.post.presentation.dto.response.comment.CommentCreateResponse;
 
 public interface ManagePostCommentUseCase {
 

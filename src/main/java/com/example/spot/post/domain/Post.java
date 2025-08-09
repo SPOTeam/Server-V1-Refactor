@@ -1,13 +1,12 @@
 package com.example.spot.post.domain;
 
 import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.comment.domain.PostComment;
 import com.example.spot.post.domain.association.PostImage;
 import com.example.spot.report.domain.PostReport;
 import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.post.presentation.dto.request.PostUpdateRequest;
+import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
 import com.example.spot.member.domain.Member;
 
 import jakarta.persistence.*;

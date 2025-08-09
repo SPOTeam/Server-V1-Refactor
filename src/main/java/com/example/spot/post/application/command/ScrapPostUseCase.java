@@ -1,8 +1,8 @@
 package com.example.spot.post.application.command;
 
-import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
-import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
-import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
+import com.example.spot.post.presentation.dto.request.post.ScrapAllDeleteRequest;
+import com.example.spot.post.presentation.dto.response.post.ScrapPostResponse;
+import com.example.spot.post.presentation.dto.response.post.ScrapsPostDeleteResponse;
 
 public interface ScrapPostUseCase {
 

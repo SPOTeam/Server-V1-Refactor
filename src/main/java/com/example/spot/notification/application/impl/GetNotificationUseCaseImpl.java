@@ -4,7 +4,7 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.notification.application.GetNotificationUseCase;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.notification.domain.NotificationRepository;
+import com.example.spot.notification.infrastructure.jpa.NotificationRepository;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationListDTO;
 import com.example.spot.notification.presentation.dto.response.NotificationResponseDTO.NotificationListDTO.NotificationDTO;

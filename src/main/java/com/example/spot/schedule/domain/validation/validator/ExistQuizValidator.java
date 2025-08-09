@@ -15,7 +15,8 @@ public class ExistQuizValidator implements ConstraintValidator<ExistQuiz, Long> 
     private final QuizRepository quizRepository;
 
     @Override
-    public void initialize(ExistQuiz constraintAnnotation) {}
+    public void initialize(ExistQuiz constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long quizId, ConstraintValidatorContext context) {

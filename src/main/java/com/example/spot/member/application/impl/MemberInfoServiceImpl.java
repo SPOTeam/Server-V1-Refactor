@@ -3,7 +3,7 @@ package com.example.spot.member.application.impl;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.member.application.MemberInfoService;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.member.presentation.dto.MemberRequestDTO.MemberUpdateDTO;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;

@@ -15,7 +15,8 @@ public class ExistScheduleValidator implements ConstraintValidator<ExistSchedule
     private final ScheduleRepository scheduleRepository;
 
     @Override
-    public void initialize(ExistSchedule constraintAnnotation) {}
+    public void initialize(ExistSchedule constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long scheduleId, ConstraintValidatorContext context) {

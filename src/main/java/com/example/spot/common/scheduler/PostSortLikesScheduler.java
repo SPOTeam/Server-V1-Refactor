@@ -2,8 +2,8 @@ package com.example.spot.common.scheduler;
 
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.schedule.PostScheduleLikes;
-import com.example.spot.post.domain.PostRepository;
-import com.example.spot.post.domain.schedule.PostScheduleLikesRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostScheduleLikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

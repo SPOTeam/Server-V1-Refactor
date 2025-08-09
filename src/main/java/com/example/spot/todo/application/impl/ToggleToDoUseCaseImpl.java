@@ -5,7 +5,7 @@ import com.example.spot.common.api.exception.handler.StudyHandler;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.member.domain.Member;
 import com.example.spot.notification.domain.Notification;
-import com.example.spot.notification.domain.NotificationRepository;
+import com.example.spot.notification.infrastructure.jpa.NotificationRepository;
 import com.example.spot.notification.domain.enums.NotifyType;
 import com.example.spot.study.domain.association.StudyMember;
 import com.example.spot.study.domain.enums.StudyApplicationStatus;

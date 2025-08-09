@@ -1,17 +1,17 @@
 package com.example.spot.post.application.command.impl;
 
-import com.example.spot.comment.domain.PostComment;
-import com.example.spot.comment.domain.PostCommentRepository;
-import com.example.spot.comment.presentation.dto.CommentCreateRequest;
-import com.example.spot.comment.presentation.dto.CommentCreateResponse;
+import com.example.spot.post.domain.PostComment;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
+import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
+import com.example.spot.post.presentation.dto.response.comment.CommentCreateResponse;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.infrastructure.MemberRepository;
+import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.ManagePostCommentUseCase;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.domain.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,44 +46,21 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
 
-        if (request.getParentCommentId() == null) {
-            // 부모 댓글 생성
-            PostComment comment = PostComment.builder()
-                    .content(request.getContent())
-                    .isAnonymous(request.isAnonymous())
-                    .post(post)
-                    .parentComment(null)
-                    .member(member)
-                    .build();
+        // 부모 댓글 생성
+        PostComment comment = PostComment.builder()
+                .content(request.getContent())
+                .isAnonymous(request.isAnonymous())
+                .post(post)
+                .parentComment(null)
+                .member(member)
+                .build();
 
-            // 댓글 객체 저장
-            comment = postCommentRepository.saveAndFlush(comment);
-            post.addComment(comment);
-            post.plusCommentNum();
+        // 댓글 객체 저장
+        comment = postCommentRepository.saveAndFlush(comment);
+        post.addComment(comment);
+        post.plusCommentNum();
 
-            // 생성된 댓글 정보 반환
-            return CommentCreateResponse.toDTO(comment);
-
-        } else {
-            // 자식 댓글 생성
-            PostComment parentComment = postCommentRepository.findById(request.getParentCommentId())
-                    .orElseThrow(() -> new PostHandler(ErrorStatus._POST_PARENT_COMMENT_NOT_FOUND));
-
-            PostComment comment = PostComment.builder()
-                    .content(request.getContent())
-                    .isAnonymous(request.isAnonymous())
-                    .post(post)
-                    .parentComment(parentComment)
-                    .member(member)
-                    .build();
-
-            // 댓글 객체 저장
-            comment = postCommentRepository.saveAndFlush(comment);
-            post.addComment(comment);
-            post.plusCommentNum();
-
-            // 생성된 댓글 정보와 부모 댓글 ID 반환
-            return CommentCreateResponse.toDTOwithParent(comment, parentComment.getId());
-        }
+        // 생성된 댓글 정보 반환
+        return CommentCreateResponse.toDTO(comment);
     }
 }
