@@ -1,20 +1,18 @@
 package com.example.spot.post.infrastructure;
 
-import com.example.spot.comment.domain.QPostComment;
 import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostRepositoryCustom;
 import com.example.spot.post.domain.QPost;
+import com.example.spot.post.domain.QPostComment;
 import com.example.spot.post.domain.association.QLikedPost;
 import com.example.spot.post.domain.enums.Board;
-import com.example.spot.post.domain.PostRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +26,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private final QPostComment comment = QPostComment.postComment;
     private final QLikedPost like = QLikedPost.likedPost;
 
-    //댓글순
+    // 댓글순
     @Override
     public List<Post> findTopByOrderByCommentCountDesc() {
         return jpaQueryFactory

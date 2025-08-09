@@ -6,17 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.comment.domain.PostComment;
-import com.example.spot.comment.domain.PostCommentRepository;
-import com.example.spot.comment.domain.association.LikedPostComment;
-import com.example.spot.comment.domain.association.LikedPostCommentRepository;
-import com.example.spot.comment.presentation.dto.CommentCreateRequest;
-import com.example.spot.comment.presentation.dto.CommentCreateResponse;
-import com.example.spot.comment.presentation.dto.CommentLikeResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.MemberRepository;
-import com.example.spot.post.application.command.impl.LikePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.LikePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostUseCaseImpl;
@@ -24,19 +16,25 @@ import com.example.spot.post.application.command.impl.ScrapPostUseCaseImpl;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostComment;
+import com.example.spot.post.domain.PostCommentRepository;
 import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.domain.association.LikedPost;
+import com.example.spot.post.domain.association.LikedPostComment;
+import com.example.spot.post.domain.association.LikedPostCommentRepository;
 import com.example.spot.post.domain.association.LikedPostRepository;
 import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.domain.association.MemberScrapRepository;
 import com.example.spot.post.domain.enums.Board;
-import com.example.spot.post.presentation.dto.request.PostCreateRequest;
-import com.example.spot.post.presentation.dto.request.PostUpdateRequest;
-import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
-import com.example.spot.post.presentation.dto.response.PostCreateResponse;
-import com.example.spot.post.presentation.dto.response.PostLikeResponse;
-import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
-import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
+import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
+import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
+import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
+import com.example.spot.post.presentation.dto.request.post.ScrapAllDeleteRequest;
+import com.example.spot.post.presentation.dto.response.comment.CommentCreateResponse;
+import com.example.spot.post.presentation.dto.response.post.PostCreateResponse;
+import com.example.spot.post.presentation.dto.response.post.PostLikeResponse;
+import com.example.spot.post.presentation.dto.response.post.ScrapPostResponse;
+import com.example.spot.post.presentation.dto.response.post.ScrapsPostDeleteResponse;
 import com.example.spot.report.application.ReportCommandServiceImpl;
 import com.example.spot.report.domain.PostReport;
 import com.example.spot.report.domain.PostReportRepository;
@@ -89,9 +87,6 @@ class PostCommandServiceTest {
 
     @Mock
     private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
-
-    @InjectMocks
-    private LikePostCommentUseCaseImpl likePostCommentUseCase;
 
     @InjectMocks
     private LikePostUseCaseImpl likePostUseCase;
@@ -593,255 +588,6 @@ class PostCommandServiceTest {
         // when & then
         assertThrows(PostHandler.class,
                 () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
-    }
-
-    @Test
-    @DisplayName("댓글 작성 - 상위 댓글이 존재하지 않는 경우 (실패)")
-    void createComment_InvalidParent_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long postId = 2L;
-        getAuthentication(memberId);
-
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder()
-                .content("댓글3")
-                .anonymous(false)
-                .parentCommentId(3L)
-                .build();
-
-        // when & then
-        assertThrows(PostHandler.class,
-                () -> managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest));
-    }
-
-    /*-------------------------------------------------------- 댓글 좋아요 ------------------------------------------------------------------------*/
-
-    @Test
-    @DisplayName("댓글 좋아요 - (성공)")
-    void likeComment_Success() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.saveAndFlush(any(LikedPostComment.class)))
-                .thenReturn(member1LikedComment1);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
-                .thenReturn(1L);
-
-        // when
-        CommentLikeResponse result = likePostCommentUseCase.likeComment(commentId, memberId);
-
-        // then
-        assertNotNull(result);
-        assertThat(result.getCommentId()).isEqualTo(1L);
-        assertThat(result.getLikeCount()).isEqualTo(1L);
-        assertThat(result.getDisLikeCount()).isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("댓글 좋아요 - 댓글이 존재하지 않는 경우 (실패)")
-    void likeComment_NotExisted_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 3L;
-        getAuthentication(memberId);
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.likeComment(commentId, memberId));
-    }
-
-    @Test
-    @DisplayName("댓글 좋아요 - 이미 좋아요 한 경우 (실패)")
-    void likeComment_AlreadyLiked_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 3L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId))
-                .thenReturn(Optional.of(member1LikedComment1));
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.likeComment(commentId, memberId));
-    }
-
-    /*-------------------------------------------------------- 댓글 좋아요 취소 ------------------------------------------------------------------------*/
-
-    @Test
-    @DisplayName("댓글 좋아요 취소 - (성공)")
-    void cancelCommentLike_Success() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId))
-                .thenReturn(Optional.of(member1LikedComment1));
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
-                .thenReturn(0L);
-
-        // when
-        CommentLikeResponse result = likePostCommentUseCase.cancelCommentLike(commentId, memberId);
-
-        // then
-        assertNotNull(result);
-        assertThat(result.getCommentId()).isEqualTo(1L);
-        assertThat(result.getLikeCount()).isEqualTo(0L);
-        assertThat(result.getDisLikeCount()).isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("댓글 좋아요 취소 - 댓글이 존재하지 않는 경우 (실패)")
-    void cancelCommentLike_NotExisted_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 3L;
-        getAuthentication(memberId);
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentLike(commentId, memberId));
-    }
-
-    @Test
-    @DisplayName("댓글 좋아요 취소 - 좋아요 한 댓글이 아닌 경우 (실패)")
-    void cancelCommentLike_NotLiked_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 2L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(memberId, commentId))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentLike(commentId, memberId));
-    }
-
-    /*-------------------------------------------------------- 댓글 싫어요 ------------------------------------------------------------------------*/
-
-    @Test
-    @DisplayName("댓글 싫어요 - (성공)")
-    void dislikeComment_Success() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.saveAndFlush(any(LikedPostComment.class)))
-                .thenReturn(member1LikedComment1);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
-                .thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(commentId))
-                .thenReturn(1L);
-
-        // when
-        CommentLikeResponse result = likePostCommentUseCase.dislikeComment(commentId, memberId);
-
-        // then
-        assertNotNull(result);
-        assertThat(result.getCommentId()).isEqualTo(1L);
-        assertThat(result.getLikeCount()).isEqualTo(1L);
-        assertThat(result.getDisLikeCount()).isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("댓글 싫어요 - 댓글이 존재하지 않는 경우 (실패)")
-    void dislikeComment_NotExisted_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 3L;
-        getAuthentication(memberId);
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.dislikeComment(commentId, memberId));
-
-    }
-
-    @Test
-    @DisplayName("댓글 싫어요 - 이미 싫어요 한 경우 (실패)")
-    void dislikeComment_AlreadyDisliked_Fail() {
-
-        // given
-        Long memberId = 2L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId))
-                .thenReturn(Optional.of(member2LikedComment1));
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.dislikeComment(commentId, memberId));
-    }
-
-    /*-------------------------------------------------------- 댓글 싫어요 취소 ------------------------------------------------------------------------*/
-
-    @Test
-    @DisplayName("댓글 싫어요 취소 - (성공)")
-    void cancelCommentDislike_Success() {
-
-        // given
-        Long memberId = 2L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId))
-                .thenReturn(Optional.of(member2LikedComment1));
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(commentId))
-                .thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(commentId))
-                .thenReturn(0L);
-
-        // when
-        CommentLikeResponse result = likePostCommentUseCase.cancelCommentDislike(commentId, memberId);
-
-        // then
-        assertNotNull(result);
-        assertThat(result.getCommentId()).isEqualTo(1L);
-        assertThat(result.getLikeCount()).isEqualTo(1L);
-        assertThat(result.getDisLikeCount()).isEqualTo(0L);
-    }
-
-    @Test
-    @DisplayName("댓글 싫어요 취소 - 댓글이 존재하지 않는 경우 (실패)")
-    void cancelCommentDislike_NotExisted_Fail() {
-
-        // given
-        Long memberId = 2L;
-        Long commentId = 3L;
-        getAuthentication(memberId);
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentDislike(commentId, memberId));
-    }
-
-    @Test
-    @DisplayName("댓글 싫어요 취소 - 싫어요 한 댓글이 아닌 경우 (실패)")
-    void cancelCommentDislike_NotDisliked_Fail() {
-
-        // given
-        Long memberId = 1L;
-        Long commentId = 1L;
-        getAuthentication(memberId);
-
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(memberId, commentId))
-                .thenReturn(Optional.empty());
-
-        // when & then
-        assertThrows(PostHandler.class, () -> likePostCommentUseCase.cancelCommentDislike(commentId, memberId));
     }
 
     /*-------------------------------------------------------- 게시글 스크랩 ------------------------------------------------------------------------*/

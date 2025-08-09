@@ -1,11 +1,11 @@
 package com.example.spot.post.application.query;
 
-import com.example.spot.comment.presentation.dto.CommentResponse;
-import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
-import com.example.spot.post.presentation.dto.response.PostBest5Response;
-import com.example.spot.post.presentation.dto.response.PostPagingResponse;
-import com.example.spot.post.presentation.dto.response.PostRepresentativeResponse;
-import com.example.spot.post.presentation.dto.response.PostSingleResponse;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
+import com.example.spot.post.presentation.dto.response.post.PostAnnouncementResponse;
+import com.example.spot.post.presentation.dto.response.post.PostBest5Response;
+import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
+import com.example.spot.post.presentation.dto.response.post.PostRepresentativeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostSingleResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface GetPostUseCase {

@@ -4,25 +4,19 @@ import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.post.application.command.ScrapPostUseCase;
-import com.example.spot.post.presentation.dto.request.ScrapAllDeleteRequest;
-import com.example.spot.post.presentation.dto.response.PostPagingResponse;
-import com.example.spot.post.presentation.dto.response.ScrapPostResponse;
-import com.example.spot.post.presentation.dto.response.ScrapsPostDeleteResponse;
+import com.example.spot.post.presentation.dto.request.post.ScrapAllDeleteRequest;
+import com.example.spot.post.presentation.dto.response.post.ScrapPostResponse;
+import com.example.spot.post.presentation.dto.response.post.ScrapsPostDeleteResponse;
 import com.example.spot.post.presentation.validator.ExistPost;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated

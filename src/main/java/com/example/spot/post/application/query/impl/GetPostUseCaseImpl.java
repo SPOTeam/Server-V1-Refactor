@@ -6,24 +6,24 @@ import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.GetPostUseCase;
 import com.example.spot.post.domain.Post;
-import com.example.spot.comment.domain.PostComment;
+import com.example.spot.post.domain.PostComment;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.enums.PostStatus;
 import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.domain.association.MemberScrapRepository;
-import com.example.spot.comment.domain.PostCommentRepository;
+import com.example.spot.post.domain.PostCommentRepository;
 import com.example.spot.report.domain.PostReportRepository;
 import com.example.spot.post.domain.PostRepository;
-import com.example.spot.comment.presentation.dto.CommentDetailResponse;
-import com.example.spot.comment.presentation.dto.CommentResponse;
-import com.example.spot.post.presentation.dto.response.PostAnnouncementResponse;
-import com.example.spot.post.presentation.dto.response.PostBest5DetailResponse;
-import com.example.spot.post.presentation.dto.response.PostBest5Response;
-import com.example.spot.post.presentation.dto.response.PostPagingDetailResponse;
-import com.example.spot.post.presentation.dto.response.PostPagingResponse;
-import com.example.spot.post.presentation.dto.response.PostRepresentativeDetailResponse;
-import com.example.spot.post.presentation.dto.response.PostRepresentativeResponse;
-import com.example.spot.post.presentation.dto.response.PostSingleResponse;
+import com.example.spot.post.presentation.dto.response.comment.CommentDetailResponse;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
+import com.example.spot.post.presentation.dto.response.post.PostAnnouncementResponse;
+import com.example.spot.post.presentation.dto.response.post.PostBest5DetailResponse;
+import com.example.spot.post.presentation.dto.response.post.PostBest5Response;
+import com.example.spot.post.presentation.dto.response.post.PostPagingDetailResponse;
+import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
+import com.example.spot.post.presentation.dto.response.post.PostRepresentativeDetailResponse;
+import com.example.spot.post.presentation.dto.response.post.PostRepresentativeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostSingleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -53,6 +53,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 게시글 단건 조회 : 게시글 1개의 상세 정보를 댓글 리스트와 함께 조회합니다.
+     *
      * @param postId 조회할 게시글 ID
      * @return 조회한 게시글의 정보와 좋아요/스크랩 수, 댓글 리스트, 현재 사용자의 좋아요/스크랩 여부, 프로필 이미지 반환
      * @throws PostHandler 게시글을 찾을 수 없는 경우
@@ -94,12 +95,14 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
         CommentResponse commentResponse = getCommentsByPostId(post.getId());
 
         // 조회된 게시글을 PostSingleResponse로 변환하여 반환 (익명처리일 경우 프로필 이미지를 DEFAULT_PROFILE_IMAGE_URL로 반환)
-        return PostSingleResponse.toDTO(post, likeCount, scrapCount, commentResponse, likedByCurrentUser, scrapedByCurrentUser, createdByCurrentUser, DEFAULT_PROFILE_IMAGE_URL);
+        return PostSingleResponse.toDTO(post, likeCount, scrapCount, commentResponse, likedByCurrentUser,
+                scrapedByCurrentUser, createdByCurrentUser, DEFAULT_PROFILE_IMAGE_URL);
     }
 
     /**
      * 게시글 페이징 조회 : 게시글 종류별로 게시글 목록을 페이징 조회합니다.
-     * @param type 게시글 종류
+     *
+     * @param type     게시글 종류
      * @param pageable 페이지 정보
      * @return 게시글 타입과 게시글 목록, 페이지 정보 반환
      */
@@ -126,8 +129,10 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
                     boolean likedByCurrentUser = getLikedPostUseCase.existsByMemberIdAndPostId(post.getId());
                     long scrapCount = memberScrapRepository.countByPostId(post.getId());
                     Long currentUserId = getCurrentUserId();
-                    boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId, post.getId());
-                    return PostPagingDetailResponse.toDTO(post, likeCount, scrapCount, likedByCurrentUser, scrapedByCurrentUser);
+                    boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId,
+                            post.getId());
+                    return PostPagingDetailResponse.toDTO(post, likeCount, scrapCount, likedByCurrentUser,
+                            scrapedByCurrentUser);
                 })
                 .toList();
 
@@ -149,6 +154,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 인기글 종류(실시간, 추천순, 댓글순)에 따라 게시글을 상위 5개씩 조회합니다.
+     *
      * @param sortType 인기글 종류
      * @return 상위 5개의 인기글 목록 반환
      * @throws PostHandler 인기글 종류를 찾을 수 없는 경우
@@ -211,6 +217,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 게시글 종류 별로 가장 최신 게시글을 1개씩 조회합니다.
+     *
      * @return 게시글 종류와 각 최신 게시글 목록 반환
      */
     @Transactional(readOnly = true)
@@ -232,6 +239,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 최신 공지 5개를 조회합니다.
+     *
      * @return 최신순 5개의 공지글 목록 반환
      */
     @Transactional(readOnly = true)
@@ -254,6 +262,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 조회한 게시글의 댓글 리스트을 조회합니다.
+     *
      * @param postId 조회한 게시글 ID
      * @return 댓글 리스트 반환
      */
@@ -272,9 +281,12 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
         List<CommentDetailResponse> commentResponses = comments.stream()
                 .map(comment -> {
                     long likeCount = getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(comment.getId());
-                    boolean likedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedTrue(comment.getId());
-                    boolean dislikedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedFalse(comment.getId());
-                    return CommentDetailResponse.toDTO(comment, likeCount, likedByCurrentUser, dislikedByCurrentUser, DEFAULT_PROFILE_IMAGE_URL);
+                    boolean likedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedTrue(
+                            comment.getId());
+                    boolean dislikedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedFalse(
+                            comment.getId());
+                    return CommentDetailResponse.toDTO(comment, likeCount, likedByCurrentUser, dislikedByCurrentUser,
+                            DEFAULT_PROFILE_IMAGE_URL);
                 })
                 .toList();
 
@@ -286,7 +298,8 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
     /**
      * 스크랩한 게시글을 게시글 종류 별로 페이징 조회합니다.
-     * @param type 게시글 종류
+     *
+     * @param type     게시글 종류
      * @param pageable 페이지 정보
      * @return 게시글 종류와 스크랩한 게시글 목록, 페이지 정보 반환
      */
@@ -318,8 +331,10 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
                     //현재 사용자 좋아요 여부
                     boolean likedByCurrentUser = getLikedPostUseCase.existsByMemberIdAndPostId(post.getId());
                     long scrapCount = memberScrapRepository.countByPostId(post.getId());
-                    boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId, post.getId());
-                    return PostPagingDetailResponse.toDTO(post, likeCount, scrapCount, likedByCurrentUser, scrapedByCurrentUser);
+                    boolean scrapedByCurrentUser = memberScrapRepository.existsByMemberIdAndPostId(currentUserId,
+                            post.getId());
+                    return PostPagingDetailResponse.toDTO(post, likeCount, scrapCount, likedByCurrentUser,
+                            scrapedByCurrentUser);
                 })
                 .toList();
 

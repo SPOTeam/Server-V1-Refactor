@@ -1,6 +1,6 @@
 package com.example.spot.post.application.query.impl;
 
-import com.example.spot.comment.domain.association.LikedPostCommentRepository;
+import com.example.spot.post.domain.association.LikedPostCommentRepository;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ public class GetLikedPostCommentUseCaseImpl implements GetLikedPostCommentUseCas
 
     /**
      * 게시글 댓글 좋아요 수를 반환합니다.
+     *
      * @param postCommentId 게시글 댓글 ID
      * @return 게시글 댓글 좋아요 수
      */
@@ -27,6 +28,7 @@ public class GetLikedPostCommentUseCaseImpl implements GetLikedPostCommentUseCas
 
     /**
      * 현재 사용자의 게시글 댓글 좋아요 여부를 반환합니다.
+     *
      * @param postCommentId 게시글 댓글 ID
      * @return 현재 사용자의 댓글 좋아요 여부
      */
@@ -38,6 +40,7 @@ public class GetLikedPostCommentUseCaseImpl implements GetLikedPostCommentUseCas
 
     /**
      * 현재 사용자의 게시글 댓글 싫어요 여부를 true/false로 반환합니다.
+     *
      * @param postCommentId 게시글 댓글 ID
      * @return 현재 사용자의 댓글 싫어요 여부
      */

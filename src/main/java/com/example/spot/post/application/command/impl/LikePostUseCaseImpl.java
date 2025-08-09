@@ -11,7 +11,7 @@ import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostRepository;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.post.domain.association.LikedPostRepository;
-import com.example.spot.post.presentation.dto.response.PostLikeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostLikeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

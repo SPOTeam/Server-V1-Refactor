@@ -4,7 +4,7 @@ import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
 import com.example.spot.common.security.utils.SecurityUtils;
 import com.example.spot.post.application.command.LikePostUseCase;
-import com.example.spot.post.presentation.dto.response.PostLikeResponse;
+import com.example.spot.post.presentation.dto.response.post.PostLikeResponse;
 import com.example.spot.post.presentation.validator.ExistPost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

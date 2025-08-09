@@ -1,8 +1,8 @@
 package com.example.spot.post.application.command;
 
-import com.example.spot.post.presentation.dto.request.PostCreateRequest;
-import com.example.spot.post.presentation.dto.request.PostUpdateRequest;
-import com.example.spot.post.presentation.dto.response.PostCreateResponse;
+import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
+import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
+import com.example.spot.post.presentation.dto.response.post.PostCreateResponse;
 
 public interface ManagePostUseCase {
 
