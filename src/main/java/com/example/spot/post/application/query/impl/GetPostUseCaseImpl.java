@@ -1,5 +1,7 @@
 package com.example.spot.post.application.query.impl;
 
+import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
+
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
@@ -7,12 +9,11 @@ import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.GetPostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostComment;
+import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.enums.PostStatus;
-import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
 import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.report.infrastructure.jpa.PostReportRepository;
 import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.presentation.dto.response.comment.CommentDetailResponse;
 import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
@@ -24,17 +25,15 @@ import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
 import com.example.spot.post.presentation.dto.response.post.PostRepresentativeDetailResponse;
 import com.example.spot.post.presentation.dto.response.post.PostRepresentativeResponse;
 import com.example.spot.post.presentation.dto.response.post.PostSingleResponse;
+import com.example.spot.report.infrastructure.jpa.PostReportRepository;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
 
 
 @Service
@@ -114,12 +113,13 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
         Board boardType = Board.findByValue(type);
 
         Page<Post> postPage;
+
         if (boardType == Board.ALL) {
             // ALL 타입일 경우 모든 게시글 조회
-            postPage = postRepository.findByPostReportListIsEmptyOrderByCreatedAtDesc(pageable);
+            postPage = postRepository.findPostsWithoutReport(pageable);
         } else {
             // 특정 게시판 타입의 게시글 조회
-            postPage = postRepository.findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(boardType, pageable);
+            postPage = postRepository.findPostsWithoutReportByBoard(boardType, pageable);
         }
 
         // PostPagingDetailResponse를 묶어서 응답 리스트 생성 (좋아요 수, 좋아요여부, 스크랩 수, 스크랩여부 포함)
@@ -145,11 +145,6 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
                 .isFirst(postPage.isFirst())
                 .isLast(postPage.isLast())
                 .build();
-    }
-
-    // 게시글이 신고되었는지 확인하는 메서드
-    private boolean isPostReported(Post post) {
-        return !post.getPostReportList().isEmpty();
     }
 
     /**

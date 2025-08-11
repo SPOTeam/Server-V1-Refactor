@@ -1,14 +1,20 @@
 package com.example.spot.post.domain;
 
-import com.example.spot.post.domain.association.LikedPostComment;
 import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.member.domain.Member;
-
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -30,10 +36,6 @@ public class PostComment extends BaseEntity {
 
     private int disLikeNum;
 
-    @OneToMany(mappedBy = "postComment")
-    @Builder.Default
-    private List<LikedPostComment> likedPostCommentsList = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
@@ -42,12 +44,4 @@ public class PostComment extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    //대댓글
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private PostComment parentComment; //부모 댓글
-
-    @OneToMany(mappedBy = "parentComment", orphanRemoval = true)
-    @Builder.Default
-    private List<PostComment> childrenComment = new ArrayList<>(); //자식 댓글들(대댓글)
 }

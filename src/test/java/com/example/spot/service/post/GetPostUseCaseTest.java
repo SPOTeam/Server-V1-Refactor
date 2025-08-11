@@ -5,11 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.post.domain.PostComment;
-import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.post.domain.association.LikedPostComment;
-import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
-import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
@@ -17,13 +12,18 @@ import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.domain.PostComment;
 import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.domain.association.LikedPostComment;
 import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.enums.PostStatus;
+import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.post.presentation.dto.response.post.PostAnnouncementResponse;
 import com.example.spot.post.presentation.dto.response.post.PostBest5Response;
 import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
@@ -281,7 +281,7 @@ class GetPostUseCaseTest {
         List<Post> posts = List.of(post1, post2);
         postPage = new PageImpl<>(posts, pageable, 2);
 
-        when(postRepository.findByPostReportListIsEmptyOrderByCreatedAtDesc(pageable)).thenReturn(postPage);
+        when(postRepository.findPostsWithoutReport(pageable)).thenReturn(postPage);
 
         // when
         PostPagingResponse result = postQueryService.getPagingPosts("ALL", pageable);
@@ -307,7 +307,7 @@ class GetPostUseCaseTest {
         List<Post> posts = List.of(post2);
         postPage = new PageImpl<>(posts, pageable, 1);
 
-        when(postRepository.findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board.INFORMATION_SHARING,
+        when(postRepository.findPostsWithoutReportByBoard(Board.INFORMATION_SHARING,
                 pageable)).thenReturn(postPage);
 
         // when
@@ -488,7 +488,6 @@ class GetPostUseCaseTest {
         assertThat(result.getComments().size()).isEqualTo(2);
         assertThat(result.getComments().get(0).getCommentId()).isEqualTo(1L);
         assertThat(result.getComments().get(1).getCommentId()).isEqualTo(2L);
-        assertThat(result.getComments().get(1).getParentCommentId()).isEqualTo(1L);
     }
 
     @Test
@@ -635,7 +634,6 @@ class GetPostUseCaseTest {
                 .disLikeNum(1)
                 .post(post1)
                 .member(member1)
-                .parentComment(null)
                 .build();
         post1Comment2 = PostComment.builder()
                 .id(2L)
@@ -645,7 +643,6 @@ class GetPostUseCaseTest {
                 .disLikeNum(0)
                 .post(post1)
                 .member(member2)
-                .parentComment(post1Comment1)
                 .build();
     }
 

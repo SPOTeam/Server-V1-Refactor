@@ -2,12 +2,11 @@ package com.example.spot.post.presentation.dto.response.comment;
 
 import com.example.spot.post.domain.PostComment;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -89,7 +88,6 @@ public class CommentDetailResponse {
                 .commentId(comment.getId())
                 .profileImage(writerImage)
                 .commentContent(comment.getContent())
-                .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getId() : null)
                 .writer(writerName)
                 .anonymous(comment.isAnonymous())
                 .writtenTime(comment.getCreatedAt() != null ? comment.getCreatedAt().toString()

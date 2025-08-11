@@ -22,7 +22,6 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom {
                         postComment.post.id.eq(postId)
                 )
                 .orderBy(
-                        postComment.parentComment.id.asc().nullsFirst(),
                         postComment.createdAt.asc()
                 )
                 .fetch();

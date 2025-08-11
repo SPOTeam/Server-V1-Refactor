@@ -1,9 +1,5 @@
 package com.example.spot.post.application.command.impl;
 
-import com.example.spot.post.domain.PostComment;
-import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
-import com.example.spot.post.presentation.dto.response.comment.CommentCreateResponse;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
@@ -11,7 +7,11 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.ManagePostCommentUseCase;
 import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostComment;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
 import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
+import com.example.spot.post.presentation.dto.response.comment.CommentCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,6 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
                 .content(request.getContent())
                 .isAnonymous(request.isAnonymous())
                 .post(post)
-                .parentComment(null)
                 .member(member)
                 .build();
 

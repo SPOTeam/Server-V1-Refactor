@@ -17,15 +17,15 @@ import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostComment;
-import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.post.domain.association.LikedPostComment;
+import com.example.spot.post.domain.association.MemberScrap;
+import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
 import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
-import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
-import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
@@ -879,7 +879,6 @@ class PostCommandServiceTest {
                 .disLikeNum(1)
                 .post(post1)
                 .member(member1)
-                .parentComment(null)
                 .build();
         post1Comment2 = PostComment.builder()
                 .id(2L)
@@ -889,7 +888,6 @@ class PostCommandServiceTest {
                 .disLikeNum(0)
                 .post(post1)
                 .member(member2)
-                .parentComment(post1Comment1)
                 .build();
     }
 
