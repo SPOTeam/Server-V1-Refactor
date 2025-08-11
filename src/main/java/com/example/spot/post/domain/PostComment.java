@@ -32,10 +32,6 @@ public class PostComment extends BaseEntity {
 
     private String content;
 
-    private int likeNum;
-
-    private int disLikeNum;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;

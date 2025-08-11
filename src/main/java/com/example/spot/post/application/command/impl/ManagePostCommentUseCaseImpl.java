@@ -56,8 +56,6 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
 
         // 댓글 객체 저장
         comment = postCommentRepository.saveAndFlush(comment);
-        post.addComment(comment);
-        post.plusCommentNum();
 
         // 생성된 댓글 정보 반환
         return CommentCreateResponse.toDTO(comment);

@@ -6,7 +6,6 @@ import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -40,18 +39,11 @@ public class Post extends BaseEntity {
 
     private boolean isAdmin;
 
-    @Column
     private boolean isAnonymous;
 
     private String title;
 
     private String content;
-
-    private int scrapNum;
-
-    private int commentNum;
-
-    private int hitNum;
 
     private String image;
 
@@ -103,20 +95,8 @@ public class Post extends BaseEntity {
     }
 
 
-    public void viewHit() {
-        this.hitNum++;
-    }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         super.setCreatedAt(createdAt);
-    }
-
-    public void plusCommentNum() {
-        this.commentNum++;
-    }
-
-    public void addComment(PostComment comment) {
-        this.postCommentList.add(comment);
     }
 
 }
