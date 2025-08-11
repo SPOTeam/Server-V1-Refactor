@@ -25,7 +25,6 @@ public class LikePostController {
     private final LikePostUseCase likePostUseCase;
 
     @Tag(name = "게시글 좋아요", description = "게시글 좋아요 관련 API")
-    //게시글 좋아요
     @Operation(summary = "[게시판] 게시글 좋아요 API", description = "게시글 Id를 받아 게시글에 좋아요를 추가합니다.")
     @PostMapping("/{postId}/like")
     public ApiResponse<PostLikeResponse> likePost(

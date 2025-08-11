@@ -17,14 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class PostCreateRequest {
 
-    @Schema(description = "게시글 제목입니다.",
-            format = "string")
     @NotNull
+    @Schema(description = "게시글 제목입니다.", format = "string")
     private String title;
 
-    @Schema(description = "게시글 내용입니다.",
-            format = "string")
     @NotNull
+    @Schema(description = "게시글 내용입니다.", format = "string")
     private String content;
 
     @Schema(

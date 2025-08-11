@@ -1,6 +1,5 @@
 package com.example.spot.post.presentation.dto.response.post;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ScrapPostResponse {
-    @Schema(description = "게시글 ID", example = "1")
-    private Long postId;
 
-    @Schema(description = "스크랩 수", example = "10")
+    private Long postId;
     private Long scrapCount;
 }

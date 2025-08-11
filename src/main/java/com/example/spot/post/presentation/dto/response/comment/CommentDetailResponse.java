@@ -1,7 +1,6 @@
 package com.example.spot.post.presentation.dto.response.comment;
 
 import com.example.spot.post.domain.PostComment;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,69 +11,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentDetailResponse {
-    @Schema(
-            description = "댓글 ID",
-            example = "101"
-    )
+
     private Long commentId;
-
-    @Schema(
-            description = "댓글 내용",
-            example = "댓글 내용 예시"
-    )
     private String commentContent;
-
-    @Schema(
-            description = "부모 댓글 ID (대댓글의 경우)",
-            example = "1"
-    )
-    private Long parentCommentId;
-
-    @Schema(
-            description = "댓글 작성자",
-            example = "댓글 작성자 예시"
-    )
     private String writer;
-
-    @Schema(
-            description = "댓글 작성자 익명 여부입니다."
-    )
     private boolean anonymous;
-
-    @Schema(
-            description = "댓글 작성자 프로필 사진"
-    )
     private String profileImage;
-
-    @Schema(
-            description = "작성 시간입니다.",
-            type = "string",
-            format = "date-time",
-            example = "2024-07-19T10:15:30"
-    )
     private String writtenTime;
-
-    @Schema(
-            description = "좋아요 수입니다.",
-            format = "long"
-    )
-    private long likeCount;
-
-    @Schema(
-            description = "현재 사용자의 해당 댓글 좋아요 여부입니다."
-    )
-    private boolean likedByCurrentUser;
-
-    @Schema(
-            description = "현재 사용자의 해당 댓글 싫어요 여부입니다."
-    )
-    private boolean dislikedByCurrentUser;
-
-//    @Schema(
-//            description = "싫어요 수입니다.",
-//            format = "int"
-//    )
-//    private int disLikeCount;
 
     public static CommentDetailResponse toDTO(PostComment comment, long likeCount, boolean likedByCurrentUser,
                                               boolean dislikedByCurrentUser, String defaultProfileImageUrl) {
@@ -92,18 +35,13 @@ public class CommentDetailResponse {
                 .anonymous(comment.isAnonymous())
                 .writtenTime(comment.getCreatedAt() != null ? comment.getCreatedAt().toString()
                         : LocalDateTime.now().toString())
-                .likeCount(likeCount)
-                .likedByCurrentUser(likedByCurrentUser)
-                .dislikedByCurrentUser(dislikedByCurrentUser)
                 .build();
     }
 
-    public static String judgeAnonymous(Boolean isAnonymous, String writer) {
-
+    static String judgeAnonymous(Boolean isAnonymous, String writer) {
         if (isAnonymous) {
             return "익명";
         }
-
         return writer;
     }
 
@@ -112,7 +50,6 @@ public class CommentDetailResponse {
         if (isAnonymous) {
             return defaultProfileImageUrl;
         }
-
         return profileImage;
     }
 }
