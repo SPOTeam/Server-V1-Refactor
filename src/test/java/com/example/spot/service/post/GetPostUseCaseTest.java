@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
-import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;
 import com.example.spot.post.domain.Post;
@@ -18,7 +17,6 @@ import com.example.spot.post.domain.association.LikedPostComment;
 import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.enums.PostStatus;
-import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
 import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
 import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
 import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
@@ -72,17 +70,10 @@ class GetPostUseCaseTest {
     private LikedPostRepository likedPostRepository;
 
     @Mock
-    private LikedPostCommentRepository likedPostCommentRepository;
-
-    @Mock
     private PostReportRepository postReportRepository;
 
     @Mock
     private GetLikedPostUseCase getLikedPostUseCase;
-
-    @Mock
-    private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
-
 
     @InjectMocks
     private GetPostUseCaseImpl postQueryService;
@@ -139,26 +130,6 @@ class GetPostUseCaseTest {
         when(likedPostRepository.existsByMemberIdAndPostId(2L, 2L)).thenReturn(false);
         when(getLikedPostUseCase.countByPostId(1L)).thenReturn(1L);
         when(getLikedPostUseCase.countByPostId(2L)).thenReturn(1L);
-
-        // LikedPostComment
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L))
-                .thenReturn(Optional.of(member2LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L))
-                .thenReturn(Optional.of(member1LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L)).thenReturn(true);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L)).thenReturn(true);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
 
         // MemberScrap
         when(memberScrapRepository.countByPostId(1L)).thenReturn(1L);

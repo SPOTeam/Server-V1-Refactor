@@ -1,4 +1,4 @@
-package com.example.spot.post.infrastructure.jpa;
+package com.example.spot.post.infrastructure.jpa.schedule;
 
 import com.example.spot.post.domain.schedule.PostScheduleComments;
 import org.springframework.data.jpa.repository.JpaRepository;

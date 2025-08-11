@@ -4,7 +4,6 @@ import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUse
 
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.PostHandler;
-import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.GetPostUseCase;
 import com.example.spot.post.domain.Post;
@@ -46,7 +45,6 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
     private final PostRepository postRepository;
     private final GetLikedPostUseCase getLikedPostUseCase;
     private final PostCommentRepository postCommentRepository;
-    private final GetLikedPostCommentUseCase getLikedPostCommentUseCase;
     private final MemberScrapRepository memberScrapRepository;
     private final PostReportRepository postReportRepository;
 
@@ -275,11 +273,9 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
         // CommentDetailResponse를 묶어서 응답 리스트 생성 (댓글 좋아요수, 댓글 좋아요/싫어요 여부 포함)
         List<CommentDetailResponse> commentResponses = comments.stream()
                 .map(comment -> {
-                    long likeCount = getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(comment.getId());
-                    boolean likedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedTrue(
-                            comment.getId());
-                    boolean dislikedByCurrentUser = getLikedPostCommentUseCase.existsByMemberIdAndPostCommentIdAndIsLikedFalse(
-                            comment.getId());
+                    long likeCount = 0L;
+                    boolean likedByCurrentUser = true;
+                    boolean dislikedByCurrentUser = false;
                     return CommentDetailResponse.toDTO(comment, likeCount, likedByCurrentUser, dislikedByCurrentUser,
                             DEFAULT_PROFILE_IMAGE_URL);
                 })
