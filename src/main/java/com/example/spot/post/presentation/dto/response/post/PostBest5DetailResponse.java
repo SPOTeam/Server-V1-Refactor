@@ -39,7 +39,7 @@ public class PostBest5DetailResponse {
                 .postId(post.getId())
                 .rank(rank)
                 .postTitle(post.getTitle())
-                .commentCount(post.getCommentNum())
+                .commentCount(0)
                 .build();
     }
 }

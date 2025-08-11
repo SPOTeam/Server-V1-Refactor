@@ -10,8 +10,8 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.ManagePostUseCase;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
 import com.example.spot.post.presentation.dto.response.post.PostCreateResponse;
@@ -92,10 +92,7 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
                 .isAnonymous(postCreateRequest.isAnonymous())
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
-                .scrapNum(0)
                 .image(image)
-                .commentNum(0)
-                .hitNum(0)
                 .board(postCreateRequest.getType())
                 .member(currentMember)
                 .build();

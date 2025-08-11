@@ -1,14 +1,13 @@
 package com.example.spot.post.presentation.dto.response.post;
 
-import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -151,7 +150,7 @@ public class PostSingleResponse {
                 .likedByCurrentUser(likedByCurrentUser)
                 .createdByCurrentUser(createdByCurrentUser)
                 .commentCount(commentResponse.getComments().size())
-                .viewCount(post.getHitNum())
+                .viewCount(0)
                 .commentResponses(commentResponse)
                 .build();
     }

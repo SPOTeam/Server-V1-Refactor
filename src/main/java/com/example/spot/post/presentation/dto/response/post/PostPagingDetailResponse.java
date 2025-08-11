@@ -2,11 +2,10 @@ package com.example.spot.post.presentation.dto.response.post;
 
 import com.example.spot.post.domain.Post;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -97,7 +96,7 @@ public class PostPagingDetailResponse {
                 .likeCount(likeCount)
                 .likedByCurrentUser(likedByCurrentUser)
                 .commentCount(post.getPostCommentList().size())
-                .viewCount(post.getHitNum())
+                .viewCount(0)
                 .build();
     }
 }

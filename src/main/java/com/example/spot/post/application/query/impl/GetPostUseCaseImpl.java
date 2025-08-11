@@ -71,7 +71,7 @@ public class GetPostUseCaseImpl implements GetPostUseCase {
 
         // 조회수 증가는 일반 조회시에(likeOrScrap이 false일 때)만 실행
         if (!likeOrScrap) {
-            post.viewHit();
+//            post.viewHit();
         }
 
         // 좋아요 수 조회
