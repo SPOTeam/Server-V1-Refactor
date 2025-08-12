@@ -202,6 +202,7 @@ class PostCommandServiceTest {
                 .image(null)
                 .build();
 
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member1);
         when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         // when
@@ -228,6 +229,9 @@ class PostCommandServiceTest {
                 .anonymous(false)
                 .build();
 
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member2);
+        when(postRepository.save(any(Post.class))).thenReturn(post1);
+
         // when & then
         assertThrows(PostHandler.class, () -> managePostUseCase.createPost(memberId, postCreateRequest));
     }
@@ -249,6 +253,13 @@ class PostCommandServiceTest {
                 .isAnonymous(true)
                 .type("SPOT_ANNOUNCEMENT")
                 .build();
+
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postRepository.existsById(postId)).thenReturn(true);
+
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member1);
+        when(postRepository.getReferenceById(postId)).thenReturn(post1);
+        when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         // when
         PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
@@ -274,6 +285,13 @@ class PostCommandServiceTest {
                 .isAnonymous(true)
                 .type("JOB_TALK")
                 .build();
+
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postRepository.existsById(postId)).thenReturn(true);
+
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member2);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(postRepository.save(any(Post.class))).thenReturn(post2);
 
         // when
         PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
@@ -354,6 +372,11 @@ class PostCommandServiceTest {
         Long memberId = 1L;
         Long postId = 1L;
         getAuthentication(memberId);
+
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post1);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(memberRepository.getReferenceById(postId)).thenReturn(member1);
 
         // when & then
         managePostUseCase.deletePost(memberId, postId);
@@ -532,7 +555,7 @@ class PostCommandServiceTest {
         assertThat(result.getContent()).isEqualTo("댓글1");
         assertThat(result.getWriter()).isEqualTo("익명");
     }
-    
+
 
     @Test
     @DisplayName("댓글 작성 - 게시글이 존재하지 않는 경우 (실패)")
