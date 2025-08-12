@@ -16,12 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class PostUpdateRequest {
 
-    @Schema(description = "게시글 제목입니다.",
-            format = "string")
+    @Schema(description = "게시글 제목입니다.", format = "string")
     private String title;
 
-    @Schema(description = "게시글 내용입니다.",
-            format = "string")
+    @Schema(description = "게시글 내용입니다.", format = "string")
     private String content;
 
     @Schema(description = "익명 여부", example = "false")

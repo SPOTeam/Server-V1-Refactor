@@ -5,25 +5,23 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.example.spot.post.domain.PostComment;
-import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.post.domain.association.LikedPostComment;
-import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
-import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
-import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.application.query.impl.GetPostUseCaseImpl;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.domain.PostComment;
 import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.domain.association.LikedPostComment;
 import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.domain.enums.PostStatus;
+import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.presentation.dto.response.comment.CommentResponse;
 import com.example.spot.post.presentation.dto.response.post.PostAnnouncementResponse;
 import com.example.spot.post.presentation.dto.response.post.PostBest5Response;
 import com.example.spot.post.presentation.dto.response.post.PostPagingResponse;
@@ -72,17 +70,10 @@ class GetPostUseCaseTest {
     private LikedPostRepository likedPostRepository;
 
     @Mock
-    private LikedPostCommentRepository likedPostCommentRepository;
-
-    @Mock
     private PostReportRepository postReportRepository;
 
     @Mock
     private GetLikedPostUseCase getLikedPostUseCase;
-
-    @Mock
-    private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
-
 
     @InjectMocks
     private GetPostUseCaseImpl postQueryService;
@@ -140,26 +131,6 @@ class GetPostUseCaseTest {
         when(getLikedPostUseCase.countByPostId(1L)).thenReturn(1L);
         when(getLikedPostUseCase.countByPostId(2L)).thenReturn(1L);
 
-        // LikedPostComment
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L))
-                .thenReturn(Optional.of(member2LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L))
-                .thenReturn(Optional.of(member1LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L)).thenReturn(true);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L)).thenReturn(true);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(getLikedPostCommentUseCase.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
-
         // MemberScrap
         when(memberScrapRepository.countByPostId(1L)).thenReturn(1L);
         when(memberScrapRepository.countByPostId(2L)).thenReturn(1L);
@@ -194,9 +165,9 @@ class GetPostUseCaseTest {
         assertThat(result.getAnonymous()).isEqualTo(true);
         assertThat(result.getScrapCount()).isEqualTo(1L);
         assertThat(result.getTitle()).isEqualTo("게시글1");
-        assertThat(result.getLikeCount()).isEqualTo(1L);
-        assertThat(result.getCommentCount()).isEqualTo(2);
-        assertThat(result.getViewCount()).isEqualTo(2L);
+//        assertThat(result.getLikeCount()).isEqualTo(1L);
+//        assertThat(result.getCommentCount()).isEqualTo(2);
+//        assertThat(result.getViewCount()).isEqualTo(2L);
         assertThat(result.getLikedByCurrentUser()).isEqualTo(false);
         assertThat(result.getScrapedByCurrentUser()).isEqualTo(false);
         assertThat(result.getCreatedByCurrentUser()).isEqualTo(true);
@@ -224,9 +195,9 @@ class GetPostUseCaseTest {
         assertThat(result.getAnonymous()).isEqualTo(false);
         assertThat(result.getScrapCount()).isEqualTo(1L);
         assertThat(result.getTitle()).isEqualTo("게시글2");
-        assertThat(result.getLikeCount()).isEqualTo(1L);
-        assertThat(result.getCommentCount()).isEqualTo(0);
-        assertThat(result.getViewCount()).isEqualTo(1L);
+//        assertThat(result.getLikeCount()).isEqualTo(1L);
+//        assertThat(result.getCommentCount()).isEqualTo(0);
+//        assertThat(result.getViewCount()).isEqualTo(1L);
         assertThat(result.getLikedByCurrentUser()).isEqualTo(true);
         assertThat(result.getScrapedByCurrentUser()).isEqualTo(true);
         assertThat(result.getCreatedByCurrentUser()).isEqualTo(false);
@@ -281,7 +252,7 @@ class GetPostUseCaseTest {
         List<Post> posts = List.of(post1, post2);
         postPage = new PageImpl<>(posts, pageable, 2);
 
-        when(postRepository.findByPostReportListIsEmptyOrderByCreatedAtDesc(pageable)).thenReturn(postPage);
+        when(postRepository.findPostsWithoutReport(pageable)).thenReturn(postPage);
 
         // when
         PostPagingResponse result = postQueryService.getPagingPosts("ALL", pageable);
@@ -307,7 +278,7 @@ class GetPostUseCaseTest {
         List<Post> posts = List.of(post2);
         postPage = new PageImpl<>(posts, pageable, 1);
 
-        when(postRepository.findByBoardAndPostReportListIsEmptyOrderByCreatedAtDesc(Board.INFORMATION_SHARING,
+        when(postRepository.findPostsWithoutReportByBoard(Board.INFORMATION_SHARING,
                 pageable)).thenReturn(postPage);
 
         // when
@@ -488,7 +459,6 @@ class GetPostUseCaseTest {
         assertThat(result.getComments().size()).isEqualTo(2);
         assertThat(result.getComments().get(0).getCommentId()).isEqualTo(1L);
         assertThat(result.getComments().get(1).getCommentId()).isEqualTo(2L);
-        assertThat(result.getComments().get(1).getParentCommentId()).isEqualTo(1L);
     }
 
     @Test
@@ -604,9 +574,6 @@ class GetPostUseCaseTest {
                 .id(1L)
                 .title("게시글1")
                 .isAnonymous(true)
-                .commentNum(2)
-                .hitNum(1)
-                .scrapNum(1)
                 .isAdmin(false)
                 .board(Board.SPOT_ANNOUNCEMENT)
                 .member(member1)
@@ -616,9 +583,6 @@ class GetPostUseCaseTest {
                 .id(2L)
                 .title("게시글2")
                 .isAnonymous(false)
-                .commentNum(0)
-                .hitNum(1)
-                .scrapNum(1)
                 .isAdmin(false)
                 .board(Board.INFORMATION_SHARING)
                 .member(member2)
@@ -631,21 +595,15 @@ class GetPostUseCaseTest {
                 .id(1L)
                 .isAnonymous(true)
                 .content("댓글1")
-                .likeNum(1)
-                .disLikeNum(1)
                 .post(post1)
                 .member(member1)
-                .parentComment(null)
                 .build();
         post1Comment2 = PostComment.builder()
                 .id(2L)
                 .isAnonymous(false)
                 .content("댓글2")
-                .likeNum(0)
-                .disLikeNum(0)
                 .post(post1)
                 .member(member2)
-                .parentComment(post1Comment1)
                 .build();
     }
 

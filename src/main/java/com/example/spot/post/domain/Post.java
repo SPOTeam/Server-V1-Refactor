@@ -1,21 +1,30 @@
 package com.example.spot.post.domain;
 
-import com.example.spot.post.domain.association.LikedPost;
-import com.example.spot.post.domain.association.PostImage;
-import com.example.spot.report.domain.PostReport;
 import com.example.spot.common.entity.BaseEntity;
-import com.example.spot.post.domain.enums.Board;
-import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
 import com.example.spot.member.domain.Member;
-
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.util.StringUtils;
-
+import com.example.spot.post.domain.association.LikedPost;
+import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Builder
 @AllArgsConstructor
@@ -30,27 +39,16 @@ public class Post extends BaseEntity {
 
     private boolean isAdmin;
 
-    @Column
     private boolean isAnonymous;
 
     private String title;
 
     private String content;
 
-    private int scrapNum;
-
-    private int commentNum;
-
-    private int hitNum;
-
     private String image;
 
     @Enumerated(EnumType.STRING)
     private Board board;
-
-    @OneToMany(mappedBy = "post")
-    @Builder.Default
-    private List<PostImage> postImageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @Builder.Default
@@ -58,15 +56,7 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @Builder.Default
-    private List<PostReport> postReportList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @Builder.Default
     private List<PostComment> postCommentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<MemberScrap> memberScrapList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -105,20 +95,8 @@ public class Post extends BaseEntity {
     }
 
 
-    public void viewHit() {
-        this.hitNum++;
-    }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         super.setCreatedAt(createdAt);
-    }
-
-    public void plusCommentNum() {
-        this.commentNum++;
-    }
-
-    public void addComment(PostComment comment) {
-        this.postCommentList.add(comment);
     }
 
 }

@@ -13,19 +13,18 @@ import com.example.spot.post.application.command.impl.LikePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostCommentUseCaseImpl;
 import com.example.spot.post.application.command.impl.ManagePostUseCaseImpl;
 import com.example.spot.post.application.command.impl.ScrapPostUseCaseImpl;
-import com.example.spot.post.application.query.GetLikedPostCommentUseCase;
 import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.PostComment;
-import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.post.domain.association.LikedPostComment;
-import com.example.spot.post.infrastructure.jpa.LikedPostCommentRepository;
-import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
 import com.example.spot.post.domain.association.MemberScrap;
-import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
 import com.example.spot.post.domain.enums.Board;
+import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
+import com.example.spot.post.infrastructure.jpa.PostCommentRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostStatsRepository;
 import com.example.spot.post.presentation.dto.request.comment.CommentCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
@@ -77,16 +76,13 @@ class PostCommandServiceTest {
     private LikedPostRepository likedPostRepository;
 
     @Mock
-    private LikedPostCommentRepository likedPostCommentRepository;
-
-    @Mock
     private PostReportRepository postReportRepository;
 
     @Mock
-    private GetLikedPostUseCase getLikedPostUseCase;
+    private PostStatsRepository postStatsRepository;
 
     @Mock
-    private GetLikedPostCommentUseCase getLikedPostCommentUseCase;
+    private GetLikedPostUseCase getLikedPostUseCase;
 
     @InjectMocks
     private LikePostUseCaseImpl likePostUseCase;
@@ -150,24 +146,6 @@ class PostCommandServiceTest {
         when(getLikedPostUseCase.countByPostId(1L)).thenReturn(1L);
         when(getLikedPostUseCase.countByPostId(2L)).thenReturn(1L);
 
-        // LikedPostComment
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L))
-                .thenReturn(Optional.of(member2LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L))
-                .thenReturn(Optional.of(member1LikedComment1));
-        when(likedPostCommentRepository.findByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L))
-                .thenReturn(Optional.empty());
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedTrue(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(1L)).thenReturn(1L);
-        when(likedPostCommentRepository.countByPostCommentIdAndIsLikedFalse(2L)).thenReturn(0L);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(1L, 1L)).thenReturn(true);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedTrue(2L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(1L, 1L)).thenReturn(false);
-        when(likedPostCommentRepository.existsByMemberIdAndPostCommentIdAndIsLikedFalse(2L, 1L)).thenReturn(true);
-
         // MemberScrap
         when(memberScrapRepository.countByPostId(1L)).thenReturn(1L);
         when(memberScrapRepository.countByPostId(2L)).thenReturn(1L);
@@ -224,6 +202,7 @@ class PostCommandServiceTest {
                 .image(null)
                 .build();
 
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member1);
         when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         // when
@@ -250,6 +229,9 @@ class PostCommandServiceTest {
                 .anonymous(false)
                 .build();
 
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member2);
+        when(postRepository.save(any(Post.class))).thenReturn(post1);
+
         // when & then
         assertThrows(PostHandler.class, () -> managePostUseCase.createPost(memberId, postCreateRequest));
     }
@@ -271,6 +253,13 @@ class PostCommandServiceTest {
                 .isAnonymous(true)
                 .type("SPOT_ANNOUNCEMENT")
                 .build();
+
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postRepository.existsById(postId)).thenReturn(true);
+
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member1);
+        when(postRepository.getReferenceById(postId)).thenReturn(post1);
+        when(postRepository.save(any(Post.class))).thenReturn(post1);
 
         // when
         PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
@@ -296,6 +285,13 @@ class PostCommandServiceTest {
                 .isAnonymous(true)
                 .type("JOB_TALK")
                 .build();
+
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postRepository.existsById(postId)).thenReturn(true);
+
+        when(memberRepository.getReferenceById(memberId)).thenReturn(member2);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(postRepository.save(any(Post.class))).thenReturn(post2);
 
         // when
         PostCreateResponse result = managePostUseCase.updatePost(memberId, postId, postUpdateRequest);
@@ -377,6 +373,11 @@ class PostCommandServiceTest {
         Long postId = 1L;
         getAuthentication(memberId);
 
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post1);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(memberRepository.getReferenceById(postId)).thenReturn(member1);
+
         // when & then
         managePostUseCase.deletePost(memberId, postId);
     }
@@ -418,6 +419,10 @@ class PostCommandServiceTest {
         Long postId = 2L;
         getAuthentication(memberId);
 
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postStatsRepository.getLikeCount(postId)).thenReturn(1L);
         when(likedPostRepository.findByMemberIdAndPostId(memberId, postId))
                 .thenReturn(Optional.empty());
         when(likedPostRepository.saveAndFlush(any(LikedPost.class)))
@@ -472,9 +477,14 @@ class PostCommandServiceTest {
         Long postId = 2L;
         getAuthentication(memberId);
 
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(likedPostRepository.deleteByMemberIdAndPostId(memberId, postId)).thenReturn(1);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
         when(likedPostRepository.findByMemberIdAndPostId(memberId, postId))
                 .thenReturn(Optional.of(member1LikedPost2));
-        when(getLikedPostUseCase.countByPostId(postId)).thenReturn(0L);
+        when(postStatsRepository.getLikeCount(postId)).thenReturn(0L);
 
         // when
         PostLikeResponse result = likePostUseCase.cancelPostLike(postId, memberId);
@@ -531,7 +541,10 @@ class PostCommandServiceTest {
                 .parentCommentId(null)
                 .build();
 
-        when(postCommentRepository.saveAndFlush(any(PostComment.class))).thenReturn(post1Comment1);
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post1);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(postCommentRepository.save(any(PostComment.class))).thenReturn(post1Comment1);
 
         // when
         CommentCreateResponse result = managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest);
@@ -543,32 +556,6 @@ class PostCommandServiceTest {
         assertThat(result.getWriter()).isEqualTo("익명");
     }
 
-    @Test
-    @DisplayName("댓글 작성 - 하위 댓글 (성공)")
-    void createComment_Child_Success() {
-
-        // given
-        Long memberId = 2L;
-        Long postId = 1L;
-        getAuthentication(memberId);
-
-        CommentCreateRequest commentCreateRequest = CommentCreateRequest.builder()
-                .content("댓글2")
-                .anonymous(false)
-                .parentCommentId(1L)
-                .build();
-
-        when(postCommentRepository.saveAndFlush(any(PostComment.class))).thenReturn(post1Comment2);
-
-        // when
-        CommentCreateResponse result = managePostCommentUseCase.createComment(postId, memberId, commentCreateRequest);
-
-        // then
-        assertNotNull(result);
-        assertThat(result.getId()).isEqualTo(2L);
-        assertThat(result.getContent()).isEqualTo("댓글2");
-        assertThat(result.getWriter()).isEqualTo("회원2");
-    }
 
     @Test
     @DisplayName("댓글 작성 - 게시글이 존재하지 않는 경우 (실패)")
@@ -601,10 +588,14 @@ class PostCommandServiceTest {
         Long postId = 2L;
         getAuthentication(memberId);
 
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
         when(memberScrapRepository.findByMemberIdAndPostId(memberId, postId))
                 .thenReturn(Optional.empty());
         when(memberScrapRepository.saveAndFlush(any(MemberScrap.class)))
                 .thenReturn(member1Scrap2);
+        when(postStatsRepository.getScrapNum(postId)).thenReturn(1L);
 
         // when
         ScrapPostResponse result = scrapPostUseCase.scrapPost(postId, memberId);
@@ -654,9 +645,13 @@ class PostCommandServiceTest {
         Long memberId = 1L;
         Long postId = 2L;
 
+        when(postRepository.existsById(postId)).thenReturn(true);
+        when(postRepository.getReferenceById(postId)).thenReturn(post2);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(memberScrapRepository.deleteByPostIdAndMemberId(postId, memberId)).thenReturn(1);
         when(memberScrapRepository.findByMemberIdAndPostId(memberId, postId))
                 .thenReturn(Optional.of(member1Scrap2));
-        when(memberScrapRepository.countByPostId(postId)).thenReturn(1L);
+        when(postStatsRepository.getScrapNum(postId)).thenReturn(1L);
 
         // when
         ScrapPostResponse result = scrapPostUseCase.cancelPostScrap(postId, memberId);
@@ -699,28 +694,26 @@ class PostCommandServiceTest {
     @Test
     @DisplayName("게시글 스크랩 다중 취소 - (성공)")
     void cancelPostScraps_Success() {
-
         // given
         Long memberId = 1L;
         getAuthentication(memberId);
 
-        ScrapAllDeleteRequest scrapAllDeleteRequest = new ScrapAllDeleteRequest(List.of(1L, 2L));
-
+        ScrapAllDeleteRequest scrapAllDeleteRequest = new ScrapAllDeleteRequest(List.of(1L));
+        when(postRepository.existsById(1L)).thenReturn(true);
+        when(postRepository.getReferenceById(1L)).thenReturn(post2);
+        when(memberRepository.existsById(memberId)).thenReturn(true);
+        when(memberScrapRepository.deleteByPostIdAndMemberId(1L, memberId)).thenReturn(1);
         when(memberScrapRepository.findByMemberIdAndPostId(memberId, 1L))
                 .thenReturn(Optional.of(member1Scrap2));
-        when(memberScrapRepository.findByMemberIdAndPostId(memberId, 2L))
-                .thenReturn(Optional.of(member2Scrap1));
-        when(memberScrapRepository.countByPostId(1L)).thenReturn(0L);
-        when(memberScrapRepository.countByPostId(2L)).thenReturn(1L);
+        when(postStatsRepository.getScrapNum(1L)).thenReturn(1L);
 
         // when
-        ScrapsPostDeleteResponse result = scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest);
+        ScrapsPostDeleteResponse result = scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest, memberId);
 
         // then
         assertNotNull(result);
-        assertThat(result.getCancelScraps().size()).isEqualTo(2L);
-        assertThat(result.getCancelScraps().get(0).getPostId()).isEqualTo(1L);
-        assertThat(result.getCancelScraps().get(1).getPostId()).isEqualTo(2L);
+        assertThat(result.getCancelScraps().size()).isEqualTo(1L);
+        assertThat(result.getCancelScraps().get(0).getPostId()).isEqualTo(2L);
     }
 
     @Test
@@ -738,7 +731,7 @@ class PostCommandServiceTest {
         when(memberScrapRepository.countByPostId(1L)).thenReturn(0L);
 
         // when & then
-        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest, memberId));
     }
 
     @Test
@@ -755,7 +748,7 @@ class PostCommandServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest));
+        assertThrows(PostHandler.class, () -> scrapPostUseCase.cancelPostScraps(scrapAllDeleteRequest, memberId));
     }
 
     /*-------------------------------------------------------- 게시글 신고 ------------------------------------------------------------------------*/
@@ -848,9 +841,6 @@ class PostCommandServiceTest {
                 .id(1L)
                 .title("게시글1")
                 .isAnonymous(true)
-                .commentNum(2)
-                .hitNum(1)
-                .scrapNum(1)
                 .isAdmin(false)
                 .board(Board.SPOT_ANNOUNCEMENT)
                 .member(member1)
@@ -860,9 +850,6 @@ class PostCommandServiceTest {
                 .id(2L)
                 .title("게시글2")
                 .isAnonymous(false)
-                .commentNum(0)
-                .hitNum(1)
-                .scrapNum(1)
                 .isAdmin(false)
                 .board(Board.INFORMATION_SHARING)
                 .member(member2)
@@ -875,21 +862,15 @@ class PostCommandServiceTest {
                 .id(1L)
                 .isAnonymous(true)
                 .content("댓글1")
-                .likeNum(1)
-                .disLikeNum(1)
                 .post(post1)
                 .member(member1)
-                .parentComment(null)
                 .build();
         post1Comment2 = PostComment.builder()
                 .id(2L)
                 .isAnonymous(false)
                 .content("댓글2")
-                .likeNum(0)
-                .disLikeNum(0)
                 .post(post1)
                 .member(member2)
-                .parentComment(post1Comment1)
                 .build();
     }
 

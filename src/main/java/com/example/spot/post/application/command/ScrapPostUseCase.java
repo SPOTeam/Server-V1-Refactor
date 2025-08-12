@@ -13,5 +13,5 @@ public interface ScrapPostUseCase {
     ScrapPostResponse cancelPostScrap(Long postId, Long memberId);
 
     //게시글 스크랩 모두 취소
-    ScrapsPostDeleteResponse cancelPostScraps(ScrapAllDeleteRequest request);
+    ScrapsPostDeleteResponse cancelPostScraps(ScrapAllDeleteRequest request, Long memberId);
 }

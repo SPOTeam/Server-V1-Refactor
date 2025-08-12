@@ -6,13 +6,14 @@ import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.LikePostUseCase;
-import com.example.spot.post.application.query.GetLikedPostUseCase;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.domain.association.LikedPost;
 import com.example.spot.post.infrastructure.jpa.LikedPostRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostStatsRepository;
 import com.example.spot.post.presentation.dto.response.post.PostLikeResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +25,7 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final LikedPostRepository likedPostRepository;
-
-    private final GetLikedPostUseCase getLikedPostUseCase;
+    private final PostStatsRepository postStatsRepository;
 
     /**
      * 게시글에 좋아요를 합니다.
@@ -40,33 +40,15 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
     @Transactional
     @Override
     public PostLikeResponse likePost(Long postId, Long memberId) {
+        ensurePostAndMemberExist(postId, memberId);
+
         // 회원 정보 가져오기
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        // 게시글 조회
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
-        //좋아요 여부 확인
-        if (likedPostRepository.findByMemberIdAndPostId(memberId, postId).isPresent()) {
-            throw new PostHandler(ErrorStatus._POST_ALREADY_LIKED);
-        }
+        Member memberRef = requireMemberRef(memberId);
+        Post postRef = requirePostRef(postId);
 
-        // 좋아요 객체 생성 및 저장
-        LikedPost likedPost = LikedPost.builder()
-                .post(post)
-                .member(member)
-                .build();
+        saveLikePostAndIncreaseLikeCount(postId, postRef, memberRef);
 
-        likedPostRepository.saveAndFlush(likedPost);
-
-        // 게시글의 현재 좋아요 수 조회
-        long likeCount = getLikedPostUseCase.countByPostId(postId);
-
-        // 좋아요 결과 반환
-        return PostLikeResponse.builder()
-                .postId(post.getId())
-                .likeCount(likeCount)
-                .build();
+        return getPostLikeResponse(postId, postRef);
     }
 
     /**
@@ -82,26 +64,66 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
     @Transactional
     @Override
     public PostLikeResponse cancelPostLike(Long postId, Long memberId) {
-        // 회원 정보 가져오기
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
-        // 게시글 조회
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
-        // 좋아요 여부 확인
-        LikedPost likedPost = likedPostRepository.findByMemberIdAndPostId(member.getId(), post.getId())
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_LIKED));
+        ensurePostAndMemberExist(postId, memberId);
+        Post postRef = requirePostRef(postId);
 
-        // 좋아요 객체 삭제
-        likedPostRepository.delete(likedPost);
-        likedPostRepository.flush();
+        deleteLikePostAndDecreaseLikeCount(postId, memberId);
 
         // 게시글의 현재 좋아요 수 조회
-        long likeCount = getLikedPostUseCase.countByPostId(postId);
+        return getPostLikeResponse(postId, postRef);
+    }
 
-        // 좋아요 취소 결과 반환
+    /* ------------------------------- private method ------------------------------------------ */
+
+    private void ensurePostAndMemberExist(Long postId, Long memberId) {
+        // 게시글 존재 여부 확인
+        if (!postRepository.existsById(postId)) {
+            throw new PostHandler(ErrorStatus._POST_NOT_FOUND);
+        }
+
+        // 회원 존재 여부 확인
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
+        }
+    }
+
+    private Member requireMemberRef(Long memberId) {
+        return memberRepository.getReferenceById(memberId);
+    }
+
+    private Post requirePostRef(Long postId) {
+        return postRepository.getReferenceById(postId);
+    }
+
+    private void saveLikePostAndIncreaseLikeCount(Long postId, Post postRef, Member memberRef) {
+        try {
+            // 1) 좋아요 행 삽입 시도
+            likedPostRepository.save(
+                    LikedPost.builder()
+                            .post(postRef)
+                            .member(memberRef)
+                            .build()
+            );
+
+            // 2) 삽입 성공한 경우에만 카운터 +1
+            postStatsRepository.incrementLike(postId);
+        } catch (DataIntegrityViolationException e) {
+            throw new PostHandler(ErrorStatus._POST_ALREADY_LIKED);
+        }
+    }
+
+    private void deleteLikePostAndDecreaseLikeCount(Long postId, Long memberId) {
+        int effectedRow = likedPostRepository.deleteByMemberIdAndPostId(memberId, postId);
+        if (effectedRow == 1) {
+            postStatsRepository.decrementLike(postId);
+        }
+    }
+
+    private PostLikeResponse getPostLikeResponse(Long postId, Post postRef) {
+        long likeCount = postStatsRepository.getLikeCount(postId);
+        // 좋아요 결과 반환
         return PostLikeResponse.builder()
-                .postId(post.getId())
+                .postId(postRef.getId())
                 .likeCount(likeCount)
                 .build();
     }

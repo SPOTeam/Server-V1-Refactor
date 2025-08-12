@@ -63,8 +63,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(post.createdAt.isNotNull()
                         .and(post.createdAt.after(twoHoursAgo)))
                 .orderBy(
-                        post.hitNum.add(post.likedPostList.size()).add(post.postCommentList.size()).desc(),
-                        post.hitNum.desc(),
+//                        post.hitNum.add(post.likedPostList.size()).add(post.postCommentList.size()).desc(),
+//                        post.hitNum.desc(),
                         post.likedPostList.size().desc(),
                         post.postCommentList.size().desc()
                 )

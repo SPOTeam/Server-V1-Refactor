@@ -1,7 +1,5 @@
 package com.example.spot.post.application.command.impl;
 
-import static com.example.spot.common.security.utils.SecurityUtils.getCurrentUserId;
-
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.handler.MemberHandler;
 import com.example.spot.common.api.exception.handler.PostHandler;
@@ -9,9 +7,10 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.ScrapPostUseCase;
 import com.example.spot.post.domain.Post;
-import com.example.spot.post.infrastructure.jpa.PostRepository;
 import com.example.spot.post.domain.association.MemberScrap;
 import com.example.spot.post.infrastructure.jpa.MemberScrapRepository;
+import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostStatsRepository;
 import com.example.spot.post.presentation.dto.request.post.ScrapAllDeleteRequest;
 import com.example.spot.post.presentation.dto.response.post.ScrapPostResponse;
 import com.example.spot.post.presentation.dto.response.post.ScrapsPostDeleteResponse;
@@ -26,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
 
     private final PostRepository postRepository;
+    private final PostStatsRepository postStatsRepository;
     private final MemberRepository memberRepository;
     private final MemberScrapRepository memberScrapRepository;
 
@@ -41,35 +41,15 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
      */
     @Override
     public ScrapPostResponse scrapPost(Long postId, Long memberId) {
-        // 게시글 조회
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
+        ensurePostAndMemberExist(postId, memberId);
 
-        // 회원 정보 가져오기
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Post post = requirePostRef(postId);
+        Member member = requireMemberRef(memberId);
 
-        // 스크랩 여부 확인
-        if (memberScrapRepository.findByMemberIdAndPostId(memberId, postId).isPresent()) {
-            throw new PostHandler(ErrorStatus._POST_ALREADY_SCRAPPED);
-        }
-
-        // 스크랩 정보 저장
-        MemberScrap memberScrap = MemberScrap.builder()
-                .member(member)
-                .post(post)
-                .build();
-
-        memberScrapRepository.saveAndFlush(memberScrap);
+        saveMemberScrapAndIncreaseScrapNum(postId, member, post);
 
         // 스크랩된 리스트의 갯수를 조회하여 스크랩 수 계산
-        long scrapCount = memberScrapRepository.countByPostId(postId);
-
-        // 스크랩 결과 반환
-        return ScrapPostResponse.builder()
-                .postId(post.getId())
-                .scrapCount(scrapCount)
-                .build();
+        return getScrapPostResponse(postId, post);
     }
 
     /**
@@ -84,30 +64,13 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
      */
     @Override
     public ScrapPostResponse cancelPostScrap(Long postId, Long memberId) {
-        // 게시글 조회
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
+        ensurePostAndMemberExist(postId, memberId);
 
-        // 회원 정보 가져오기
-        memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND));
+        Post post = requirePostRef(postId);
 
-        // 스크랩 여부 확인
-        MemberScrap memberScrap = memberScrapRepository.findByMemberIdAndPostId(memberId, postId)
-                .orElseThrow(() -> new PostHandler(ErrorStatus._POST_NOT_SCRAPPED));
+        deleteMemberScrapAndDecreaseScrapNum(postId, memberId);
 
-        // 스크랩 삭제 및 즉시 반영
-        memberScrapRepository.delete(memberScrap);
-        memberScrapRepository.flush();
-
-        // 스크랩된 리스트의 갯수를 조회하여 스크랩 수 계산
-        long scrapCount = memberScrapRepository.countByPostId(postId);
-
-        // 스크랩 취소 결과 반환
-        return ScrapPostResponse.builder()
-                .postId(post.getId())
-                .scrapCount(scrapCount)
-                .build();
+        return getScrapPostResponse(postId, post);
     }
 
     /**
@@ -117,18 +80,66 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
      * @return 스크랩 취소 결과 반환
      */
     @Override
-    public ScrapsPostDeleteResponse cancelPostScraps(ScrapAllDeleteRequest request) {
-        // 현재 로그인한 회원 조회
-        Long currentMemberId = getCurrentUserId();
-
+    public ScrapsPostDeleteResponse cancelPostScraps(ScrapAllDeleteRequest request, Long memberId) {
         // 삭제할 List<Long> scrapIds cancelPostScrap() 순회
-        List<ScrapPostResponse> deletePostResponses = request.getDeletePostIds().stream().map(
-                deletePostId -> cancelPostScrap(deletePostId, currentMemberId)
-        ).toList();
+        List<ScrapPostResponse> deletePostResponses = request.getDeletePostIds().stream()
+                .map(deletePostId -> cancelPostScrap(deletePostId, memberId))
+                .toList();
 
         // 스크랩 취소 결과 반환
         return ScrapsPostDeleteResponse.builder()
                 .cancelScraps(deletePostResponses)
+                .build();
+    }
+
+
+    /* ------------------------------- private method ------------------------------------------ */
+
+    private void ensurePostAndMemberExist(Long postId, Long memberId) {
+        // 게시글 존재 여부 확인
+        if (!postRepository.existsById(postId)) {
+            throw new PostHandler(ErrorStatus._POST_NOT_FOUND);
+        }
+
+        // 회원 존재 여부 확인
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
+        }
+    }
+
+    private Member requireMemberRef(Long memberId) {
+        return memberRepository.getReferenceById(memberId);
+    }
+
+    private Post requirePostRef(Long postId) {
+        return postRepository.getReferenceById(postId);
+    }
+
+    private void saveMemberScrapAndIncreaseScrapNum(Long postId, Member member, Post post) {
+        // 스크랩 정보 저장
+        MemberScrap memberScrap = MemberScrap.builder()
+                .member(member)
+                .post(post)
+                .build();
+
+        memberScrapRepository.save(memberScrap);
+        postStatsRepository.incrementScrap(postId);
+    }
+
+    private void deleteMemberScrapAndDecreaseScrapNum(Long postId, Long memberId) {
+        // 스크랩 삭제 및 즉시 반영
+        int effectedRow = memberScrapRepository.deleteByPostIdAndMemberId(postId, memberId);
+        if (effectedRow == 1) {
+            postStatsRepository.decrementScrap(postId);
+        }
+    }
+
+    private ScrapPostResponse getScrapPostResponse(Long postId, Post post) {
+        // 스크랩된 리스트의 갯수를 조회하여 스크랩 수 계산
+        long scrapCount = postStatsRepository.getScrapNum(postId);
+        return ScrapPostResponse.builder()
+                .postId(post.getId())
+                .scrapCount(scrapCount)
                 .build();
     }
 }

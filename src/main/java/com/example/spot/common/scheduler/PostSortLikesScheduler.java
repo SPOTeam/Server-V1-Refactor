@@ -3,14 +3,13 @@ package com.example.spot.common.scheduler;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.schedule.PostScheduleLikes;
 import com.example.spot.post.infrastructure.jpa.PostRepository;
-import com.example.spot.post.infrastructure.jpa.PostScheduleLikesRepository;
+import com.example.spot.post.infrastructure.jpa.schedule.PostScheduleLikesRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -27,7 +27,6 @@ public class ScrapPostController {
 
     private final ScrapPostUseCase scrapPostUseCase;
 
-    //스크랩
     @Tag(name = "게시글 스크랩", description = "게시글 스크랩 관련 API")
     @Operation(summary = "[게시판] 게시글 스크랩 API", description = "게시글 ID와 회원 ID를 받아 스크랩을 추가합니다.")
     @PostMapping("/{postId}/scrap")
@@ -54,7 +53,8 @@ public class ScrapPostController {
     @DeleteMapping("/scraps")
     public ApiResponse<ScrapsPostDeleteResponse> deleteAllPostScrap(
             @RequestBody ScrapAllDeleteRequest request) {
-        ScrapsPostDeleteResponse response = scrapPostUseCase.cancelPostScraps(request);
+        ScrapsPostDeleteResponse response = scrapPostUseCase.cancelPostScraps(request,
+                SecurityUtils.getCurrentUserId());
         return ApiResponse.onSuccess(SuccessStatus._NO_CONTENT, response);
     }
 }

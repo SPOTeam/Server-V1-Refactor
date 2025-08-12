@@ -2,7 +2,6 @@ package com.example.spot.post.domain.schedule;
 
 import com.example.spot.common.entity.BaseEntity;
 import com.example.spot.post.domain.Post;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +23,8 @@ public class PostScheduleRealTime extends BaseEntity {
     private Integer likeCount;
     private Integer hitCount;
 
-    private PostScheduleRealTime(Integer rank, String title, Integer commentCount, Integer likeCount, Integer hitCount) {
+    private PostScheduleRealTime(Integer rank, String title, Integer commentCount, Integer likeCount,
+                                 Integer hitCount) {
         this.ranking = rank;
         this.title = title;
         this.commentCount = commentCount;
@@ -35,7 +35,7 @@ public class PostScheduleRealTime extends BaseEntity {
     public static PostScheduleRealTime of(Post post, Integer rank) {
         int commentSize = post.getPostCommentList().size();
         int likeSize = post.getLikedPostList().size();
-        int hitSize = post.getHitNum();
+        int hitSize = 0;
         return new PostScheduleRealTime(rank, post.getTitle(), commentSize, likeSize, hitSize);
     }
 }
