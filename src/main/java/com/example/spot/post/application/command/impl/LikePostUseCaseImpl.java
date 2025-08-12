@@ -73,17 +73,7 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
         return getPostLikeResponse(postId, postRef);
     }
 
-    /**
-     * ------------------------------- private method ------------------------------------------
-     **/
-
-    private Member getMemberRef(Long memberId) {
-        return memberRepository.getReferenceById(memberId);
-    }
-
-    private Post getPostRef(Long postId) {
-        return postRepository.getReferenceById(postId);
-    }
+    /* ------------------------------- private method ------------------------------------------ */
 
     private void checkIsExistPostAndMember(Long postId, Long memberId) {
         // 게시글 존재 여부 확인
@@ -95,6 +85,14 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
         if (!memberRepository.existsById(memberId)) {
             throw new MemberHandler(ErrorStatus._MEMBER_NOT_FOUND);
         }
+    }
+
+    private Member getMemberRef(Long memberId) {
+        return memberRepository.getReferenceById(memberId);
+    }
+
+    private Post getPostRef(Long postId) {
+        return postRepository.getReferenceById(postId);
     }
 
     private void saveLikePostAndIncreaseLikeCount(Long postId, Post postRef, Member memberRef) {

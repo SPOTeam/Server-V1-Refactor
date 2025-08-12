@@ -1,5 +1,6 @@
 package com.example.spot.post.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,8 +24,8 @@ public class PostStats {
     @Id
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", nullable = false, unique = true)
     private Post post;
 
