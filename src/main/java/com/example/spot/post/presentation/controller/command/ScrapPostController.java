@@ -53,7 +53,8 @@ public class ScrapPostController {
     @DeleteMapping("/scraps")
     public ApiResponse<ScrapsPostDeleteResponse> deleteAllPostScrap(
             @RequestBody ScrapAllDeleteRequest request) {
-        ScrapsPostDeleteResponse response = scrapPostUseCase.cancelPostScraps(request);
+        ScrapsPostDeleteResponse response = scrapPostUseCase.cancelPostScraps(request,
+                SecurityUtils.getCurrentUserId());
         return ApiResponse.onSuccess(SuccessStatus._NO_CONTENT, response);
     }
 }
