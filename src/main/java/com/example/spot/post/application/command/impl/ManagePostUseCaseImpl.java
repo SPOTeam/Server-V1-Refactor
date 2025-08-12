@@ -10,8 +10,10 @@ import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.post.application.command.ManagePostUseCase;
 import com.example.spot.post.domain.Post;
+import com.example.spot.post.domain.PostStats;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.infrastructure.jpa.PostRepository;
+import com.example.spot.post.infrastructure.jpa.PostStatsRepository;
 import com.example.spot.post.presentation.dto.request.post.PostCreateRequest;
 import com.example.spot.post.presentation.dto.request.post.PostUpdateRequest;
 import com.example.spot.post.presentation.dto.response.post.PostCreateResponse;
@@ -28,6 +30,7 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final PostStatsRepository postStatsRepository;
 
     private final S3ImageService s3ImageService;
 
@@ -57,9 +60,15 @@ public class ManagePostUseCaseImpl implements ManagePostUseCase {
 
         // Post 객체 생성 및 연관 관계 설정
         Post post = createPostEntity(postCreateRequest, member, imageUrls);
+        PostStats postStats = PostStats.builder()
+                .post(post)
+                .likeCount(0L)
+                .commentCount(0L)
+                .build();
 
         // 게시글 저장
         post = postRepository.save(post);
+        postStatsRepository.save(postStats);
 
         // 게시글 생성 정보 반환
         return PostCreateResponse.toDTO(post);

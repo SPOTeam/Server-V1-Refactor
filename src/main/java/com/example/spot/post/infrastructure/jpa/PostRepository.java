@@ -1,5 +1,7 @@
 package com.example.spot.post.infrastructure.jpa;
 
+import com.example.spot.common.api.code.status.ErrorStatus;
+import com.example.spot.common.api.exception.handler.PostHandler;
 import com.example.spot.post.domain.Post;
 import com.example.spot.post.domain.enums.Board;
 import com.example.spot.post.infrastructure.querydsl.PostRepositoryCustom;
@@ -10,6 +12,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
+
+    default Post getById(Long postId) {
+        return findById(postId).orElseThrow(
+                () -> new PostHandler(ErrorStatus._POST_NOT_FOUND));
+    }
 
     @Query(value = """
               select p
