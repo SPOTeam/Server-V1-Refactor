@@ -40,11 +40,11 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
     @Transactional
     @Override
     public PostLikeResponse likePost(Long postId, Long memberId) {
-        checkIsExistPostAndMember(postId, memberId);
+        ensurePostAndMemberExist(postId, memberId);
 
         // 회원 정보 가져오기
-        Member memberRef = getMemberRef(memberId);
-        Post postRef = getPostRef(postId);
+        Member memberRef = requireMemberRef(memberId);
+        Post postRef = requirePostRef(postId);
 
         saveLikePostAndIncreaseLikeCount(postId, postRef, memberRef);
 
@@ -64,8 +64,8 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
     @Transactional
     @Override
     public PostLikeResponse cancelPostLike(Long postId, Long memberId) {
-        checkIsExistPostAndMember(postId, memberId);
-        Post postRef = getPostRef(postId);
+        ensurePostAndMemberExist(postId, memberId);
+        Post postRef = requirePostRef(postId);
 
         deleteLikePostAndDecreaseLikeCount(postId, memberId);
 
@@ -75,7 +75,7 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
 
     /* ------------------------------- private method ------------------------------------------ */
 
-    private void checkIsExistPostAndMember(Long postId, Long memberId) {
+    private void ensurePostAndMemberExist(Long postId, Long memberId) {
         // 게시글 존재 여부 확인
         if (!postRepository.existsById(postId)) {
             throw new PostHandler(ErrorStatus._POST_NOT_FOUND);
@@ -87,11 +87,11 @@ public class LikePostUseCaseImpl implements LikePostUseCase {
         }
     }
 
-    private Member getMemberRef(Long memberId) {
+    private Member requireMemberRef(Long memberId) {
         return memberRepository.getReferenceById(memberId);
     }
 
-    private Post getPostRef(Long postId) {
+    private Post requirePostRef(Long postId) {
         return postRepository.getReferenceById(postId);
     }
 

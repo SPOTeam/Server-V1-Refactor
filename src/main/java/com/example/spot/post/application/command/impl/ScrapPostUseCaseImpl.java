@@ -41,10 +41,10 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
      */
     @Override
     public ScrapPostResponse scrapPost(Long postId, Long memberId) {
-        checkIsExistPostAndMember(postId, memberId);
+        ensurePostAndMemberExist(postId, memberId);
 
-        Post post = getPostRef(postId);
-        Member member = getMemberRef(memberId);
+        Post post = requirePostRef(postId);
+        Member member = requireMemberRef(memberId);
 
         saveMemberScrapAndIncreaseScrapNum(postId, member, post);
 
@@ -64,9 +64,9 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
      */
     @Override
     public ScrapPostResponse cancelPostScrap(Long postId, Long memberId) {
-        checkIsExistPostAndMember(postId, memberId);
-        
-        Post post = getPostRef(postId);
+        ensurePostAndMemberExist(postId, memberId);
+
+        Post post = requirePostRef(postId);
 
         deleteMemberScrapAndDecreaseScrapNum(postId, memberId);
 
@@ -95,7 +95,7 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
 
     /* ------------------------------- private method ------------------------------------------ */
 
-    private void checkIsExistPostAndMember(Long postId, Long memberId) {
+    private void ensurePostAndMemberExist(Long postId, Long memberId) {
         // 게시글 존재 여부 확인
         if (!postRepository.existsById(postId)) {
             throw new PostHandler(ErrorStatus._POST_NOT_FOUND);
@@ -107,11 +107,11 @@ public class ScrapPostUseCaseImpl implements ScrapPostUseCase {
         }
     }
 
-    private Member getMemberRef(Long memberId) {
+    private Member requireMemberRef(Long memberId) {
         return memberRepository.getReferenceById(memberId);
     }
 
-    private Post getPostRef(Long postId) {
+    private Post requirePostRef(Long postId) {
         return postRepository.getReferenceById(postId);
     }
 

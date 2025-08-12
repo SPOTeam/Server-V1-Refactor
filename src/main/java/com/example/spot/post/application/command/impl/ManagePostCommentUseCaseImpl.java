@@ -41,9 +41,9 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
     @Override
     public CommentCreateResponse createComment(Long postId, Long memberId, CommentCreateRequest request) {
         // 게시글과 회원 존재 여부 확인 및 참조 가져오기
-        checkIsExistPostAndMember(postId, memberId);
-        Post post = getPostRef(postId);
-        Member member = getMemberRef(memberId);
+        ensurePostAndMemberExist(postId, memberId);
+        Post post = requirePostRef(postId);
+        Member member = requireMemberRef(memberId);
 
         // 댓글 생성 및 저장
         PostComment comment = PostComment.builder()
@@ -59,7 +59,7 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
 
     /* ------------------------------- private method ------------------------------------------ */
 
-    private void checkIsExistPostAndMember(Long postId, Long memberId) {
+    private void ensurePostAndMemberExist(Long postId, Long memberId) {
         // 게시글 존재 여부 확인
         if (!postRepository.existsById(postId)) {
             throw new PostHandler(ErrorStatus._POST_NOT_FOUND);
@@ -71,11 +71,11 @@ public class ManagePostCommentUseCaseImpl implements ManagePostCommentUseCase {
         }
     }
 
-    private Member getMemberRef(Long memberId) {
+    private Member requireMemberRef(Long memberId) {
         return memberRepository.getReferenceById(memberId);
     }
 
-    private Post getPostRef(Long postId) {
+    private Post requirePostRef(Long postId) {
         return postRepository.getReferenceById(postId);
     }
 
