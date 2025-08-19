@@ -14,8 +14,8 @@ public class RefreshTokenStore {
     public void replace(Long memberId, String refresh) {
         refreshTokenRepository.deleteAllByMemberId(memberId);
         refreshTokenRepository.save(RefreshToken.builder()
-                .memberId(memberId).
-                token(refresh)
+                .memberId(memberId)
+                .token(refresh)
                 .build());
     }
 }
