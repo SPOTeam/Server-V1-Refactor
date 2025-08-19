@@ -1,5 +1,6 @@
 package com.example.spot.auth.application.refactor.impl;
 
+import com.example.spot.auth.application.refactor.dto.OAuthProfile;
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
@@ -7,7 +8,6 @@ import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
 import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.enums.LoginType;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import com.example.spot.member.infrastructure.jpa.PreferredRegionRepository;
 import com.example.spot.member.infrastructure.jpa.PreferredThemeRepository;
@@ -33,11 +33,10 @@ public class OAuthMemberProcessor {
     private EntityManager entityManager;
 
     @Transactional
-    public MemberResponseDTO.SocialLoginSignInDTO processOAuthMember(LoginType loginType,
-                                                                     Member providerMember) {
+    public MemberResponseDTO.SocialLoginSignInDTO processOAuthMember(OAuthProfile oAuthProfile) {
         // 다른 로그인 타입으로 가입된 경우
-        if (memberRepository.existsByEmailAndLoginTypeNot(providerMember.getEmail(), loginType)) {
-            Member existing = memberRepository.findByEmail(providerMember.getEmail())
+        if (memberRepository.existsByEmailAndLoginTypeNot(oAuthProfile.email(), oAuthProfile.loginType())) {
+            Member existing = memberRepository.findByEmail(oAuthProfile.email())
                     .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
             if (existing.getInactive() != null) {
                 refreshTokenRepository.deleteByMemberId(existing.getId());
@@ -49,7 +48,7 @@ public class OAuthMemberProcessor {
         }
 
         boolean isSpotMember = false;
-        Member member = memberRepository.findByEmail(providerMember.getEmail()).orElse(null);
+        Member member = memberRepository.findByEmail(oAuthProfile.email()).orElse(null);
 
         if (member != null && member.getInactive() != null) {
             refreshTokenRepository.deleteByMemberId(member.getId());
@@ -59,7 +58,10 @@ public class OAuthMemberProcessor {
         }
 
         if (member == null) {
-            member = memberRepository.save(providerMember);
+            Member memberByOAuth = Member.toMemberByOAuth(oAuthProfile.loginType(), oAuthProfile.nickname(),
+                    oAuthProfile.email(),
+                    oAuthProfile.profileImageUrl());
+            member = memberRepository.save(memberByOAuth);
         }
 
         isSpotMember = checkIsSpotMember(member);
