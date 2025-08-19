@@ -21,6 +21,6 @@ public class OAuthService {
 
     public SocialLoginSignInDTO loginOrSignUp(LoginType type, String code) {
         OAuthStrategy strategy = strategyFactory.getStrategy(type);
-        return memberProcessor.processOAuthMember(type, strategy.toMember(code));
+        return memberProcessor.processOAuthMember(strategy.getOAuthProfile(code));
     }
 }

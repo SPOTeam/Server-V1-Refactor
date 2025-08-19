@@ -1,6 +1,6 @@
 package com.example.spot.auth.presentation.controller.refactor;
 
-import com.example.spot.auth.application.refactor.TokenService;
+import com.example.spot.auth.application.refactor.TokenReissueService;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.SuccessStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TokenController {
 
-    private final TokenService tokenService;
+    private final TokenReissueService tokenReissueService;
 
     /* ----------------------------- JWT 토큰 관리 API ------------------------------------- */
 
@@ -35,7 +35,7 @@ public class TokenController {
     @PostMapping("/reissue")
     public ApiResponse<TokenResponseDTO.TokenDTO> reissueToken(HttpServletRequest request,
                                                                @RequestHeader("refreshToken") String refreshToken) {
-        return ApiResponse.onSuccess(SuccessStatus._CREATED, tokenService.reissueToken(refreshToken));
+        return ApiResponse.onSuccess(SuccessStatus._CREATED, tokenReissueService.reissueToken(refreshToken));
     }
 
 }

@@ -1,20 +1,15 @@
 package com.example.spot.auth.application.refactor.impl;
 
-import com.example.spot.auth.domain.RefreshToken;
-import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
-import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
-import com.example.spot.common.api.code.status.ErrorStatus;
-import com.example.spot.common.api.exception.GeneralException;
-import com.example.spot.common.security.utils.JwtTokenProvider;
+import com.example.spot.auth.application.refactor.TokenProvider;
+import com.example.spot.auth.application.refactor.dto.OAuthProfile;
+import com.example.spot.auth.application.refactor.dto.SocialAccountResult;
+import com.example.spot.auth.application.refactor.member.OAuthMemberConflictProcessor;
+import com.example.spot.auth.application.refactor.member.OAuthMemberCreator;
+import com.example.spot.auth.application.refactor.member.ProfileCompletenessChecker;
+import com.example.spot.auth.application.refactor.member.RefreshTokenStore;
+import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
 import com.example.spot.member.domain.Member;
-import com.example.spot.member.domain.enums.LoginType;
-import com.example.spot.member.infrastructure.jpa.MemberRepository;
-import com.example.spot.member.infrastructure.jpa.PreferredRegionRepository;
-import com.example.spot.member.infrastructure.jpa.PreferredThemeRepository;
-import com.example.spot.member.infrastructure.jpa.StudyJoinReasonRepository;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,72 +18,29 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OAuthMemberProcessor {
 
-    private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtTokenProvider tokenProvider;
-    private final PreferredThemeRepository preferredThemeRepository;
-    private final PreferredRegionRepository preferredRegionRepository;
-    private final StudyJoinReasonRepository studyJoinReasonRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final OAuthMemberCreator oAuthMemberCreator;
+    private final OAuthMemberConflictProcessor oAuthMemberConflictProcessor;
+    private final ProfileCompletenessChecker profileCompletenessChecker;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenStore refreshTokenStore;
 
     @Transactional
-    public MemberResponseDTO.SocialLoginSignInDTO processOAuthMember(LoginType loginType,
-                                                                     Member providerMember) {
-        // 다른 로그인 타입으로 가입된 경우
-        if (memberRepository.existsByEmailAndLoginTypeNot(providerMember.getEmail(), loginType)) {
-            Member existing = memberRepository.findByEmail(providerMember.getEmail())
-                    .orElseThrow(() -> new GeneralException(ErrorStatus._MEMBER_NOT_FOUND));
-            if (existing.getInactive() != null) {
-                refreshTokenRepository.deleteByMemberId(existing.getId());
-                memberRepository.deleteById(existing.getId());
-                entityManager.flush();
-            } else {
-                throw new GeneralException(ErrorStatus._MEMBER_EMAIL_EXIST);
-            }
-        }
+    public MemberResponseDTO.SocialLoginSignInDTO processOAuthMember(OAuthProfile oAuthProfile) {
+        SocialAccountResult socialAccountResult = oAuthMemberConflictProcessor.resolveConflict(oAuthProfile);
+        Member member = socialAccountResult.member().orElseGet(() -> oAuthMemberCreator.createFrom(oAuthProfile));
 
-        boolean isSpotMember = false;
-        Member member = memberRepository.findByEmail(providerMember.getEmail()).orElse(null);
+        boolean isSpotMember = profileCompletenessChecker.isComplete(member.getId());
 
-        if (member != null && member.getInactive() != null) {
-            refreshTokenRepository.deleteByMemberId(member.getId());
-            memberRepository.deleteById(member.getId());
-            entityManager.flush();
-            member = null;
-        }
+        TokenDTO token = tokenProvider.createToken(member.getId());
+        refreshTokenStore.replace(member.getId(), token.getRefreshToken());
 
-        if (member == null) {
-            member = memberRepository.save(providerMember);
-        }
-
-        isSpotMember = checkIsSpotMember(member);
-
-        TokenResponseDTO.TokenDTO token = tokenProvider.createToken(member.getId());
-        saveRefreshToken(member, token);
-
-        return MemberResponseDTO.SocialLoginSignInDTO.toDTO(isSpotMember,
+        return MemberResponseDTO.SocialLoginSignInDTO.toDTO(
+                isSpotMember,
                 MemberResponseDTO.MemberSignInDTO.builder()
                         .tokens(token)
                         .memberId(member.getId())
                         .loginType(member.getLoginType())
                         .email(member.getEmail())
                         .build());
-    }
-
-    private void saveRefreshToken(Member member, TokenResponseDTO.TokenDTO token) {
-        refreshTokenRepository.deleteAllByMemberId(member.getId());
-        RefreshToken refreshToken = RefreshToken.builder()
-                .memberId(member.getId())
-                .token(token.getRefreshToken())
-                .build();
-        refreshTokenRepository.save(refreshToken);
-    }
-
-    private boolean checkIsSpotMember(Member member) {
-        Long id = member.getId();
-        return preferredThemeRepository.existsByMemberId(id) &&
-                preferredRegionRepository.existsByMemberId(id) &&
-                studyJoinReasonRepository.existsByMemberId(id);
     }
 }

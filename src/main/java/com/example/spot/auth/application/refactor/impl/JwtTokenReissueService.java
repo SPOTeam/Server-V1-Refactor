@@ -1,12 +1,12 @@
 package com.example.spot.auth.application.refactor.impl;
 
-import com.example.spot.auth.application.refactor.TokenService;
+import com.example.spot.auth.application.refactor.TokenProvider;
+import com.example.spot.auth.application.refactor.TokenReissueService;
 import com.example.spot.auth.domain.RefreshToken;
 import com.example.spot.auth.infrastructure.jpa.RefreshTokenRepository;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO;
 import com.example.spot.common.api.code.status.ErrorStatus;
 import com.example.spot.common.api.exception.GeneralException;
-import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.infrastructure.jpa.MemberRepository;
 import java.util.Objects;
@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class JwtTokenService implements TokenService {
+public class JwtTokenReissueService implements TokenReissueService {
 
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     /**
