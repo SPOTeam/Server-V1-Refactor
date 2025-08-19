@@ -1,13 +1,9 @@
-package com.example.spot.auth.application.refactor.impl;
+package com.example.spot.auth.application.refactor.member;
 
+import com.example.spot.auth.application.refactor.TokenProvider;
 import com.example.spot.auth.application.refactor.dto.OAuthProfile;
 import com.example.spot.auth.application.refactor.dto.SocialAccountResult;
-import com.example.spot.auth.application.refactor.member.OAuthMemberConflictProcessor;
-import com.example.spot.auth.application.refactor.member.OAuthMemberCreator;
-import com.example.spot.auth.application.refactor.member.ProfileCompletenessChecker;
-import com.example.spot.auth.application.refactor.member.RefreshTokenStore;
 import com.example.spot.auth.presentation.dto.token.TokenResponseDTO.TokenDTO;
-import com.example.spot.common.security.utils.JwtTokenProvider;
 import com.example.spot.member.domain.Member;
 import com.example.spot.member.presentation.dto.MemberResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +17,7 @@ public class OAuthMemberProcessor {
     private final OAuthMemberCreator oAuthMemberCreator;
     private final OAuthMemberConflictProcessor oAuthMemberConflictProcessor;
     private final ProfileCompletenessChecker profileCompletenessChecker;
-    private final JwtTokenProvider tokenService; // TODO 인터페이스 분리
+    private final TokenProvider tokenProvider; // TODO 인터페이스 분리
     private final RefreshTokenStore refreshTokenStore;
 
     @Transactional
@@ -31,7 +27,7 @@ public class OAuthMemberProcessor {
 
         boolean isSpotMember = profileCompletenessChecker.isComplete(member.getId());
 
-        TokenDTO token = tokenService.createToken(member.getId());
+        TokenDTO token = tokenProvider.createToken(member.getId());
         refreshTokenStore.replace(member.getId(), token.getRefreshToken());
 
         return MemberResponseDTO.SocialLoginSignInDTO.toDTO(
