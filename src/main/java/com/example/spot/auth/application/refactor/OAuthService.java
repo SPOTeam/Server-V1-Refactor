@@ -1,6 +1,6 @@
 package com.example.spot.auth.application.refactor;
 
-import com.example.spot.auth.application.refactor.member.OAuthMemberProcessor;
+import com.example.spot.auth.application.refactor.impl.OAuthMemberProcessor;
 import com.example.spot.auth.application.refactor.strategy.OAuthStrategy;
 import com.example.spot.auth.application.refactor.strategy.OAuthStrategyFactory;
 import com.example.spot.member.domain.enums.LoginType;
