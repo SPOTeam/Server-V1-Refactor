@@ -1,7 +1,15 @@
 package com.example.spot.common.api.exception.base;
 
 public class ExternalApiException extends RuntimeException {
-    public ExternalApiException(String s, Exception e) {
+
+    private final String responseBody;
+
+    public ExternalApiException(String s, String body, Exception e) {
         super(s, e);
+        this.responseBody = body;
+    }
+
+    public String getResponseBody() {
+        return responseBody;
     }
 }

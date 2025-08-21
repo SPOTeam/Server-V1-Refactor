@@ -2,6 +2,7 @@ package com.example.spot.common.api.exception;
 
 import com.example.spot.common.api.ApiResponse;
 import com.example.spot.common.api.code.status.ErrorStatus;
+import com.example.spot.common.api.exception.base.ExternalApiException;
 import io.sentry.Sentry;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ExceptionAdvice {
 
     /**
      * GeneralException 처리
+     *
      * @param exception GeneralException
      * @return ApiResponse - GeneralException
      */
@@ -33,6 +35,7 @@ public class ExceptionAdvice {
 
     /**
      * Exception 처리
+     *
      * @param exception Exception
      * @return ApiResponse - INTERNAL_SERVER_ERROR
      */
@@ -44,6 +47,7 @@ public class ExceptionAdvice {
 
     /**
      * MethodArgumentTypeMismatchException 처리 - 잘못된 값 입력
+     *
      * @param ex MethodArgumentTypeMismatchException
      * @return ApiResponse - BAD_VALUE_REQUEST
      */
@@ -56,17 +60,20 @@ public class ExceptionAdvice {
 
     /**
      * ConstraintViolationException 처리
+     *
      * @param exception ConstraintViolationException 객체
      * @return 클라이언트에게 반환할 ApiResponse 객체
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiResponse<List<String>>> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<ApiResponse<List<String>>> handleConstraintViolationException(
+            ConstraintViolationException exception) {
         // 모든 필드 오류 메시지를 수집
         List<String> errors = exception.getConstraintViolations()
-            .stream()
-            // 각 ConstraintViolation에서 필드 경로와 메시지를 포맷하여 수집
-            .map(constraintViolation -> String.format("'%s': %s ", constraintViolation.getPropertyPath(), constraintViolation.getMessage()))
-            .collect(Collectors.toList());
+                .stream()
+                // 각 ConstraintViolation에서 필드 경로와 메시지를 포맷하여 수집
+                .map(constraintViolation -> String.format("'%s': %s ", constraintViolation.getPropertyPath(),
+                        constraintViolation.getMessage()))
+                .collect(Collectors.toList());
 
         // 모든 에러 메시지를 하나의 문자열로 결합
         String errorMessage = String.join(", ", errors);
@@ -75,9 +82,9 @@ public class ExceptionAdvice {
 
         // ApiResponse 객체를 생성하여 오류 정보를 포함
         ApiResponse<List<String>> response = ApiResponse.onFailure(
-            ErrorStatus._BAD_REQUEST.getCode(), // HTTP 상태 코드
-            ErrorStatus._BAD_REQUEST.getMessage(), // 오류 메시지
-            errors // 오류 목록
+                ErrorStatus._BAD_REQUEST.getCode(), // HTTP 상태 코드
+                ErrorStatus._BAD_REQUEST.getMessage(), // 오류 메시지
+                errors // 오류 목록
         );
 
         // BAD_REQUEST 상태와 함께 ApiResponse 반환
@@ -86,7 +93,8 @@ public class ExceptionAdvice {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ApiResponse<List<String>>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
         List<String> errors = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -102,6 +110,22 @@ public class ExceptionAdvice {
         );
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExternalApiException.class)
+    public ResponseEntity<ApiResponse<String>> handleExternalApiException(ExternalApiException exception) {
+        String errorMessage = String.format("외부 API 호출 실패: %s", exception.getMessage());
+        log.error("ExternalApiException. error message: {}", errorMessage, exception);
+
+        captureException(exception);
+
+        ApiResponse<String> response = ApiResponse.onFailure(
+                ErrorStatus._EXTERNAL_API_ERROR.getCode(),
+                ErrorStatus._EXTERNAL_API_ERROR.getMessage(),
+                exception.getResponseBody()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_GATEWAY);
     }
 
     private static String validateGender(FieldError fieldError) {
