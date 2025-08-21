@@ -30,6 +30,8 @@ public enum ErrorStatus implements BaseErrorCode {
     _RSA_ERROR(HttpStatus.BAD_REQUEST, "COMMON4015", "RSA 에러가 발생했습니다."),
     _NOT_ADMIN(HttpStatus.FORBIDDEN, "COMMON4016", "관리자 권한이 없습니다."),
     _INVALID_ENUM_VALUE(HttpStatus.BAD_REQUEST, "COMMON4017", "유효하지 않은 Enum 값입니다."),
+    _EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "COMMON4018", "외부 API 호출 중 오류가 발생했습니다."),
+
     // 네이버 소셜 로그인 관련 에러
     _NAVER_SIGN_IN_INTEGRATION_FAILED(HttpStatus.UNAUTHORIZED, "NAVER4001", "네이버 로그인 연동에 실패하였습니다."),
     _NAVER_ACCESS_TOKEN_ISSUANCE_FAILED(HttpStatus.UNAUTHORIZED, "NAVER4002", "네이버 액세스 토큰 발급에 실패하였습니다."),
@@ -70,7 +72,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _STUDY_OWNER_ONLY_CAN_WITHDRAW(HttpStatus.FORBIDDEN, "STUDY4007", "스터디장만 해당 API를 통해 스터디를 탈퇴할 수 있습니다."),
     _STUDY_NOT_RECRUITING(HttpStatus.BAD_REQUEST, "STUDY4007", "스터디 모집기한이 아닙니다."),
     _STUDY_APPLICANT_NOT_FOUND(HttpStatus.NOT_FOUND, "STUDY4009", "처리를 기다리는 스터디 신청을 찾을 수 없습니다."),
-    _STUDY_APPLY_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "STUDY4010","스터디 신청이 이미 처리된 회원입니다."),
+    _STUDY_APPLY_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "STUDY4010", "스터디 신청이 이미 처리된 회원입니다."),
     _STUDY_OWNER_CANNOT_APPLY(HttpStatus.BAD_REQUEST, "STUDY4011", "스터디장은 스터디에 신청할 수 없습니다."),
     _STUDY_IS_FULL(HttpStatus.BAD_REQUEST, "STUDY4012", "스터디 인원이 가득 찼습니다."),
     _ONLY_STUDY_OWNER_CAN_ACCESS_APPLICANTS(HttpStatus.FORBIDDEN, "STUDY4013", "스터디장만 신청자 목록에 접근할 수 있습니다."),
@@ -199,9 +201,8 @@ public enum ErrorStatus implements BaseErrorCode {
     _STUDY_TODO_IS_NOT_BELONG_TO_STUDY(HttpStatus.BAD_REQUEST, "TODO4003", "해당 투두 리스트가 해당 스터디에 속해있지 않습니다."),
     _ONLY_STUDY_MEMBER_CAN_ACCESS_TODO_LIST(HttpStatus.FORBIDDEN, "TODO4004", "스터디 멤버만 투두 리스트에 접근할 수 있습니다."),
     _TODO_LIST_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "SCHEDULE4004", "일정을 조회하려는 멤버가 스터디에 가입되지 않았습니다."),
-    _STUDY_TODO_NULL(HttpStatus.BAD_REQUEST, "TODO4005", "투두 리스트 아이디가 입력되지 않았습니다."),;
-
-    ;
+    _STUDY_TODO_NULL(HttpStatus.BAD_REQUEST, "TODO4005", "투두 리스트 아이디가 입력되지 않았습니다."),
+    ;;
 
 
     private final HttpStatus httpStatus;

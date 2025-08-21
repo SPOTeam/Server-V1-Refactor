@@ -14,9 +14,10 @@ public final class SafeFeignExecutor {
             return call.get();
         } catch (FeignException e) {
             String message = e.getMessage() != null ? e.getMessage() : "";
+            String body = e.contentUTF8();
             String masked = mask(message);
             throw new ExternalApiException(
-                    "Feign API 호출 실패(" + e.status() + "): " + masked, e
+                    "Feign API 호출 실패(" + e.status() + "): " + masked, body, e
             );
         }
     }
