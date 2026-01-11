@@ -1,4 +1,4 @@
-# SPOT Server Ver.2 Repository입니다. 
+# SPOT Server Ver.1 리팩토링 버전 Repository입니다. 
 
 
 
